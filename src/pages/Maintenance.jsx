@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Plus, Search, Filter, Calendar, Clock, Wrench, 
+  Plus, Search, Filter, Calendar, Clock, Wrench, FileText,
   CheckCircle2, AlertTriangle, Sparkles, Loader2, Brain
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import MaintenanceCard from '@/components/maintenance/MaintenanceCard';
 import AIScheduleOptimizer from '@/components/maintenance/AIScheduleOptimizer';
+import WorkOrderList from '@/components/maintenance/WorkOrderList';
 
 const TASK_TYPES = ['preventive', 'predictive', 'corrective', 'emergency', 'inspection'];
 const PRIORITIES = ['low', 'medium', 'high', 'urgent'];
@@ -52,6 +53,11 @@ export default function Maintenance() {
     queryFn: () => base44.entities.Equipment.list('-created_date', 200),
   });
 
+  const { data: workOrders = [] } = useQuery({
+    queryKey: ['workOrders'],
+    queryFn: () => base44.entities.WorkOrder.list('-created_date', 200),
+  });
+
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.MaintenanceTask.create(data),
     onSuccess: () => {
@@ -75,6 +81,28 @@ export default function Maintenance() {
     mutationFn: ({ id, data }) => base44.entities.MaintenanceTask.update(id, data),
     onSuccess: () => queryClient.invalidateQueries(['tasks']),
   });
+
+  const createWorkOrderMutation = useMutation({
+    mutationFn: (data) => base44.entities.WorkOrder.create(data),
+    onSuccess: () => queryClient.invalidateQueries(['workOrders']),
+  });
+
+  const updateWorkOrderMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.WorkOrder.update(id, data),
+    onSuccess: () => queryClient.invalidateQueries(['workOrders']),
+  });
+
+  const handleCreateWorkOrder = async (workOrderData) => {
+    await createWorkOrderMutation.mutateAsync(workOrderData);
+  };
+
+  const handleUpdateWorkOrder = async (workOrderData) => {
+    await updateWorkOrderMutation.mutateAsync({ id: workOrderData.id, data: workOrderData });
+  };
+
+  const handleWorkOrderStatusChange = async (workOrderId, updates) => {
+    await updateWorkOrderMutation.mutateAsync({ id: workOrderId, data: updates });
+  };
 
   const handleStatusChange = (taskId, newStatus) => {
     const updateData = { status: newStatus };
@@ -174,6 +202,15 @@ export default function Maintenance() {
               >
                 <Wrench className="w-4 h-4 mr-1" />
                 Tasks
+              </Button>
+              <Button
+                variant={viewMode === 'workorders' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('workorders')}
+                className={viewMode === 'workorders' ? 'bg-indigo-600 hover:bg-indigo-700' : 'text-slate-500'}
+              >
+                <FileText className="w-4 h-4 mr-1" />
+                Work Orders
               </Button>
               <Button
                 variant={viewMode === 'scheduler' ? 'default' : 'ghost'}
@@ -327,6 +364,17 @@ export default function Maintenance() {
               onCreateTask={handleAICreateTask}
             />
           </div>
+        )}
+
+        {/* Work Orders View */}
+        {viewMode === 'workorders' && (
+          <WorkOrderList
+            workOrders={workOrders}
+            equipment={equipment}
+            onCreateWorkOrder={handleCreateWorkOrder}
+            onUpdateWorkOrder={handleUpdateWorkOrder}
+            onStatusChange={handleWorkOrderStatusChange}
+          />
         )}
 
         {/* Tasks View */}
