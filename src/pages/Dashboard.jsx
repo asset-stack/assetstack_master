@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,6 +20,7 @@ import EquipmentDetails from '@/components/equipment/EquipmentDetails';
 export default function Dashboard() {
   const [selectedEquipment, setSelectedEquipment] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [liveUpdates, setLiveUpdates] = useState({ equipment: [], alerts: [] });
   const queryClient = useQueryClient();
 
   const { data: equipment = [], isLoading: loadingEquipment } = useQuery({
@@ -31,6 +32,30 @@ export default function Dashboard() {
     queryKey: ['alerts'],
     queryFn: () => base44.entities.Alert.list('-created_date', 50),
   });
+
+  // Real-time subscriptions
+  useEffect(() => {
+    const equipmentUnsubscribe = base44.entities.Equipment.subscribe((event) => {
+      queryClient.invalidateQueries(['equipment']);
+      setLiveUpdates(prev => ({
+        ...prev,
+        equipment: [{ id: event.id, type: event.type, timestamp: Date.now() }, ...prev.equipment.slice(0, 9)]
+      }));
+    });
+
+    const alertUnsubscribe = base44.entities.Alert.subscribe((event) => {
+      queryClient.invalidateQueries(['alerts']);
+      setLiveUpdates(prev => ({
+        ...prev,
+        alerts: [{ id: event.id, type: event.type, timestamp: Date.now() }, ...prev.alerts.slice(0, 9)]
+      }));
+    });
+
+    return () => {
+      equipmentUnsubscribe();
+      alertUnsubscribe();
+    };
+  }, [queryClient]);
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks'],
@@ -95,9 +120,15 @@ export default function Dashboard() {
         <div className="max-w-[1800px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Predictive Maintenance
-              </h1>
+              <div className="flex items-center gap-3">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  Predictive Maintenance
+                </h1>
+                <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-full">
+                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                  <span className="text-xs text-emerald-400 font-medium">LIVE</span>
+                </div>
+              </div>
               <p className="text-sm text-slate-400">AI-Powered Asset Health Monitoring</p>
             </div>
             <div className="flex items-center gap-4">

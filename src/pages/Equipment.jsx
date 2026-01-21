@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -36,6 +36,7 @@ export default function Equipment() {
   const [filterRisk, setFilterRisk] = useState('all');
   const [selectedEquipment, setSelectedEquipment] = useState(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [recentUpdates, setRecentUpdates] = useState([]);
   const [newEquipment, setNewEquipment] = useState({
     name: '',
     type: 'motor',
@@ -56,6 +57,24 @@ export default function Equipment() {
     queryKey: ['equipment'],
     queryFn: () => base44.entities.Equipment.list('-created_date', 200),
   });
+
+  // Real-time subscription
+  useEffect(() => {
+    const unsubscribe = base44.entities.Equipment.subscribe((event) => {
+      queryClient.invalidateQueries(['equipment']);
+      setRecentUpdates(prev => {
+        const newUpdate = { id: event.id, type: event.type, timestamp: Date.now() };
+        return [newUpdate, ...prev.slice(0, 19)];
+      });
+      
+      // Auto-remove update indicator after 3 seconds
+      setTimeout(() => {
+        setRecentUpdates(prev => prev.filter(u => u.id !== event.id || Date.now() - u.timestamp > 3000));
+      }, 3000);
+    });
+
+    return unsubscribe;
+  }, [queryClient]);
 
   const { data: sensorReadings = [] } = useQuery({
     queryKey: ['sensorReadings', selectedEquipment?.id],
@@ -318,14 +337,29 @@ export default function Equipment() {
         {/* Equipment Grid/List */}
         {viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filteredEquipment.map((eq, idx) => (
-              <EquipmentCard 
-                key={eq.id}
-                equipment={eq}
-                onClick={() => setSelectedEquipment(eq)}
-                delay={idx * 0.03}
-              />
-            ))}
+            {filteredEquipment.map((eq, idx) => {
+              const hasRecentUpdate = recentUpdates.some(u => u.id === eq.id && Date.now() - u.timestamp < 3000);
+              return (
+                <div key={eq.id} className="relative">
+                  {hasRecentUpdate && (
+                    <motion.div
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      className="absolute -top-2 -right-2 z-10 flex items-center gap-1 px-2 py-1 bg-blue-500 rounded-full shadow-lg"
+                    >
+                      <Activity className="w-3 h-3 text-white animate-pulse" />
+                      <span className="text-xs text-white font-medium">UPDATED</span>
+                    </motion.div>
+                  )}
+                  <EquipmentCard 
+                    equipment={eq}
+                    onClick={() => setSelectedEquipment(eq)}
+                    delay={idx * 0.03}
+                  />
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="bg-slate-900/50 rounded-xl border border-slate-700/50 overflow-hidden">
@@ -342,13 +376,26 @@ export default function Equipment() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredEquipment.map((eq) => (
-                  <TableRow 
-                    key={eq.id} 
-                    className="border-slate-700/50 cursor-pointer hover:bg-slate-800/50"
-                    onClick={() => setSelectedEquipment(eq)}
-                  >
-                    <TableCell className="font-medium text-white">{eq.name}</TableCell>
+                {filteredEquipment.map((eq) => {
+                  const hasRecentUpdate = recentUpdates.some(u => u.id === eq.id && Date.now() - u.timestamp < 3000);
+                  return (
+                    <TableRow 
+                      key={eq.id} 
+                      className={`border-slate-700/50 cursor-pointer hover:bg-slate-800/50 ${hasRecentUpdate ? 'bg-blue-500/5' : ''}`}
+                      onClick={() => setSelectedEquipment(eq)}
+                    >
+                      <TableCell className="font-medium text-white">
+                        <div className="flex items-center gap-2">
+                          {hasRecentUpdate && (
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"
+                            />
+                          )}
+                          {eq.name}
+                        </div>
+                      </TableCell>
                     <TableCell className="text-slate-400 capitalize">{eq.type?.replace(/_/g, ' ')}</TableCell>
                     <TableCell className="text-slate-400">{eq.location}</TableCell>
                     <TableCell>
@@ -370,11 +417,12 @@ export default function Equipment() {
                         {eq.risk_level || 'low'}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-slate-300">
-                      {eq.remaining_useful_life_days || 'N/A'} days
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      <TableCell className="text-slate-300">
+                        {eq.remaining_useful_life_days || 'N/A'} days
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
