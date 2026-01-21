@@ -20,7 +20,7 @@ export default function FleetOverview({ equipment }) {
     { name: 'Degraded', value: statusCounts.degraded || 0, color: '#f59e0b' },
     { name: 'Critical', value: statusCounts.critical || 0, color: '#ef4444' },
     { name: 'Maintenance', value: statusCounts.maintenance || 0, color: '#3b82f6' },
-    { name: 'Offline', value: statusCounts.offline || 0, color: '#64748b' },
+    { name: 'Offline', value: statusCounts.offline || 0, color: '#94a3b8' },
   ].filter(d => d.value > 0);
 
   const riskData = [
@@ -37,9 +37,9 @@ export default function FleetOverview({ equipment }) {
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-slate-800/95 backdrop-blur-xl border border-slate-700 rounded-lg p-2 shadow-xl">
-          <p className="text-sm font-medium text-white">{payload[0].name}</p>
-          <p className="text-xs text-slate-400">{payload[0].value} equipment</p>
+        <div className="bg-white border border-slate-200 rounded-lg p-2.5 shadow-lg">
+          <p className="text-sm font-medium text-slate-900">{payload[0].name}</p>
+          <p className="text-xs text-slate-500">{payload[0].value} equipment</p>
         </div>
       );
     }
@@ -50,13 +50,13 @@ export default function FleetOverview({ equipment }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-6 backdrop-blur-xl"
+      className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm"
     >
-      <h3 className="text-lg font-semibold text-white mb-6">Fleet Overview</h3>
+      <h3 className="text-base font-semibold text-slate-900 mb-6">Fleet Overview</h3>
       
       <div className="grid grid-cols-2 gap-6">
         <div>
-          <p className="text-xs text-slate-400 text-center mb-2">By Status</p>
+          <p className="text-xs font-medium text-slate-500 text-center mb-2">By Status</p>
           <div className="h-[140px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -79,16 +79,16 @@ export default function FleetOverview({ equipment }) {
           </div>
           <div className="flex flex-wrap justify-center gap-2 mt-2">
             {statusData.map((item, idx) => (
-              <div key={idx} className="flex items-center gap-1">
+              <div key={idx} className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
-                <span className="text-xs text-slate-400">{item.name}</span>
+                <span className="text-xs text-slate-500">{item.name}</span>
               </div>
             ))}
           </div>
         </div>
 
         <div>
-          <p className="text-xs text-slate-400 text-center mb-2">By Risk Level</p>
+          <p className="text-xs font-medium text-slate-500 text-center mb-2">By Risk Level</p>
           <div className="h-[140px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -111,27 +111,27 @@ export default function FleetOverview({ equipment }) {
           </div>
           <div className="flex flex-wrap justify-center gap-2 mt-2">
             {riskData.map((item, idx) => (
-              <div key={idx} className="flex items-center gap-1">
+              <div key={idx} className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
-                <span className="text-xs text-slate-400">{item.name}</span>
+                <span className="text-xs text-slate-500">{item.name}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-700/50">
+      <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-100">
         <div className="text-center">
-          <p className="text-2xl font-bold text-white">{equipment.length}</p>
-          <p className="text-xs text-slate-400">Total Assets</p>
+          <p className="text-2xl font-semibold text-slate-900">{equipment.length}</p>
+          <p className="text-xs text-slate-500">Total Assets</p>
         </div>
         <div className="text-center">
-          <p className="text-2xl font-bold text-emerald-400">{avgHealth}%</p>
-          <p className="text-xs text-slate-400">Avg Health</p>
+          <p className="text-2xl font-semibold text-emerald-600">{avgHealth}%</p>
+          <p className="text-xs text-slate-500">Avg Health</p>
         </div>
         <div className="text-center">
-          <p className="text-2xl font-bold text-amber-400">{(riskCounts.high || 0) + (riskCounts.critical || 0)}</p>
-          <p className="text-xs text-slate-400">At Risk</p>
+          <p className="text-2xl font-semibold text-amber-600">{(riskCounts.high || 0) + (riskCounts.critical || 0)}</p>
+          <p className="text-xs text-slate-500">At Risk</p>
         </div>
       </div>
     </motion.div>
