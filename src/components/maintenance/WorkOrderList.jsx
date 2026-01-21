@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, Plus, FileText, Clock, DollarSign, CheckCircle2 } from 'lucide-react';
+import { Search, Filter, Plus, FileText, Clock, DollarSign, CheckCircle2, Zap } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import WorkOrderCard from './WorkOrderCard';
 import WorkOrderDetails from './WorkOrderDetails';
+import WorkOrderAutoGenerator from './WorkOrderAutoGenerator';
+import FollowUpWorkOrderDialog from './FollowUpWorkOrderDialog';
 
 const STATUSES = ['draft', 'open', 'assigned', 'in_progress', 'on_hold', 'completed', 'closed', 'cancelled'];
 
 export default function WorkOrderList({ 
   workOrders = [], 
   equipment = [], 
+  alerts = [],
+  tasks = [],
   onCreateWorkOrder, 
   onUpdateWorkOrder,
   onStatusChange 
@@ -23,6 +27,8 @@ export default function WorkOrderList({
   const [activeTab, setActiveTab] = useState('active');
   const [selectedWorkOrder, setSelectedWorkOrder] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [autoGenSource, setAutoGenSource] = useState(null);
+  const [followUpWorkOrder, setFollowUpWorkOrder] = useState(null);
 
   const equipmentMap = equipment.reduce((acc, e) => { acc[e.id] = e; return acc; }, {});
 
@@ -168,6 +174,25 @@ export default function WorkOrderList({
               ))}
             </SelectContent>
           </Select>
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              // Pick first high-severity alert or pending task for auto-gen demo
+              const highAlert = alerts?.find(a => (a.severity === 'critical' || a.severity === 'emergency') && a.status === 'active');
+              const pendingTask = tasks?.find(t => t.status === 'scheduled');
+              if (highAlert) {
+                setAutoGenSource({ type: 'alert', data: highAlert });
+              } else if (pendingTask) {
+                setAutoGenSource({ type: 'task', data: pendingTask });
+              } else if (equipment.length > 0) {
+                setAutoGenSource({ type: 'equipment', data: equipment[0] });
+              }
+            }}
+            className="border-violet-300 text-violet-600 hover:bg-violet-50"
+          >
+            <Zap className="w-4 h-4 mr-2" />
+            Auto-Generate
+          </Button>
           <Button onClick={() => setIsCreating(true)} className="bg-indigo-600 hover:bg-indigo-700">
             <Plus className="w-4 h-4 mr-2" />
             New Work Order
@@ -207,10 +232,29 @@ export default function WorkOrderList({
             onClose={() => { setSelectedWorkOrder(null); setIsCreating(false); }}
             onSave={handleSaveWorkOrder}
             onStatusChange={onStatusChange}
+            onCreateFollowUp={(wo) => setFollowUpWorkOrder(wo)}
             isNew={isCreating}
           />
         )}
       </AnimatePresence>
+
+      {/* Auto-Generate Work Order Dialog */}
+      {autoGenSource && (
+        <WorkOrderAutoGenerator
+          source={autoGenSource}
+          onClose={() => setAutoGenSource(null)}
+          onSuccess={() => setAutoGenSource(null)}
+        />
+      )}
+
+      {/* Follow-up Work Order Dialog */}
+      {followUpWorkOrder && (
+        <FollowUpWorkOrderDialog
+          completedWorkOrder={followUpWorkOrder}
+          onClose={() => setFollowUpWorkOrder(null)}
+          onSuccess={() => setFollowUpWorkOrder(null)}
+        />
+      )}
     </div>
   );
 }

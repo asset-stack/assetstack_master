@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, Calendar, Clock, User, Users, Cpu, DollarSign, Package, 
   FileText, Plus, Trash2, Save, History, AlertTriangle, CheckCircle2,
-  Play, Pause, Square
+  Play, Pause, Square, RefreshCw
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +24,7 @@ export default function WorkOrderDetails({
   onClose, 
   onSave, 
   onStatusChange,
+  onCreateFollowUp,
   isNew = false 
 }) {
   const [editedWorkOrder, setEditedWorkOrder] = useState(workOrder || {
@@ -205,9 +206,21 @@ export default function WorkOrderDetails({
                 </Button>
               )}
               {editedWorkOrder.status === 'completed' && (
-                <Button size="sm" onClick={() => handleStatusChange('closed')} className="bg-slate-600 hover:bg-slate-700">
-                  <Square className="w-4 h-4 mr-1" /> Close Work Order
-                </Button>
+                <>
+                  <Button size="sm" onClick={() => handleStatusChange('closed')} className="bg-slate-600 hover:bg-slate-700">
+                    <Square className="w-4 h-4 mr-1" /> Close Work Order
+                  </Button>
+                  {onCreateFollowUp && (
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      onClick={() => onCreateFollowUp(editedWorkOrder)}
+                      className="border-violet-300 text-violet-600 hover:bg-violet-50"
+                    >
+                      <RefreshCw className="w-4 h-4 mr-1" /> Create Follow-up
+                    </Button>
+                  )}
+                </>
               )}
             </div>
           )}
