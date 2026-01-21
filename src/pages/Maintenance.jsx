@@ -161,16 +161,16 @@ export default function Maintenance() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-white">Maintenance Tasks</h1>
-            <p className="text-sm text-slate-400">{tasks.length} total tasks • {aiCount} AI recommended</p>
+            <h1 className="text-2xl font-semibold text-slate-900">Maintenance Tasks</h1>
+            <p className="text-sm text-slate-500">{tasks.length} total tasks • {aiCount} AI recommended</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex bg-slate-900/50 rounded-lg border border-slate-700 p-1">
+            <div className="flex bg-white rounded-lg border border-slate-200 p-1">
               <Button
                 variant={viewMode === 'tasks' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('tasks')}
-                className={viewMode === 'tasks' ? 'bg-blue-600' : 'text-slate-400'}
+                className={viewMode === 'tasks' ? 'bg-indigo-600 hover:bg-indigo-700' : 'text-slate-500'}
               >
                 <Wrench className="w-4 h-4 mr-1" />
                 Tasks
@@ -179,7 +179,7 @@ export default function Maintenance() {
                 variant={viewMode === 'scheduler' ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setViewMode('scheduler')}
-                className={viewMode === 'scheduler' ? 'bg-purple-600' : 'text-slate-400'}
+                className={viewMode === 'scheduler' ? 'bg-violet-600 hover:bg-violet-700' : 'text-slate-500'}
               >
                 <Brain className="w-4 h-4 mr-1" />
                 AI Scheduler
@@ -189,7 +189,7 @@ export default function Maintenance() {
               variant="outline"
               onClick={generateAIRecommendations}
               disabled={isGenerating}
-              className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10"
+              className="border-violet-300 text-violet-600 hover:bg-violet-50"
             >
               {isGenerating ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -200,41 +200,41 @@ export default function Maintenance() {
             </Button>
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button className="bg-indigo-600 hover:bg-indigo-700">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Task
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-slate-900 border-slate-700 text-white max-w-2xl">
+              <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-2xl">
                 <DialogHeader>
                   <DialogTitle>Create Maintenance Task</DialogTitle>
                 </DialogHeader>
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <div className="col-span-2 space-y-2">
-                    <Label>Title *</Label>
+                    <Label className="text-slate-700">Title *</Label>
                     <Input
                       value={newTask.title}
                       onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
                       placeholder="Task title"
-                      className="bg-slate-800 border-slate-700"
+                      className="bg-white border-slate-200"
                     />
                   </div>
                   <div className="col-span-2 space-y-2">
-                    <Label>Description</Label>
+                    <Label className="text-slate-700">Description</Label>
                     <Textarea
                       value={newTask.description}
                       onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
                       placeholder="Task details..."
-                      className="bg-slate-800 border-slate-700"
+                      className="bg-white border-slate-200"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Equipment *</Label>
+                    <Label className="text-slate-700">Equipment *</Label>
                     <Select value={newTask.equipment_id} onValueChange={(v) => setNewTask({ ...newTask, equipment_id: v })}>
-                      <SelectTrigger className="bg-slate-800 border-slate-700">
+                      <SelectTrigger className="bg-white border-slate-200">
                         <SelectValue placeholder="Select equipment" />
                       </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700 max-h-60">
+                      <SelectContent className="bg-white border-slate-200 max-h-60">
                         {equipment.map(eq => (
                           <SelectItem key={eq.id} value={eq.id}>
                             {eq.name}
@@ -244,12 +244,12 @@ export default function Maintenance() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Type</Label>
+                    <Label className="text-slate-700">Type</Label>
                     <Select value={newTask.type} onValueChange={(v) => setNewTask({ ...newTask, type: v })}>
-                      <SelectTrigger className="bg-slate-800 border-slate-700">
+                      <SelectTrigger className="bg-white border-slate-200">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
+                      <SelectContent className="bg-white border-slate-200">
                         {TASK_TYPES.map(type => (
                           <SelectItem key={type} value={type} className="capitalize">
                             {type}
@@ -259,12 +259,12 @@ export default function Maintenance() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Priority</Label>
+                    <Label className="text-slate-700">Priority</Label>
                     <Select value={newTask.priority} onValueChange={(v) => setNewTask({ ...newTask, priority: v })}>
-                      <SelectTrigger className="bg-slate-800 border-slate-700">
+                      <SelectTrigger className="bg-white border-slate-200">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
+                      <SelectContent className="bg-white border-slate-200">
                         {PRIORITIES.map(p => (
                           <SelectItem key={p} value={p} className="capitalize">
                             {p}
@@ -274,41 +274,41 @@ export default function Maintenance() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Scheduled Date</Label>
+                    <Label className="text-slate-700">Scheduled Date</Label>
                     <Input
                       type="date"
                       value={newTask.scheduled_date}
                       onChange={(e) => setNewTask({ ...newTask, scheduled_date: e.target.value })}
-                      className="bg-slate-800 border-slate-700"
+                      className="bg-white border-slate-200"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Est. Duration (hours)</Label>
+                    <Label className="text-slate-700">Est. Duration (hours)</Label>
                     <Input
                       type="number"
                       value={newTask.estimated_duration_hours}
                       onChange={(e) => setNewTask({ ...newTask, estimated_duration_hours: Number(e.target.value) })}
-                      className="bg-slate-800 border-slate-700"
+                      className="bg-white border-slate-200"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Assigned To</Label>
+                    <Label className="text-slate-700">Assigned To</Label>
                     <Input
                       value={newTask.assigned_to}
                       onChange={(e) => setNewTask({ ...newTask, assigned_to: e.target.value })}
                       placeholder="Technician name"
-                      className="bg-slate-800 border-slate-700"
+                      className="bg-white border-slate-200"
                     />
                   </div>
                 </div>
                 <div className="flex justify-end gap-3 mt-6">
-                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="border-slate-700">
+                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="border-slate-200">
                     Cancel
                   </Button>
                   <Button 
                     onClick={() => createMutation.mutate({ ...newTask, status: 'scheduled' })}
                     disabled={!newTask.title || !newTask.equipment_id || createMutation.isPending}
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="bg-indigo-600 hover:bg-indigo-700"
                   >
                     Create Task
                   </Button>
@@ -334,47 +334,47 @@ export default function Maintenance() {
           <>
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-4">
+          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-500/20 rounded-lg">
-                <Calendar className="w-5 h-5 text-blue-400" />
+              <div className="p-2 bg-indigo-100 rounded-lg">
+                <Calendar className="w-5 h-5 text-indigo-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{scheduledCount}</p>
-                <p className="text-xs text-slate-400">Scheduled</p>
+                <p className="text-2xl font-semibold text-slate-900">{scheduledCount}</p>
+                <p className="text-xs text-slate-500">Scheduled</p>
               </div>
             </div>
           </div>
-          <div className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-4">
+          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-rose-500/20 rounded-lg">
-                <AlertTriangle className="w-5 h-5 text-rose-400" />
+              <div className="p-2 bg-rose-100 rounded-lg">
+                <AlertTriangle className="w-5 h-5 text-rose-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{overdueCount}</p>
-                <p className="text-xs text-slate-400">Overdue</p>
+                <p className="text-2xl font-semibold text-slate-900">{overdueCount}</p>
+                <p className="text-xs text-slate-500">Overdue</p>
               </div>
             </div>
           </div>
-          <div className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-4">
+          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-500/20 rounded-lg">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+              <div className="p-2 bg-emerald-100 rounded-lg">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{completedCount}</p>
-                <p className="text-xs text-slate-400">Completed</p>
+                <p className="text-2xl font-semibold text-slate-900">{completedCount}</p>
+                <p className="text-xs text-slate-500">Completed</p>
               </div>
             </div>
           </div>
-          <div className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-4">
+          <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-500/20 rounded-lg">
-                <Sparkles className="w-5 h-5 text-purple-400" />
+              <div className="p-2 bg-violet-100 rounded-lg">
+                <Sparkles className="w-5 h-5 text-violet-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{aiCount}</p>
-                <p className="text-xs text-slate-400">AI Recommended</p>
+                <p className="text-2xl font-semibold text-slate-900">{aiCount}</p>
+                <p className="text-xs text-slate-500">AI Recommended</p>
               </div>
             </div>
           </div>
@@ -383,17 +383,17 @@ export default function Maintenance() {
         {/* Tabs & Filters */}
         <div className="flex flex-wrap items-center gap-4 mb-6">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full md:w-auto">
-            <TabsList className="bg-slate-900/50 border border-slate-700">
-              <TabsTrigger value="scheduled" className="data-[state=active]:bg-blue-600">
+            <TabsList className="bg-white border border-slate-200">
+              <TabsTrigger value="scheduled" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
                 Scheduled ({scheduledCount})
               </TabsTrigger>
-              <TabsTrigger value="overdue" className="data-[state=active]:bg-blue-600">
+              <TabsTrigger value="overdue" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
                 Overdue ({overdueCount})
               </TabsTrigger>
-              <TabsTrigger value="completed" className="data-[state=active]:bg-blue-600">
+              <TabsTrigger value="completed" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
                 Completed ({completedCount})
               </TabsTrigger>
-              <TabsTrigger value="all" className="data-[state=active]:bg-blue-600">
+              <TabsTrigger value="all" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
                 All
               </TabsTrigger>
             </TabsList>
@@ -406,14 +406,14 @@ export default function Maintenance() {
                 placeholder="Search tasks..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 w-56 bg-slate-900/50 border-slate-700 text-white"
+                className="pl-10 w-56 bg-white border-slate-200 text-slate-900"
               />
             </div>
             <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger className="w-36 bg-slate-900/50 border-slate-700">
+              <SelectTrigger className="w-36 bg-white border-slate-200">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
+              <SelectContent className="bg-white border-slate-200">
                 <SelectItem value="all">All Types</SelectItem>
                 {TASK_TYPES.map(type => (
                   <SelectItem key={type} value={type} className="capitalize">
@@ -423,10 +423,10 @@ export default function Maintenance() {
               </SelectContent>
             </Select>
             <Select value={filterPriority} onValueChange={setFilterPriority}>
-              <SelectTrigger className="w-36 bg-slate-900/50 border-slate-700">
+              <SelectTrigger className="w-36 bg-white border-slate-200">
                 <SelectValue placeholder="Priority" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
+              <SelectContent className="bg-white border-slate-200">
                 <SelectItem value="all">All Priorities</SelectItem>
                 {PRIORITIES.map(p => (
                   <SelectItem key={p} value={p} className="capitalize">
@@ -453,9 +453,9 @@ export default function Maintenance() {
 
         {filteredTasks.length === 0 && !isLoading && (
           <div className="text-center py-16">
-            <Wrench className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-400">No tasks found</h3>
-            <p className="text-sm text-slate-500">Create a new task or generate AI recommendations</p>
+            <Wrench className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-slate-600">No tasks found</h3>
+            <p className="text-sm text-slate-400">Create a new task or generate AI recommendations</p>
           </div>
         )}
           </>
