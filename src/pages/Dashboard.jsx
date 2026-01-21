@@ -116,40 +116,40 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800">
-        <div className="max-w-[1800px] mx-auto px-6 py-4">
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200">
+        <div className="px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-semibold text-slate-900">
                   Predictive Maintenance
                 </h1>
-                <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-full">
-                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                  <span className="text-xs text-emerald-400 font-medium">LIVE</span>
+                <div className="flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200 rounded-full">
+                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                  <span className="text-xs text-emerald-600 font-medium">LIVE</span>
                 </div>
               </div>
-              <p className="text-sm text-slate-400">AI-Powered Asset Health Monitoring</p>
+              <p className="text-sm text-slate-500 mt-0.5">AI-Powered Asset Health Monitoring</p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <div className="relative">
                 <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
                 <Input
                   placeholder="Search equipment..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-64 bg-slate-900/50 border-slate-700 text-white placeholder:text-slate-500"
+                  className="pl-10 w-64 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-indigo-300 focus:ring-indigo-200"
                 />
               </div>
-              <Button variant="outline" size="icon" className="bg-slate-900/50 border-slate-700 text-slate-400 hover:text-white">
+              <Button variant="outline" size="icon" className="bg-white border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 relative">
                 <Bell className="w-4 h-4" />
                 {activeAlerts > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full text-xs flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full text-xs text-white flex items-center justify-center">
                     {activeAlerts}
                   </span>
                 )}
               </Button>
-              <Button variant="outline" size="icon" className="bg-slate-900/50 border-slate-700 text-slate-400 hover:text-white">
+              <Button variant="outline" size="icon" className="bg-white border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50">
                 <Settings className="w-4 h-4" />
               </Button>
             </div>
@@ -157,7 +157,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="max-w-[1800px] mx-auto px-6 py-8">
+      <main className="px-6 lg:px-8 py-8">
         {/* Metrics Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           <MetricCard 
@@ -231,12 +231,12 @@ export default function Dashboard() {
 
         {/* Equipment Grid */}
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-white">Equipment Fleet</h2>
+          <h2 className="text-xl font-semibold text-slate-900">Equipment Fleet</h2>
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => queryClient.invalidateQueries(['equipment'])}
-            className="bg-slate-900/50 border-slate-700 text-slate-400 hover:text-white"
+            className="bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
@@ -246,10 +246,10 @@ export default function Dashboard() {
         {loadingEquipment ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-5 animate-pulse">
-                <div className="h-4 bg-slate-700 rounded w-1/3 mb-4" />
-                <div className="h-6 bg-slate-700 rounded w-2/3 mb-2" />
-                <div className="h-4 bg-slate-700 rounded w-1/2" />
+              <div key={i} className="bg-white rounded-xl border border-slate-200 p-5 animate-pulse shadow-sm">
+                <div className="h-4 bg-slate-100 rounded w-1/3 mb-4" />
+                <div className="h-6 bg-slate-100 rounded w-2/3 mb-2" />
+                <div className="h-4 bg-slate-100 rounded w-1/2" />
               </div>
             ))}
           </div>
@@ -268,9 +268,9 @@ export default function Dashboard() {
 
         {filteredEquipment.length === 0 && !loadingEquipment && (
           <div className="text-center py-16">
-            <Cpu className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-400">No equipment found</h3>
-            <p className="text-sm text-slate-500">Add equipment to start monitoring</p>
+            <Cpu className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-slate-600">No equipment found</h3>
+            <p className="text-sm text-slate-400">Add equipment to start monitoring</p>
           </div>
         )}
       </main>
