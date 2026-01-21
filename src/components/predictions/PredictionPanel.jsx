@@ -70,10 +70,10 @@ export default function PredictionPanel({ equipment, sensorReadings, onPredictio
 
   const getRiskColor = (level) => {
     const colors = {
-      low: 'text-emerald-400',
-      medium: 'text-amber-400',
-      high: 'text-orange-400',
-      critical: 'text-rose-400'
+      low: 'text-emerald-600 bg-emerald-50 border-emerald-200',
+      medium: 'text-amber-600 bg-amber-50 border-amber-200',
+      high: 'text-orange-600 bg-orange-50 border-orange-200',
+      critical: 'text-rose-600 bg-rose-50 border-rose-200'
     };
     return colors[level] || colors.medium;
   };
@@ -82,22 +82,22 @@ export default function PredictionPanel({ equipment, sensorReadings, onPredictio
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-purple-900/30 to-blue-900/30 rounded-2xl border border-purple-500/20 p-6 backdrop-blur-xl"
+      className="bg-white rounded-xl border border-slate-200 p-6"
     >
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-3 bg-purple-500/20 rounded-xl">
-            <Brain className="w-6 h-6 text-purple-400" />
+          <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center">
+            <Brain className="w-5 h-5 text-indigo-600" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-white">AI Prediction Engine</h3>
-            <p className="text-sm text-slate-400">Advanced failure prediction analysis</p>
+            <h3 className="text-lg font-semibold text-slate-900">AI Prediction Engine</h3>
+            <p className="text-sm text-slate-500">Advanced failure prediction analysis</p>
           </div>
         </div>
         <Button
           onClick={runPrediction}
           disabled={isAnalyzing}
-          className="bg-purple-600 hover:bg-purple-700"
+          className="bg-indigo-600 hover:bg-indigo-700"
         >
           {isAnalyzing ? (
             <>
@@ -117,10 +117,10 @@ export default function PredictionPanel({ equipment, sensorReadings, onPredictio
         <div className="py-8">
           <div className="flex flex-col items-center justify-center">
             <div className="relative">
-              <div className="w-20 h-20 rounded-full border-4 border-purple-500/30 animate-pulse" />
-              <Brain className="w-10 h-10 text-purple-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse" />
+              <div className="w-20 h-20 rounded-full border-4 border-indigo-200 animate-pulse" />
+              <Brain className="w-10 h-10 text-indigo-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse" />
             </div>
-            <p className="text-slate-400 mt-4">Analyzing sensor patterns...</p>
+            <p className="text-slate-600 mt-4">Analyzing sensor patterns...</p>
             <p className="text-xs text-slate-500">Running predictive models</p>
           </div>
         </div>
@@ -133,62 +133,62 @@ export default function PredictionPanel({ equipment, sensorReadings, onPredictio
           className="space-y-6"
         >
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-slate-800/50 rounded-xl p-4 text-center">
+            <div className="bg-slate-50 rounded-xl p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <AlertTriangle className={`w-5 h-5 ${getRiskColor(prediction.risk_level)}`} />
               </div>
-              <p className="text-2xl font-bold text-white">{prediction.failure_probability}%</p>
-              <p className="text-xs text-slate-400">Failure Probability</p>
+              <p className="text-2xl font-bold text-slate-900">{prediction.failure_probability}%</p>
+              <p className="text-xs text-slate-500">Failure Probability</p>
             </div>
-            <div className="bg-slate-800/50 rounded-xl p-4 text-center">
+            <div className="bg-slate-50 rounded-xl p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <Clock className="w-5 h-5 text-blue-400" />
+                <Clock className="w-5 h-5 text-blue-600" />
               </div>
-              <p className="text-2xl font-bold text-white">{prediction.remaining_useful_life_days}</p>
-              <p className="text-xs text-slate-400">Days RUL</p>
+              <p className="text-2xl font-bold text-slate-900">{prediction.remaining_useful_life_days}</p>
+              <p className="text-xs text-slate-500">Days RUL</p>
             </div>
-            <div className="bg-slate-800/50 rounded-xl p-4 text-center">
+            <div className="bg-slate-50 rounded-xl p-4 text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
               </div>
-              <p className="text-2xl font-bold text-white">{prediction.confidence_score}%</p>
-              <p className="text-xs text-slate-400">Confidence</p>
+              <p className="text-2xl font-bold text-slate-900">{prediction.confidence_score}%</p>
+              <p className="text-xs text-slate-500">Confidence</p>
             </div>
           </div>
 
           <div>
-            <p className="text-sm font-medium text-slate-400 mb-2">Risk Level</p>
-            <Badge className={`${getRiskColor(prediction.risk_level)} bg-slate-800/50 capitalize text-sm px-3 py-1`}>
+            <p className="text-sm font-medium text-slate-600 mb-2">Risk Level</p>
+            <Badge className={`${getRiskColor(prediction.risk_level)} capitalize text-sm px-3 py-1`}>
               {prediction.risk_level} Risk
             </Badge>
           </div>
 
           {prediction.primary_failure_mode && (
             <div>
-              <p className="text-sm font-medium text-slate-400 mb-2">Primary Failure Mode</p>
-              <p className="text-white bg-slate-800/50 rounded-lg p-3 text-sm">{prediction.primary_failure_mode}</p>
+              <p className="text-sm font-medium text-slate-600 mb-2">Primary Failure Mode</p>
+              <p className="text-slate-800 bg-slate-50 rounded-lg p-3 text-sm">{prediction.primary_failure_mode}</p>
             </div>
           )}
 
           {prediction.analysis_summary && (
             <div>
-              <p className="text-sm font-medium text-slate-400 mb-2">Analysis Summary</p>
-              <p className="text-slate-300 bg-slate-800/50 rounded-lg p-3 text-sm">{prediction.analysis_summary}</p>
+              <p className="text-sm font-medium text-slate-600 mb-2">Analysis Summary</p>
+              <p className="text-slate-700 bg-slate-50 rounded-lg p-3 text-sm">{prediction.analysis_summary}</p>
             </div>
           )}
 
           {/* Advanced Metrics */}
           {prediction.anomaly_score !== undefined && (
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-slate-800/50 rounded-lg p-3">
-                <p className="text-xs text-slate-400 mb-1">Anomaly Score</p>
-                <p className="text-xl font-bold text-white">{prediction.anomaly_score.toFixed(1)}/100</p>
-                <p className="text-xs text-amber-400 capitalize mt-1">{prediction.anomaly_assessment}</p>
+              <div className="bg-slate-50 rounded-lg p-3">
+                <p className="text-xs text-slate-500 mb-1">Anomaly Score</p>
+                <p className="text-xl font-bold text-slate-900">{prediction.anomaly_score.toFixed(1)}/100</p>
+                <p className="text-xs text-amber-600 capitalize mt-1">{prediction.anomaly_assessment}</p>
               </div>
               {prediction.estimated_cost_of_failure && (
-                <div className="bg-slate-800/50 rounded-lg p-3">
-                  <p className="text-xs text-slate-400 mb-1">Estimated Failure Cost</p>
-                  <p className="text-xl font-bold text-rose-400">${(prediction.estimated_cost_of_failure / 1000).toFixed(0)}K</p>
+                <div className="bg-slate-50 rounded-lg p-3">
+                  <p className="text-xs text-slate-500 mb-1">Estimated Failure Cost</p>
+                  <p className="text-xl font-bold text-rose-600">${(prediction.estimated_cost_of_failure / 1000).toFixed(0)}K</p>
                   <p className="text-xs text-slate-500 mt-1">If unaddressed</p>
                 </div>
               )}
@@ -197,15 +197,15 @@ export default function PredictionPanel({ equipment, sensorReadings, onPredictio
 
           {prediction.rul_confidence_interval && (
             <div>
-              <p className="text-sm font-medium text-slate-400 mb-2">RUL Confidence Interval ({(prediction.rul_confidence_interval.confidence_level * 100)}%)</p>
-              <div className="bg-slate-800/50 rounded-lg p-3">
+              <p className="text-sm font-medium text-slate-600 mb-2">RUL Confidence Interval ({(prediction.rul_confidence_interval.confidence_level * 100)}%)</p>
+              <div className="bg-slate-50 rounded-lg p-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">Lower Bound:</span>
-                  <span className="text-white font-medium">{prediction.rul_confidence_interval.lower} days</span>
+                  <span className="text-slate-500">Lower Bound:</span>
+                  <span className="text-slate-900 font-medium">{prediction.rul_confidence_interval.lower} days</span>
                 </div>
                 <div className="flex justify-between text-sm mt-2">
-                  <span className="text-slate-400">Upper Bound:</span>
-                  <span className="text-white font-medium">{prediction.rul_confidence_interval.upper} days</span>
+                  <span className="text-slate-500">Upper Bound:</span>
+                  <span className="text-slate-900 font-medium">{prediction.rul_confidence_interval.upper} days</span>
                 </div>
               </div>
             </div>
@@ -213,10 +213,10 @@ export default function PredictionPanel({ equipment, sensorReadings, onPredictio
 
           {prediction.optimal_maintenance_window && (
             <div>
-              <p className="text-sm font-medium text-slate-400 mb-2">Optimal Maintenance Window</p>
-              <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
-                <p className="text-white font-medium capitalize">{prediction.optimal_maintenance_window.urgency} Priority</p>
-                <p className="text-sm text-slate-300 mt-1">
+              <p className="text-sm font-medium text-slate-600 mb-2">Optimal Maintenance Window</p>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <p className="text-slate-900 font-medium capitalize">{prediction.optimal_maintenance_window.urgency} Priority</p>
+                <p className="text-sm text-slate-600 mt-1">
                   Schedule between {prediction.optimal_maintenance_window.start_days}-{prediction.optimal_maintenance_window.end_days} days
                 </p>
               </div>
@@ -225,17 +225,17 @@ export default function PredictionPanel({ equipment, sensorReadings, onPredictio
 
           {prediction.failure_modes && Object.keys(prediction.failure_modes).length > 0 && (
             <div>
-              <p className="text-sm font-medium text-slate-400 mb-2">Likely Failure Modes</p>
+              <p className="text-sm font-medium text-slate-600 mb-2">Likely Failure Modes</p>
               <div className="space-y-2">
                 {Object.entries(prediction.failure_modes)
                   .sort((a, b) => b[1] - a[1])
                   .map(([mode, probability], idx) => (
-                    <div key={idx} className="bg-slate-800/50 rounded-lg p-3">
+                    <div key={idx} className="bg-slate-50 rounded-lg p-3">
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-sm text-white capitalize">{mode.replace(/_/g, ' ')}</span>
-                        <span className="text-sm font-medium text-amber-400">{probability}%</span>
+                        <span className="text-sm text-slate-900 capitalize">{mode.replace(/_/g, ' ')}</span>
+                        <span className="text-sm font-medium text-amber-600">{probability}%</span>
                       </div>
-                      <div className="w-full bg-slate-700 rounded-full h-1.5">
+                      <div className="w-full bg-slate-200 rounded-full h-1.5">
                         <div 
                           className="bg-amber-500 h-1.5 rounded-full"
                           style={{ width: `${probability}%` }}
@@ -249,11 +249,11 @@ export default function PredictionPanel({ equipment, sensorReadings, onPredictio
 
           {prediction.risk_factors && prediction.risk_factors.length > 0 && (
             <div>
-              <p className="text-sm font-medium text-slate-400 mb-2">Risk Factors</p>
+              <p className="text-sm font-medium text-slate-600 mb-2">Risk Factors</p>
               <div className="space-y-2">
                 {prediction.risk_factors.map((factor, idx) => (
-                  <div key={idx} className="flex items-start gap-2 text-sm text-slate-300 bg-slate-800/50 rounded-lg p-2">
-                    <TrendingDown className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" />
+                  <div key={idx} className="flex items-start gap-2 text-sm text-slate-700 bg-slate-50 rounded-lg p-2">
+                    <TrendingDown className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
                     {factor}
                   </div>
                 ))}
@@ -263,23 +263,23 @@ export default function PredictionPanel({ equipment, sensorReadings, onPredictio
 
           {prediction.model_performance && (
             <div>
-              <p className="text-sm font-medium text-slate-400 mb-2">Model Performance Metrics</p>
-              <div className="grid grid-cols-2 gap-2 bg-slate-800/50 rounded-lg p-3">
+              <p className="text-sm font-medium text-slate-600 mb-2">Model Performance Metrics</p>
+              <div className="grid grid-cols-2 gap-2 bg-slate-50 rounded-lg p-3">
                 <div>
-                  <p className="text-xs text-slate-400">Accuracy</p>
-                  <p className="text-sm font-medium text-emerald-400">{prediction.model_performance.accuracy}%</p>
+                  <p className="text-xs text-slate-500">Accuracy</p>
+                  <p className="text-sm font-medium text-emerald-600">{prediction.model_performance.accuracy}%</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Precision</p>
-                  <p className="text-sm font-medium text-emerald-400">{prediction.model_performance.precision}%</p>
+                  <p className="text-xs text-slate-500">Precision</p>
+                  <p className="text-sm font-medium text-emerald-600">{prediction.model_performance.precision}%</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Recall</p>
-                  <p className="text-sm font-medium text-emerald-400">{prediction.model_performance.recall}%</p>
+                  <p className="text-xs text-slate-500">Recall</p>
+                  <p className="text-sm font-medium text-emerald-600">{prediction.model_performance.recall}%</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">F1 Score</p>
-                  <p className="text-sm font-medium text-emerald-400">{prediction.model_performance.f1_score}%</p>
+                  <p className="text-xs text-slate-500">F1 Score</p>
+                  <p className="text-sm font-medium text-emerald-600">{prediction.model_performance.f1_score}%</p>
                 </div>
               </div>
             </div>
@@ -287,11 +287,11 @@ export default function PredictionPanel({ equipment, sensorReadings, onPredictio
 
           {prediction.recommended_actions && prediction.recommended_actions.length > 0 && (
             <div>
-              <p className="text-sm font-medium text-slate-400 mb-2">Recommended Actions</p>
+              <p className="text-sm font-medium text-slate-600 mb-2">Recommended Actions</p>
               <div className="space-y-2">
                 {prediction.recommended_actions.map((action, idx) => (
-                  <div key={idx} className="flex items-start gap-2 text-sm text-slate-300 bg-emerald-900/20 border border-emerald-500/20 rounded-lg p-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <div key={idx} className="flex items-start gap-2 text-sm text-slate-700 bg-emerald-50 border border-emerald-200 rounded-lg p-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
                     {action}
                   </div>
                 ))}
@@ -302,10 +302,10 @@ export default function PredictionPanel({ equipment, sensorReadings, onPredictio
       )}
 
       {!prediction && !isAnalyzing && (
-        <div className="text-center py-8 text-slate-400">
-          <Brain className="w-12 h-12 mx-auto mb-3 opacity-50" />
+        <div className="text-center py-8 text-slate-500">
+          <Brain className="w-12 h-12 mx-auto mb-3 text-slate-300" />
           <p>Click "Run Analysis" to generate AI-powered predictions</p>
-          <p className="text-xs text-slate-500 mt-1">Uses advanced machine learning models</p>
+          <p className="text-xs text-slate-400 mt-1">Uses advanced machine learning models</p>
         </div>
       )}
     </motion.div>
