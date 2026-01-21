@@ -4,7 +4,8 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Activity, TrendingUp, AlertTriangle, Clock, Brain, BarChart3, 
-  PieChart as PieChartIcon, Calendar, Target, Zap, DollarSign
+  PieChart as PieChartIcon, Calendar, Target, Zap, DollarSign,
+  Package, Users, Search, Award
 } from 'lucide-react';
 import { 
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, 
@@ -15,6 +16,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MetricCard from '@/components/dashboard/MetricCard';
 import CostOptimizationModule from '@/components/analytics/CostOptimizationModule';
+import RULVisualization from '@/components/analytics/RULVisualization';
+import SparePartsInventory from '@/components/inventory/SparePartsInventory';
+import RootCausePanel from '@/components/analytics/RootCausePanel';
+import ResourceOptimizer from '@/components/analytics/ResourceOptimizer';
+import BenchmarkDashboard from '@/components/analytics/BenchmarkDashboard';
 
 export default function Analytics() {
   const [timeRange, setTimeRange] = useState('30d');
@@ -37,6 +43,11 @@ export default function Analytics() {
   const { data: predictions = [] } = useQuery({
     queryKey: ['predictions'],
     queryFn: () => base44.entities.PredictionLog.list('-created_date', 200),
+  });
+
+  const { data: workOrders = [] } = useQuery({
+    queryKey: ['workOrders'],
+    queryFn: () => base44.entities.WorkOrder.list('-created_date', 200),
   });
 
   // Calculate metrics
@@ -152,12 +163,32 @@ export default function Analytics() {
 
         {/* Tabs */}
         <Tabs defaultValue="overview" className="mb-8">
-          <TabsList className="bg-white border border-slate-200">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-blue-600">
+          <TabsList className="bg-white border border-slate-200 flex-wrap h-auto p-1">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
               <BarChart3 className="w-4 h-4 mr-2" />
               Overview
             </TabsTrigger>
-            <TabsTrigger value="optimization" className="data-[state=active]:bg-blue-600">
+            <TabsTrigger value="predictions" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <Brain className="w-4 h-4 mr-2" />
+              RUL & Predictions
+            </TabsTrigger>
+            <TabsTrigger value="rootcause" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <Search className="w-4 h-4 mr-2" />
+              Root Cause
+            </TabsTrigger>
+            <TabsTrigger value="resources" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <Users className="w-4 h-4 mr-2" />
+              Resources
+            </TabsTrigger>
+            <TabsTrigger value="inventory" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <Package className="w-4 h-4 mr-2" />
+              Spare Parts
+            </TabsTrigger>
+            <TabsTrigger value="benchmarks" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <Award className="w-4 h-4 mr-2" />
+              Benchmarks
+            </TabsTrigger>
+            <TabsTrigger value="optimization" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
               <DollarSign className="w-4 h-4 mr-2" />
               Cost Optimization
             </TabsTrigger>
@@ -401,6 +432,43 @@ export default function Analytics() {
             </div>
           </motion.div>
         </div>
+          </TabsContent>
+
+          <TabsContent value="predictions" className="mt-6">
+            <RULVisualization 
+              equipment={equipment}
+              predictions={predictions}
+            />
+          </TabsContent>
+
+          <TabsContent value="rootcause" className="mt-6">
+            <RootCausePanel 
+              equipment={equipment}
+              alerts={alerts}
+            />
+          </TabsContent>
+
+          <TabsContent value="resources" className="mt-6">
+            <ResourceOptimizer 
+              workOrders={workOrders}
+              maintenanceTasks={tasks}
+              equipment={equipment}
+            />
+          </TabsContent>
+
+          <TabsContent value="inventory" className="mt-6">
+            <SparePartsInventory 
+              workOrders={workOrders}
+              maintenanceTasks={tasks}
+            />
+          </TabsContent>
+
+          <TabsContent value="benchmarks" className="mt-6">
+            <BenchmarkDashboard 
+              equipment={equipment}
+              workOrders={workOrders}
+              maintenanceTasks={tasks}
+            />
           </TabsContent>
 
           <TabsContent value="optimization" className="mt-6">
