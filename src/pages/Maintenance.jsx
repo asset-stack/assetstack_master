@@ -85,73 +85,17 @@ export default function Maintenance() {
   const generateAIRecommendations = async () => {
     setIsGenerating(true);
     try {
-      const atRiskEquipment = equipment.filter(e => 
-        e.risk_level === 'high' || e.risk_level === 'critical' || 
-        e.health_score < 70 || e.failure_probability > 30
-      );
-
-      if (atRiskEquipment.length === 0) {
-        alert('No at-risk equipment found');
-        setIsGenerating(false);
-        return;
+      const result = await base44.functions.invoke('autoGenerateTasks', {});
+      
+      if (result.data.success) {
+        queryClient.invalidateQueries(['tasks']);
+        alert(`Successfully generated ${result.data.tasksGenerated} AI-recommended tasks`);
+      } else {
+        alert('No tasks were generated. All at-risk equipment may already have scheduled tasks.');
       }
-
-      for (const eq of atRiskEquipment.slice(0, 5)) {
-        const prompt = `Generate a predictive maintenance task recommendation for this equipment:
-- Name: ${eq.name}
-- Type: ${eq.type}
-- Health Score: ${eq.health_score}%
-- Risk Level: ${eq.risk_level}
-- Failure Probability: ${eq.failure_probability}%
-- Operating Hours: ${eq.operating_hours}
-- Last Maintenance: ${eq.last_maintenance_date || 'Unknown'}
-
-Provide a specific, actionable maintenance task recommendation.`;
-
-        const result = await base44.integrations.Core.InvokeLLM({
-          prompt,
-          response_json_schema: {
-            type: "object",
-            properties: {
-              title: { type: "string", description: "Brief task title" },
-              description: { type: "string", description: "Detailed task description" },
-              priority: { type: "string", enum: ["low", "medium", "high", "urgent"] },
-              estimated_duration_hours: { type: "number" },
-              parts_required: { type: "array", items: { type: "string" } },
-              cost_estimate: { type: "number" }
-            },
-            required: ["title", "description", "priority"]
-          }
-        });
-
-        const scheduledDate = new Date();
-        if (result.priority === 'urgent') {
-          scheduledDate.setDate(scheduledDate.getDate() + 1);
-        } else if (result.priority === 'high') {
-          scheduledDate.setDate(scheduledDate.getDate() + 3);
-        } else {
-          scheduledDate.setDate(scheduledDate.getDate() + 7);
-        }
-
-        await base44.entities.MaintenanceTask.create({
-          equipment_id: eq.id,
-          title: result.title,
-          description: result.description,
-          type: 'predictive',
-          priority: result.priority,
-          status: 'scheduled',
-          scheduled_date: scheduledDate.toISOString().split('T')[0],
-          estimated_duration_hours: result.estimated_duration_hours || 2,
-          parts_required: result.parts_required || [],
-          cost_estimate: result.cost_estimate || 0,
-          ai_recommended: true,
-          ai_confidence: 85
-        });
-      }
-
-      queryClient.invalidateQueries(['tasks']);
     } catch (error) {
       console.error('Error generating recommendations:', error);
+      alert('Failed to generate tasks. Please try again.');
     } finally {
       setIsGenerating(false);
     }
@@ -162,19 +106,43 @@ Provide a specific, actionable maintenance task recommendation.`;
     return acc;
   }, {});
 
-  const filteredTasks = tasks.filter(t => {
-    const matchesSearch = !searchQuery || 
-      t.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      equipmentMap[t.equipment_id]?.name?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = filterType === 'all' || t.type === filterType;
-    const matchesPriority = filterPriority === 'all' || t.priority === filterPriority;
-    const matchesTab = 
-      (activeTab === 'scheduled' && (t.status === 'scheduled' || t.status === 'in_progress')) ||
-      (activeTab === 'overdue' && t.status === 'overdue') ||
-      (activeTab === 'completed' && t.status === 'completed') ||
-      (activeTab === 'all');
-    return matchesSearch && matchesType && matchesPriority && matchesTab;
-  });
+  const filteredTasks = tasks
+    .filter(t => {
+      const matchesSearch = !searchQuery || 
+        t.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        equipmentMap[t.equipment_id]?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesType = filterType === 'all' || t.type === filterType;
+      const matchesPriority = filterPriority === 'all' || t.priority === filterPriority;
+      const matchesTab = 
+        (activeTab === 'scheduled' && (t.status === 'scheduled' || t.status === 'in_progress')) ||
+        (activeTab === 'overdue' && t.status === 'overdue') ||
+        (activeTab === 'completed' && t.status === 'completed') ||
+        (activeTab === 'all');
+      return matchesSearch && matchesType && matchesPriority && matchesTab;
+    })
+    .sort((a, b) => {
+      // Priority sorting
+      const priorityOrder = { urgent: 1, high: 2, medium: 3, low: 4 };
+      const priorityA = priorityOrder[a.priority] || 5;
+      const priorityB = priorityOrder[b.priority] || 5;
+      
+      // Criticality sorting
+      const criticalityOrder = { mission_critical: 1, high: 2, medium: 3, low: 4 };
+      const eqA = equipmentMap[a.equipment_id];
+      const eqB = equipmentMap[b.equipment_id];
+      const criticalityA = criticalityOrder[eqA?.criticality] || 5;
+      const criticalityB = criticalityOrder[eqB?.criticality] || 5;
+      
+      // AI recommended first
+      if (a.ai_recommended && !b.ai_recommended) return -1;
+      if (!a.ai_recommended && b.ai_recommended) return 1;
+      
+      // Then by criticality
+      if (criticalityA !== criticalityB) return criticalityA - criticalityB;
+      
+      // Then by priority
+      return priorityA - priorityB;
+    });
 
   const scheduledCount = tasks.filter(t => t.status === 'scheduled' || t.status === 'in_progress').length;
   const overdueCount = tasks.filter(t => t.status === 'overdue').length;
