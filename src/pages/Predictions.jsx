@@ -10,9 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from 'date-fns';
 import PredictionPanel from '@/components/predictions/PredictionPanel';
 import HealthGauge from '@/components/dashboard/HealthGauge';
+import FailurePredictionModule from '@/components/predictions/FailurePredictionModule';
 
 export default function Predictions() {
   const [selectedEquipment, setSelectedEquipment] = useState(null);
@@ -187,9 +189,29 @@ export default function Predictions() {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Equipment List */}
-          <div className="lg:col-span-1">
+        <Tabs defaultValue="fleet" className="mb-6">
+          <TabsList className="bg-slate-900/50 border border-slate-700">
+            <TabsTrigger value="fleet" className="data-[state=active]:bg-purple-600">
+              <Brain className="w-4 h-4 mr-2" />
+              Fleet Analysis
+            </TabsTrigger>
+            <TabsTrigger value="individual" className="data-[state=active]:bg-purple-600">
+              <Cpu className="w-4 h-4 mr-2" />
+              Individual Asset
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="fleet" className="mt-6">
+            <FailurePredictionModule 
+              equipment={equipment}
+              onPredictionComplete={() => queryClient.invalidateQueries(['equipment', 'predictions'])}
+            />
+          </TabsContent>
+
+          <TabsContent value="individual" className="mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Equipment List */}
+              <div className="lg:col-span-1">
             <div className="bg-slate-900/50 rounded-2xl border border-slate-700/50 overflow-hidden">
               <div className="p-4 border-b border-slate-700/50">
                 <h3 className="text-lg font-semibold text-white">Select Equipment</h3>
@@ -347,6 +369,8 @@ export default function Predictions() {
             )}
           </div>
         </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
