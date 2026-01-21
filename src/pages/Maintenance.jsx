@@ -58,6 +58,11 @@ export default function Maintenance() {
     queryFn: () => base44.entities.WorkOrder.list('-created_date', 200),
   });
 
+  const { data: alerts = [] } = useQuery({
+    queryKey: ['alerts'],
+    queryFn: () => base44.entities.Alert.list('-created_date', 100),
+  });
+
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.MaintenanceTask.create(data),
     onSuccess: () => {
@@ -371,6 +376,8 @@ export default function Maintenance() {
           <WorkOrderList
             workOrders={workOrders}
             equipment={equipment}
+            alerts={alerts}
+            tasks={tasks}
             onCreateWorkOrder={handleCreateWorkOrder}
             onUpdateWorkOrder={handleUpdateWorkOrder}
             onStatusChange={handleWorkOrderStatusChange}
