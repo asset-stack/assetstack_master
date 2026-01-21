@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Activity, TrendingUp, AlertTriangle, Clock, Brain, BarChart3, 
-  PieChart as PieChartIcon, Calendar, Target, Zap
+  PieChart as PieChartIcon, Calendar, Target, Zap, DollarSign
 } from 'lucide-react';
 import { 
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, 
@@ -12,7 +12,9 @@ import {
   ResponsiveContainer, Legend, RadialBarChart, RadialBar
 } from 'recharts';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MetricCard from '@/components/dashboard/MetricCard';
+import CostOptimizationModule from '@/components/analytics/CostOptimizationModule';
 
 export default function Analytics() {
   const [timeRange, setTimeRange] = useState('30d');
@@ -148,15 +150,29 @@ export default function Analytics() {
           </Select>
         </div>
 
-        {/* Metrics */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-          <MetricCard title="Fleet Health" value={`${avgHealth}%`} icon={Activity} color="green" />
-          <MetricCard title="At Risk Assets" value={criticalAssets} icon={AlertTriangle} color="amber" />
-          <MetricCard title="Pending Tasks" value={pendingTasks} icon={Clock} color="blue" />
-          <MetricCard title="Completed" value={completedTasks} icon={Target} color="green" />
-          <MetricCard title="Active Alerts" value={alerts.filter(a => a.status === 'active').length} icon={Zap} color="rose" />
-          <MetricCard title="AI Confidence" value={`${avgPredictionConfidence}%`} icon={Brain} color="purple" />
-        </div>
+        {/* Tabs */}
+        <Tabs defaultValue="overview" className="mb-8">
+          <TabsList className="bg-slate-900/50 border border-slate-700">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-blue-600">
+              <BarChart3 className="w-4 h-4 mr-2" />
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="optimization" className="data-[state=active]:bg-blue-600">
+              <DollarSign className="w-4 h-4 mr-2" />
+              Cost Optimization
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="mt-6">
+            {/* Metrics */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+              <MetricCard title="Fleet Health" value={`${avgHealth}%`} icon={Activity} color="green" />
+              <MetricCard title="At Risk Assets" value={criticalAssets} icon={AlertTriangle} color="amber" />
+              <MetricCard title="Pending Tasks" value={pendingTasks} icon={Clock} color="blue" />
+              <MetricCard title="Completed" value={completedTasks} icon={Target} color="green" />
+              <MetricCard title="Active Alerts" value={alerts.filter(a => a.status === 'active').length} icon={Zap} color="rose" />
+              <MetricCard title="AI Confidence" value={`${avgPredictionConfidence}%`} icon={Brain} color="purple" />
+            </div>
 
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -385,6 +401,16 @@ export default function Analytics() {
             </div>
           </motion.div>
         </div>
+          </TabsContent>
+
+          <TabsContent value="optimization" className="mt-6">
+            <CostOptimizationModule 
+              equipment={equipment}
+              predictions={predictions}
+              tasks={tasks}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
