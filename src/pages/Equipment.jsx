@@ -129,10 +129,10 @@ export default function Equipment() {
 
   const getRiskBadge = (risk) => {
     const configs = {
-      low: 'bg-emerald-500/20 text-emerald-400',
-      medium: 'bg-amber-500/20 text-amber-400',
-      high: 'bg-orange-500/20 text-orange-400',
-      critical: 'bg-rose-500/20 text-rose-400'
+      low: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      medium: 'bg-amber-50 text-amber-700 border-amber-200',
+      high: 'bg-orange-50 text-orange-700 border-orange-200',
+      critical: 'bg-rose-50 text-rose-700 border-rose-200'
     };
     return configs[risk] || configs.low;
   };
@@ -143,38 +143,38 @@ export default function Equipment() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-white">Equipment Management</h1>
-            <p className="text-sm text-slate-400">{equipment.length} total assets registered</p>
+            <h1 className="text-2xl font-semibold text-slate-900">Equipment Management</h1>
+            <p className="text-sm text-slate-500">{equipment.length} total assets registered</p>
           </div>
           <div className="flex items-center gap-3">
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button className="bg-indigo-600 hover:bg-indigo-700">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Equipment
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-slate-900 border-slate-700 text-white max-w-2xl">
+              <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-2xl">
                 <DialogHeader>
                   <DialogTitle>Add New Equipment</DialogTitle>
                 </DialogHeader>
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <div className="space-y-2">
-                    <Label>Name *</Label>
+                    <Label className="text-slate-700">Name *</Label>
                     <Input
                       value={newEquipment.name}
                       onChange={(e) => setNewEquipment({ ...newEquipment, name: e.target.value })}
                       placeholder="Equipment name"
-                      className="bg-slate-800 border-slate-700"
+                      className="bg-white border-slate-200"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Type *</Label>
+                    <Label className="text-slate-700">Type *</Label>
                     <Select value={newEquipment.type} onValueChange={(v) => setNewEquipment({ ...newEquipment, type: v })}>
-                      <SelectTrigger className="bg-slate-800 border-slate-700">
+                      <SelectTrigger className="bg-white border-slate-200">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
+                      <SelectContent className="bg-white border-slate-200">
                         {EQUIPMENT_TYPES.map(type => (
                           <SelectItem key={type} value={type} className="capitalize">
                             {type.replace(/_/g, ' ')}
@@ -184,57 +184,57 @@ export default function Equipment() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>Location *</Label>
+                    <Label className="text-slate-700">Location *</Label>
                     <Input
                       value={newEquipment.location}
                       onChange={(e) => setNewEquipment({ ...newEquipment, location: e.target.value })}
                       placeholder="Building/Zone"
-                      className="bg-slate-800 border-slate-700"
+                      className="bg-white border-slate-200"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Manufacturer</Label>
+                    <Label className="text-slate-700">Manufacturer</Label>
                     <Input
                       value={newEquipment.manufacturer}
                       onChange={(e) => setNewEquipment({ ...newEquipment, manufacturer: e.target.value })}
                       placeholder="Manufacturer"
-                      className="bg-slate-800 border-slate-700"
+                      className="bg-white border-slate-200"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Model</Label>
+                    <Label className="text-slate-700">Model</Label>
                     <Input
                       value={newEquipment.model}
                       onChange={(e) => setNewEquipment({ ...newEquipment, model: e.target.value })}
                       placeholder="Model number"
-                      className="bg-slate-800 border-slate-700"
+                      className="bg-white border-slate-200"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Serial Number</Label>
+                    <Label className="text-slate-700">Serial Number</Label>
                     <Input
                       value={newEquipment.serial_number}
                       onChange={(e) => setNewEquipment({ ...newEquipment, serial_number: e.target.value })}
                       placeholder="Serial number"
-                      className="bg-slate-800 border-slate-700"
+                      className="bg-white border-slate-200"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Installation Date</Label>
+                    <Label className="text-slate-700">Installation Date</Label>
                     <Input
                       type="date"
                       value={newEquipment.installation_date}
                       onChange={(e) => setNewEquipment({ ...newEquipment, installation_date: e.target.value })}
-                      className="bg-slate-800 border-slate-700"
+                      className="bg-white border-slate-200"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Criticality</Label>
+                    <Label className="text-slate-700">Criticality</Label>
                     <Select value={newEquipment.criticality} onValueChange={(v) => setNewEquipment({ ...newEquipment, criticality: v })}>
-                      <SelectTrigger className="bg-slate-800 border-slate-700">
+                      <SelectTrigger className="bg-white border-slate-200">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-slate-800 border-slate-700">
+                      <SelectContent className="bg-white border-slate-200">
                         <SelectItem value="low">Low</SelectItem>
                         <SelectItem value="medium">Medium</SelectItem>
                         <SelectItem value="high">High</SelectItem>
@@ -244,13 +244,13 @@ export default function Equipment() {
                   </div>
                 </div>
                 <div className="flex justify-end gap-3 mt-6">
-                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="border-slate-700">
+                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="border-slate-200">
                     Cancel
                   </Button>
                   <Button 
                     onClick={() => createMutation.mutate(newEquipment)}
                     disabled={!newEquipment.name || !newEquipment.location || createMutation.isPending}
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="bg-indigo-600 hover:bg-indigo-700"
                   >
                     Add Equipment
                   </Button>
@@ -268,14 +268,14 @@ export default function Equipment() {
               placeholder="Search equipment..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-slate-900/50 border-slate-700 text-white"
+              className="pl-10 bg-white border-slate-200 text-slate-900"
             />
           </div>
           <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className="w-40 bg-slate-900/50 border-slate-700">
+            <SelectTrigger className="w-40 bg-white border-slate-200">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
-            <SelectContent className="bg-slate-800 border-slate-700">
+            <SelectContent className="bg-white border-slate-200">
               <SelectItem value="all">All Types</SelectItem>
               {EQUIPMENT_TYPES.map(type => (
                 <SelectItem key={type} value={type} className="capitalize">
@@ -285,10 +285,10 @@ export default function Equipment() {
             </SelectContent>
           </Select>
           <Select value={filterStatus} onValueChange={setFilterStatus}>
-            <SelectTrigger className="w-40 bg-slate-900/50 border-slate-700">
+            <SelectTrigger className="w-40 bg-white border-slate-200">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
-            <SelectContent className="bg-slate-800 border-slate-700">
+            <SelectContent className="bg-white border-slate-200">
               <SelectItem value="all">All Status</SelectItem>
               <SelectItem value="operational">Operational</SelectItem>
               <SelectItem value="degraded">Degraded</SelectItem>
@@ -298,10 +298,10 @@ export default function Equipment() {
             </SelectContent>
           </Select>
           <Select value={filterRisk} onValueChange={setFilterRisk}>
-            <SelectTrigger className="w-40 bg-slate-900/50 border-slate-700">
+            <SelectTrigger className="w-40 bg-white border-slate-200">
               <SelectValue placeholder="Risk" />
             </SelectTrigger>
-            <SelectContent className="bg-slate-800 border-slate-700">
+            <SelectContent className="bg-white border-slate-200">
               <SelectItem value="all">All Risk</SelectItem>
               <SelectItem value="low">Low</SelectItem>
               <SelectItem value="medium">Medium</SelectItem>
@@ -314,7 +314,7 @@ export default function Equipment() {
               variant={viewMode === 'grid' ? 'default' : 'outline'}
               size="icon"
               onClick={() => setViewMode('grid')}
-              className={viewMode === 'grid' ? 'bg-blue-600' : 'bg-transparent border-slate-700'}
+              className={viewMode === 'grid' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-white border-slate-200 text-slate-600'}
             >
               <Grid3X3 className="w-4 h-4" />
             </Button>
@@ -322,7 +322,7 @@ export default function Equipment() {
               variant={viewMode === 'list' ? 'default' : 'outline'}
               size="icon"
               onClick={() => setViewMode('list')}
-              className={viewMode === 'list' ? 'bg-blue-600' : 'bg-transparent border-slate-700'}
+              className={viewMode === 'list' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-white border-slate-200 text-slate-600'}
             >
               <List className="w-4 h-4" />
             </Button>
@@ -330,7 +330,7 @@ export default function Equipment() {
         </div>
 
         {/* Results count */}
-        <p className="text-sm text-slate-400 mb-4">
+        <p className="text-sm text-slate-500 mb-4">
           Showing {filteredEquipment.length} of {equipment.length} equipment
         </p>
 
@@ -362,17 +362,17 @@ export default function Equipment() {
             })}
           </div>
         ) : (
-          <div className="bg-slate-900/50 rounded-xl border border-slate-700/50 overflow-hidden">
+          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
             <Table>
               <TableHeader>
-                <TableRow className="border-slate-700 hover:bg-transparent">
-                  <TableHead className="text-slate-400">Name</TableHead>
-                  <TableHead className="text-slate-400">Type</TableHead>
-                  <TableHead className="text-slate-400">Location</TableHead>
-                  <TableHead className="text-slate-400">Health</TableHead>
-                  <TableHead className="text-slate-400">Status</TableHead>
-                  <TableHead className="text-slate-400">Risk</TableHead>
-                  <TableHead className="text-slate-400">RUL</TableHead>
+                <TableRow className="border-slate-100 hover:bg-transparent bg-slate-50">
+                  <TableHead className="text-slate-600 font-medium">Name</TableHead>
+                  <TableHead className="text-slate-600 font-medium">Type</TableHead>
+                  <TableHead className="text-slate-600 font-medium">Location</TableHead>
+                  <TableHead className="text-slate-600 font-medium">Health</TableHead>
+                  <TableHead className="text-slate-600 font-medium">Status</TableHead>
+                  <TableHead className="text-slate-600 font-medium">Risk</TableHead>
+                  <TableHead className="text-slate-600 font-medium">RUL</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -381,35 +381,35 @@ export default function Equipment() {
                   return (
                     <TableRow 
                       key={eq.id} 
-                      className={`border-slate-700/50 cursor-pointer hover:bg-slate-800/50 ${hasRecentUpdate ? 'bg-blue-500/5' : ''}`}
+                      className={`border-slate-100 cursor-pointer hover:bg-slate-50 ${hasRecentUpdate ? 'bg-indigo-50' : ''}`}
                       onClick={() => setSelectedEquipment(eq)}
                     >
-                      <TableCell className="font-medium text-white">
+                      <TableCell className="font-medium text-slate-900">
                         <div className="flex items-center gap-2">
                           {hasRecentUpdate && (
                             <motion.div
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
-                              className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"
+                              className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"
                             />
                           )}
                           {eq.name}
                         </div>
                       </TableCell>
-                    <TableCell className="text-slate-400 capitalize">{eq.type?.replace(/_/g, ' ')}</TableCell>
-                    <TableCell className="text-slate-400">{eq.location}</TableCell>
+                    <TableCell className="text-slate-500 capitalize">{eq.type?.replace(/_/g, ' ')}</TableCell>
+                    <TableCell className="text-slate-500">{eq.location}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <div className="w-8">
                           <HealthGauge score={eq.health_score || 0} size={32} label="" />
                         </div>
-                        <span className="text-white">{eq.health_score || 0}%</span>
+                        <span className="text-slate-900">{eq.health_score || 0}%</span>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <span className={`w-2 h-2 rounded-full ${getStatusColor(eq.status)}`} />
-                        <span className="text-slate-300 capitalize">{eq.status}</span>
+                        <span className="text-slate-600 capitalize">{eq.status}</span>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -417,7 +417,7 @@ export default function Equipment() {
                         {eq.risk_level || 'low'}
                       </Badge>
                     </TableCell>
-                      <TableCell className="text-slate-300">
+                      <TableCell className="text-slate-600">
                         {eq.remaining_useful_life_days || 'N/A'} days
                       </TableCell>
                     </TableRow>
@@ -430,9 +430,9 @@ export default function Equipment() {
 
         {filteredEquipment.length === 0 && !isLoading && (
           <div className="text-center py-16">
-            <Cpu className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-400">No equipment found</h3>
-            <p className="text-sm text-slate-500">Try adjusting your filters or add new equipment</p>
+            <Cpu className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-slate-600">No equipment found</h3>
+            <p className="text-sm text-slate-400">Try adjusting your filters or add new equipment</p>
           </div>
         )}
       </div>
