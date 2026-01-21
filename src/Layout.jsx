@@ -4,12 +4,13 @@ import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
-  Settings, Menu, X, ChevronRight, Radio
+  Settings, Menu, X, ChevronRight, Radio, Sparkles
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const navItems = [
   { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
+  { name: 'Setup', icon: Sparkles, page: 'Onboarding' },
   { name: 'Equipment', icon: Cpu, page: 'Equipment' },
   { name: 'Sensors', icon: Radio, page: 'SensorIntegration' },
   { name: 'Maintenance', icon: Wrench, page: 'Maintenance' },
