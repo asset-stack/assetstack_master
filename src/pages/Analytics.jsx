@@ -118,10 +118,10 @@ export default function Analytics() {
         <div className="bg-white border border-slate-200 rounded-lg p-3 shadow-lg">
         <p className="text-slate-500 text-xs mb-1">{label}</p>
         {payload.map((entry, idx) => (
-          <p key={idx} className="text-sm font-medium" style={{ color: entry.color }}
-              {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(1) : entry.value}
-            </p>
-          ))}
+          <p key={idx} className="text-sm font-medium" style={{ color: entry.color }}>
+            {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(1) : entry.value}
+          </p>
+        ))}
         </div>
       );
     }
