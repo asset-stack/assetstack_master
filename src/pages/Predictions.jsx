@@ -88,18 +88,18 @@ export default function Predictions() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Brain className="w-8 h-8 text-purple-400" />
+            <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-3">
+              <Brain className="w-7 h-7 text-indigo-600" />
               Predictive Analytics
             </h1>
-            <p className="text-sm text-slate-400">AI-powered failure prediction and remaining useful life estimation</p>
+            <p className="text-sm text-slate-500 mt-1">AI-powered failure prediction and remaining useful life estimation</p>
           </div>
           <div className="flex items-center gap-3">
             <Select value={filterRisk} onValueChange={setFilterRisk}>
-              <SelectTrigger className="w-40 bg-slate-900/50 border-slate-700">
+              <SelectTrigger className="w-40 bg-white border-slate-200">
                 <SelectValue placeholder="Risk Level" />
               </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
+              <SelectContent className="bg-white border-slate-200">
                 <SelectItem value="all">All Risk Levels</SelectItem>
                 <SelectItem value="low">Low Risk</SelectItem>
                 <SelectItem value="medium">Medium Risk</SelectItem>
@@ -110,7 +110,7 @@ export default function Predictions() {
             <Button 
               variant="outline"
               onClick={() => queryClient.invalidateQueries(['equipment', 'predictions'])}
-              className="border-slate-700 text-slate-400 hover:text-white"
+              className="border-slate-200"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
@@ -123,15 +123,15 @@ export default function Predictions() {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-5"
+            className="bg-white rounded-xl border border-slate-200 p-4"
           >
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-purple-500/20 rounded-xl">
-                <Brain className="w-6 h-6 text-purple-400" />
+              <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
+                <Brain className="w-5 h-5 text-purple-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{predictions.length}</p>
-                <p className="text-xs text-slate-400">Predictions Made</p>
+                <p className="text-2xl font-semibold text-slate-900">{predictions.length}</p>
+                <p className="text-xs text-slate-500">Predictions Made</p>
               </div>
             </div>
           </motion.div>
@@ -139,15 +139,15 @@ export default function Predictions() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-5"
+            className="bg-white rounded-xl border border-slate-200 p-4"
           >
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-rose-500/20 rounded-xl">
-                <AlertTriangle className="w-6 h-6 text-rose-400" />
+              <div className="w-10 h-10 rounded-lg bg-rose-50 flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-rose-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{atRiskEquipment.length}</p>
-                <p className="text-xs text-slate-400">At Risk Assets</p>
+                <p className="text-2xl font-semibold text-rose-600">{atRiskEquipment.length}</p>
+                <p className="text-xs text-slate-500">At Risk Assets</p>
               </div>
             </div>
           </motion.div>
@@ -155,15 +155,15 @@ export default function Predictions() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-5"
+            className="bg-white rounded-xl border border-slate-200 p-4"
           >
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-blue-500/20 rounded-xl">
-                <Cpu className="w-6 h-6 text-blue-400" />
+              <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                <Cpu className="w-5 h-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{equipment.length}</p>
-                <p className="text-xs text-slate-400">Monitored Assets</p>
+                <p className="text-2xl font-semibold text-slate-900">{equipment.length}</p>
+                <p className="text-xs text-slate-500">Monitored Assets</p>
               </div>
             </div>
           </motion.div>
@@ -171,31 +171,31 @@ export default function Predictions() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-5"
+            className="bg-white rounded-xl border border-slate-200 p-4"
           >
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-emerald-500/20 rounded-xl">
-                <Activity className="w-6 h-6 text-emerald-400" />
+              <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center">
+                <Activity className="w-5 h-5 text-emerald-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-2xl font-semibold text-emerald-600">
                   {equipment.length > 0 
                     ? Math.round(equipment.reduce((s, e) => s + (e.health_score || 0), 0) / equipment.length)
                     : 0}%
                 </p>
-                <p className="text-xs text-slate-400">Avg Fleet Health</p>
+                <p className="text-xs text-slate-500">Avg Fleet Health</p>
               </div>
             </div>
           </motion.div>
         </div>
 
         <Tabs defaultValue="fleet" className="mb-6">
-          <TabsList className="bg-slate-900/50 border border-slate-700">
-            <TabsTrigger value="fleet" className="data-[state=active]:bg-purple-600">
+          <TabsList className="bg-white border border-slate-200">
+            <TabsTrigger value="fleet" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
               <Brain className="w-4 h-4 mr-2" />
               Fleet Analysis
             </TabsTrigger>
-            <TabsTrigger value="individual" className="data-[state=active]:bg-purple-600">
+            <TabsTrigger value="individual" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
               <Cpu className="w-4 h-4 mr-2" />
               Individual Asset
             </TabsTrigger>
