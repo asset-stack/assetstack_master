@@ -104,11 +104,11 @@ export default function MLModels() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <Brain className="w-8 h-8 text-purple-400" />
+            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-3">
+              <Brain className="w-8 h-8 text-purple-500" />
               ML Models & Performance
             </h1>
-            <p className="text-sm text-slate-400">Advanced machine learning model management and monitoring</p>
+            <p className="text-sm text-slate-500">Advanced machine learning model management and monitoring</p>
           </div>
           <Button className="bg-purple-600 hover:bg-purple-700">
             <Layers className="w-4 h-4 mr-2" />
@@ -121,14 +121,14 @@ export default function MLModels() {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-5"
+            className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm"
           >
             <div className="flex items-center gap-3">
               <div className="p-3 bg-purple-500/20 rounded-xl">
                 <Brain className="w-6 h-6 text-purple-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{activeModels}</p>
+                <p className="text-2xl font-bold text-slate-900">{activeModels}</p>
                 <p className="text-xs text-slate-400">Active Models</p>
               </div>
             </div>
@@ -138,14 +138,14 @@ export default function MLModels() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-5"
+            className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm"
           >
             <div className="flex items-center gap-3">
               <div className="p-3 bg-blue-500/20 rounded-xl">
                 <Activity className="w-6 h-6 text-blue-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{totalPredictions}</p>
+                <p className="text-2xl font-bold text-slate-900">{totalPredictions}</p>
                 <p className="text-xs text-slate-400">Total Predictions</p>
               </div>
             </div>
@@ -155,14 +155,14 @@ export default function MLModels() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-5"
+            className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm"
           >
             <div className="flex items-center gap-3">
               <div className="p-3 bg-emerald-500/20 rounded-xl">
                 <Target className="w-6 h-6 text-emerald-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{avgConfidence}%</p>
+                <p className="text-2xl font-bold text-slate-900">{avgConfidence}%</p>
                 <p className="text-xs text-slate-400">Avg Confidence</p>
               </div>
             </div>
@@ -172,14 +172,14 @@ export default function MLModels() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-5"
+            className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm"
           >
             <div className="flex items-center gap-3">
               <div className="p-3 bg-amber-500/20 rounded-xl">
                 <Zap className="w-6 h-6 text-amber-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{featureVectorsToday}</p>
+                <p className="text-2xl font-bold text-slate-900">{featureVectorsToday}</p>
                 <p className="text-xs text-slate-400">Features Today</p>
               </div>
             </div>
@@ -189,7 +189,7 @@ export default function MLModels() {
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Model Performance Comparison */}
-          <Card className="bg-slate-900/50 border-slate-700/50">
+          <Card className="bg-white border-slate-200 shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BarChart3 className="w-5 h-5 text-blue-400" />
@@ -218,7 +218,7 @@ export default function MLModels() {
           </Card>
 
           {/* Accuracy Trend */}
-          <Card className="bg-slate-900/50 border-slate-700/50">
+          <Card className="bg-white border-slate-200 shadow-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-emerald-400" />
@@ -248,7 +248,7 @@ export default function MLModels() {
 
         {/* Models Grid */}
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Deployed Models</h2>
+          <h2 className="text-xl font-semibold text-slate-900 mb-4">Deployed Models</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -258,12 +258,12 @@ export default function MLModels() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.05 }}
-              className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-5 hover:border-purple-500/30 transition-all cursor-pointer"
+              className="bg-white rounded-xl border border-slate-200 p-5 hover:border-purple-500/50 hover:shadow-md transition-all cursor-pointer"
               onClick={() => setSelectedModel(model)}
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{model.model_name}</h3>
+                  <h3 className="text-lg font-semibold text-slate-900">{model.model_name}</h3>
                   <p className="text-xs text-slate-400 capitalize">{model.model_type?.replace(/_/g, ' ')}</p>
                 </div>
                 <Badge className={getStatusColor(model.status)}>
@@ -304,18 +304,18 @@ export default function MLModels() {
                 )}
 
                 {model.performance_metrics && (
-                  <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-700/50">
+                  <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-200">
                     <div className="text-center">
                       <p className="text-xs text-slate-500">Precision</p>
-                      <p className="text-sm font-medium text-white">{model.performance_metrics.precision || 'N/A'}</p>
+                      <p className="text-sm font-medium text-slate-900">{model.performance_metrics.precision || 'N/A'}</p>
                     </div>
                     <div className="text-center">
                       <p className="text-xs text-slate-500">Recall</p>
-                      <p className="text-sm font-medium text-white">{model.performance_metrics.recall || 'N/A'}</p>
+                      <p className="text-sm font-medium text-slate-900">{model.performance_metrics.recall || 'N/A'}</p>
                     </div>
                     <div className="text-center">
                       <p className="text-xs text-slate-500">F1</p>
-                      <p className="text-sm font-medium text-white">{model.performance_metrics.f1_score || 'N/A'}</p>
+                      <p className="text-sm font-medium text-slate-900">{model.performance_metrics.f1_score || 'N/A'}</p>
                     </div>
                   </div>
                 )}
