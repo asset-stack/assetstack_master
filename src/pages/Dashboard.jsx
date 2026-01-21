@@ -16,6 +16,7 @@ import AlertsPanel from '@/components/dashboard/AlertsPanel';
 import PredictionChart from '@/components/dashboard/PredictionChart';
 import EquipmentCard from '@/components/dashboard/EquipmentCard';
 import EquipmentDetails from '@/components/equipment/EquipmentDetails';
+import OnboardingBanner from '@/components/onboarding/OnboardingBanner';
 
 export default function Dashboard() {
   const [selectedEquipment, setSelectedEquipment] = useState(null);
@@ -158,6 +159,9 @@ export default function Dashboard() {
       </header>
 
       <main className="px-6 lg:px-8 py-8">
+        {/* Onboarding Banner */}
+        <OnboardingBanner />
+        
         {/* Metrics Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           <MetricCard 
