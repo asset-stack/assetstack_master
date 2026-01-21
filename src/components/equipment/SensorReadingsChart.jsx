@@ -16,8 +16,20 @@ export default function SensorReadingsChart({ sensorType, readings }) {
       flow_rate: { icon: Droplet, color: '#06b6d4', unit: 'L/min', label: 'Flow Rate' },
       rpm: { icon: Settings, color: '#ec4899', unit: 'RPM', label: 'RPM' },
       noise_level: { icon: Volume2, color: '#6366f1', unit: 'dB', label: 'Noise Level' },
+      strain: { icon: Activity, color: '#f97316', unit: 'με', label: 'Strain' },
+      displacement: { icon: Activity, color: '#8b5cf6', unit: 'mm', label: 'Displacement' },
+      crack_width: { icon: Activity, color: '#ef4444', unit: 'mm', label: 'Crack Width' },
+      tilt: { icon: Activity, color: '#f59e0b', unit: '°', label: 'Tilt' },
+      acceleration: { icon: Activity, color: '#06b6d4', unit: 'g', label: 'Acceleration' },
+      corrosion: { icon: Activity, color: '#dc2626', unit: 'mm/year', label: 'Corrosion Rate' },
+      deflection: { icon: Activity, color: '#7c3aed', unit: 'mm', label: 'Deflection' },
+      rail_profile: { icon: Settings, color: '#2563eb', unit: 'mm', label: 'Rail Profile' },
+      track_geometry: { icon: Settings, color: '#059669', unit: 'mm', label: 'Track Geometry' },
+      structural_load: { icon: Gauge, color: '#ea580c', unit: 'kN', label: 'Structural Load' },
+      seismic_activity: { icon: Activity, color: '#be123c', unit: 'g', label: 'Seismic Activity' },
+      wind_speed: { icon: Activity, color: '#0891b2', unit: 'm/s', label: 'Wind Speed' },
     };
-    return configs[type] || { icon: Activity, color: '#64748b', unit: '', label: type };
+    return configs[type] || { icon: Activity, color: '#64748b', unit: '', label: type.replace(/_/g, ' ') };
   };
 
   const config = getSensorConfig(sensorType);

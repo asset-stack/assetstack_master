@@ -20,7 +20,12 @@ import HealthGauge from '@/components/dashboard/HealthGauge';
 
 const EQUIPMENT_TYPES = [
   'motor', 'pump', 'compressor', 'turbine', 'conveyor', 
-  'hvac', 'generator', 'transformer', 'valve', 'heat_exchanger'
+  'hvac', 'generator', 'transformer', 'valve', 'heat_exchanger',
+  'railway_track', 'railway_switch', 'railway_signal',
+  'bridge', 'building', 'tunnel', 'dam', 'power_line',
+  'wind_turbine', 'elevator', 'escalator', 'hvac_system',
+  'fire_suppression', 'water_treatment', 'road_surface',
+  'retaining_wall', 'parking_structure'
 ];
 
 export default function Equipment() {
