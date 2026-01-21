@@ -169,11 +169,11 @@ export default function AIScheduleOptimizer({ equipment = [], tasks = [], onCrea
   };
 
   const getWindowColor = (window) => ({
-    immediate: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
-    urgent: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
-    soon: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
-    routine: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-  }[window] || 'bg-slate-500/20 text-slate-400');
+    immediate: 'bg-rose-50 text-rose-700 border-rose-200',
+    urgent: 'bg-orange-50 text-orange-700 border-orange-200',
+    soon: 'bg-amber-50 text-amber-700 border-amber-200',
+    routine: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+  }[window] || 'bg-slate-100 text-slate-600');
 
   const handleCreateTask = (asset) => {
     if (onCreateTask) {
@@ -194,22 +194,22 @@ export default function AIScheduleOptimizer({ equipment = [], tasks = [], onCrea
   };
 
   return (
-    <div className="bg-slate-900/50 rounded-2xl border border-slate-700/50 overflow-hidden">
-      <div className="p-5 border-b border-slate-700/50">
+    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+      <div className="p-5 border-b border-slate-100">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-xl">
-              <Brain className="w-6 h-6 text-purple-400" />
+            <div className="p-2 bg-gradient-to-br from-violet-100 to-indigo-100 rounded-xl">
+              <Brain className="w-6 h-6 text-violet-600" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white">AI Schedule Optimizer</h3>
-              <p className="text-sm text-slate-400">Optimal maintenance schedule based on predictions</p>
+              <h3 className="text-lg font-semibold text-slate-900">AI Schedule Optimizer</h3>
+              <p className="text-sm text-slate-500">Optimal maintenance schedule based on predictions</p>
             </div>
           </div>
           <Button
             onClick={generateOptimizedSchedule}
             disabled={isOptimizing}
-            className="bg-purple-600 hover:bg-purple-700"
+            className="bg-violet-600 hover:bg-violet-700"
           >
             {isOptimizing ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -223,9 +223,9 @@ export default function AIScheduleOptimizer({ equipment = [], tasks = [], onCrea
 
       {isOptimizing && (
         <div className="p-12 text-center">
-          <Loader2 className="w-12 h-12 text-purple-400 mx-auto mb-4 animate-spin" />
-          <p className="text-white font-medium">Analyzing predictions and optimizing schedule...</p>
-          <p className="text-sm text-slate-400 mt-1">Considering failure risks, costs, and resource allocation</p>
+          <Loader2 className="w-12 h-12 text-violet-600 mx-auto mb-4 animate-spin" />
+          <p className="text-slate-900 font-medium">Analyzing predictions and optimizing schedule...</p>
+          <p className="text-sm text-slate-500 mt-1">Considering failure risks, costs, and resource allocation</p>
         </div>
       )}
 
@@ -233,31 +233,31 @@ export default function AIScheduleOptimizer({ equipment = [], tasks = [], onCrea
         <div className="p-5 space-y-6">
           {/* Summary Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-slate-800/50 rounded-xl p-4 text-center">
-              <Wrench className="w-5 h-5 text-blue-400 mx-auto mb-2" />
-              <p className="text-2xl font-bold text-white">{optimizedSchedule.summary.totalAssets}</p>
-              <p className="text-xs text-slate-400">Assets to Schedule</p>
+            <div className="bg-slate-50 rounded-xl p-4 text-center border border-slate-200">
+              <Wrench className="w-5 h-5 text-indigo-600 mx-auto mb-2" />
+              <p className="text-2xl font-semibold text-slate-900">{optimizedSchedule.summary.totalAssets}</p>
+              <p className="text-xs text-slate-500">Assets to Schedule</p>
             </div>
-            <div className="bg-slate-800/50 rounded-xl p-4 text-center">
-              <AlertTriangle className="w-5 h-5 text-rose-400 mx-auto mb-2" />
-              <p className="text-2xl font-bold text-rose-400">{optimizedSchedule.summary.criticalCount}</p>
-              <p className="text-xs text-slate-400">Immediate Action</p>
+            <div className="bg-slate-50 rounded-xl p-4 text-center border border-slate-200">
+              <AlertTriangle className="w-5 h-5 text-rose-600 mx-auto mb-2" />
+              <p className="text-2xl font-semibold text-rose-600">{optimizedSchedule.summary.criticalCount}</p>
+              <p className="text-xs text-slate-500">Immediate Action</p>
             </div>
-            <div className="bg-slate-800/50 rounded-xl p-4 text-center">
-              <DollarSign className="w-5 h-5 text-emerald-400 mx-auto mb-2" />
-              <p className="text-2xl font-bold text-emerald-400">${(optimizedSchedule.summary.totalSavings / 1000).toFixed(0)}k</p>
-              <p className="text-xs text-slate-400">Potential Savings</p>
+            <div className="bg-slate-50 rounded-xl p-4 text-center border border-slate-200">
+              <DollarSign className="w-5 h-5 text-emerald-600 mx-auto mb-2" />
+              <p className="text-2xl font-semibold text-emerald-600">${(optimizedSchedule.summary.totalSavings / 1000).toFixed(0)}k</p>
+              <p className="text-xs text-slate-500">Potential Savings</p>
             </div>
-            <div className="bg-slate-800/50 rounded-xl p-4 text-center">
-              <Clock className="w-5 h-5 text-amber-400 mx-auto mb-2" />
-              <p className="text-2xl font-bold text-white">{optimizedSchedule.summary.totalHours}h</p>
-              <p className="text-xs text-slate-400">Total Work Hours</p>
+            <div className="bg-slate-50 rounded-xl p-4 text-center border border-slate-200">
+              <Clock className="w-5 h-5 text-amber-600 mx-auto mb-2" />
+              <p className="text-2xl font-semibold text-slate-900">{optimizedSchedule.summary.totalHours}h</p>
+              <p className="text-xs text-slate-500">Total Work Hours</p>
             </div>
           </div>
 
           {/* Weekly Schedule */}
           <div className="space-y-3">
-            <h4 className="text-sm font-medium text-slate-400 flex items-center gap-2">
+            <h4 className="text-sm font-medium text-slate-600 flex items-center gap-2">
               <Calendar className="w-4 h-4" />
               Optimized Weekly Schedule
             </h4>
@@ -268,29 +268,29 @@ export default function AIScheduleOptimizer({ equipment = [], tasks = [], onCrea
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
-                className="bg-slate-800/30 rounded-xl border border-slate-700/50 overflow-hidden"
+                className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden"
               >
                 <div
-                  className="p-4 cursor-pointer hover:bg-slate-700/30 transition-colors"
+                  className="p-4 cursor-pointer hover:bg-slate-100 transition-colors"
                   onClick={() => setExpandedWeek(expandedWeek === idx ? null : idx)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                        <span className="text-lg font-bold text-purple-400">{week.weekNumber}</span>
+                      <div className="w-10 h-10 rounded-lg bg-violet-100 flex items-center justify-center">
+                        <span className="text-lg font-bold text-violet-600">{week.weekNumber}</span>
                       </div>
                       <div>
-                        <p className="text-white font-medium">
+                        <p className="text-slate-900 font-medium">
                           {format(week.startDate, 'MMM d')} - {format(week.endDate, 'MMM d, yyyy')}
                         </p>
-                        <p className="text-sm text-slate-400">
+                        <p className="text-sm text-slate-500">
                           {week.tasks.length} tasks • {week.totalHours}h workload
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <p className="text-sm text-emerald-400">+${(week.potentialSavings / 1000).toFixed(1)}k savings</p>
+                        <p className="text-sm text-emerald-600">+${(week.potentialSavings / 1000).toFixed(1)}k savings</p>
                         <p className="text-xs text-slate-500">${week.totalCost.toLocaleString()} cost</p>
                       </div>
                       {expandedWeek === idx ? (
@@ -301,7 +301,7 @@ export default function AIScheduleOptimizer({ equipment = [], tasks = [], onCrea
                     </div>
                   </div>
                   <div className="mt-3">
-                    <Progress value={(week.totalHours / 40) * 100} className="h-1.5 bg-slate-700" />
+                    <Progress value={(week.totalHours / 40) * 100} className="h-1.5 bg-slate-200" />
                     <p className="text-xs text-slate-500 mt-1">{Math.round((week.totalHours / 40) * 100)}% capacity utilized</p>
                   </div>
                 </div>
@@ -312,20 +312,20 @@ export default function AIScheduleOptimizer({ equipment = [], tasks = [], onCrea
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="border-t border-slate-700/50"
+                      className="border-t border-slate-200"
                     >
                       <div className="p-4 space-y-2">
                         {week.tasks.map((asset, taskIdx) => (
                           <div
                             key={asset.id}
-                            className="flex items-center justify-between p-3 bg-slate-900/50 rounded-lg"
+                            className="flex items-center justify-between p-3 bg-white rounded-lg border border-slate-200"
                           >
                             <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center text-sm font-bold text-white">
+                              <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-sm font-bold text-slate-700">
                                 {asset.health_score || 0}
                               </div>
                               <div>
-                                <p className="text-sm font-medium text-white">{asset.name}</p>
+                                <p className="text-sm font-medium text-slate-900">{asset.name}</p>
                                 <div className="flex items-center gap-2 mt-1">
                                   <Badge variant="outline" className={getWindowColor(asset.optimalWindow)}>
                                     {asset.optimalWindow}
@@ -338,13 +338,13 @@ export default function AIScheduleOptimizer({ equipment = [], tasks = [], onCrea
                             </div>
                             <div className="flex items-center gap-3">
                               <div className="text-right">
-                                <p className="text-xs text-slate-400">Score: {asset.urgencyScore}</p>
-                                <p className="text-xs text-emerald-400">Save ${asset.costSavings.toLocaleString()}</p>
+                                <p className="text-xs text-slate-500">Score: {asset.urgencyScore}</p>
+                                <p className="text-xs text-emerald-600">Save ${asset.costSavings.toLocaleString()}</p>
                               </div>
                               <Button
                                 size="sm"
                                 onClick={() => handleCreateTask(asset)}
-                                className="bg-blue-600 hover:bg-blue-700 text-xs"
+                                className="bg-indigo-600 hover:bg-indigo-700 text-xs"
                               >
                                 Create Task
                               </Button>
@@ -360,7 +360,7 @@ export default function AIScheduleOptimizer({ equipment = [], tasks = [], onCrea
           </div>
 
           {optimizedSchedule.weeklySchedule.length === 0 && (
-            <div className="text-center py-8 text-slate-400">
+            <div className="text-center py-8 text-slate-500">
               <Wrench className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p>All assets are either healthy or already have scheduled tasks</p>
             </div>
@@ -370,9 +370,9 @@ export default function AIScheduleOptimizer({ equipment = [], tasks = [], onCrea
 
       {!optimizedSchedule && !isOptimizing && (
         <div className="p-12 text-center">
-          <Calendar className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-          <p className="text-slate-400">Click "Generate Schedule" to create an AI-optimized maintenance plan</p>
-          <p className="text-sm text-slate-500 mt-1">Based on failure predictions, asset criticality, and resource constraints</p>
+          <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+          <p className="text-slate-600">Click "Generate Schedule" to create an AI-optimized maintenance plan</p>
+          <p className="text-sm text-slate-400 mt-1">Based on failure predictions, asset criticality, and resource constraints</p>
         </div>
       )}
     </div>
