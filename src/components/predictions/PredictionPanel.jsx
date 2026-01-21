@@ -15,116 +15,54 @@ export default function PredictionPanel({ equipment, sensorReadings, onPredictio
     setPrediction(null);
 
     try {
-      // Prepare sensor data summary
-      const sensorSummary = sensorReadings.reduce((acc, r) => {
-        if (!acc[r.sensor_type]) {
-          acc[r.sensor_type] = { values: [], anomalies: 0 };
-        }
-        acc[r.sensor_type].values.push(r.value);
-        if (r.is_anomaly) acc[r.sensor_type].anomalies++;
-        return acc;
-      }, {});
-
-      const sensorStats = Object.entries(sensorSummary).map(([type, data]) => ({
-        type,
-        avg: data.values.reduce((a, b) => a + b, 0) / data.values.length,
-        max: Math.max(...data.values),
-        min: Math.min(...data.values),
-        anomalyCount: data.anomalies,
-        trend: data.values.length > 1 ? 
-          (data.values[data.values.length - 1] > data.values[0] ? 'increasing' : 'decreasing') : 'stable'
-      }));
-
-      const prompt = `You are an advanced predictive maintenance AI system. Analyze the following equipment data and provide a detailed failure prediction.
-
-Equipment Information:
-- Name: ${equipment.name}
-- Type: ${equipment.type}
-- Operating Hours: ${equipment.operating_hours || 'Unknown'}
-- Current Health Score: ${equipment.health_score || 'Unknown'}%
-- Installation Date: ${equipment.installation_date || 'Unknown'}
-- Last Maintenance: ${equipment.last_maintenance_date || 'Unknown'}
-- Criticality: ${equipment.criticality || 'medium'}
-
-Sensor Data Summary (last 24 hours):
-${sensorStats.map(s => `- ${s.type}: avg=${s.avg.toFixed(2)}, max=${s.max.toFixed(2)}, min=${s.min.toFixed(2)}, anomalies=${s.anomalyCount}, trend=${s.trend}`).join('\n')}
-
-Based on this data, provide a comprehensive predictive maintenance analysis.`;
-
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt,
-        response_json_schema: {
-          type: "object",
-          properties: {
-            failure_probability: {
-              type: "number",
-              description: "Probability of failure in the next 30 days (0-100)"
-            },
-            remaining_useful_life_days: {
-              type: "number",
-              description: "Estimated remaining useful life in days"
-            },
-            confidence_score: {
-              type: "number",
-              description: "Model confidence in this prediction (0-100)"
-            },
-            risk_level: {
-              type: "string",
-              enum: ["low", "medium", "high", "critical"]
-            },
-            primary_failure_mode: {
-              type: "string",
-              description: "Most likely failure mode"
-            },
-            risk_factors: {
-              type: "array",
-              items: { type: "string" },
-              description: "Key risk factors identified"
-            },
-            recommended_actions: {
-              type: "array",
-              items: { type: "string" },
-              description: "Recommended maintenance actions"
-            },
-            degradation_indicators: {
-              type: "array",
-              items: { type: "string" },
-              description: "Signs of degradation detected"
-            },
-            next_maintenance_date: {
-              type: "string",
-              description: "Recommended next maintenance date (YYYY-MM-DD format)"
-            },
-            analysis_summary: {
-              type: "string",
-              description: "Brief summary of the analysis"
-            }
-          },
-          required: ["failure_probability", "remaining_useful_life_days", "risk_level", "recommended_actions"]
-        }
+      // Use the advanced ML-based prediction engine
+      const response = await base44.functions.invoke('advancedPrediction', {
+        equipment_id: equipment.id,
+        analysis_type: 'full'
       });
 
-      setPrediction(result);
+      const result = response.data;
+
+      if (!result.success) {
+        throw new Error(result.error || 'Prediction failed');
+      }
+
+      // Format the ensemble prediction for display
+      const formattedPrediction = {
+        failure_probability: result.predictions.ensemble_prediction.failure_probability,
+        remaining_useful_life_days: result.predictions.ensemble_prediction.rul_days,
+        confidence_score: result.predictions.ensemble_prediction.confidence,
+        risk_level: result.predictions.ensemble_prediction.risk_level,
+        primary_failure_mode: Object.entries(result.predictions.failure_probability.failure_modes || {})
+          .sort((a, b) => b[1] - a[1])[0]?.[0] || 'general_wear',
+        risk_factors: result.insights.risk_factors,
+        recommended_actions: result.insights.recommendations,
+        degradation_indicators: Object.entries(result.predictions.degradation_analysis.degradation_indicators)
+          .filter(([_, data]) => data.severity !== 'low')
+          .map(([sensor, data]) => `${sensor}: ${data.trend_direction} (${data.severity} severity)`),
+        analysis_summary: `Advanced ML analysis using ${result.predictions.ensemble_prediction.model_agreement} model agreement. Health index: ${result.predictions.ensemble_prediction.health_index}%`,
+        
+        // Additional advanced metrics
+        anomaly_score: result.predictions.anomaly_detection.overall_anomaly_score,
+        anomaly_assessment: result.predictions.anomaly_detection.assessment,
+        rul_confidence_interval: result.predictions.rul_prediction.confidence_interval,
+        failure_modes: result.predictions.failure_probability.failure_modes,
+        model_performance: result.model_performance,
+        feature_quality: result.feature_quality,
+        estimated_cost_of_failure: result.insights.estimated_cost_of_failure,
+        optimal_maintenance_window: result.insights.optimal_maintenance_window
+      };
+
+      setPrediction(formattedPrediction);
       
       // Update equipment with new predictions
       if (onPredictionComplete) {
-        onPredictionComplete(result);
+        onPredictionComplete(formattedPrediction);
       }
 
-      // Log the prediction
-      await base44.entities.PredictionLog.create({
-        equipment_id: equipment.id,
-        prediction_type: 'failure_probability',
-        model_version: 'LLM-v1',
-        input_features: { sensorStats, equipment_data: { operating_hours: equipment.operating_hours, health_score: equipment.health_score } },
-        prediction_result: result,
-        confidence_score: result.confidence_score,
-        risk_factors: result.risk_factors,
-        recommendations: result.recommended_actions
-      });
-
     } catch (error) {
-      console.error('Prediction failed:', error);
+      console.error('Advanced prediction failed:', error);
+      alert('Prediction analysis failed. Please ensure sufficient sensor data is available.');
     } finally {
       setIsAnalyzing(false);
     }
@@ -239,6 +177,76 @@ Based on this data, provide a comprehensive predictive maintenance analysis.`;
             </div>
           )}
 
+          {/* Advanced Metrics */}
+          {prediction.anomaly_score !== undefined && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-slate-800/50 rounded-lg p-3">
+                <p className="text-xs text-slate-400 mb-1">Anomaly Score</p>
+                <p className="text-xl font-bold text-white">{prediction.anomaly_score.toFixed(1)}/100</p>
+                <p className="text-xs text-amber-400 capitalize mt-1">{prediction.anomaly_assessment}</p>
+              </div>
+              {prediction.estimated_cost_of_failure && (
+                <div className="bg-slate-800/50 rounded-lg p-3">
+                  <p className="text-xs text-slate-400 mb-1">Estimated Failure Cost</p>
+                  <p className="text-xl font-bold text-rose-400">${(prediction.estimated_cost_of_failure / 1000).toFixed(0)}K</p>
+                  <p className="text-xs text-slate-500 mt-1">If unaddressed</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {prediction.rul_confidence_interval && (
+            <div>
+              <p className="text-sm font-medium text-slate-400 mb-2">RUL Confidence Interval ({(prediction.rul_confidence_interval.confidence_level * 100)}%)</p>
+              <div className="bg-slate-800/50 rounded-lg p-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-400">Lower Bound:</span>
+                  <span className="text-white font-medium">{prediction.rul_confidence_interval.lower} days</span>
+                </div>
+                <div className="flex justify-between text-sm mt-2">
+                  <span className="text-slate-400">Upper Bound:</span>
+                  <span className="text-white font-medium">{prediction.rul_confidence_interval.upper} days</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {prediction.optimal_maintenance_window && (
+            <div>
+              <p className="text-sm font-medium text-slate-400 mb-2">Optimal Maintenance Window</p>
+              <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
+                <p className="text-white font-medium capitalize">{prediction.optimal_maintenance_window.urgency} Priority</p>
+                <p className="text-sm text-slate-300 mt-1">
+                  Schedule between {prediction.optimal_maintenance_window.start_days}-{prediction.optimal_maintenance_window.end_days} days
+                </p>
+              </div>
+            </div>
+          )}
+
+          {prediction.failure_modes && Object.keys(prediction.failure_modes).length > 0 && (
+            <div>
+              <p className="text-sm font-medium text-slate-400 mb-2">Likely Failure Modes</p>
+              <div className="space-y-2">
+                {Object.entries(prediction.failure_modes)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([mode, probability], idx) => (
+                    <div key={idx} className="bg-slate-800/50 rounded-lg p-3">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-sm text-white capitalize">{mode.replace(/_/g, ' ')}</span>
+                        <span className="text-sm font-medium text-amber-400">{probability}%</span>
+                      </div>
+                      <div className="w-full bg-slate-700 rounded-full h-1.5">
+                        <div 
+                          className="bg-amber-500 h-1.5 rounded-full"
+                          style={{ width: `${probability}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
           {prediction.risk_factors && prediction.risk_factors.length > 0 && (
             <div>
               <p className="text-sm font-medium text-slate-400 mb-2">Risk Factors</p>
@@ -249,6 +257,30 @@ Based on this data, provide a comprehensive predictive maintenance analysis.`;
                     {factor}
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {prediction.model_performance && (
+            <div>
+              <p className="text-sm font-medium text-slate-400 mb-2">Model Performance Metrics</p>
+              <div className="grid grid-cols-2 gap-2 bg-slate-800/50 rounded-lg p-3">
+                <div>
+                  <p className="text-xs text-slate-400">Accuracy</p>
+                  <p className="text-sm font-medium text-emerald-400">{prediction.model_performance.accuracy}%</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400">Precision</p>
+                  <p className="text-sm font-medium text-emerald-400">{prediction.model_performance.precision}%</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400">Recall</p>
+                  <p className="text-sm font-medium text-emerald-400">{prediction.model_performance.recall}%</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400">F1 Score</p>
+                  <p className="text-sm font-medium text-emerald-400">{prediction.model_performance.f1_score}%</p>
+                </div>
               </div>
             </div>
           )}
