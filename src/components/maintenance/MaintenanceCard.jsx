@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, User, Wrench, Cpu, ChevronRight, Sparkles } from 'lucide-react';
+import { Calendar, Clock, User, Wrench, Cpu, ChevronRight, Sparkles, AlertTriangle } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from 'date-fns';
@@ -49,7 +49,7 @@ export default function MaintenanceCard({ task, equipment, onStatusChange, delay
       className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-5 backdrop-blur-xl hover:border-blue-500/30 transition-all group"
     >
       <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="text-lg">{getTypeIcon(task.type)}</span>
           <Badge variant="outline" className={priorityConfig.color}>
             {task.priority}
@@ -60,13 +60,16 @@ export default function MaintenanceCard({ task, equipment, onStatusChange, delay
           {task.ai_recommended && (
             <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30 flex items-center gap-1">
               <Sparkles className="w-3 h-3" />
-              AI
+              AI {task.ai_confidence}%
+            </Badge>
+          )}
+          {equipment?.criticality === 'mission_critical' && (
+            <Badge className="bg-rose-500/20 text-rose-400 border-rose-500/30 flex items-center gap-1">
+              <AlertTriangle className="w-3 h-3" />
+              CRITICAL
             </Badge>
           )}
         </div>
-        {task.ai_confidence && (
-          <span className="text-xs text-slate-500">{task.ai_confidence}% confidence</span>
-        )}
       </div>
 
       <h4 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
@@ -99,16 +102,19 @@ export default function MaintenanceCard({ task, equipment, onStatusChange, delay
       </div>
 
       {task.parts_required && task.parts_required.length > 0 && (
-        <div className="mb-4">
-          <p className="text-xs text-slate-500 mb-1">Parts Required:</p>
+        <div className={`mb-4 p-2 rounded-lg ${task.ai_recommended ? 'bg-purple-500/5 border border-purple-500/20' : 'bg-slate-800/30'}`}>
+          <p className={`text-xs mb-1 flex items-center gap-1 ${task.ai_recommended ? 'text-purple-400' : 'text-slate-500'}`}>
+            {task.ai_recommended && <Sparkles className="w-3 h-3" />}
+            {task.ai_recommended ? 'AI Suggested Parts:' : 'Parts Required:'}
+          </p>
           <div className="flex flex-wrap gap-1">
             {task.parts_required.slice(0, 3).map((part, idx) => (
-              <Badge key={idx} variant="outline" className="text-xs bg-slate-800/50">
+              <Badge key={idx} variant="outline" className={`text-xs ${task.ai_recommended ? 'bg-purple-500/10 text-purple-300' : 'bg-slate-800/50'}`}>
                 {part}
               </Badge>
             ))}
             {task.parts_required.length > 3 && (
-              <Badge variant="outline" className="text-xs bg-slate-800/50">
+              <Badge variant="outline" className={`text-xs ${task.ai_recommended ? 'bg-purple-500/10 text-purple-300' : 'bg-slate-800/50'}`}>
                 +{task.parts_required.length - 3} more
               </Badge>
             )}
