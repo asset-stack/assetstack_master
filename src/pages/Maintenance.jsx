@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import MaintenanceCard from '@/components/maintenance/MaintenanceCard';
 import AIScheduleOptimizer from '@/components/maintenance/AIScheduleOptimizer';
 import WorkOrderList from '@/components/maintenance/WorkOrderList';
+import AISchedulerPanel from '@/components/maintenance/AISchedulerPanel';
 
 const TASK_TYPES = ['preventive', 'predictive', 'corrective', 'emergency', 'inspection'];
 const PRIORITIES = ['low', 'medium', 'high', 'urgent'];
@@ -363,10 +364,11 @@ export default function Maintenance() {
         {/* AI Scheduler View */}
         {viewMode === 'scheduler' && (
           <div className="mb-8">
-            <AIScheduleOptimizer 
-              equipment={equipment} 
-              tasks={tasks}
-              onCreateTask={handleAICreateTask}
+            <AISchedulerPanel 
+              onTaskCreated={() => {
+                queryClient.invalidateQueries(['tasks']);
+                queryClient.invalidateQueries(['workOrders']);
+              }}
             />
           </div>
         )}
