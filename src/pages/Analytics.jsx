@@ -115,10 +115,10 @@ export default function Analytics() {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-slate-800/95 backdrop-blur-xl border border-slate-700 rounded-lg p-3 shadow-xl">
-          <p className="text-slate-400 text-xs mb-1">{label}</p>
-          {payload.map((entry, idx) => (
-            <p key={idx} className="text-sm font-medium" style={{ color: entry.color }}>
+        <div className="bg-white border border-slate-200 rounded-lg p-3 shadow-lg">
+        <p className="text-slate-500 text-xs mb-1">{label}</p>
+        {payload.map((entry, idx) => (
+          <p key={idx} className="text-sm font-medium" style={{ color: entry.color }}
               {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(1) : entry.value}
             </p>
           ))}
@@ -129,19 +129,19 @@ export default function Analytics() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen bg-gray-50 text-slate-900">
       <div className="max-w-[1800px] mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-white">Analytics Dashboard</h1>
-            <p className="text-sm text-slate-400">Comprehensive insights into your maintenance operations</p>
+            <h1 className="text-2xl font-bold text-slate-900">Analytics Dashboard</h1>
+            <p className="text-sm text-slate-500">Comprehensive insights into your maintenance operations</p>
           </div>
           <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-36 bg-slate-900/50 border-slate-700">
+            <SelectTrigger className="w-36 bg-white border-slate-200">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-slate-800 border-slate-700">
+            <SelectContent className="bg-white border-slate-200">
               <SelectItem value="7d">Last 7 days</SelectItem>
               <SelectItem value="30d">Last 30 days</SelectItem>
               <SelectItem value="90d">Last 90 days</SelectItem>
@@ -152,7 +152,7 @@ export default function Analytics() {
 
         {/* Tabs */}
         <Tabs defaultValue="overview" className="mb-8">
-          <TabsList className="bg-slate-900/50 border border-slate-700">
+          <TabsList className="bg-white border border-slate-200">
             <TabsTrigger value="overview" className="data-[state=active]:bg-blue-600">
               <BarChart3 className="w-4 h-4 mr-2" />
               Overview
@@ -180,9 +180,9 @@ export default function Analytics() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-6 backdrop-blur-xl"
+            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
           >
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-blue-400" />
               Fleet Health Trend
             </h3>
@@ -210,9 +210,9 @@ export default function Analytics() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-6 backdrop-blur-xl"
+            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
           >
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
               <BarChart3 className="w-5 h-5 text-blue-400" />
               Equipment by Type
             </h3>
@@ -234,9 +234,9 @@ export default function Analytics() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-6 backdrop-blur-xl"
+            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
           >
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
               <PieChartIcon className="w-5 h-5 text-emerald-400" />
               Health Distribution
             </h3>
@@ -272,9 +272,9 @@ export default function Analytics() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-6 backdrop-blur-xl"
+            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
           >
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-amber-400" />
               Risk Distribution
             </h3>
@@ -313,9 +313,9 @@ export default function Analytics() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-6 backdrop-blur-xl"
+            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
           >
-            <h3 className="text-lg font-semibold text-white mb-4">Task Completion Rate</h3>
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Task Completion Rate</h3>
             <div className="h-[200px] flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <RadialBarChart 
@@ -335,7 +335,7 @@ export default function Analytics() {
                 </RadialBarChart>
               </ResponsiveContainer>
               <div className="absolute text-center">
-                <p className="text-3xl font-bold text-white">{taskCompletionRate}%</p>
+                <p className="text-3xl font-bold text-slate-900">{taskCompletionRate}%</p>
                 <p className="text-xs text-slate-400">Completed</p>
               </div>
             </div>
@@ -346,9 +346,9 @@ export default function Analytics() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-6 backdrop-blur-xl"
+            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
           >
-            <h3 className="text-lg font-semibold text-white mb-4">Maintenance by Type</h3>
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Maintenance by Type</h3>
             <div className="h-[200px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={taskTypeData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
@@ -371,9 +371,9 @@ export default function Analytics() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-6 backdrop-blur-xl"
+            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
           >
-            <h3 className="text-lg font-semibold text-white mb-4">Alert Severity</h3>
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Alert Severity</h3>
             <div className="h-[200px] flex items-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
