@@ -212,10 +212,10 @@ export default function Predictions() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Equipment List */}
               <div className="lg:col-span-1">
-            <div className="bg-slate-900/50 rounded-2xl border border-slate-700/50 overflow-hidden">
-              <div className="p-4 border-b border-slate-700/50">
-                <h3 className="text-lg font-semibold text-white">Select Equipment</h3>
-                <p className="text-xs text-slate-400">Choose equipment to analyze</p>
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+              <div className="p-4 border-b border-slate-100">
+                <h3 className="text-lg font-semibold text-slate-900">Select Equipment</h3>
+                <p className="text-xs text-slate-500">Choose equipment to analyze</p>
               </div>
               <div className="max-h-[600px] overflow-y-auto">
                 {filteredEquipment.map((eq, idx) => (
@@ -225,8 +225,8 @@ export default function Predictions() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.03 }}
                     onClick={() => setSelectedEquipment(eq)}
-                    className={`p-4 border-b border-slate-700/30 cursor-pointer hover:bg-slate-800/50 transition-colors ${
-                      selectedEquipment?.id === eq.id ? 'bg-blue-500/10 border-l-2 border-l-blue-500' : ''
+                    className={`p-4 border-b border-slate-100 cursor-pointer hover:bg-slate-50 transition-colors ${
+                      selectedEquipment?.id === eq.id ? 'bg-indigo-50 border-l-2 border-l-indigo-500' : ''
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -235,8 +235,8 @@ export default function Predictions() {
                           <HealthGauge score={eq.health_score || 0} size={48} label="" />
                         </div>
                         <div>
-                          <h4 className="text-sm font-medium text-white">{eq.name}</h4>
-                          <p className="text-xs text-slate-400">{eq.type?.replace(/_/g, ' ')}</p>
+                          <h4 className="text-sm font-medium text-slate-900">{eq.name}</h4>
+                          <p className="text-xs text-slate-500">{eq.type?.replace(/_/g, ' ')}</p>
                           <div className="flex items-center gap-2 mt-1">
                             <span className={`w-1.5 h-1.5 rounded-full ${getStatusColor(eq.status)}`} />
                             <Badge className={`text-xs ${getRiskColor(eq.risk_level)}`}>
@@ -249,7 +249,7 @@ export default function Predictions() {
                     </div>
                     {eq.failure_probability > 0 && (
                       <div className="mt-3">
-                        <div className="flex justify-between text-xs text-slate-400 mb-1">
+                        <div className="flex justify-between text-xs text-slate-500 mb-1">
                           <span>Failure Risk</span>
                           <span>{eq.failure_probability?.toFixed(1)}%</span>
                         </div>
@@ -273,45 +273,45 @@ export default function Predictions() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-6"
+                  className="bg-white rounded-xl border border-slate-200 p-6"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="p-4 bg-blue-500/10 rounded-xl">
-                      <Cpu className="w-10 h-10 text-blue-400" />
+                    <div className="p-4 bg-indigo-50 rounded-xl">
+                      <Cpu className="w-10 h-10 text-indigo-600" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className={`w-2 h-2 rounded-full ${getStatusColor(selectedEquipment.status)}`} />
-                        <span className="text-sm text-slate-400 capitalize">{selectedEquipment.status}</span>
+                        <span className="text-sm text-slate-500 capitalize">{selectedEquipment.status}</span>
                       </div>
-                      <h2 className="text-2xl font-bold text-white">{selectedEquipment.name}</h2>
-                      <p className="text-slate-400">{selectedEquipment.type?.replace(/_/g, ' ')} • {selectedEquipment.location}</p>
+                      <h2 className="text-2xl font-bold text-slate-900">{selectedEquipment.name}</h2>
+                      <p className="text-slate-500">{selectedEquipment.type?.replace(/_/g, ' ')} • {selectedEquipment.location}</p>
                     </div>
                     <HealthGauge score={selectedEquipment.health_score || 0} size={100} />
                   </div>
 
                   <div className="grid grid-cols-4 gap-4 mt-6">
-                    <div className="bg-slate-800/50 rounded-xl p-3 text-center">
-                      <Clock className="w-5 h-5 text-blue-400 mx-auto mb-1" />
-                      <p className="text-lg font-bold text-white">{selectedEquipment.remaining_useful_life_days || 'N/A'}</p>
-                      <p className="text-xs text-slate-400">Days RUL</p>
+                    <div className="bg-slate-50 rounded-xl p-3 text-center">
+                      <Clock className="w-5 h-5 text-blue-600 mx-auto mb-1" />
+                      <p className="text-lg font-bold text-slate-900">{selectedEquipment.remaining_useful_life_days || 'N/A'}</p>
+                      <p className="text-xs text-slate-500">Days RUL</p>
                     </div>
-                    <div className="bg-slate-800/50 rounded-xl p-3 text-center">
-                      <AlertTriangle className="w-5 h-5 text-amber-400 mx-auto mb-1" />
-                      <p className="text-lg font-bold text-white">{selectedEquipment.failure_probability?.toFixed(1) || 0}%</p>
-                      <p className="text-xs text-slate-400">Failure Risk</p>
+                    <div className="bg-slate-50 rounded-xl p-3 text-center">
+                      <AlertTriangle className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+                      <p className="text-lg font-bold text-slate-900">{selectedEquipment.failure_probability?.toFixed(1) || 0}%</p>
+                      <p className="text-xs text-slate-500">Failure Risk</p>
                     </div>
-                    <div className="bg-slate-800/50 rounded-xl p-3 text-center">
-                      <Activity className="w-5 h-5 text-emerald-400 mx-auto mb-1" />
-                      <p className="text-lg font-bold text-white">{selectedEquipment.operating_hours?.toLocaleString() || 0}</p>
-                      <p className="text-xs text-slate-400">Op. Hours</p>
+                    <div className="bg-slate-50 rounded-xl p-3 text-center">
+                      <Activity className="w-5 h-5 text-emerald-600 mx-auto mb-1" />
+                      <p className="text-lg font-bold text-slate-900">{selectedEquipment.operating_hours?.toLocaleString() || 0}</p>
+                      <p className="text-xs text-slate-500">Op. Hours</p>
                     </div>
-                    <div className="bg-slate-800/50 rounded-xl p-3 text-center">
-                      <TrendingDown className="w-5 h-5 text-purple-400 mx-auto mb-1" />
+                    <div className="bg-slate-50 rounded-xl p-3 text-center">
+                      <TrendingDown className="w-5 h-5 text-purple-600 mx-auto mb-1" />
                       <Badge className={getRiskColor(selectedEquipment.risk_level)}>
                         {selectedEquipment.risk_level || 'low'}
                       </Badge>
-                      <p className="text-xs text-slate-400 mt-1">Risk Level</p>
+                      <p className="text-xs text-slate-500 mt-1">Risk Level</p>
                     </div>
                   </div>
                 </motion.div>
@@ -328,23 +328,23 @@ export default function Predictions() {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-6"
+                    className="bg-white rounded-xl border border-slate-200 p-6"
                   >
-                    <h3 className="text-lg font-semibold text-white mb-4">Prediction History</h3>
+                    <h3 className="text-lg font-semibold text-slate-900 mb-4">Prediction History</h3>
                     <div className="space-y-3">
                       {predictions
                         .filter(p => p.equipment_id === selectedEquipment.id)
                         .slice(0, 5)
                         .map((pred, idx) => (
-                          <div key={pred.id} className="bg-slate-800/50 rounded-lg p-3 flex items-center justify-between">
+                          <div key={pred.id} className="bg-slate-50 rounded-lg p-3 flex items-center justify-between">
                             <div>
-                              <p className="text-sm text-white capitalize">{pred.prediction_type?.replace(/_/g, ' ')}</p>
-                              <p className="text-xs text-slate-400">
+                              <p className="text-sm text-slate-900 capitalize">{pred.prediction_type?.replace(/_/g, ' ')}</p>
+                              <p className="text-xs text-slate-500">
                                 {format(new Date(pred.created_date), 'MMM d, yyyy HH:mm')}
                               </p>
                             </div>
                             <div className="text-right">
-                              <Badge className="bg-purple-500/20 text-purple-400">
+                              <Badge className="bg-purple-100 text-purple-700 border-purple-200">
                                 {pred.confidence_score}% confidence
                               </Badge>
                             </div>
@@ -358,10 +358,10 @@ export default function Predictions() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="bg-slate-900/50 rounded-2xl border border-slate-700/50 p-12 text-center h-full flex flex-col items-center justify-center"
+                className="bg-white rounded-xl border border-slate-200 p-12 text-center h-full flex flex-col items-center justify-center"
               >
-                <Brain className="w-20 h-20 text-slate-600 mb-4" />
-                <h3 className="text-xl font-medium text-slate-400">Select Equipment</h3>
+                <Brain className="w-20 h-20 text-slate-300 mb-4" />
+                <h3 className="text-xl font-medium text-slate-600">Select Equipment</h3>
                 <p className="text-sm text-slate-500 mt-2 max-w-md">
                   Choose equipment from the list to run AI-powered predictive analysis and get failure probability estimates
                 </p>
