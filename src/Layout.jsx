@@ -15,6 +15,7 @@ const navItems = [
   { name: 'Maintenance', icon: Wrench, page: 'Maintenance' },
   { name: 'Predictions', icon: Brain, page: 'Predictions' },
   { name: 'Analytics', icon: BarChart3, page: 'Analytics' },
+  { name: 'ML Models', icon: Settings, page: 'MLModels' },
 ];
 
 export default function Layout({ children, currentPageName }) {
