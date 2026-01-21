@@ -5,6 +5,7 @@ import MLModels from './pages/MLModels';
 import Maintenance from './pages/Maintenance';
 import Predictions from './pages/Predictions';
 import SensorIntegration from './pages/SensorIntegration';
+import Onboarding from './pages/Onboarding';
 import __Layout from './Layout.jsx';
 
 
@@ -16,6 +17,7 @@ export const PAGES = {
     "Maintenance": Maintenance,
     "Predictions": Predictions,
     "SensorIntegration": SensorIntegration,
+    "Onboarding": Onboarding,
 }
 
 export const pagesConfig = {
