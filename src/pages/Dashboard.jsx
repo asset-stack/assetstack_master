@@ -114,7 +114,7 @@ export default function Dashboard() {
   }));
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen bg-gray-50 text-slate-900">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800">
         <div className="max-w-[1800px] mx-auto px-6 py-4">

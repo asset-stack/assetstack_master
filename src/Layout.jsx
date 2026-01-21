@@ -19,16 +19,16 @@ const navItems = [
 ];
 
 export default function Layout({ children, currentPageName }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+        const [sidebarOpen, setSidebarOpen] = useState(true);
+        const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  return (
-    <div className="min-h-screen bg-slate-950 flex">
+        return (
+          <div className="min-h-screen bg-white flex">
       {/* Desktop Sidebar */}
       <motion.aside
         initial={false}
         animate={{ width: sidebarOpen ? 240 : 72 }}
-        className="hidden lg:flex flex-col bg-slate-900/80 border-r border-slate-800 backdrop-blur-xl fixed h-screen z-50"
+        className="hidden lg:flex flex-col bg-slate-900 border-r border-slate-200 shadow-lg fixed h-screen z-50"
       >
         <div className="p-4 border-b border-slate-800">
           <div className="flex items-center gap-3">
@@ -97,7 +97,7 @@ export default function Layout({ children, currentPageName }) {
       </motion.aside>
 
       {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 z-50 flex items-center justify-between px-4">
+      <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-slate-900 border-b border-slate-200 shadow-sm z-50 flex items-center justify-between px-4">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
             <Cpu className="w-4 h-4 text-white" />
@@ -121,7 +121,7 @@ export default function Layout({ children, currentPageName }) {
             initial={{ opacity: 0, x: -300 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -300 }}
-            className="lg:hidden fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-xl pt-16"
+            className="lg:hidden fixed inset-0 z-40 bg-slate-900 pt-16"
           >
             <nav className="p-4 space-y-2">
               {navItems.map((item) => {
