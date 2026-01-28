@@ -6,12 +6,16 @@ import { createPageUrl } from '@/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Cpu, Radio, Users, Package, Brain, CheckCircle, Circle,
-  ArrowRight, ChevronRight, Sparkles, Upload, Play, Rocket
+  ArrowRight, ArrowLeft, ChevronRight, Sparkles, Upload, Play, Rocket,
+  Building2
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import IndustrySelector, { INDUSTRIES } from '@/components/onboarding/IndustrySelector';
+import AssetQuickAdd from '@/components/onboarding/AssetQuickAdd';
 
 const ONBOARDING_STEPS = [
   {
@@ -70,9 +74,20 @@ const ONBOARDING_STEPS = [
   }
 ];
 
+const ORG_SIZES = [
+  { value: 'small', label: 'Small (1-50 employees)' },
+  { value: 'medium', label: 'Medium (51-250 employees)' },
+  { value: 'large', label: 'Large (251-1000 employees)' },
+  { value: 'enterprise', label: 'Enterprise (1000+ employees)' },
+];
+
 export default function Onboarding() {
+  const [wizardStep, setWizardStep] = useState(1); // 1: Company, 2: Industry, 3: Assets
   const [companyName, setCompanyName] = useState('');
-  const [isStarting, setIsStarting] = useState(false);
+  const [industry, setIndustry] = useState('');
+  const [orgSize, setOrgSize] = useState('');
+  const [initialAssets, setInitialAssets] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const queryClient = useQueryClient();
 
@@ -121,6 +136,11 @@ export default function Onboarding() {
     onSuccess: () => queryClient.invalidateQueries(['onboardingProgress']),
   });
 
+  const createEquipmentMutation = useMutation({
+    mutationFn: (data) => base44.entities.Equipment.create(data),
+    onSuccess: () => queryClient.invalidateQueries(['equipment']),
+  });
+
   const currentProgress = progress[0];
 
   // Auto-update progress based on actual data
@@ -165,13 +185,34 @@ export default function Onboarding() {
     }
   }, [equipment, sensorConfigs, readings, technicians, spareParts, predictions, currentProgress]);
 
-  const handleStartOnboarding = async () => {
-    if (!companyName.trim()) return;
-    setIsStarting(true);
+  const handleCompleteOnboarding = async () => {
+    if (!companyName.trim() || !industry) return;
+    setIsSubmitting(true);
+
+    // Create equipment records for initial assets
+    const createdAssetIds = [];
+    for (const asset of initialAssets) {
+      const created = await createEquipmentMutation.mutateAsync({
+        name: asset.name,
+        type: asset.type,
+        location: asset.location || 'Unassigned',
+        status: 'operational',
+        health_score: 100,
+        risk_level: 'low',
+      });
+      createdAssetIds.push(created.id);
+    }
+
+    // Create onboarding progress
     await createProgressMutation.mutateAsync({
-      company_name: companyName.trim()
+      company_name: companyName.trim(),
+      industry,
+      organization_size: orgSize,
+      initial_assets_added: createdAssetIds,
+      step_equipment_added: initialAssets.length > 0,
     });
-    setIsStarting(false);
+
+    setIsSubmitting(false);
   };
 
   const getStepStatus = (step) => {
@@ -184,6 +225,11 @@ export default function Onboarding() {
     : 0;
   const progressPercent = (completedSteps / ONBOARDING_STEPS.length) * 100;
 
+  const getIndustryName = (id) => {
+    const ind = INDUSTRIES.find(i => i.id === id);
+    return ind?.name || id;
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -192,65 +238,210 @@ export default function Onboarding() {
     );
   }
 
-  // Welcome screen if no progress exists
+  // Multi-step Wizard if no progress exists
   if (!currentProgress) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-lg w-full"
+          className="max-w-2xl w-full"
         >
+          {/* Header */}
           <div className="text-center mb-8">
             <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-indigo-500/30">
               <Sparkles className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome to PredictAI</h1>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome to AssetStack</h1>
             <p className="text-slate-600">
-              Let's get your predictive maintenance platform set up in just a few steps
+              The modular asset management platform for any industry
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-xl">
-            <div className="space-y-4">
-              <div>
-                <Label className="text-slate-700">Company Name</Label>
-                <Input
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  placeholder="Enter your company name"
-                  className="mt-2 bg-white border-slate-200"
-                />
-              </div>
-
-              <Button
-                onClick={handleStartOnboarding}
-                disabled={!companyName.trim() || isStarting}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 h-12 text-lg"
-              >
-                {isStarting ? (
-                  'Setting up...'
-                ) : (
-                  <>
-                    Get Started
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </>
+          {/* Progress Indicator */}
+          <div className="flex items-center justify-center gap-2 mb-8">
+            {[1, 2, 3].map((step) => (
+              <div key={step} className="flex items-center">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                  wizardStep >= step 
+                    ? 'bg-indigo-600 text-white' 
+                    : 'bg-slate-200 text-slate-500'
+                }`}>
+                  {wizardStep > step ? <CheckCircle className="w-5 h-5" /> : step}
+                </div>
+                {step < 3 && (
+                  <div className={`w-16 h-1 mx-1 ${
+                    wizardStep > step ? 'bg-indigo-600' : 'bg-slate-200'
+                  }`} />
                 )}
-              </Button>
-            </div>
-
-            <div className="mt-8 pt-6 border-t border-slate-100">
-              <h4 className="text-sm font-medium text-slate-900 mb-4">What you'll set up:</h4>
-              <div className="grid grid-cols-2 gap-3">
-                {ONBOARDING_STEPS.slice(0, 4).map(step => (
-                  <div key={step.id} className="flex items-center gap-2 text-sm text-slate-600">
-                    <step.icon className="w-4 h-4 text-indigo-500" />
-                    {step.title}
-                  </div>
-                ))}
               </div>
-            </div>
+            ))}
           </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-xl">
+            <AnimatePresence mode="wait">
+              {/* Step 1: Company Info */}
+              {wizardStep === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  <div>
+                    <h2 className="text-xl font-semibold text-slate-900 mb-1">Tell us about your organization</h2>
+                    <p className="text-sm text-slate-500">We'll customize your experience based on this</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-slate-700">Organization Name *</Label>
+                      <Input
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        placeholder="e.g., Bunbury City Council"
+                        className="mt-2 bg-white border-slate-200"
+                      />
+                    </div>
+
+                    <div>
+                      <Label className="text-slate-700">Organization Size</Label>
+                      <Select value={orgSize} onValueChange={setOrgSize}>
+                        <SelectTrigger className="mt-2">
+                          <SelectValue placeholder="Select size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {ORG_SIZES.map((size) => (
+                            <SelectItem key={size.value} value={size.value}>{size.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={() => setWizardStep(2)}
+                    disabled={!companyName.trim()}
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 h-12"
+                  >
+                    Continue
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </motion.div>
+              )}
+
+              {/* Step 2: Industry Selection */}
+              {wizardStep === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  <div>
+                    <h2 className="text-xl font-semibold text-slate-900 mb-1">Select your industry</h2>
+                    <p className="text-sm text-slate-500">We'll suggest relevant asset types and configurations</p>
+                  </div>
+
+                  <IndustrySelector selected={industry} onSelect={setIndustry} />
+
+                  <div className="flex gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={() => setWizardStep(1)}
+                      className="flex-1"
+                    >
+                      <ArrowLeft className="w-4 h-4 mr-2" />
+                      Back
+                    </Button>
+                    <Button
+                      onClick={() => setWizardStep(3)}
+                      disabled={!industry}
+                      className="flex-1 bg-indigo-600 hover:bg-indigo-700"
+                    >
+                      Continue
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 3: Initial Assets */}
+              {wizardStep === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  <div>
+                    <h2 className="text-xl font-semibold text-slate-900 mb-1">Add your initial assets</h2>
+                    <p className="text-sm text-slate-500">Start with a few key assets - you can add more later</p>
+                  </div>
+
+                  <AssetQuickAdd
+                    industry={industry}
+                    assets={initialAssets}
+                    onAssetsChange={setInitialAssets}
+                    isSubmitting={isSubmitting}
+                  />
+
+                  <div className="flex gap-3">
+                    <Button
+                      variant="outline"
+                      onClick={() => setWizardStep(2)}
+                      className="flex-1"
+                      disabled={isSubmitting}
+                    >
+                      <ArrowLeft className="w-4 h-4 mr-2" />
+                      Back
+                    </Button>
+                    <Button
+                      onClick={handleCompleteOnboarding}
+                      disabled={isSubmitting}
+                      className="flex-1 bg-indigo-600 hover:bg-indigo-700"
+                    >
+                      {isSubmitting ? (
+                        'Setting up...'
+                      ) : (
+                        <>
+                          <Rocket className="w-4 h-4 mr-2" />
+                          Complete Setup
+                        </>
+                      )}
+                    </Button>
+                  </div>
+
+                  {initialAssets.length === 0 && (
+                    <button
+                      onClick={handleCompleteOnboarding}
+                      disabled={isSubmitting}
+                      className="w-full text-sm text-slate-500 hover:text-slate-700"
+                    >
+                      Skip and add assets later →
+                    </button>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Industry Badge Preview */}
+          {industry && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-4 text-center"
+            >
+              <span className="inline-flex items-center gap-2 text-sm text-slate-500">
+                <Building2 className="w-4 h-4" />
+                Setting up for: <span className="font-medium text-slate-700">{getIndustryName(industry)}</span>
+              </span>
+            </motion.div>
+          )}
         </motion.div>
       </div>
     );
@@ -270,8 +461,14 @@ export default function Onboarding() {
           </div>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">Setup Complete!</h1>
           <p className="text-slate-600 mb-8">
-            Congratulations, {currentProgress.company_name}! Your predictive maintenance platform is ready to go.
+            Congratulations, {currentProgress.company_name}! Your asset management platform is ready.
           </p>
+
+          {currentProgress.industry && (
+            <p className="text-sm text-slate-500 mb-6">
+              Configured for: <span className="font-medium">{getIndustryName(currentProgress.industry)}</span>
+            </p>
+          )}
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to={createPageUrl('Dashboard')}>
@@ -302,8 +499,13 @@ export default function Onboarding() {
             Welcome, {currentProgress.company_name}!
           </h1>
           <p className="text-slate-600 mt-1">
-            Complete these steps to get the most out of your predictive maintenance platform
+            Complete these steps to get the most out of your asset management platform
           </p>
+          {currentProgress.industry && (
+            <p className="text-sm text-slate-500 mt-1">
+              Industry: <span className="font-medium">{getIndustryName(currentProgress.industry)}</span>
+            </p>
+          )}
         </div>
 
         {/* Progress */}
