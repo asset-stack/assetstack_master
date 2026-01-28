@@ -545,15 +545,7 @@ export default function DigitalTwin() {
               <AlertTriangle className="w-4 h-4 mr-1" />
               Anomalies
             </Button>
-            <Button
-              variant={showEquipment ? "default" : "outline"}
-              size="sm"
-              onClick={() => setShowEquipment(!showEquipment)}
-              className={showEquipment ? "bg-indigo-600 hover:bg-indigo-700" : "bg-white"}
-            >
-              <Layers className="w-4 h-4 mr-1" />
-              Equipment
-            </Button>
+
             {anomalies.length > 0 && (
               <Button
                 variant="outline"
