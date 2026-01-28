@@ -706,7 +706,7 @@ export default function DigitalTwin() {
 
           {/* 3D Canvas */}
           {currentScan ? (
-            <Canvas className="bg-slate-900">
+            <Canvas className="bg-slate-900" camera={{ position: [80, 60, 80], fov: 50 }}>
               <Suspense fallback={null}>
                 <Scene
                   scan={currentScan}
