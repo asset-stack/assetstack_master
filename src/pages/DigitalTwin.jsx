@@ -382,7 +382,7 @@ export default function DigitalTwin() {
 
   const [showAnomalyPanel, setShowAnomalyPanel] = useState(false);
   const [selectedAnomaly, setSelectedAnomaly] = useState(null);
-  const [selectedEquipment, setSelectedEquipment] = useState(null);
+
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data: scans = [], isLoading: scansLoading } = useQuery({
