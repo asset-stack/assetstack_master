@@ -379,7 +379,7 @@ export default function DigitalTwin() {
   const [selectedScan, setSelectedScan] = useState(null);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const [showAnomalies, setShowAnomalies] = useState(true);
-  const [showEquipment, setShowEquipment] = useState(true);
+
   const [showAnomalyPanel, setShowAnomalyPanel] = useState(false);
   const [selectedAnomaly, setSelectedAnomaly] = useState(null);
   const [selectedEquipment, setSelectedEquipment] = useState(null);
