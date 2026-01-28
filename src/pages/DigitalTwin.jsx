@@ -390,10 +390,7 @@ export default function DigitalTwin() {
     queryFn: () => base44.entities.LiDARScan.list('-created_date', 50),
   });
 
-  const { data: equipment = [] } = useQuery({
-    queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
-  });
+
 
   const createScanMutation = useMutation({
     mutationFn: (data) => base44.entities.LiDARScan.create(data),
