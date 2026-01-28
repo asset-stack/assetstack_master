@@ -4,7 +4,7 @@ import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
-  Settings, Menu, X, ChevronRight, Radio, Sparkles
+  Settings, Menu, X, ChevronRight, Radio, Sparkles, Box
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -12,6 +12,7 @@ const navItems = [
   { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
   { name: 'Setup', icon: Sparkles, page: 'Onboarding' },
   { name: 'Equipment', icon: Cpu, page: 'Equipment' },
+  { name: 'Digital Twin', icon: Box, page: 'DigitalTwin' },
   { name: 'Sensors', icon: Radio, page: 'SensorIntegration' },
   { name: 'Maintenance', icon: Wrench, page: 'Maintenance' },
   { name: 'Predictions', icon: Brain, page: 'Predictions' },
@@ -43,8 +44,8 @@ export default function Layout({ children, currentPageName }) {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <h1 className="font-semibold text-slate-900 text-lg tracking-tight">PredictAI</h1>
-                  <p className="text-xs text-slate-500">Maintenance Platform</p>
+                  <h1 className="font-semibold text-slate-900 text-lg tracking-tight">AssetStack</h1>
+                  <p className="text-xs text-slate-500">Asset Management Platform</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -103,7 +104,7 @@ export default function Layout({ children, currentPageName }) {
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center">
             <Cpu className="w-4 h-4 text-white" />
           </div>
-          <span className="font-semibold text-slate-900">PredictAI</span>
+          <span className="font-semibold text-slate-900">AssetStack</span>
         </div>
         <Button
           variant="ghost"
