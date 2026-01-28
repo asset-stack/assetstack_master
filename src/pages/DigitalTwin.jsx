@@ -607,51 +607,7 @@ export default function DigitalTwin() {
             </div>
           )}
 
-          {/* Selected Equipment Info */}
-          <AnimatePresence>
-            {selectedEquipment && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                className="absolute bottom-4 left-4 bg-white rounded-xl shadow-xl border border-slate-200 p-4 w-72 z-10"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h4 className="font-semibold text-slate-900">{selectedEquipment.name}</h4>
-                    <p className="text-xs text-slate-500 capitalize">{selectedEquipment.type?.replace(/_/g, ' ')}</p>
-                  </div>
-                  <button onClick={() => setSelectedEquipment(null)} className="text-slate-400 hover:text-slate-600">
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div>
-                    <p className="text-slate-500">Health</p>
-                    <p className="font-medium text-slate-900">{selectedEquipment.health_score || 'N/A'}%</p>
-                  </div>
-                  <div>
-                    <p className="text-slate-500">Status</p>
-                    <Badge className={
-                      selectedEquipment.status === 'operational' ? 'bg-green-100 text-green-700' :
-                      selectedEquipment.status === 'critical' ? 'bg-red-100 text-red-700' :
-                      'bg-amber-100 text-amber-700'
-                    }>
-                      {selectedEquipment.status}
-                    </Badge>
-                  </div>
-                  <div>
-                    <p className="text-slate-500">Location</p>
-                    <p className="font-medium text-slate-900">{selectedEquipment.location}</p>
-                  </div>
-                  <div>
-                    <p className="text-slate-500">Risk Level</p>
-                    <p className="font-medium text-slate-900 capitalize">{selectedEquipment.risk_level || 'N/A'}</p>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+
         </div>
       </div>
 
