@@ -156,33 +156,40 @@ function EquipmentMarkers({ equipment, scan, onEquipmentClick, selectedEquipment
   );
 }
 
+// Simple grid floor component
+function GridFloor() {
+  const geometry = React.useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = [];
+    const size = 100;
+    const divisions = 20;
+    const step = size / divisions;
+    
+    for (let i = -size / 2; i <= size / 2; i += step) {
+      positions.push(-size / 2, i, 0, size / 2, i, 0);
+      positions.push(i, -size / 2, 0, i, size / 2, 0);
+    }
+    
+    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+    return geo;
+  }, []);
+
+  return (
+    <lineSegments geometry={geometry}>
+      <lineBasicMaterial color="#4a5568" opacity={0.3} transparent />
+    </lineSegments>
+  );
+}
+
 // Scene setup component
 function Scene({ scan, equipment, showAnomalies, showEquipment, selectedAnomaly, selectedEquipment, onAnomalyClick, onEquipmentClick }) {
   return (
     <>
-      <PerspectiveCamera makeDefault position={[80, 60, 80]} fov={50} />
-      <OrbitControls 
-        enablePan 
-        enableZoom 
-        enableRotate 
-        minDistance={20}
-        maxDistance={200}
-      />
       <ambientLight intensity={0.4} />
       <directionalLight position={[50, 50, 50]} intensity={0.8} />
       <pointLight position={[-50, 50, -50]} intensity={0.3} />
       
-      <Grid 
-        args={[200, 200]} 
-        cellSize={5}
-        cellThickness={0.5}
-        cellColor="#4a5568"
-        sectionSize={20}
-        sectionThickness={1}
-        sectionColor="#2d3748"
-        fadeDistance={150}
-        position={[0, 0, -0.1]}
-      />
+      <GridFloor />
 
       {scan && (
         <PointCloud 
@@ -201,6 +208,14 @@ function Scene({ scan, equipment, showAnomalies, showEquipment, selectedAnomaly,
           selectedEquipment={selectedEquipment}
         />
       )}
+      
+      <OrbitControls 
+        enablePan 
+        enableZoom 
+        enableRotate 
+        minDistance={20}
+        maxDistance={200}
+      />
     </>
   );
 }
