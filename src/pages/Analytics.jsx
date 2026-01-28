@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { 
   Activity, TrendingUp, AlertTriangle, Clock, Brain, BarChart3, 
   PieChart as PieChartIcon, Calendar, Target, Zap, DollarSign,
-  Package, Users, Search, Award
+  Package, Users, Search, Award, Sparkles
 } from 'lucide-react';
 import { 
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, 
@@ -21,6 +21,9 @@ import SparePartsInventory from '@/components/inventory/SparePartsInventory';
 import RootCausePanel from '@/components/analytics/RootCausePanel';
 import ResourceOptimizer from '@/components/analytics/ResourceOptimizer';
 import BenchmarkDashboard from '@/components/analytics/BenchmarkDashboard';
+import PredictiveWorkflowConfig from '@/components/maintenance/PredictiveWorkflowConfig';
+import SuggestedTasksPanel from '@/components/maintenance/SuggestedTasksPanel';
+import RunPredictiveAnalysis from '@/components/maintenance/RunPredictiveAnalysis';
 
 export default function Analytics() {
   const [timeRange, setTimeRange] = useState('30d');
@@ -48,6 +51,21 @@ export default function Analytics() {
   const { data: workOrders = [] } = useQuery({
     queryKey: ['workOrders'],
     queryFn: () => base44.entities.WorkOrder.list('-created_date', 200),
+  });
+
+  const { data: triggers = [], refetch: refetchTriggers } = useQuery({
+    queryKey: ['triggers'],
+    queryFn: () => base44.entities.MaintenanceTrigger.list('-created_date', 50),
+  });
+
+  const { data: suggestedTasks = [], refetch: refetchSuggestions } = useQuery({
+    queryKey: ['suggestedTasks'],
+    queryFn: () => base44.entities.SuggestedTask.list('-created_date', 100),
+  });
+
+  const { data: technicians = [] } = useQuery({
+    queryKey: ['technicians'],
+    queryFn: () => base44.entities.Technician.list('-created_date', 50),
   });
 
   // Calculate metrics
@@ -191,6 +209,10 @@ export default function Analytics() {
             <TabsTrigger value="optimization" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
               <DollarSign className="w-4 h-4 mr-2" />
               Cost Optimization
+            </TabsTrigger>
+            <TabsTrigger value="automation" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI Automation
             </TabsTrigger>
           </TabsList>
 
@@ -477,6 +499,35 @@ export default function Analytics() {
               predictions={predictions}
               tasks={tasks}
             />
+          </TabsContent>
+
+          <TabsContent value="automation" className="mt-6">
+            <div className="space-y-6">
+              <RunPredictiveAnalysis
+                equipment={equipment}
+                predictions={predictions}
+                triggers={triggers}
+                technicians={technicians}
+                onComplete={() => refetchSuggestions()}
+              />
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-white rounded-xl border border-slate-200 p-6">
+                  <PredictiveWorkflowConfig 
+                    triggers={triggers}
+                    onRefresh={refetchTriggers}
+                  />
+                </div>
+
+                <div className="bg-white rounded-xl border border-slate-200 p-6">
+                  <SuggestedTasksPanel
+                    suggestions={suggestedTasks}
+                    technicians={technicians}
+                    onRefresh={refetchSuggestions}
+                  />
+                </div>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
