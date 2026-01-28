@@ -3,19 +3,20 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Plus, Search, Filter, Grid3X3, List, Download, Upload, 
+  Plus, Search, Filter, Grid3X3, List, Layers,
   Cpu, Activity, MapPin, AlertTriangle, X
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from 'date-fns';
 import EquipmentCard from '@/components/dashboard/EquipmentCard';
 import EquipmentDetails from '@/components/equipment/EquipmentDetails';
+import EquipmentForm from '@/components/equipment/EquipmentForm';
+import EquipmentStats from '@/components/equipment/EquipmentStats';
+import AssetHierarchy from '@/components/equipment/AssetHierarchy';
 import HealthGauge from '@/components/dashboard/HealthGauge';
 
 const EQUIPMENT_TYPES = [
@@ -34,22 +35,12 @@ export default function Equipment() {
   const [filterType, setFilterType] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterRisk, setFilterRisk] = useState('all');
+  const [filterLocation, setFilterLocation] = useState('all');
   const [selectedEquipment, setSelectedEquipment] = useState(null);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingEquipment, setEditingEquipment] = useState(null);
   const [recentUpdates, setRecentUpdates] = useState([]);
-  const [newEquipment, setNewEquipment] = useState({
-    name: '',
-    type: 'motor',
-    location: '',
-    manufacturer: '',
-    model: '',
-    serial_number: '',
-    installation_date: '',
-    criticality: 'medium',
-    health_score: 100,
-    status: 'operational',
-    risk_level: 'low'
-  });
+  const [groupBy, setGroupBy] = useState('location');
 
   const queryClient = useQueryClient();
 
@@ -88,33 +79,62 @@ export default function Equipment() {
     mutationFn: (data) => base44.entities.Equipment.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['equipment']);
-      setIsAddDialogOpen(false);
-      setNewEquipment({
-        name: '',
-        type: 'motor',
-        location: '',
-        manufacturer: '',
-        model: '',
-        serial_number: '',
-        installation_date: '',
-        criticality: 'medium',
-        health_score: 100,
-        status: 'operational',
-        risk_level: 'low'
-      });
+      setIsFormOpen(false);
+      setEditingEquipment(null);
     },
   });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Equipment.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['equipment']);
+      setIsFormOpen(false);
+      setEditingEquipment(null);
+      setSelectedEquipment(null);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.Equipment.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['equipment']);
+      setSelectedEquipment(null);
+    },
+  });
+
+  // Get unique locations for filter
+  const uniqueLocations = [...new Set(equipment.map(e => e.location).filter(Boolean))];
 
   const filteredEquipment = equipment.filter(e => {
     const matchesSearch = !searchQuery || 
       e.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       e.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      e.location?.toLowerCase().includes(searchQuery.toLowerCase());
+      e.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.manufacturer?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.serial_number?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesType = filterType === 'all' || e.type === filterType;
     const matchesStatus = filterStatus === 'all' || e.status === filterStatus;
     const matchesRisk = filterRisk === 'all' || e.risk_level === filterRisk;
-    return matchesSearch && matchesType && matchesStatus && matchesRisk;
+    const matchesLocation = filterLocation === 'all' || e.location === filterLocation;
+    return matchesSearch && matchesType && matchesStatus && matchesRisk && matchesLocation;
   });
+
+  const handleSaveEquipment = (data) => {
+    if (editingEquipment?.id) {
+      updateMutation.mutate({ id: editingEquipment.id, data });
+    } else {
+      createMutation.mutate(data);
+    }
+  };
+
+  const handleEditFromDetails = (eq) => {
+    setEditingEquipment(eq);
+    setIsFormOpen(true);
+  };
+
+  const handleDeleteEquipment = (id) => {
+    deleteMutation.mutate(id);
+  };
 
   const getStatusColor = (status) => {
     const colors = {
@@ -141,141 +161,41 @@ export default function Equipment() {
     <div className="min-h-screen bg-gray-50 text-slate-900">
       <div className="max-w-[1800px] mx-auto px-6 py-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
             <h1 className="text-2xl font-semibold text-slate-900">Equipment Management</h1>
             <p className="text-sm text-slate-500">{equipment.length} total assets registered</p>
           </div>
-          <div className="flex items-center gap-3">
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-indigo-600 hover:bg-indigo-700">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Equipment
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Add New Equipment</DialogTitle>
-                </DialogHeader>
-                <div className="grid grid-cols-2 gap-4 mt-4">
-                  <div className="space-y-2">
-                    <Label className="text-slate-700">Name *</Label>
-                    <Input
-                      value={newEquipment.name}
-                      onChange={(e) => setNewEquipment({ ...newEquipment, name: e.target.value })}
-                      placeholder="Equipment name"
-                      className="bg-white border-slate-200"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-slate-700">Type *</Label>
-                    <Select value={newEquipment.type} onValueChange={(v) => setNewEquipment({ ...newEquipment, type: v })}>
-                      <SelectTrigger className="bg-white border-slate-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white border-slate-200">
-                        {EQUIPMENT_TYPES.map(type => (
-                          <SelectItem key={type} value={type} className="capitalize">
-                            {type.replace(/_/g, ' ')}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-slate-700">Location *</Label>
-                    <Input
-                      value={newEquipment.location}
-                      onChange={(e) => setNewEquipment({ ...newEquipment, location: e.target.value })}
-                      placeholder="Building/Zone"
-                      className="bg-white border-slate-200"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-slate-700">Manufacturer</Label>
-                    <Input
-                      value={newEquipment.manufacturer}
-                      onChange={(e) => setNewEquipment({ ...newEquipment, manufacturer: e.target.value })}
-                      placeholder="Manufacturer"
-                      className="bg-white border-slate-200"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-slate-700">Model</Label>
-                    <Input
-                      value={newEquipment.model}
-                      onChange={(e) => setNewEquipment({ ...newEquipment, model: e.target.value })}
-                      placeholder="Model number"
-                      className="bg-white border-slate-200"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-slate-700">Serial Number</Label>
-                    <Input
-                      value={newEquipment.serial_number}
-                      onChange={(e) => setNewEquipment({ ...newEquipment, serial_number: e.target.value })}
-                      placeholder="Serial number"
-                      className="bg-white border-slate-200"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-slate-700">Installation Date</Label>
-                    <Input
-                      type="date"
-                      value={newEquipment.installation_date}
-                      onChange={(e) => setNewEquipment({ ...newEquipment, installation_date: e.target.value })}
-                      className="bg-white border-slate-200"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-slate-700">Criticality</Label>
-                    <Select value={newEquipment.criticality} onValueChange={(v) => setNewEquipment({ ...newEquipment, criticality: v })}>
-                      <SelectTrigger className="bg-white border-slate-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white border-slate-200">
-                        <SelectItem value="low">Low</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="high">High</SelectItem>
-                        <SelectItem value="mission_critical">Mission Critical</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="flex justify-end gap-3 mt-6">
-                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="border-slate-200">
-                    Cancel
-                  </Button>
-                  <Button 
-                    onClick={() => createMutation.mutate(newEquipment)}
-                    disabled={!newEquipment.name || !newEquipment.location || createMutation.isPending}
-                    className="bg-indigo-600 hover:bg-indigo-700"
-                  >
-                    Add Equipment
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
+          <Button 
+            onClick={() => { setEditingEquipment(null); setIsFormOpen(true); }}
+            className="bg-indigo-600 hover:bg-indigo-700"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Equipment
+          </Button>
+        </div>
+
+        {/* Stats */}
+        <div className="mb-6">
+          <EquipmentStats equipment={equipment} />
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-4 mb-6">
-          <div className="relative flex-1 min-w-[200px] max-w-md">
+        <div className="flex flex-wrap items-center gap-3 mb-6 p-4 bg-white rounded-xl border border-slate-200">
+          <div className="relative flex-1 min-w-[200px] max-w-sm">
             <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
             <Input
-              placeholder="Search equipment..."
+              placeholder="Search name, type, location, serial..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-white border-slate-200 text-slate-900"
+              className="pl-10 bg-slate-50 border-slate-200 text-slate-900"
             />
           </div>
           <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className="w-40 bg-white border-slate-200">
+            <SelectTrigger className="w-36 bg-slate-50 border-slate-200">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
-            <SelectContent className="bg-white border-slate-200">
+            <SelectContent className="bg-white border-slate-200 max-h-60">
               <SelectItem value="all">All Types</SelectItem>
               {EQUIPMENT_TYPES.map(type => (
                 <SelectItem key={type} value={type} className="capitalize">
@@ -284,8 +204,19 @@ export default function Equipment() {
               ))}
             </SelectContent>
           </Select>
+          <Select value={filterLocation} onValueChange={setFilterLocation}>
+            <SelectTrigger className="w-44 bg-slate-50 border-slate-200">
+              <SelectValue placeholder="Location" />
+            </SelectTrigger>
+            <SelectContent className="bg-white border-slate-200 max-h-60">
+              <SelectItem value="all">All Locations</SelectItem>
+              {uniqueLocations.map(loc => (
+                <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Select value={filterStatus} onValueChange={setFilterStatus}>
-            <SelectTrigger className="w-40 bg-white border-slate-200">
+            <SelectTrigger className="w-36 bg-slate-50 border-slate-200">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent className="bg-white border-slate-200">
@@ -298,7 +229,7 @@ export default function Equipment() {
             </SelectContent>
           </Select>
           <Select value={filterRisk} onValueChange={setFilterRisk}>
-            <SelectTrigger className="w-40 bg-white border-slate-200">
+            <SelectTrigger className="w-32 bg-slate-50 border-slate-200">
               <SelectValue placeholder="Risk" />
             </SelectTrigger>
             <SelectContent className="bg-white border-slate-200">
@@ -309,7 +240,26 @@ export default function Equipment() {
               <SelectItem value="critical">Critical</SelectItem>
             </SelectContent>
           </Select>
-          <div className="flex items-center gap-1 ml-auto">
+          
+          {(searchQuery || filterType !== 'all' || filterStatus !== 'all' || filterRisk !== 'all' || filterLocation !== 'all') && (
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => {
+                setSearchQuery('');
+                setFilterType('all');
+                setFilterStatus('all');
+                setFilterRisk('all');
+                setFilterLocation('all');
+              }}
+              className="text-slate-500 hover:text-slate-700"
+            >
+              <X className="w-4 h-4 mr-1" />
+              Clear
+            </Button>
+          )}
+
+          <div className="flex items-center gap-1 ml-auto border-l border-slate-200 pl-3">
             <Button
               variant={viewMode === 'grid' ? 'default' : 'outline'}
               size="icon"
@@ -326,16 +276,104 @@ export default function Equipment() {
             >
               <List className="w-4 h-4" />
             </Button>
+            <Button
+              variant={viewMode === 'hierarchy' ? 'default' : 'outline'}
+              size="icon"
+              onClick={() => setViewMode('hierarchy')}
+              className={viewMode === 'hierarchy' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-white border-slate-200 text-slate-600'}
+            >
+              <Layers className="w-4 h-4" />
+            </Button>
           </div>
         </div>
 
         {/* Results count */}
-        <p className="text-sm text-slate-500 mb-4">
-          Showing {filteredEquipment.length} of {equipment.length} equipment
-        </p>
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-sm text-slate-500">
+            Showing {filteredEquipment.length} of {equipment.length} equipment
+          </p>
+          {viewMode === 'hierarchy' && (
+            <Select value={groupBy} onValueChange={setGroupBy}>
+              <SelectTrigger className="w-40 bg-white border-slate-200">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-white border-slate-200">
+                <SelectItem value="location">Group by Location</SelectItem>
+                <SelectItem value="type">Group by Type</SelectItem>
+                <SelectItem value="status">Group by Status</SelectItem>
+                <SelectItem value="criticality">Group by Criticality</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        </div>
 
-        {/* Equipment Grid/List */}
-        {viewMode === 'grid' ? (
+        {/* Equipment Grid/List/Hierarchy */}
+        {viewMode === 'hierarchy' ? (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-1">
+              <AssetHierarchy
+                equipment={filteredEquipment}
+                groupBy={groupBy}
+                onSelectEquipment={setSelectedEquipment}
+                selectedId={selectedEquipment?.id}
+              />
+            </div>
+            <div className="lg:col-span-2">
+              {selectedEquipment ? (
+                <div className="bg-white rounded-xl border border-slate-200 p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="text-xl font-semibold text-slate-900">{selectedEquipment.name}</h3>
+                      <p className="text-sm text-slate-500">{selectedEquipment.type?.replace(/_/g, ' ')} • {selectedEquipment.location}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => handleEditFromDetails(selectedEquipment)}>
+                        Edit
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-rose-600 border-rose-200 hover:bg-rose-50"
+                        onClick={() => handleDeleteEquipment(selectedEquipment.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="p-3 bg-slate-50 rounded-lg">
+                      <p className="text-xs text-slate-500">Health Score</p>
+                      <p className="text-xl font-bold text-slate-900">{selectedEquipment.health_score || 0}%</p>
+                    </div>
+                    <div className="p-3 bg-slate-50 rounded-lg">
+                      <p className="text-xs text-slate-500">Status</p>
+                      <p className="text-xl font-bold capitalize text-slate-900">{selectedEquipment.status}</p>
+                    </div>
+                    <div className="p-3 bg-slate-50 rounded-lg">
+                      <p className="text-xs text-slate-500">Risk Level</p>
+                      <p className="text-xl font-bold capitalize text-slate-900">{selectedEquipment.risk_level || 'low'}</p>
+                    </div>
+                    <div className="p-3 bg-slate-50 rounded-lg">
+                      <p className="text-xs text-slate-500">RUL</p>
+                      <p className="text-xl font-bold text-slate-900">{selectedEquipment.remaining_useful_life_days || 'N/A'} days</p>
+                    </div>
+                  </div>
+                  <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                    <div><span className="text-slate-500">Manufacturer:</span> <span className="text-slate-900">{selectedEquipment.manufacturer || 'N/A'}</span></div>
+                    <div><span className="text-slate-500">Model:</span> <span className="text-slate-900">{selectedEquipment.model || 'N/A'}</span></div>
+                    <div><span className="text-slate-500">Serial:</span> <span className="text-slate-900">{selectedEquipment.serial_number || 'N/A'}</span></div>
+                    <div><span className="text-slate-500">Installed:</span> <span className="text-slate-900">{selectedEquipment.installation_date ? format(new Date(selectedEquipment.installation_date), 'MMM d, yyyy') : 'N/A'}</span></div>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-slate-50 rounded-xl border border-dashed border-slate-300 p-12 text-center">
+                  <Cpu className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                  <p className="text-slate-500">Select an asset from the hierarchy to view details</p>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filteredEquipment.map((eq, idx) => {
               const hasRecentUpdate = recentUpdates.some(u => u.id === eq.id && Date.now() - u.timestamp < 3000);
@@ -438,14 +476,24 @@ export default function Equipment() {
       </div>
 
       <AnimatePresence>
-        {selectedEquipment && (
+        {selectedEquipment && viewMode !== 'hierarchy' && (
           <EquipmentDetails
             equipment={selectedEquipment}
             readings={sensorReadings}
             onClose={() => setSelectedEquipment(null)}
+            onEdit={handleEditFromDetails}
+            onDelete={handleDeleteEquipment}
           />
         )}
       </AnimatePresence>
+
+      <EquipmentForm
+        open={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        equipment={editingEquipment}
+        onSave={handleSaveEquipment}
+        isSaving={createMutation.isPending || updateMutation.isPending}
+      />
     </div>
   );
 }
