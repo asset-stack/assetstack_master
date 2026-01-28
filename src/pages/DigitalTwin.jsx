@@ -588,25 +588,19 @@ export default function DigitalTwin() {
             )}
           </AnimatePresence>
 
-          {/* 3D Canvas */}
+          {/* Visualization */}
           {currentScan ? (
-            <Canvas className="bg-slate-900" camera={{ position: [80, 60, 80], fov: 50 }}>
-              <Suspense fallback={null}>
-                <Scene
-                  scan={currentScan}
-                  equipment={equipment}
-                  showAnomalies={showAnomalies}
-                  showEquipment={showEquipment}
-                  selectedAnomaly={selectedAnomaly}
-                  selectedEquipment={selectedEquipment}
-                  onAnomalyClick={(idx) => {
-                    setSelectedAnomaly(idx);
-                    setShowAnomalyPanel(true);
-                  }}
-                  onEquipmentClick={setSelectedEquipment}
-                />
-              </Suspense>
-            </Canvas>
+            <div className="h-full p-4">
+              <ScanVisualization
+                scan={currentScan}
+                showAnomalies={showAnomalies}
+                selectedAnomaly={selectedAnomaly}
+                onAnomalyClick={(idx) => {
+                  setSelectedAnomaly(idx);
+                  setShowAnomalyPanel(true);
+                }}
+              />
+            </div>
           ) : (
             <div className="h-full flex items-center justify-center bg-slate-100">
               <div className="text-center">
