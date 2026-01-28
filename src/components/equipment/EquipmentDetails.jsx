@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   X, Activity, Clock, MapPin, Calendar, Wrench, AlertTriangle, 
-  TrendingUp, Cpu, Gauge, Thermometer, Zap, Droplet
+  TrendingUp, Cpu, Gauge, Thermometer, Zap, Droplet, Pencil, Trash2
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { format } from 'date-fns';
 import HealthGauge from '../dashboard/HealthGauge';
 import SensorReadingsChart from './SensorReadingsChart';
 
-export default function EquipmentDetails({ equipment, readings, onClose }) {
+export default function EquipmentDetails({ equipment, readings, onClose, onEdit, onDelete }) {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const getStatusColor = (status) => {
     const colors = {
       operational: 'bg-emerald-500',
@@ -70,9 +72,33 @@ export default function EquipmentDetails({ equipment, readings, onClose }) {
               <p className="text-slate-400">{equipment.type?.replace(/_/g, ' ')} • {equipment.manufacturer} {equipment.model}</p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose} className="text-slate-400 hover:text-white">
-            <X className="w-5 h-5" />
-          </Button>
+          <div className="flex items-center gap-2">
+            {onEdit && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => onEdit(equipment)}
+                className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
+              >
+                <Pencil className="w-4 h-4 mr-1" />
+                Edit
+              </Button>
+            )}
+            {onDelete && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setShowDeleteConfirm(true)}
+                className="border-rose-600 text-rose-400 hover:bg-rose-600 hover:text-white"
+              >
+                <Trash2 className="w-4 h-4 mr-1" />
+                Delete
+              </Button>
+            )}
+            <Button variant="ghost" size="icon" onClick={onClose} className="text-slate-400 hover:text-white">
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
 
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
@@ -198,6 +224,34 @@ export default function EquipmentDetails({ equipment, readings, onClose }) {
             </TabsContent>
           </Tabs>
         </div>
+
+        <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+          <DialogContent className="bg-white max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-rose-600">
+                <AlertTriangle className="w-5 h-5" />
+                Delete Equipment
+              </DialogTitle>
+            </DialogHeader>
+            <p className="text-slate-600">
+              Are you sure you want to delete <strong>{equipment.name}</strong>? This action cannot be undone.
+            </p>
+            <DialogFooter className="gap-2">
+              <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
+                Cancel
+              </Button>
+              <Button 
+                className="bg-rose-600 hover:bg-rose-700"
+                onClick={() => {
+                  onDelete(equipment.id);
+                  setShowDeleteConfirm(false);
+                }}
+              >
+                Delete Equipment
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </motion.div>
     </motion.div>
   );
