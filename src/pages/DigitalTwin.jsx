@@ -1,222 +1,106 @@
-import React, { useState, useRef, useEffect, Suspense } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Html } from '@react-three/drei';
-import * as THREE from 'three';
 import { 
-  Box, Upload, FileUp, Scan, AlertTriangle, MapPin, Layers,
-  ZoomIn, ZoomOut, RotateCcw, Eye, EyeOff, Filter, Search,
-  ChevronRight, X, Loader2, Info, Calendar, Ruler, Target,
-  CheckCircle2, Clock, Crosshair
+  Box, Upload, FileUp, Scan, AlertTriangle, Layers,
+  Search, ChevronRight, X, Loader2, Info,
+  CheckCircle2, Eye, Grid3X3
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from 'date-fns';
 
-// 3D Point Cloud Visualization Component
-function PointCloud({ scan, showAnomalies, selectedAnomaly, onAnomalyClick }) {
-  const pointsRef = useRef();
+// 2D Visualization placeholder for scan data
+function ScanVisualization({ scan, showAnomalies, selectedAnomaly, onAnomalyClick }) {
+  const anomalies = scan?.anomalies_detected || [];
+  const bbox = scan?.bounding_box || { min_x: -50, max_x: 50, min_y: -50, max_y: 50, min_z: 0, max_z: 20 };
   
-  // Generate simulated point cloud based on scan data
-  const pointCount = Math.min(scan.point_count || 10000, 20000);
-  const bbox = scan.bounding_box || { min_x: -50, max_x: 50, min_y: -50, max_y: 50, min_z: 0, max_z: 20 };
-  
-  const geometry = React.useMemo(() => {
-    const geo = new THREE.BufferGeometry();
-    const positions = new Float32Array(pointCount * 3);
-    const colors = new Float32Array(pointCount * 3);
-    
-    for (let i = 0; i < pointCount; i++) {
-      const x = bbox.min_x + Math.random() * (bbox.max_x - bbox.min_x);
-      const y = bbox.min_y + Math.random() * (bbox.max_y - bbox.min_y);
-      const z = bbox.min_z + Math.random() * (bbox.max_z - bbox.min_z);
-      
-      positions[i * 3] = x;
-      positions[i * 3 + 1] = y;
-      positions[i * 3 + 2] = z;
-      
-      const normalizedHeight = (z - bbox.min_z) / (bbox.max_z - bbox.min_z);
-      colors[i * 3] = 0.2 + normalizedHeight * 0.3;
-      colors[i * 3 + 1] = 0.4 + normalizedHeight * 0.4;
-      colors[i * 3 + 2] = 0.8;
-    }
-    
-    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    return geo;
-  }, [pointCount, bbox]);
-
-  useFrame((state) => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.05) * 0.02;
-    }
-  });
-
-  const anomalies = scan.anomalies_detected || [];
   const severityColors = {
-    critical: '#ef4444',
-    high: '#f97316',
-    medium: '#f59e0b',
-    low: '#10b981'
+    critical: 'bg-red-500',
+    high: 'bg-orange-500',
+    medium: 'bg-amber-500',
+    low: 'bg-green-500'
   };
 
   return (
-    <group ref={pointsRef}>
-      <points geometry={geometry}>
-        <pointsMaterial size={0.15} vertexColors sizeAttenuation />
-      </points>
-
-      {/* Anomaly markers */}
-      {showAnomalies && anomalies.map((anomaly, idx) => {
-        const coords = anomaly.coordinates || { x: 0, y: 0, z: 5 };
-        const isSelected = selectedAnomaly === idx;
-        return (
-          <group key={idx} position={[coords.x, coords.y, coords.z]}>
-            <mesh 
-              onClick={() => onAnomalyClick(idx)}
-              scale={isSelected ? 1.5 : 1}
-            >
-              <sphereGeometry args={[0.8, 16, 16]} />
-              <meshStandardMaterial 
-                color={severityColors[anomaly.severity] || '#f59e0b'} 
-                emissive={severityColors[anomaly.severity] || '#f59e0b'}
-                emissiveIntensity={isSelected ? 0.8 : 0.3}
-                transparent
-                opacity={0.8}
-              />
-            </mesh>
-            {isSelected && (
-              <Html center distanceFactor={15}>
-                <div className="bg-slate-900/90 text-white px-3 py-2 rounded-lg text-xs whitespace-nowrap">
-                  <p className="font-semibold capitalize">{anomaly.type?.replace(/_/g, ' ')}</p>
-                  <p className="text-slate-300">{anomaly.severity} severity</p>
-                </div>
-              </Html>
-            )}
-          </group>
-        );
-      })}
-    </group>
-  );
-}
-
-// Equipment markers in 3D space
-function EquipmentMarkers({ equipment, scan, onEquipmentClick, selectedEquipment }) {
-  const linkedIds = scan.linked_equipment_ids || [];
-  const linkedEquipment = equipment.filter(e => linkedIds.includes(e.id));
-  
-  const statusColors = {
-    operational: '#10b981',
-    degraded: '#f59e0b',
-    critical: '#ef4444',
-    offline: '#6b7280',
-    maintenance: '#3b82f6'
-  };
-
-  return (
-    <group>
-      {linkedEquipment.map((eq, idx) => {
-        const bbox = scan.bounding_box || { min_x: -50, max_x: 50, min_y: -50, max_y: 50, min_z: 0, max_z: 20 };
-        const x = bbox.min_x + (idx * 15) % (bbox.max_x - bbox.min_x);
-        const y = bbox.min_y + Math.floor(idx / 4) * 15;
-        const z = 2 + Math.random() * 5;
-        const isSelected = selectedEquipment?.id === eq.id;
-
-        return (
-          <group key={eq.id} position={[x, y, z]}>
-            <mesh onClick={() => onEquipmentClick(eq)} scale={isSelected ? 1.3 : 1}>
-              <boxGeometry args={[2, 2, 3]} />
-              <meshStandardMaterial 
-                color={statusColors[eq.status] || '#6b7280'}
-                emissive={statusColors[eq.status] || '#6b7280'}
-                emissiveIntensity={isSelected ? 0.5 : 0.1}
-              />
-            </mesh>
-            {isSelected && (
-              <Html center distanceFactor={20}>
-                <div className="bg-white text-slate-900 px-3 py-2 rounded-lg shadow-lg text-xs whitespace-nowrap border">
-                  <p className="font-semibold">{eq.name}</p>
-                  <p className="text-slate-500 capitalize">{eq.type?.replace(/_/g, ' ')}</p>
-                  <p className="text-xs">Health: {eq.health_score || 'N/A'}%</p>
-                </div>
-              </Html>
-            )}
-          </group>
-        );
-      })}
-    </group>
-  );
-}
-
-// Simple grid floor component
-function GridFloor() {
-  const geometry = React.useMemo(() => {
-    const geo = new THREE.BufferGeometry();
-    const positions = [];
-    const size = 100;
-    const divisions = 20;
-    const step = size / divisions;
-    
-    for (let i = -size / 2; i <= size / 2; i += step) {
-      positions.push(-size / 2, i, 0, size / 2, i, 0);
-      positions.push(i, -size / 2, 0, i, size / 2, 0);
-    }
-    
-    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
-    return geo;
-  }, []);
-
-  return (
-    <lineSegments geometry={geometry}>
-      <lineBasicMaterial color="#4a5568" opacity={0.3} transparent />
-    </lineSegments>
-  );
-}
-
-// Scene setup component
-function Scene({ scan, equipment, showAnomalies, showEquipment, selectedAnomaly, selectedEquipment, onAnomalyClick, onEquipmentClick }) {
-  return (
-    <>
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[50, 50, 50]} intensity={0.8} />
-      <pointLight position={[-50, 50, -50]} intensity={0.3} />
-      
-      <GridFloor />
-
-      {scan && (
-        <PointCloud 
-          scan={scan} 
-          showAnomalies={showAnomalies}
-          selectedAnomaly={selectedAnomaly}
-          onAnomalyClick={onAnomalyClick}
-        />
-      )}
-
-      {showEquipment && scan && (
-        <EquipmentMarkers 
-          equipment={equipment}
-          scan={scan}
-          onEquipmentClick={onEquipmentClick}
-          selectedEquipment={selectedEquipment}
-        />
-      )}
-      
-      <OrbitControls 
-        enablePan 
-        enableZoom 
-        enableRotate 
-        minDistance={20}
-        maxDistance={200}
+    <div className="relative w-full h-full bg-slate-900 rounded-lg overflow-hidden">
+      {/* Grid background */}
+      <div 
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: 'linear-gradient(#4a5568 1px, transparent 1px), linear-gradient(90deg, #4a5568 1px, transparent 1px)',
+          backgroundSize: '40px 40px'
+        }}
       />
-    </>
+      
+      {/* Point cloud representation */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="relative w-3/4 h-3/4">
+          {/* Simulated point cloud dots */}
+          {Array.from({ length: 200 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 rounded-full bg-indigo-400 opacity-60"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                transform: `scale(${0.5 + Math.random()})`,
+              }}
+            />
+          ))}
+          
+          {/* Anomaly markers */}
+          {showAnomalies && anomalies.map((anomaly, idx) => {
+            const coords = anomaly.coordinates || { x: 0, y: 0, z: 5 };
+            const x = ((coords.x - bbox.min_x) / (bbox.max_x - bbox.min_x)) * 100;
+            const y = ((coords.y - bbox.min_y) / (bbox.max_y - bbox.min_y)) * 100;
+            const isSelected = selectedAnomaly === idx;
+            
+            return (
+              <div
+                key={idx}
+                onClick={() => onAnomalyClick(idx)}
+                className={`absolute cursor-pointer transition-transform ${isSelected ? 'scale-150 z-10' : 'hover:scale-125'}`}
+                style={{ left: `${x}%`, top: `${y}%`, transform: 'translate(-50%, -50%)' }}
+              >
+                <div className={`w-4 h-4 rounded-full ${severityColors[anomaly.severity] || 'bg-amber-500'} animate-pulse`}>
+                  <div className={`absolute inset-0 rounded-full ${severityColors[anomaly.severity] || 'bg-amber-500'} opacity-50 animate-ping`} />
+                </div>
+                {isSelected && (
+                  <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-3 py-2 rounded-lg text-xs whitespace-nowrap z-20">
+                    <p className="font-semibold capitalize">{anomaly.type?.replace(/_/g, ' ')}</p>
+                    <p className="text-slate-300">{anomaly.severity} severity</p>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      
+      {/* Scan info overlay */}
+      <div className="absolute bottom-4 left-4 bg-slate-800/80 backdrop-blur-sm rounded-lg px-4 py-2 text-white text-xs">
+        <p className="font-medium">{scan?.name}</p>
+        <p className="text-slate-400">{scan?.point_count?.toLocaleString() || 0} points</p>
+      </div>
+      
+      {/* Legend */}
+      <div className="absolute top-4 right-4 bg-slate-800/80 backdrop-blur-sm rounded-lg px-3 py-2 text-white text-xs">
+        <p className="font-medium mb-2">Anomaly Severity</p>
+        <div className="space-y-1">
+          <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-red-500" /> Critical</div>
+          <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-orange-500" /> High</div>
+          <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-amber-500" /> Medium</div>
+          <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-green-500" /> Low</div>
+        </div>
+      </div>
+    </div>
   );
 }
 
