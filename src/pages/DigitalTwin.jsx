@@ -24,33 +24,35 @@ import { format } from 'date-fns';
 // 3D Point Cloud Visualization Component
 function PointCloud({ scan, showAnomalies, selectedAnomaly, onAnomalyClick }) {
   const pointsRef = useRef();
-  const anomalyRefs = useRef([]);
   
   // Generate simulated point cloud based on scan data
-  const pointCount = Math.min(scan.point_count || 50000, 100000);
+  const pointCount = Math.min(scan.point_count || 10000, 20000);
   const bbox = scan.bounding_box || { min_x: -50, max_x: 50, min_y: -50, max_y: 50, min_z: 0, max_z: 20 };
   
-  const positions = React.useMemo(() => {
-    const pos = new Float32Array(pointCount * 3);
+  const geometry = React.useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(pointCount * 3);
+    const colors = new Float32Array(pointCount * 3);
+    
     for (let i = 0; i < pointCount; i++) {
-      pos[i * 3] = bbox.min_x + Math.random() * (bbox.max_x - bbox.min_x);
-      pos[i * 3 + 1] = bbox.min_y + Math.random() * (bbox.max_y - bbox.min_y);
-      pos[i * 3 + 2] = bbox.min_z + Math.random() * (bbox.max_z - bbox.min_z);
+      const x = bbox.min_x + Math.random() * (bbox.max_x - bbox.min_x);
+      const y = bbox.min_y + Math.random() * (bbox.max_y - bbox.min_y);
+      const z = bbox.min_z + Math.random() * (bbox.max_z - bbox.min_z);
+      
+      positions[i * 3] = x;
+      positions[i * 3 + 1] = y;
+      positions[i * 3 + 2] = z;
+      
+      const normalizedHeight = (z - bbox.min_z) / (bbox.max_z - bbox.min_z);
+      colors[i * 3] = 0.2 + normalizedHeight * 0.3;
+      colors[i * 3 + 1] = 0.4 + normalizedHeight * 0.4;
+      colors[i * 3 + 2] = 0.8;
     }
-    return pos;
+    
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    return geo;
   }, [pointCount, bbox]);
-
-  const colors = React.useMemo(() => {
-    const col = new Float32Array(pointCount * 3);
-    for (let i = 0; i < pointCount; i++) {
-      const height = positions[i * 3 + 2];
-      const normalizedHeight = (height - bbox.min_z) / (bbox.max_z - bbox.min_z);
-      col[i * 3] = 0.2 + normalizedHeight * 0.3;
-      col[i * 3 + 1] = 0.4 + normalizedHeight * 0.4;
-      col[i * 3 + 2] = 0.8;
-    }
-    return col;
-  }, [pointCount, positions, bbox]);
 
   useFrame((state) => {
     if (pointsRef.current) {
@@ -68,18 +70,8 @@ function PointCloud({ scan, showAnomalies, selectedAnomaly, onAnomalyClick }) {
 
   return (
     <group ref={pointsRef}>
-      <points>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[positions, 3]}
-          />
-          <bufferAttribute
-            attach="attributes-color"
-            args={[colors, 3]}
-          />
-        </bufferGeometry>
-        <pointsMaterial size={0.1} vertexColors sizeAttenuation />
+      <points geometry={geometry}>
+        <pointsMaterial size={0.15} vertexColors sizeAttenuation />
       </points>
 
       {/* Anomaly markers */}
