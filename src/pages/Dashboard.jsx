@@ -286,6 +286,8 @@ export default function Dashboard() {
             equipment={selectedEquipment}
             readings={sensorReadings}
             onClose={() => setSelectedEquipment(null)}
+            onEdit={null}
+            onDelete={null}
           />
         )}
       </AnimatePresence>
