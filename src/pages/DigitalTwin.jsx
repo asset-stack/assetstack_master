@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Box, Upload, FileUp, Scan, AlertTriangle, Layers,
   Search, ChevronRight, X, Loader2, Info,
-  CheckCircle2, Eye, Grid3X3
+  CheckCircle2, Eye, Grid3X3, Plus, Ruler, FileText, Lightbulb
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from 'date-fns';
+import AddAnomalyDialog from '@/components/digital-twin/AddAnomalyDialog';
+import AnomalyMeasurementPanel from '@/components/digital-twin/AnomalyMeasurementPanel';
+import AnomalyReportGenerator from '@/components/digital-twin/AnomalyReportGenerator';
+import AnomalyCausesPanel from '@/components/digital-twin/AnomalyCausesPanel';
 
 // 2D Visualization placeholder for scan data
 function ScanVisualization({ scan, showAnomalies, selectedAnomaly, onAnomalyClick }) {
@@ -382,6 +386,10 @@ export default function DigitalTwin() {
 
   const [showAnomalyPanel, setShowAnomalyPanel] = useState(false);
   const [selectedAnomaly, setSelectedAnomaly] = useState(null);
+  const [showAddAnomalyDialog, setShowAddAnomalyDialog] = useState(false);
+  const [showMeasurementPanel, setShowMeasurementPanel] = useState(false);
+  const [showReportGenerator, setShowReportGenerator] = useState(false);
+  const [showCausesPanel, setShowCausesPanel] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -398,6 +406,32 @@ export default function DigitalTwin() {
       queryClient.invalidateQueries({ queryKey: ['lidarScans'] });
     },
   });
+
+  const updateScanMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.LiDARScan.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['lidarScans'] });
+    },
+  });
+
+  const handleAddAnomaly = (anomalyData) => {
+    if (!currentScan) return;
+    const updatedAnomalies = [...(currentScan.anomalies_detected || []), anomalyData];
+    updateScanMutation.mutate({
+      id: currentScan.id,
+      data: { anomalies_detected: updatedAnomalies }
+    });
+  };
+
+  const handleUpdateAnomaly = (index, updatedAnomaly) => {
+    if (!currentScan) return;
+    const updatedAnomalies = [...(currentScan.anomalies_detected || [])];
+    updatedAnomalies[index] = updatedAnomaly;
+    updateScanMutation.mutate({
+      id: currentScan.id,
+      data: { anomalies_detected: updatedAnomalies }
+    });
+  };
 
   const filteredScans = scans.filter(s => 
     s.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -535,7 +569,7 @@ export default function DigitalTwin() {
         {/* 3D Viewer */}
         <div className="flex-1 relative">
           {/* Toolbar */}
-          <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+          <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2">
             <Button
               variant={showAnomalies ? "default" : "outline"}
               size="sm"
@@ -546,16 +580,63 @@ export default function DigitalTwin() {
               Anomalies
             </Button>
 
-            {anomalies.length > 0 && (
+            {currentScan && (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setShowAnomalyPanel(!showAnomalyPanel)}
+                onClick={() => setShowAddAnomalyDialog(true)}
                 className="bg-white"
               >
-                <Info className="w-4 h-4 mr-1" />
-                View Issues ({anomalies.length})
+                <Plus className="w-4 h-4 mr-1" />
+                Add Anomaly
               </Button>
+            )}
+
+            {anomalies.length > 0 && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowAnomalyPanel(!showAnomalyPanel)}
+                  className="bg-white"
+                >
+                  <Info className="w-4 h-4 mr-1" />
+                  View Issues ({anomalies.length})
+                </Button>
+
+                {selectedAnomaly !== null && (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowMeasurementPanel(true)}
+                      className="bg-white"
+                    >
+                      <Ruler className="w-4 h-4 mr-1" />
+                      Measure
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowCausesPanel(true)}
+                      className="bg-white"
+                    >
+                      <Lightbulb className="w-4 h-4 mr-1" />
+                      AI Analysis
+                    </Button>
+                  </>
+                )}
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowReportGenerator(true)}
+                  className="bg-white"
+                >
+                  <FileText className="w-4 h-4 mr-1" />
+                  Report
+                </Button>
+              </>
             )}
           </div>
 
@@ -570,10 +651,36 @@ export default function DigitalTwin() {
                 <AnomalyPanel
                   anomalies={anomalies}
                   selectedAnomaly={selectedAnomaly}
-                  onSelect={setSelectedAnomaly}
+                  onSelect={(idx) => {
+                    setSelectedAnomaly(idx);
+                    setShowCausesPanel(false);
+                    setShowMeasurementPanel(false);
+                  }}
                   onClose={() => setShowAnomalyPanel(false)}
                 />
               </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Measurement Panel */}
+          <AnimatePresence>
+            {showMeasurementPanel && selectedAnomaly !== null && anomalies[selectedAnomaly] && (
+              <AnomalyMeasurementPanel
+                anomaly={anomalies[selectedAnomaly]}
+                index={selectedAnomaly}
+                onUpdate={handleUpdateAnomaly}
+                onClose={() => setShowMeasurementPanel(false)}
+              />
+            )}
+          </AnimatePresence>
+
+          {/* AI Causes Panel */}
+          <AnimatePresence>
+            {showCausesPanel && selectedAnomaly !== null && anomalies[selectedAnomaly] && (
+              <AnomalyCausesPanel
+                anomaly={anomalies[selectedAnomaly]}
+                onClose={() => setShowCausesPanel(false)}
+              />
             )}
           </AnimatePresence>
 
@@ -615,6 +722,20 @@ export default function DigitalTwin() {
         open={showUploadDialog}
         onOpenChange={setShowUploadDialog}
         onUpload={createScanMutation.mutate}
+      />
+
+      <AddAnomalyDialog
+        open={showAddAnomalyDialog}
+        onOpenChange={setShowAddAnomalyDialog}
+        onAdd={handleAddAnomaly}
+        scanBoundingBox={currentScan?.bounding_box}
+      />
+
+      <AnomalyReportGenerator
+        open={showReportGenerator}
+        onOpenChange={setShowReportGenerator}
+        scan={currentScan}
+        anomalies={anomalies}
       />
     </div>
   );
