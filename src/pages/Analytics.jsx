@@ -144,13 +144,16 @@ export default function Analytics() {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white border border-slate-200 rounded-lg p-3 shadow-lg">
-        <p className="text-slate-500 text-xs mb-1">{label}</p>
-        {payload.map((entry, idx) => (
-          <p key={idx} className="text-sm font-medium" style={{ color: entry.color }}>
-            {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(1) : entry.value}
-          </p>
-        ))}
+        <div className="bg-white border border-slate-200 rounded-xl p-3 shadow-xl">
+          <p className="text-slate-500 text-xs mb-2 font-medium">{label}</p>
+          {payload.map((entry, idx) => (
+            <div key={idx} className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
+              <p className="text-sm font-medium text-slate-700">
+                {entry.name}: <span className="text-slate-900">{typeof entry.value === 'number' ? entry.value.toFixed(1) : entry.value}</span>
+              </p>
+            </div>
+          ))}
         </div>
       );
     }
@@ -158,16 +161,17 @@ export default function Analytics() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-slate-900">
+    <div className="min-h-screen bg-slate-50">
       <div className="max-w-[1800px] mx-auto px-6 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Analytics Dashboard</h1>
-            <p className="text-sm text-slate-500">Comprehensive insights into your maintenance operations</p>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Analytics Dashboard</h1>
+            <p className="text-sm text-slate-500 mt-1">Comprehensive insights into your maintenance operations</p>
           </div>
           <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-36 bg-white border-slate-200">
+            <SelectTrigger className="w-40 bg-white border-slate-200 shadow-sm">
+              <Calendar className="w-4 h-4 mr-2 text-slate-400" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-white border-slate-200">
@@ -181,42 +185,44 @@ export default function Analytics() {
 
         {/* Tabs */}
         <Tabs defaultValue="overview" className="mb-8">
-          <TabsList className="bg-white border border-slate-200 flex-wrap h-auto p-1">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="predictions" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
-              <Brain className="w-4 h-4 mr-2" />
-              RUL & Predictions
-            </TabsTrigger>
-            <TabsTrigger value="rootcause" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
-              <Search className="w-4 h-4 mr-2" />
-              Root Cause
-            </TabsTrigger>
-            <TabsTrigger value="resources" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
-              <Users className="w-4 h-4 mr-2" />
-              Resources
-            </TabsTrigger>
-            <TabsTrigger value="inventory" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
-              <Package className="w-4 h-4 mr-2" />
-              Spare Parts
-            </TabsTrigger>
-            <TabsTrigger value="benchmarks" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
-              <Award className="w-4 h-4 mr-2" />
-              Benchmarks
-            </TabsTrigger>
-            <TabsTrigger value="optimization" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
-              <DollarSign className="w-4 h-4 mr-2" />
-              Cost Optimization
-            </TabsTrigger>
-            <TabsTrigger value="automation" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
-              <Sparkles className="w-4 h-4 mr-2" />
-              AI Automation
-            </TabsTrigger>
-          </TabsList>
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-1.5 mb-6 overflow-x-auto">
+            <TabsList className="bg-transparent flex-nowrap h-auto gap-1 w-max min-w-full">
+              <TabsTrigger value="overview" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md rounded-lg px-4 py-2.5 text-sm font-medium transition-all">
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="predictions" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md rounded-lg px-4 py-2.5 text-sm font-medium transition-all">
+                <Brain className="w-4 h-4 mr-2" />
+                RUL & Predictions
+              </TabsTrigger>
+              <TabsTrigger value="rootcause" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md rounded-lg px-4 py-2.5 text-sm font-medium transition-all">
+                <Search className="w-4 h-4 mr-2" />
+                Root Cause
+              </TabsTrigger>
+              <TabsTrigger value="resources" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md rounded-lg px-4 py-2.5 text-sm font-medium transition-all">
+                <Users className="w-4 h-4 mr-2" />
+                Resources
+              </TabsTrigger>
+              <TabsTrigger value="inventory" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md rounded-lg px-4 py-2.5 text-sm font-medium transition-all">
+                <Package className="w-4 h-4 mr-2" />
+                Spare Parts
+              </TabsTrigger>
+              <TabsTrigger value="benchmarks" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md rounded-lg px-4 py-2.5 text-sm font-medium transition-all">
+                <Award className="w-4 h-4 mr-2" />
+                Benchmarks
+              </TabsTrigger>
+              <TabsTrigger value="optimization" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md rounded-lg px-4 py-2.5 text-sm font-medium transition-all">
+                <DollarSign className="w-4 h-4 mr-2" />
+                Cost Optimization
+              </TabsTrigger>
+              <TabsTrigger value="automation" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md rounded-lg px-4 py-2.5 text-sm font-medium transition-all">
+                <Sparkles className="w-4 h-4 mr-2" />
+                AI Automation
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="overview" className="mt-6">
+          <TabsContent value="overview" className="mt-0">
             {/* Metrics */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
               <MetricCard title="Fleet Health" value={`${avgHealth}%`} icon={Activity} color="green" />
@@ -227,250 +233,285 @@ export default function Analytics() {
               <MetricCard title="AI Confidence" value={`${avgPredictionConfidence}%`} icon={Brain} color="purple" />
             </div>
 
-        {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Health Trend */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
-          >
-            <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-blue-400" />
-              Fleet Health Trend
-            </h3>
-            <div className="h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="healthGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="day" stroke="#64748b" tick={{ fill: '#64748b', fontSize: 10 }} />
-                  <YAxis stroke="#64748b" tick={{ fill: '#64748b', fontSize: 10 }} domain={[60, 100]} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Area type="monotone" dataKey="health" stroke="#10b981" fill="url(#healthGradient)" strokeWidth={2} name="Health %" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
+            {/* Charts Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              {/* Health Trend */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                    <div className="p-2 bg-emerald-50 rounded-lg">
+                      <TrendingUp className="w-4 h-4 text-emerald-600" />
+                    </div>
+                    Fleet Health Trend
+                  </h3>
+                  <span className="text-xs text-slate-400 bg-slate-50 px-2 py-1 rounded-md">Last 30 days</span>
+                </div>
+                <div className="h-[280px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="healthGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                      <XAxis dataKey="day" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
+                      <YAxis stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 10 }} domain={[60, 100]} axisLine={false} tickLine={false} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Area type="monotone" dataKey="health" stroke="#10b981" fill="url(#healthGradient)" strokeWidth={2.5} name="Health %" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </motion.div>
 
-          {/* Equipment by Type */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
-          >
-            <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-blue-400" />
-              Equipment by Type
-            </h3>
-            <div className="h-[280px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={typeChartData} layout="vertical" margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis type="number" stroke="#64748b" tick={{ fill: '#64748b', fontSize: 10 }} />
-                  <YAxis dataKey="name" type="category" stroke="#64748b" tick={{ fill: '#64748b', fontSize: 10 }} width={100} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="value" fill="#3b82f6" radius={[0, 4, 4, 0]} name="Count" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
+              {/* Equipment by Type */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                    <div className="p-2 bg-blue-50 rounded-lg">
+                      <BarChart3 className="w-4 h-4 text-blue-600" />
+                    </div>
+                    Equipment by Type
+                  </h3>
+                  <span className="text-xs text-slate-400 bg-slate-50 px-2 py-1 rounded-md">{totalEquipment} total</span>
+                </div>
+                <div className="h-[280px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={typeChartData} layout="vertical" margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
+                      <XAxis type="number" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
+                      <YAxis dataKey="name" type="category" stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 11 }} width={100} axisLine={false} tickLine={false} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Bar dataKey="value" fill="#3b82f6" radius={[0, 6, 6, 0]} name="Count" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </motion.div>
 
-          {/* Health Distribution */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
-          >
-            <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-              <PieChartIcon className="w-5 h-5 text-emerald-400" />
-              Health Distribution
-            </h3>
-            <div className="h-[280px] flex items-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={healthDistribution}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={100}
-                    paddingAngle={3}
-                    dataKey="value"
-                  >
-                    {healthDistribution.map((entry, index) => (
-                      <Cell key={index} fill={entry.color} stroke="transparent" />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend 
-                    verticalAlign="bottom" 
-                    height={36}
-                    formatter={(value) => <span className="text-slate-400 text-xs">{value}</span>}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
+              {/* Health Distribution */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                    <div className="p-2 bg-emerald-50 rounded-lg">
+                      <PieChartIcon className="w-4 h-4 text-emerald-600" />
+                    </div>
+                    Health Distribution
+                  </h3>
+                </div>
+                <div className="h-[280px] flex items-center">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={healthDistribution}
+                        cx="50%"
+                        cy="45%"
+                        innerRadius={65}
+                        outerRadius={95}
+                        paddingAngle={4}
+                        dataKey="value"
+                      >
+                        {healthDistribution.map((entry, index) => (
+                          <Cell key={index} fill={entry.color} stroke="transparent" />
+                        ))}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend 
+                        verticalAlign="bottom" 
+                        height={50}
+                        formatter={(value) => <span className="text-slate-600 text-xs">{value}</span>}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </motion.div>
 
-          {/* Risk Distribution */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
-          >
-            <h3 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-amber-400" />
-              Risk Distribution
-            </h3>
-            <div className="h-[280px] flex items-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={riskDistribution}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={100}
-                    paddingAngle={3}
-                    dataKey="value"
-                  >
-                    {riskDistribution.map((entry, index) => (
-                      <Cell key={index} fill={entry.color} stroke="transparent" />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend 
-                    verticalAlign="bottom" 
-                    height={36}
-                    formatter={(value) => <span className="text-slate-400 text-xs">{value}</span>}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              {/* Risk Distribution */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                    <div className="p-2 bg-amber-50 rounded-lg">
+                      <AlertTriangle className="w-4 h-4 text-amber-600" />
+                    </div>
+                    Risk Distribution
+                  </h3>
+                </div>
+                <div className="h-[280px] flex items-center">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={riskDistribution}
+                        cx="50%"
+                        cy="45%"
+                        innerRadius={65}
+                        outerRadius={95}
+                        paddingAngle={4}
+                        dataKey="value"
+                      >
+                        {riskDistribution.map((entry, index) => (
+                          <Cell key={index} fill={entry.color} stroke="transparent" />
+                        ))}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend 
+                        verticalAlign="bottom" 
+                        height={50}
+                        formatter={(value) => <span className="text-slate-600 text-xs">{value}</span>}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
-        </div>
 
-        {/* Bottom Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Task Completion */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
-          >
-            <h3 className="text-lg font-semibold text-slate-900 mb-4">Task Completion Rate</h3>
-            <div className="h-[200px] flex items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadialBarChart 
-                  cx="50%" 
-                  cy="50%" 
-                  innerRadius="60%" 
-                  outerRadius="90%" 
-                  data={[{ name: 'Completion', value: taskCompletionRate, fill: '#10b981' }]}
-                  startAngle={90}
-                  endAngle={-270}
-                >
-                  <RadialBar
-                    background={{ fill: 'rgba(255,255,255,0.05)' }}
-                    dataKey="value"
-                    cornerRadius={10}
-                  />
-                </RadialBarChart>
-              </ResponsiveContainer>
-              <div className="absolute text-center">
-                <p className="text-3xl font-bold text-slate-900">{taskCompletionRate}%</p>
-                <p className="text-xs text-slate-400">Completed</p>
-              </div>
-            </div>
-          </motion.div>
+            {/* Bottom Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Task Completion */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow relative"
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="p-2 bg-green-50 rounded-lg">
+                    <Target className="w-4 h-4 text-green-600" />
+                  </div>
+                  <h3 className="text-base font-semibold text-slate-900">Task Completion</h3>
+                </div>
+                <div className="h-[180px] flex items-center justify-center relative">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadialBarChart 
+                      cx="50%" 
+                      cy="50%" 
+                      innerRadius="65%" 
+                      outerRadius="90%" 
+                      data={[{ name: 'Completion', value: taskCompletionRate, fill: '#10b981' }]}
+                      startAngle={90}
+                      endAngle={-270}
+                    >
+                      <RadialBar
+                        background={{ fill: '#f1f5f9' }}
+                        dataKey="value"
+                        cornerRadius={12}
+                      />
+                    </RadialBarChart>
+                  </ResponsiveContainer>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="text-3xl font-bold text-slate-900">{taskCompletionRate}%</p>
+                      <p className="text-xs text-slate-500 mt-1">Completed</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
 
-          {/* Maintenance by Type */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
-          >
-            <h3 className="text-lg font-semibold text-slate-900 mb-4">Maintenance by Type</h3>
-            <div className="h-[200px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={taskTypeData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="name" stroke="#64748b" tick={{ fill: '#64748b', fontSize: 10 }} />
-                  <YAxis stroke="#64748b" tick={{ fill: '#64748b', fontSize: 10 }} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="value" radius={[4, 4, 0, 0]} name="Tasks">
-                    {taskTypeData.map((entry, index) => (
-                      <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </motion.div>
+              {/* Maintenance by Type */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="p-2 bg-violet-50 rounded-lg">
+                    <Activity className="w-4 h-4 text-violet-600" />
+                  </div>
+                  <h3 className="text-base font-semibold text-slate-900">Maintenance by Type</h3>
+                </div>
+                <div className="h-[180px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={taskTypeData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                      <XAxis dataKey="name" stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} />
+                      <YAxis stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Bar dataKey="value" radius={[6, 6, 0, 0]} name="Tasks">
+                        {taskTypeData.map((entry, index) => (
+                          <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </motion.div>
 
-          {/* Alert Severity */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
-          >
-            <h3 className="text-lg font-semibold text-slate-900 mb-4">Alert Severity</h3>
-            <div className="h-[200px] flex items-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={alertSeverity}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={40}
-                    outerRadius={70}
-                    paddingAngle={3}
-                    dataKey="value"
-                  >
-                    {alertSeverity.map((entry, index) => (
-                      <Cell key={index} fill={entry.color} stroke="transparent" />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend 
-                    verticalAlign="bottom" 
-                    height={36}
-                    formatter={(value) => <span className="text-slate-400 text-xs">{value}</span>}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              {/* Alert Severity */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="p-2 bg-red-50 rounded-lg">
+                    <Zap className="w-4 h-4 text-red-600" />
+                  </div>
+                  <h3 className="text-base font-semibold text-slate-900">Alert Severity</h3>
+                </div>
+                <div className="h-[180px] flex items-center">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={alertSeverity}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={45}
+                        outerRadius={70}
+                        paddingAngle={4}
+                        dataKey="value"
+                      >
+                        {alertSeverity.map((entry, index) => (
+                          <Cell key={index} fill={entry.color} stroke="transparent" />
+                        ))}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend 
+                        verticalAlign="bottom" 
+                        height={40}
+                        formatter={(value) => <span className="text-slate-600 text-xs">{value}</span>}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
-        </div>
           </TabsContent>
 
-          <TabsContent value="predictions" className="mt-6">
+          <TabsContent value="predictions" className="mt-0">
             <RULVisualization 
               equipment={equipment}
               predictions={predictions}
             />
           </TabsContent>
 
-          <TabsContent value="rootcause" className="mt-6">
+          <TabsContent value="rootcause" className="mt-0">
             <RootCausePanel 
               equipment={equipment}
               alerts={alerts}
             />
           </TabsContent>
 
-          <TabsContent value="resources" className="mt-6">
+          <TabsContent value="resources" className="mt-0">
             <ResourceOptimizer 
               workOrders={workOrders}
               maintenanceTasks={tasks}
@@ -478,14 +519,14 @@ export default function Analytics() {
             />
           </TabsContent>
 
-          <TabsContent value="inventory" className="mt-6">
+          <TabsContent value="inventory" className="mt-0">
             <SparePartsInventory 
               workOrders={workOrders}
               maintenanceTasks={tasks}
             />
           </TabsContent>
 
-          <TabsContent value="benchmarks" className="mt-6">
+          <TabsContent value="benchmarks" className="mt-0">
             <BenchmarkDashboard 
               equipment={equipment}
               workOrders={workOrders}
@@ -493,7 +534,7 @@ export default function Analytics() {
             />
           </TabsContent>
 
-          <TabsContent value="optimization" className="mt-6">
+          <TabsContent value="optimization" className="mt-0">
             <CostOptimizationModule 
               equipment={equipment}
               predictions={predictions}
@@ -501,7 +542,7 @@ export default function Analytics() {
             />
           </TabsContent>
 
-          <TabsContent value="automation" className="mt-6">
+          <TabsContent value="automation" className="mt-0">
             <div className="space-y-6">
               <RunPredictiveAnalysis
                 equipment={equipment}
@@ -512,14 +553,14 @@ export default function Analytics() {
               />
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white rounded-xl border border-slate-200 p-6">
+                <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
                   <PredictiveWorkflowConfig 
                     triggers={triggers}
                     onRefresh={refetchTriggers}
                   />
                 </div>
 
-                <div className="bg-white rounded-xl border border-slate-200 p-6">
+                <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
                   <SuggestedTasksPanel
                     suggestions={suggestedTasks}
                     technicians={technicians}
