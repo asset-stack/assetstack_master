@@ -17,11 +17,13 @@ import PredictionChart from '@/components/dashboard/PredictionChart';
 import EquipmentCard from '@/components/dashboard/EquipmentCard';
 import EquipmentDetails from '@/components/equipment/EquipmentDetails';
 import OnboardingBanner from '@/components/onboarding/OnboardingBanner';
+import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
 
 export default function Dashboard() {
   const [selectedEquipment, setSelectedEquipment] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [liveUpdates, setLiveUpdates] = useState({ equipment: [], alerts: [] });
+  const [showNotifications, setShowNotifications] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: equipment = [], isLoading: loadingEquipment } = useQuery({
@@ -142,7 +144,12 @@ export default function Dashboard() {
                   className="pl-10 w-64 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-indigo-300 focus:ring-indigo-200"
                 />
               </div>
-              <Button variant="outline" size="icon" className="bg-white border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 relative">
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="bg-white border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 relative"
+                onClick={() => setShowNotifications(!showNotifications)}
+              >
                 <Bell className="w-4 h-4" />
                 {activeAlerts > 0 && (
                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full text-xs text-white flex items-center justify-center">
@@ -290,6 +297,17 @@ export default function Dashboard() {
             onDelete={null}
           />
         )}
+      </AnimatePresence>
+
+      {/* Notifications Panel */}
+      <AnimatePresence>
+        <NotificationsPanel 
+          isOpen={showNotifications}
+          onClose={() => setShowNotifications(false)}
+          alerts={alerts}
+          onAcknowledge={handleAcknowledgeAlert}
+          onResolve={handleResolveAlert}
+        />
       </AnimatePresence>
     </div>
   );
