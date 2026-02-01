@@ -4,7 +4,7 @@ import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
-  Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown
+  Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
