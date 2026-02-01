@@ -1,5 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import { 
   Calendar, Clock, User, Users, Cpu, ChevronRight, 
   DollarSign, Package, FileText, AlertTriangle, CheckCircle2 
@@ -9,6 +11,13 @@ import { Button } from "@/components/ui/button";
 import { format } from 'date-fns';
 
 export default function WorkOrderCard({ workOrder, equipment, onViewDetails, delay = 0 }) {
+  // Fetch technicians to display names
+  const { data: technicians = [] } = useQuery({
+    queryKey: ['technicians'],
+    queryFn: () => base44.entities.Technician.list('-created_date', 100),
+  });
+
+  const assignedTechnician = technicians.find(t => t.id === workOrder.assigned_to);
   const getStatusConfig = (status) => {
     const configs = {
       draft: { color: 'bg-slate-100 text-slate-600', label: 'Draft' },
@@ -80,7 +89,7 @@ export default function WorkOrderCard({ workOrder, equipment, onViewDetails, del
         </div>
         <div className="flex items-center gap-2 text-sm text-slate-500">
           <User className="w-4 h-4" />
-          <span className="truncate">{workOrder.assigned_to || 'Unassigned'}</span>
+          <span className="truncate">{assignedTechnician?.name || 'Unassigned'}</span>
         </div>
         <div className="flex items-center gap-2 text-sm text-slate-500">
           <Calendar className="w-4 h-4" />
