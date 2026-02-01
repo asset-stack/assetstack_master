@@ -56,6 +56,7 @@ import Maintenance from './pages/Maintenance';
 import Onboarding from './pages/Onboarding';
 import Predictions from './pages/Predictions';
 import SensorIntegration from './pages/SensorIntegration';
+import Reports from './pages/Reports';
 import __Layout from './Layout.jsx';
 
 
@@ -69,6 +70,7 @@ export const PAGES = {
     "Onboarding": Onboarding,
     "Predictions": Predictions,
     "SensorIntegration": SensorIntegration,
+    "Reports": Reports,
 }
 
 export const pagesConfig = {
