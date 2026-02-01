@@ -311,7 +311,7 @@ export default function Onboarding() {
                         <SelectTrigger className="mt-2">
                           <SelectValue placeholder="Select size" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-white">
                           {ORG_SIZES.map((size) => (
                             <SelectItem key={size.value} value={size.value}>{size.label}</SelectItem>
                           ))}
