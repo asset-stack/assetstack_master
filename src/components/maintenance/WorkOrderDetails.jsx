@@ -5,8 +5,12 @@ import { base44 } from '@/api/base44Client';
 import { 
   X, Calendar, Clock, User, Users, Cpu, DollarSign, Package, 
   FileText, Plus, Trash2, Save, History, AlertTriangle, CheckCircle2,
-  Play, Pause, Square, RefreshCw, Mail, Loader2
+  Play, Pause, Square, RefreshCw, Mail, Loader2, ClipboardList, ExternalLink
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../../utils';
+import ChecklistBuilder from './ChecklistBuilder';
+import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -53,6 +57,7 @@ export default function WorkOrderDetails({
   const [newPart, setNewPart] = useState({ part_name: '', part_number: '', quantity: 1, unit_cost: 0, notes: '' });
   const [newCost, setNewCost] = useState({ description: '', category: '', amount: 0 });
   const [activeTab, setActiveTab] = useState('details');
+  const [checklist, setChecklist] = useState(workOrder?.checklist || []);
   const [notifyOnAssign, setNotifyOnAssign] = useState(true);
   const [isSendingNotification, setIsSendingNotification] = useState(false);
 
@@ -166,6 +171,7 @@ AssetStack Maintenance System
     
     const updatedWorkOrder = {
       ...editedWorkOrder,
+      checklist: checklist,
       actual_labor_cost: totals.laborCost,
       actual_parts_cost: totals.partsCost,
       actual_total_cost: totals.total
@@ -321,6 +327,10 @@ AssetStack Maintenance System
             <div className="px-6 pt-4 border-b border-slate-100">
               <TabsList className="bg-slate-100">
                 <TabsTrigger value="details">Details</TabsTrigger>
+                <TabsTrigger value="checklist" className="flex items-center gap-1">
+                  <ClipboardList className="w-3.5 h-3.5" />
+                  Checklist ({checklist.length})
+                </TabsTrigger>
                 <TabsTrigger value="labor">Labor ({editedWorkOrder.labor_entries?.length || 0})</TabsTrigger>
                 <TabsTrigger value="parts">Parts ({editedWorkOrder.parts_used?.length || 0})</TabsTrigger>
                 <TabsTrigger value="costs">Costs</TabsTrigger>
@@ -525,6 +535,47 @@ AssetStack Maintenance System
                   )}
                 </div>
               )}
+            </TabsContent>
+
+            <TabsContent value="checklist" className="p-6 space-y-4">
+              {/* Checklist Status */}
+              {checklist.length > 0 && !isNew && (
+                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 className="font-medium text-slate-700">Checklist Progress</h4>
+                      <p className="text-sm text-slate-500">
+                        {checklist.filter(i => i.completed).length} of {checklist.length} items completed
+                      </p>
+                    </div>
+                    <Link 
+                      to={`${createPageUrl('MobileChecklist')}?id=${editedWorkOrder.id}`}
+                      target="_blank"
+                    >
+                      <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700">
+                        <ExternalLink className="w-4 h-4 mr-1" />
+                        Open Mobile View
+                      </Button>
+                    </Link>
+                  </div>
+                  <Progress 
+                    value={editedWorkOrder.checklist_completion_percent || 0} 
+                    className="h-2" 
+                  />
+                  {editedWorkOrder.checklist_completed && (
+                    <Badge className="mt-2 bg-emerald-50 text-emerald-700 border-emerald-200">
+                      <CheckCircle2 className="w-3 h-3 mr-1" />
+                      Checklist Complete
+                    </Badge>
+                  )}
+                </div>
+              )}
+
+              {/* Checklist Builder */}
+              <ChecklistBuilder 
+                checklist={checklist}
+                onChange={setChecklist}
+              />
             </TabsContent>
 
             <TabsContent value="labor" className="p-6 space-y-4">
