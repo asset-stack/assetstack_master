@@ -9,15 +9,18 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { source_type, source_id, equipment_id } = await req.json();
+    const { source_type, source_id, equipment_id, data_env } = await req.json();
+
+    // Use the appropriate data environment (dev for test, prod for production)
+    const entities = data_env === 'dev' ? base44.devEntities : base44.entities;
 
     // Fetch all necessary data
     const [equipment, technicians, spareParts, tasks, alerts] = await Promise.all([
-      base44.entities.Equipment.list('-created_date', 200),
-      base44.entities.Technician.list('-created_date', 50),
-      base44.entities.SparePart.list('-created_date', 200),
-      base44.entities.MaintenanceTask.list('-created_date', 100),
-      base44.entities.Alert.list('-created_date', 100)
+      entities.Equipment.list('-created_date', 200),
+      entities.Technician.list('-created_date', 50),
+      entities.SparePart.list('-created_date', 200),
+      entities.MaintenanceTask.list('-created_date', 100),
+      entities.Alert.list('-created_date', 100)
     ]);
 
     const equipmentMap = equipment.reduce((acc, e) => { acc[e.id] = e; return acc; }, {});
