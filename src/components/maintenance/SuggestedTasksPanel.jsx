@@ -230,14 +230,19 @@ function ApproveTaskDialog({ open, onOpenChange, suggestion, technicians, onAppr
 
   React.useEffect(() => {
     if (suggestion) {
+      // Find technician by name if suggested_technician is a name
+      const suggestedTech = technicians?.find(t => 
+        t.name === suggestion.suggested_technician || t.id === suggestion.suggested_technician
+      );
+      
       setFormData({
         priority: suggestion.priority || 'medium',
         scheduled_date: suggestion.recommended_date || format(addDays(new Date(), 7), 'yyyy-MM-dd'),
         estimated_hours: suggestion.estimated_hours || 4,
-        assigned_to: suggestion.suggested_technician || '',
+        assigned_to: suggestedTech?.id || '',
       });
     }
-  }, [suggestion]);
+  }, [suggestion, technicians]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
