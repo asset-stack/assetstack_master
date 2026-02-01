@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { format } from 'date-fns';
+import { jsPDF } from 'jspdf';
 
 export default function Reports() {
   const [selectedReport, setSelectedReport] = useState(null);
