@@ -20,6 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { format } from 'date-fns';
+import DynamicTaskAssignment from './DynamicTaskAssignment';
 
 const STATUSES = ['draft', 'open', 'assigned', 'in_progress', 'on_hold', 'completed', 'closed', 'cancelled'];
 const PRIORITIES = ['low', 'medium', 'high', 'urgent'];
