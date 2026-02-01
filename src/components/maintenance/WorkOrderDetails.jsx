@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import { 
   X, Calendar, Clock, User, Users, Cpu, DollarSign, Package, 
   FileText, Plus, Trash2, Save, History, AlertTriangle, CheckCircle2,
-  Play, Pause, Square, RefreshCw
+  Play, Pause, Square, RefreshCw, Mail, Loader2
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { format } from 'date-fns';
 
 const STATUSES = ['draft', 'open', 'assigned', 'in_progress', 'on_hold', 'completed', 'closed', 'cancelled'];
@@ -27,6 +30,8 @@ export default function WorkOrderDetails({
   onCreateFollowUp,
   isNew = false 
 }) {
+  const queryClient = useQueryClient();
+  
   const [editedWorkOrder, setEditedWorkOrder] = useState(workOrder || {
     title: '',
     description: '',
@@ -48,6 +53,64 @@ export default function WorkOrderDetails({
   const [newPart, setNewPart] = useState({ part_name: '', part_number: '', quantity: 1, unit_cost: 0, notes: '' });
   const [newCost, setNewCost] = useState({ description: '', category: '', amount: 0 });
   const [activeTab, setActiveTab] = useState('details');
+  const [notifyOnAssign, setNotifyOnAssign] = useState(true);
+  const [isSendingNotification, setIsSendingNotification] = useState(false);
+
+  // Fetch technicians for assignment dropdown
+  const { data: technicians = [] } = useQuery({
+    queryKey: ['technicians'],
+    queryFn: () => base44.entities.Technician.list('-created_date', 100),
+  });
+
+  // Get available technicians (not on leave or unavailable)
+  const availableTechnicians = technicians.filter(t => 
+    t.availability_status === 'available' || t.availability_status === 'busy'
+  );
+
+  // Send notification to technician
+  const sendAssignmentNotification = async (technicianId, workOrderData) => {
+    const technician = technicians.find(t => t.id === technicianId);
+    if (!technician?.email) return;
+
+    const equipmentName = equipmentMap[workOrderData.equipment_id]?.name || 'Unknown Equipment';
+    
+    await base44.integrations.Core.SendEmail({
+      to: technician.email,
+      subject: `Work Order Assigned: ${workOrderData.title}`,
+      body: `
+Hello ${technician.name},
+
+You have been assigned a new work order:
+
+Work Order: ${workOrderData.work_order_number || 'New'}
+Title: ${workOrderData.title}
+Equipment: ${equipmentName}
+Priority: ${workOrderData.priority?.toUpperCase()}
+Type: ${workOrderData.type}
+Estimated Hours: ${workOrderData.estimated_hours || 'TBD'}
+${workOrderData.scheduled_start ? `Scheduled Start: ${format(new Date(workOrderData.scheduled_start), 'PPP')}` : ''}
+
+${workOrderData.description ? `Description:\n${workOrderData.description}` : ''}
+
+Please log into AssetStack to view the full details and begin work.
+
+Best regards,
+AssetStack Maintenance System
+      `.trim()
+    });
+  };
+
+  // Update technician workload when assigned
+  const updateTechnicianWorkload = async (technicianId, hoursToAdd) => {
+    const technician = technicians.find(t => t.id === technicianId);
+    if (!technician) return;
+
+    await base44.entities.Technician.update(technicianId, {
+      current_workload_hours: (technician.current_workload_hours || 0) + hoursToAdd,
+      availability_status: ((technician.current_workload_hours || 0) + hoursToAdd) >= (technician.max_weekly_hours || 40) ? 'busy' : 'available'
+    });
+    queryClient.invalidateQueries(['technicians']);
+  };
 
   const equipmentMap = equipment.reduce((acc, e) => { acc[e.id] = e; return acc; }, {});
   const currentEquipment = equipmentMap[editedWorkOrder.equipment_id];
@@ -98,13 +161,39 @@ export default function WorkOrderDetails({
     setEditedWorkOrder({ ...editedWorkOrder, additional_costs: costs });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    setIsSendingNotification(true);
+    
     const updatedWorkOrder = {
       ...editedWorkOrder,
       actual_labor_cost: totals.laborCost,
       actual_parts_cost: totals.partsCost,
       actual_total_cost: totals.total
     };
+
+    // Check if technician was newly assigned or changed
+    const wasAssigned = workOrder?.assigned_to !== editedWorkOrder.assigned_to && editedWorkOrder.assigned_to;
+    
+    // Send notification if assigned and notify is enabled
+    if (wasAssigned && notifyOnAssign && editedWorkOrder.assigned_to) {
+      await sendAssignmentNotification(editedWorkOrder.assigned_to, updatedWorkOrder);
+      
+      // Update technician workload
+      await updateTechnicianWorkload(editedWorkOrder.assigned_to, editedWorkOrder.estimated_hours || 0);
+      
+      // If status is draft, auto-change to assigned
+      if (updatedWorkOrder.status === 'draft' || updatedWorkOrder.status === 'open') {
+        updatedWorkOrder.status = 'assigned';
+        updatedWorkOrder.history = [...(updatedWorkOrder.history || []), {
+          timestamp: new Date().toISOString(),
+          action: 'Assigned to technician',
+          user: 'Current User',
+          details: `Assigned to ${technicians.find(t => t.id === editedWorkOrder.assigned_to)?.name || 'technician'}`
+        }];
+      }
+    }
+    
+    setIsSendingNotification(false);
     onSave && onSave(updatedWorkOrder);
   };
 
@@ -325,13 +414,44 @@ export default function WorkOrderDetails({
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-slate-700">Assigned To</Label>
-                  <Input
-                    value={editedWorkOrder.assigned_to}
-                    onChange={(e) => setEditedWorkOrder({ ...editedWorkOrder, assigned_to: e.target.value })}
-                    placeholder="Primary technician"
-                    className="bg-white border-slate-200"
-                  />
+                  <Label className="text-slate-700">Assign To Technician</Label>
+                  <Select 
+                    value={editedWorkOrder.assigned_to || ''} 
+                    onValueChange={(v) => setEditedWorkOrder({ ...editedWorkOrder, assigned_to: v })}
+                  >
+                    <SelectTrigger className="bg-white border-slate-200">
+                      <SelectValue placeholder="Select technician" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border-slate-200 max-h-60">
+                      <SelectItem value={null}>Unassigned</SelectItem>
+                      {availableTechnicians.map(tech => (
+                        <SelectItem key={tech.id} value={tech.id}>
+                          <div className="flex items-center gap-2">
+                            <span>{tech.name}</span>
+                            <span className="text-xs text-slate-400">
+                              ({tech.current_workload_hours || 0}/{tech.max_weekly_hours || 40}h)
+                            </span>
+                            {tech.availability_status === 'busy' && (
+                              <Badge variant="outline" className="text-xs bg-amber-50 text-amber-600 border-amber-200">Busy</Badge>
+                            )}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {editedWorkOrder.assigned_to && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <Checkbox 
+                        id="notify-technician"
+                        checked={notifyOnAssign}
+                        onCheckedChange={setNotifyOnAssign}
+                      />
+                      <Label htmlFor="notify-technician" className="text-sm text-slate-600 cursor-pointer flex items-center gap-1">
+                        <Mail className="w-3 h-3" />
+                        Send email notification
+                      </Label>
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label className="text-slate-700">Estimated Hours</Label>
@@ -643,11 +763,21 @@ export default function WorkOrderDetails({
                 {currentEquipment.name} • {currentEquipment.location}
               </span>
             )}
+            {editedWorkOrder.assigned_to && (
+              <span className="flex items-center gap-2 mt-1">
+                <User className="w-4 h-4" />
+                Assigned to: {technicians.find(t => t.id === editedWorkOrder.assigned_to)?.name || 'Unknown'}
+              </span>
+            )}
           </div>
           <div className="flex gap-3">
             <Button variant="outline" onClick={onClose}>Cancel</Button>
-            <Button onClick={handleSave} className="bg-indigo-600 hover:bg-indigo-700">
-              <Save className="w-4 h-4 mr-2" />
+            <Button onClick={handleSave} disabled={isSendingNotification} className="bg-indigo-600 hover:bg-indigo-700">
+              {isSendingNotification ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4 mr-2" />
+              )}
               {isNew ? 'Create Work Order' : 'Save Changes'}
             </Button>
           </div>
