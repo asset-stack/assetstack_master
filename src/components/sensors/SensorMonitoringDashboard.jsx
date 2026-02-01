@@ -30,11 +30,24 @@ export default function SensorMonitoringDashboard({ sensorConfigs, equipment, re
 
   // Real-time subscription
   useEffect(() => {
-    const unsubscribe = base44.entities.SensorReading.subscribe(() => {
+    const unsubscribe = base44.entities.SensorReading.subscribe((event) => {
       queryClient.invalidateQueries(['recentReadings']);
+      // Also update sensor config last reading when new data arrives
+      if (event.type === 'create' && event.data) {
+        const config = sensorConfigs.find(
+          s => s.equipment_id === event.data.equipment_id && s.sensor_type === event.data.sensor_type
+        );
+        if (config) {
+          base44.entities.SensorConfiguration.update(config.id, {
+            last_reading_at: new Date().toISOString(),
+            last_reading_value: event.data.value,
+            status: 'online'
+          });
+        }
+      }
     });
     return unsubscribe;
-  }, [queryClient]);
+  }, [queryClient, sensorConfigs]);
 
   // Filter sensors
   const filteredConfigs = sensorConfigs.filter(s => {
