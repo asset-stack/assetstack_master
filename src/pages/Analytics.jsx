@@ -4,8 +4,8 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Activity, TrendingUp, AlertTriangle, Clock, Brain, BarChart3, 
-  PieChart as PieChartIcon, Calendar, Target, Zap, DollarSign,
-  Package, Users, Search, Award, Sparkles
+  PieChart as PieChartIcon, Calendar, Target, Zap,
+  Package, Users, Search, Sparkles
 } from 'lucide-react';
 import { 
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, 
