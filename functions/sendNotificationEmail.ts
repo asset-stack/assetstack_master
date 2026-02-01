@@ -300,6 +300,13 @@ AssetStack Maintenance System
         `.trim();
         break;
 
+      case 'work_order_assigned':
+      case 'work_order_updated':
+        subject = `🔧 Work Order ${type === 'work_order_assigned' ? 'Assigned' : 'Updated'} - #${data.work_order_number || 'N/A'} - ${data.title || 'Work Order'}`;
+        body = generateWorkOrderEmailHTML({ ...data, action: type === 'work_order_assigned' ? 'assigned' : 'updated' });
+        isHTML = true;
+        break;
+
       case 'health_degradation':
         subject = `📉 Health Score Alert - ${data.equipment_name || 'Equipment'}`;
         body = `
