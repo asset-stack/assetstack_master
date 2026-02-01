@@ -203,6 +203,271 @@ Generate a detailed, actionable report with:
     return colors[priority] || colors.medium;
   };
 
+  const exportReportToPDF = () => {
+    if (!generatedReport) return;
+    
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    let yPos = margin;
+
+    const checkNewPage = (requiredHeight = 20) => {
+      if (yPos + requiredHeight > pageHeight - margin) {
+        doc.addPage();
+        yPos = margin;
+        return true;
+      }
+      return false;
+    };
+
+    const wrapText = (text, maxWidth) => {
+      return doc.splitTextToSize(text, maxWidth);
+    };
+
+    // Header with gradient background
+    doc.setFillColor(79, 70, 229);
+    doc.rect(0, 0, pageWidth, 50, 'F');
+    doc.setFillColor(99, 102, 241);
+    doc.rect(0, 0, pageWidth, 25, 'F');
+
+    // Logo
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(margin, 12, 12, 12, 3, 3, 'F');
+    doc.setFontSize(9);
+    doc.setTextColor(79, 70, 229);
+    doc.setFont(undefined, 'bold');
+    doc.text('AS', margin + 2.5, 20);
+
+    // Title
+    doc.setFontSize(22);
+    doc.setTextColor(255, 255, 255);
+    doc.text(generatedReport.type.name, margin + 18, 22);
+
+    // Subtitle
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(200, 200, 255);
+    doc.text(`Generated: ${format(new Date(generatedReport.generatedAt), 'MMMM d, yyyy \'at\' h:mm a')}`, margin + 18, 32);
+    doc.text(`Report Period: Last ${dateRange === '7d' ? '7 days' : dateRange === '30d' ? '30 days' : dateRange === '90d' ? '90 days' : 'year'}`, margin + 18, 40);
+
+    yPos = 60;
+
+    // Executive Summary
+    if (generatedReport.content.executive_summary) {
+      doc.setFontSize(14);
+      doc.setTextColor(30, 41, 59);
+      doc.setFont(undefined, 'bold');
+      doc.text('Executive Summary', margin, yPos);
+      yPos += 8;
+
+      doc.setFillColor(248, 250, 252);
+      const summaryLines = wrapText(generatedReport.content.executive_summary, pageWidth - margin * 2 - 10);
+      const summaryHeight = summaryLines.length * 5 + 10;
+      doc.roundedRect(margin, yPos, pageWidth - margin * 2, summaryHeight, 3, 3, 'F');
+
+      doc.setFontSize(9);
+      doc.setTextColor(71, 85, 105);
+      doc.setFont(undefined, 'normal');
+      doc.text(summaryLines, margin + 5, yPos + 7);
+      yPos += summaryHeight + 12;
+    }
+
+    // Key Metrics
+    if (generatedReport.content.key_metrics && generatedReport.content.key_metrics.length > 0) {
+      checkNewPage(50);
+      doc.setFontSize(14);
+      doc.setTextColor(30, 41, 59);
+      doc.setFont(undefined, 'bold');
+      doc.text('Key Metrics', margin, yPos);
+      yPos += 10;
+
+      const metricsPerRow = 2;
+      const metricWidth = (pageWidth - margin * 2 - 10) / metricsPerRow;
+      
+      generatedReport.content.key_metrics.forEach((metric, idx) => {
+        if (idx % metricsPerRow === 0 && idx > 0) yPos += 32;
+        checkNewPage(35);
+        
+        const col = idx % metricsPerRow;
+        const xPos = margin + col * (metricWidth + 10);
+
+        doc.setFillColor(248, 250, 252);
+        doc.roundedRect(xPos, yPos, metricWidth, 28, 3, 3, 'F');
+
+        // Trend indicator
+        const trendColor = metric.trend === 'up' ? [16, 185, 129] : metric.trend === 'down' ? [239, 68, 68] : [148, 163, 184];
+        doc.setFillColor(...trendColor);
+        doc.circle(xPos + metricWidth - 8, yPos + 8, 3, 'F');
+
+        doc.setFontSize(8);
+        doc.setTextColor(100, 116, 139);
+        doc.setFont(undefined, 'normal');
+        doc.text(metric.name, xPos + 5, yPos + 8);
+
+        doc.setFontSize(16);
+        doc.setTextColor(30, 41, 59);
+        doc.setFont(undefined, 'bold');
+        doc.text(metric.value, xPos + 5, yPos + 18);
+
+        if (metric.analysis) {
+          doc.setFontSize(7);
+          doc.setTextColor(100, 116, 139);
+          doc.setFont(undefined, 'normal');
+          const analysisText = metric.analysis.length > 50 ? metric.analysis.substring(0, 47) + '...' : metric.analysis;
+          doc.text(analysisText, xPos + 5, yPos + 25);
+        }
+      });
+
+      const metricRows = Math.ceil(generatedReport.content.key_metrics.length / metricsPerRow);
+      yPos += 35;
+    }
+
+    // Risk Assessment
+    if (generatedReport.content.risk_assessment) {
+      checkNewPage(60);
+      doc.setFontSize(14);
+      doc.setTextColor(30, 41, 59);
+      doc.setFont(undefined, 'bold');
+      doc.text('Risk Assessment', margin, yPos);
+      yPos += 10;
+
+      const riskLevel = generatedReport.content.risk_assessment.overall_risk_level || 'Unknown';
+      const riskColor = riskLevel.toLowerCase().includes('high') || riskLevel.toLowerCase().includes('critical') 
+        ? [254, 226, 226] : riskLevel.toLowerCase().includes('medium') 
+        ? [254, 243, 199] : [220, 252, 231];
+      
+      doc.setFillColor(...riskColor);
+      doc.roundedRect(margin, yPos, pageWidth - margin * 2, 12, 2, 2, 'F');
+      doc.setFontSize(10);
+      doc.setTextColor(30, 41, 59);
+      doc.setFont(undefined, 'bold');
+      doc.text(`Overall Risk Level: ${riskLevel}`, margin + 5, yPos + 8);
+      yPos += 18;
+
+      if (generatedReport.content.risk_assessment.high_risk_areas?.length > 0) {
+        doc.setFontSize(10);
+        doc.setTextColor(146, 64, 14);
+        doc.setFont(undefined, 'bold');
+        doc.text('High Risk Areas:', margin, yPos);
+        yPos += 6;
+        
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'normal');
+        generatedReport.content.risk_assessment.high_risk_areas.forEach(area => {
+          checkNewPage(8);
+          doc.text(`• ${area}`, margin + 5, yPos);
+          yPos += 5;
+        });
+        yPos += 5;
+      }
+
+      if (generatedReport.content.risk_assessment.mitigation_actions?.length > 0) {
+        checkNewPage(20);
+        doc.setFontSize(10);
+        doc.setTextColor(22, 101, 52);
+        doc.setFont(undefined, 'bold');
+        doc.text('Mitigation Actions:', margin, yPos);
+        yPos += 6;
+        
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'normal');
+        generatedReport.content.risk_assessment.mitigation_actions.forEach(action => {
+          checkNewPage(8);
+          doc.text(`✓ ${action}`, margin + 5, yPos);
+          yPos += 5;
+        });
+        yPos += 8;
+      }
+    }
+
+    // Recommendations
+    if (generatedReport.content.recommendations && generatedReport.content.recommendations.length > 0) {
+      checkNewPage(40);
+      doc.setFontSize(14);
+      doc.setTextColor(30, 41, 59);
+      doc.setFont(undefined, 'bold');
+      doc.text('Recommendations', margin, yPos);
+      yPos += 10;
+
+      generatedReport.content.recommendations.forEach((rec, idx) => {
+        checkNewPage(30);
+        
+        const priorityColors = {
+          critical: [254, 226, 226],
+          high: [255, 237, 213],
+          medium: [254, 243, 199],
+          low: [219, 234, 254]
+        };
+        const bgColor = priorityColors[rec.priority] || priorityColors.medium;
+        
+        doc.setFillColor(250, 250, 250);
+        doc.roundedRect(margin, yPos, pageWidth - margin * 2, 22, 3, 3, 'F');
+        
+        doc.setFillColor(...bgColor);
+        doc.roundedRect(pageWidth - margin - 25, yPos + 3, 22, 7, 2, 2, 'F');
+        doc.setFontSize(7);
+        doc.setTextColor(30, 41, 59);
+        doc.text(rec.priority.toUpperCase(), pageWidth - margin - 23, yPos + 8);
+
+        doc.setFontSize(9);
+        doc.setTextColor(30, 41, 59);
+        doc.setFont(undefined, 'bold');
+        const recLines = wrapText(rec.recommendation, pageWidth - margin * 2 - 35);
+        doc.text(recLines[0], margin + 5, yPos + 8);
+
+        doc.setFontSize(8);
+        doc.setTextColor(100, 116, 139);
+        doc.setFont(undefined, 'normal');
+        doc.text(`Impact: ${rec.expected_impact}`, margin + 5, yPos + 16);
+
+        yPos += 26;
+      });
+    }
+
+    // Next Steps
+    if (generatedReport.content.next_steps && generatedReport.content.next_steps.length > 0) {
+      checkNewPage(40);
+      doc.setFontSize(14);
+      doc.setTextColor(30, 41, 59);
+      doc.setFont(undefined, 'bold');
+      doc.text('Next Steps', margin, yPos);
+      yPos += 10;
+
+      doc.setFillColor(220, 252, 231);
+      const stepsHeight = generatedReport.content.next_steps.length * 8 + 10;
+      doc.roundedRect(margin, yPos, pageWidth - margin * 2, stepsHeight, 3, 3, 'F');
+
+      doc.setFontSize(9);
+      doc.setTextColor(22, 101, 52);
+      doc.setFont(undefined, 'normal');
+      
+      generatedReport.content.next_steps.forEach((step, idx) => {
+        doc.setFont(undefined, 'bold');
+        doc.text(`${idx + 1}.`, margin + 5, yPos + 7 + idx * 8);
+        doc.setFont(undefined, 'normal');
+        doc.text(step, margin + 12, yPos + 7 + idx * 8);
+      });
+    }
+
+    // Footer on all pages
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(148, 163, 184);
+      doc.setFont(undefined, 'normal');
+      
+      doc.setDrawColor(226, 232, 240);
+      doc.line(margin, pageHeight - 15, pageWidth - margin, pageHeight - 15);
+      
+      doc.text(`AssetStack Platform • ${generatedReport.type.name}`, margin, pageHeight - 8);
+      doc.text(`Page ${i} of ${totalPages}`, pageWidth - margin - 20, pageHeight - 8);
+    }
+
+    doc.save(`${generatedReport.type.name.replace(/\s+/g, '_')}_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-[1600px] mx-auto px-6 py-8">
