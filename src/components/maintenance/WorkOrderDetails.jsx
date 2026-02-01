@@ -410,7 +410,14 @@ export default function WorkOrderDetails({
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-slate-700">Assign To Technician</Label>
+                  <div className="flex items-center justify-between">
+                    <Label className="text-slate-700">Assign To Technician</Label>
+                    <DynamicTaskAssignment
+                      workOrder={editedWorkOrder}
+                      equipment={currentEquipment}
+                      onAssign={(techId) => setEditedWorkOrder({ ...editedWorkOrder, assigned_to: techId })}
+                    />
+                  </div>
                   <Select 
                     value={editedWorkOrder.assigned_to || ''} 
                     onValueChange={(v) => setEditedWorkOrder({ ...editedWorkOrder, assigned_to: v })}
