@@ -445,18 +445,30 @@ export default function WorkOrderDetails({
                       ))}
                     </SelectContent>
                   </Select>
-                  {editedWorkOrder.assigned_to && (
-                    <div className="flex items-center gap-2 mt-2">
-                      <Checkbox 
-                        id="notify-technician"
-                        checked={notifyOnAssign}
-                        onCheckedChange={setNotifyOnAssign}
-                      />
-                      <Label htmlFor="notify-technician" className="text-sm text-slate-600 cursor-pointer flex items-center gap-1">
-                        <Mail className="w-3 h-3" />
-                        Send email notification
-                      </Label>
-                    </div>
+                  {editedWorkOrder.assigned_to && editedWorkOrder.assigned_to !== 'unassigned' && (
+                    <>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Checkbox 
+                          id="notify-technician"
+                          checked={notifyOnAssign}
+                          onCheckedChange={setNotifyOnAssign}
+                        />
+                        <Label htmlFor="notify-technician" className="text-sm text-slate-600 cursor-pointer flex items-center gap-1">
+                          <Mail className="w-3 h-3" />
+                          Send email notification
+                        </Label>
+                      </div>
+                      {notifyOnAssign && technicians.find(t => t.id === editedWorkOrder.assigned_to)?.email && (
+                        <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                          ✓ Email will be sent to {technicians.find(t => t.id === editedWorkOrder.assigned_to).email}
+                        </p>
+                      )}
+                      {notifyOnAssign && !technicians.find(t => t.id === editedWorkOrder.assigned_to)?.email && (
+                        <p className="text-xs text-amber-600 mt-1 flex items-center gap-1">
+                          ⚠ No email address configured for this technician
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
                 <div className="space-y-2">
