@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
     const estimatedCost = laborCost + partsCost;
 
     // Create the work order
-    const workOrder = await base44.entities.WorkOrder.create({
+    const workOrder = await entities.WorkOrder.create({
       work_order_number: woNumber,
       ...workOrderData,
       status: 'draft',
