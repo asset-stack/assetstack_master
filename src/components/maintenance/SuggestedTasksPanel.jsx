@@ -309,16 +309,26 @@ function ApproveTaskDialog({ open, onOpenChange, suggestion, technicians, onAppr
             <Label>Assign To</Label>
             <Select value={formData.assigned_to} onValueChange={(v) => setFormData({ ...formData, assigned_to: v })}>
               <SelectTrigger>
+                <User className="w-4 h-4 mr-2 text-slate-400" />
                 <SelectValue placeholder="Select technician" />
               </SelectTrigger>
               <SelectContent className="bg-white">
                 {technicians?.map((tech) => (
-                  <SelectItem key={tech.id} value={tech.name}>
-                    {tech.name} ({tech.availability_status})
+                  <SelectItem key={tech.id} value={tech.id}>
+                    <div className="flex items-center gap-2">
+                      <span>{tech.name}</span>
+                      <span className="text-xs text-slate-500">({tech.availability_status})</span>
+                      {tech.email && <span className="text-xs text-indigo-500">• will be notified</span>}
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+            {formData.assigned_to && technicians?.find(t => t.id === formData.assigned_to)?.email && (
+              <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                ✓ Email notification will be sent to {technicians.find(t => t.id === formData.assigned_to).email}
+              </p>
+            )}
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
