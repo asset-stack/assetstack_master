@@ -59,6 +59,7 @@ import Predictions from './pages/Predictions';
 import Reports from './pages/Reports';
 import SensorIntegration from './pages/SensorIntegration';
 import Depreciation from './pages/Depreciation';
+import MaintenancePlanning from './pages/MaintenancePlanning';
 import __Layout from './Layout.jsx';
 
 
@@ -75,6 +76,7 @@ export const PAGES = {
     "Reports": Reports,
     "SensorIntegration": SensorIntegration,
     "Depreciation": Depreciation,
+    "MaintenancePlanning": MaintenancePlanning,
 }
 
 export const pagesConfig = {
