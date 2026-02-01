@@ -50,6 +50,7 @@ Deno.serve(async (req) => {
       // Create maintenance tasks and work orders for high-priority items
       for (const rec of optimizedSchedule.recommendations.filter(r => r.urgency >= 70)) {
         const eq = equipmentMap[rec.equipment_id];
+        const assignedTech = rec.suggested_technician_id ? technicians.find(t => t.id === rec.suggested_technician_id) : null;
         
         // Create maintenance task
         const task = await base44.entities.MaintenanceTask.create({
@@ -58,18 +59,18 @@ Deno.serve(async (req) => {
           description: rec.description,
           type: rec.type,
           priority: rec.priority,
-          status: 'scheduled',
+          status: assignedTech ? 'scheduled' : 'scheduled',
           scheduled_date: rec.recommended_date,
           estimated_duration_hours: rec.estimated_hours,
           cost_estimate: rec.estimated_cost,
-          assigned_to: rec.suggested_technician,
+          assigned_to: assignedTech?.name || rec.suggested_technician,
           parts_required: rec.required_parts.map(p => p.name),
           ai_recommended: true,
           ai_confidence: rec.confidence
         });
         createdItems.tasks.push(task);
 
-        // Create draft work order
+        // Create work order (assigned status if technician assigned)
         const woNumber = `WO-${Date.now().toString().slice(-8)}-${createdItems.workOrders.length}`;
         const workOrder = await base44.entities.WorkOrder.create({
           work_order_number: woNumber,
@@ -79,8 +80,8 @@ Deno.serve(async (req) => {
           description: rec.description,
           type: rec.type,
           priority: rec.priority,
-          status: 'draft',
-          assigned_to: rec.suggested_technician,
+          status: assignedTech ? 'assigned' : 'draft',
+          assigned_to: rec.suggested_technician_id || null,
           scheduled_start: rec.recommended_date,
           estimated_hours: rec.estimated_hours,
           estimated_cost: rec.estimated_cost,
@@ -95,22 +96,32 @@ Deno.serve(async (req) => {
             action: 'AI Auto-Generated',
             user: 'AI Scheduler',
             details: `Auto-generated based on ${rec.trigger_reason}. Confidence: ${rec.confidence}%`
-          }]
+          }, ...(assignedTech ? [{
+            timestamp: new Date().toISOString(),
+            action: 'Assigned to technician',
+            user: 'AI Scheduler',
+            details: `Assigned to ${assignedTech.name}`
+          }] : [])]
         });
         createdItems.workOrders.push(workOrder);
 
+        // Update technician workload if assigned
+        if (assignedTech) {
+          await base44.entities.Technician.update(assignedTech.id, {
+            current_workload_hours: (assignedTech.current_workload_hours || 0) + rec.estimated_hours,
+            availability_status: ((assignedTech.current_workload_hours || 0) + rec.estimated_hours) >= (assignedTech.max_weekly_hours || 40) ? 'busy' : 'available'
+          });
+        }
+
         // Prepare notification
-        if (notify_technicians && rec.suggested_technician) {
-          const tech = technicians.find(t => t.name === rec.suggested_technician);
-          if (tech?.email) {
-            notifications.push({
-              technician: tech,
-              equipment: eq,
-              task: task,
-              workOrder: workOrder,
-              recommendation: rec
-            });
-          }
+        if (notify_technicians && assignedTech?.email) {
+          notifications.push({
+            technician: assignedTech,
+            equipment: eq,
+            task: task,
+            workOrder: workOrder,
+            recommendation: rec
+          });
         }
       }
 
@@ -341,6 +352,8 @@ function analyzeEquipmentForMaintenance(equipment, tasks, workOrders, alerts, te
         estimated_hours: laborHours,
         estimated_cost: laborCost + partsCost,
         suggested_technician: bestTech?.name || null,
+        suggested_technician_id: bestTech?.id || null,
+        technician_email: bestTech?.email || null,
         technician_match_score: bestTech ? (bestTech.equipment_specializations?.includes(eq.type) ? 95 : 70) : 0,
         required_parts: requiredParts.map(p => ({
           name: p.name,
