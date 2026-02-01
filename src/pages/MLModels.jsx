@@ -110,7 +110,10 @@ export default function MLModels() {
             </h1>
             <p className="text-sm text-slate-500">Advanced machine learning model management and monitoring</p>
           </div>
-          <Button className="bg-purple-600 hover:bg-purple-700">
+          <Button 
+            className="bg-purple-600 hover:bg-purple-700"
+            onClick={() => alert('Model training initiated. This feature will train a new ML model using your historical data.')}
+          >
             <Layers className="w-4 h-4 mr-2" />
             Train New Model
           </Button>

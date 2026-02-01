@@ -246,7 +246,7 @@ function ApproveTaskDialog({ open, onOpenChange, suggestion, technicians, onAppr
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="low">Low</SelectItem>
                   <SelectItem value="medium">Medium</SelectItem>
                   <SelectItem value="high">High</SelectItem>
@@ -281,8 +281,8 @@ function ApproveTaskDialog({ open, onOpenChange, suggestion, technicians, onAppr
               <SelectTrigger>
                 <SelectValue placeholder="Select technician" />
               </SelectTrigger>
-              <SelectContent>
-                {technicians.map((tech) => (
+              <SelectContent className="bg-white">
+                {technicians?.map((tech) => (
                   <SelectItem key={tech.id} value={tech.name}>
                     {tech.name} ({tech.availability_status})
                   </SelectItem>

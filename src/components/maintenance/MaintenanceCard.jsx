@@ -151,6 +151,10 @@ export default function MaintenanceCard({ task, equipment, onStatusChange, delay
             size="sm" 
             variant="ghost" 
             className="text-slate-500 hover:text-slate-700 text-xs"
+            onClick={(e) => {
+              e.stopPropagation();
+              // Details button - could open a modal in the future
+            }}
           >
             Details <ChevronRight className="w-3 h-3 ml-1" />
           </Button>
