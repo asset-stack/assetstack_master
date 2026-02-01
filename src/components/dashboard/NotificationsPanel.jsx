@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../../utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Bell, X, AlertTriangle, Cpu, Wrench, Package, 
-  Brain, Scan, CheckCircle2, Clock
+  Brain, Scan, CheckCircle2, Clock, ExternalLink
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -154,6 +156,19 @@ export default function NotificationsPanel({
                                 >
                                   Resolve
                                 </Button>
+                                <Link 
+                                  to={createPageUrl(`Equipment?id=${alert.equipment_id}`)}
+                                  onClick={onClose}
+                                >
+                                  <Button 
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-7 text-xs"
+                                  >
+                                    <ExternalLink className="w-3 h-3 mr-1" />
+                                    View
+                                  </Button>
+                                </Link>
                               </div>
                             </div>
                           </div>
@@ -189,14 +204,29 @@ export default function NotificationsPanel({
                               <p className="text-xs text-slate-400 mt-0.5">
                                 {formatTimeAgo(alert.created_date)}
                               </p>
-                              <Button 
-                                size="sm"
-                                variant="outline"
-                                className="h-7 text-xs mt-2"
-                                onClick={() => onResolve(alert.id)}
-                              >
-                                Mark Resolved
-                              </Button>
+                              <div className="flex items-center gap-2 mt-2">
+                                <Button 
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-7 text-xs"
+                                  onClick={() => onResolve(alert.id)}
+                                >
+                                  Mark Resolved
+                                </Button>
+                                <Link 
+                                  to={createPageUrl(`Equipment?id=${alert.equipment_id}`)}
+                                  onClick={onClose}
+                                >
+                                  <Button 
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-7 text-xs"
+                                  >
+                                    <ExternalLink className="w-3 h-3 mr-1" />
+                                    View
+                                  </Button>
+                                </Link>
+                              </div>
                             </div>
                           </div>
                         </div>
