@@ -106,6 +106,27 @@ export default function WorkOrderCard({ workOrder, equipment, onViewDetails, del
         </div>
       </div>
 
+      {/* Checklist Progress */}
+      {workOrder.checklist?.length > 0 && (
+        <div className="mb-4 p-2.5 bg-slate-50 rounded-lg">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs text-slate-500 flex items-center gap-1">
+              <ClipboardList className="w-3 h-3" />
+              Checklist
+            </span>
+            <span className="text-xs font-medium text-slate-700">
+              {workOrder.checklist_completion_percent || 0}%
+            </span>
+          </div>
+          <Progress value={workOrder.checklist_completion_percent || 0} className="h-1.5" />
+          {workOrder.checklist_completed && (
+            <Badge className="mt-1.5 text-xs bg-emerald-50 text-emerald-600 border-emerald-200">
+              <CheckCircle2 className="w-3 h-3 mr-1" /> Complete
+            </Badge>
+          )}
+        </div>
+      )}
+
       {/* Cost & Parts Summary */}
       <div className="flex items-center gap-4 mb-4 p-3 bg-slate-50 rounded-lg">
         <div className="flex items-center gap-2">
