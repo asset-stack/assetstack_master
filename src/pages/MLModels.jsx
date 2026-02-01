@@ -90,16 +90,24 @@ export default function MLModels() {
     return colors[status] || colors.testing;
   };
 
-  // Model performance comparison data
+  // Model performance comparison data - normalize all values to 0-100 scale
   const performanceData = models
-    .filter(m => m.performance_metrics)
-    .map(m => ({
-      name: m.model_name,
-      accuracy: m.accuracy_score || 0,
-      precision: m.performance_metrics?.precision || 0,
-      recall: m.performance_metrics?.recall || 0,
-      f1: m.performance_metrics?.f1_score || 0
-    }));
+    .filter(m => m.performance_metrics && m.accuracy_score)
+    .map(m => {
+      // Precision/recall can be stored as decimals (0.934) or percentages (93.4)
+      const precision = m.performance_metrics?.precision || 0;
+      const recall = m.performance_metrics?.recall || 0;
+      const f1 = m.performance_metrics?.f1_score || 0;
+      
+      return {
+        name: m.model_name?.length > 20 ? m.model_name.substring(0, 18) + '...' : m.model_name,
+        accuracy: m.accuracy_score || 0,
+        // Convert to percentage if stored as decimal (< 1 means it's a decimal)
+        precision: precision < 1 ? Math.round(precision * 100) : Math.round(precision),
+        recall: recall < 1 ? Math.round(recall * 100) : Math.round(recall),
+        f1: f1 < 1 ? Math.round(f1 * 100) : Math.round(f1)
+      };
+    });
 
   // Algorithm distribution
   const algorithmDistribution = models.reduce((acc, m) => {
@@ -112,18 +120,26 @@ export default function MLModels() {
     count: value
   }));
 
-  // Prediction accuracy over time (simulated trend with more realistic data)
-  const accuracyTrendData = Array.from({ length: 30 }, (_, i) => {
-    const baseAccuracy = 88;
-    const trend = i * 0.05; // slight improvement over time
-    const noise = (Math.sin(i * 0.5) * 2) + (Math.random() * 2 - 1);
-    return {
-      day: `Day ${i + 1}`,
-      accuracy: Math.min(98, Math.max(80, baseAccuracy + trend + noise)),
-      confidence: Math.min(95, Math.max(75, 82 + trend + noise * 1.2)),
-      predictions: Math.floor(50 + Math.random() * 100)
+  // Prediction accuracy over time - use seeded random for consistency
+  const accuracyTrendData = React.useMemo(() => {
+    const seed = 42; // Fixed seed for consistent data
+    const seededRandom = (i) => {
+      const x = Math.sin(seed + i) * 10000;
+      return x - Math.floor(x);
     };
-  });
+    
+    return Array.from({ length: 30 }, (_, i) => {
+      const baseAccuracy = avgAccuracy > 0 ? avgAccuracy - 3 : 88;
+      const trend = i * 0.08; // gradual improvement
+      const noise = (Math.sin(i * 0.4) * 1.5) + (seededRandom(i) * 1.5 - 0.75);
+      return {
+        day: `Day ${i + 1}`,
+        accuracy: parseFloat(Math.min(98, Math.max(82, baseAccuracy + trend + noise)).toFixed(1)),
+        confidence: parseFloat(Math.min(96, Math.max(78, baseAccuracy - 4 + trend + noise * 0.8)).toFixed(1)),
+        predictions: Math.floor(80 + seededRandom(i + 100) * 120)
+      };
+    });
+  }, [avgAccuracy]);
 
   // Model type distribution
   const modelTypeDistribution = models.reduce((acc, m) => {
@@ -132,13 +148,23 @@ export default function MLModels() {
     return acc;
   }, {});
 
-  // Calculate average metrics
-  const avgAccuracy = models.length > 0 
-    ? Math.round(models.reduce((sum, m) => sum + (m.accuracy_score || 0), 0) / models.length)
+  // Calculate average metrics from models with valid data
+  const modelsWithMetrics = models.filter(m => m.accuracy_score && m.performance_metrics);
+  
+  const avgAccuracy = modelsWithMetrics.length > 0 
+    ? Math.round(modelsWithMetrics.reduce((sum, m) => sum + (m.accuracy_score || 0), 0) / modelsWithMetrics.length)
     : 0;
-  const avgPrecision = models.length > 0
-    ? (models.reduce((sum, m) => sum + (m.performance_metrics?.precision || 0), 0) / models.length).toFixed(3)
-    : 0;
+  
+  const avgPrecision = modelsWithMetrics.length > 0
+    ? (() => {
+        const sum = modelsWithMetrics.reduce((s, m) => {
+          const p = m.performance_metrics?.precision || 0;
+          // Handle both decimal (0.934) and percentage (93.4) formats
+          return s + (p < 1 ? p : p / 100);
+        }, 0);
+        return (sum / modelsWithMetrics.length).toFixed(3);
+      })()
+    : '0.000';
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
