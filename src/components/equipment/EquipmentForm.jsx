@@ -159,7 +159,7 @@ export default function EquipmentForm({ open, onOpenChange, equipment, onSave, i
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="max-h-60">
+                    <SelectContent className="max-h-60 bg-white">
                       {EQUIPMENT_TYPES.map(type => (
                         <SelectItem key={type} value={type} className="capitalize">
                           {type.replace(/_/g, ' ')}
@@ -215,7 +215,7 @@ export default function EquipmentForm({ open, onOpenChange, equipment, onSave, i
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       {CRITICALITIES.map(c => (
                         <SelectItem key={c} value={c} className="capitalize">
                           {c.replace(/_/g, ' ')}
@@ -299,7 +299,7 @@ export default function EquipmentForm({ open, onOpenChange, equipment, onSave, i
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       {STATUSES.map(s => (
                         <SelectItem key={s} value={s} className="capitalize">{s}</SelectItem>
                       ))}
@@ -312,7 +312,7 @@ export default function EquipmentForm({ open, onOpenChange, equipment, onSave, i
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       {RISK_LEVELS.map(r => (
                         <SelectItem key={r} value={r} className="capitalize">{r}</SelectItem>
                       ))}

@@ -200,7 +200,7 @@ function UploadLiDARDialog({ open, onOpenChange, onUpload }) {
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="terrestrial">Terrestrial</SelectItem>
                   <SelectItem value="aerial">Aerial (Drone)</SelectItem>
                   <SelectItem value="mobile">Mobile</SelectItem>
@@ -214,7 +214,7 @@ function UploadLiDARDialog({ open, onOpenChange, onUpload }) {
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="las">LAS</SelectItem>
                   <SelectItem value="laz">LAZ (Compressed)</SelectItem>
                   <SelectItem value="e57">E57</SelectItem>
