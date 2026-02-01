@@ -55,8 +55,8 @@ import MLModels from './pages/MLModels';
 import Maintenance from './pages/Maintenance';
 import Onboarding from './pages/Onboarding';
 import Predictions from './pages/Predictions';
-import SensorIntegration from './pages/SensorIntegration';
 import Reports from './pages/Reports';
+import SensorIntegration from './pages/SensorIntegration';
 import __Layout from './Layout.jsx';
 
 
@@ -69,8 +69,8 @@ export const PAGES = {
     "Maintenance": Maintenance,
     "Onboarding": Onboarding,
     "Predictions": Predictions,
-    "SensorIntegration": SensorIntegration,
     "Reports": Reports,
+    "SensorIntegration": SensorIntegration,
 }
 
 export const pagesConfig = {

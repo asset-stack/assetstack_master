@@ -220,7 +220,7 @@ Generate a detailed, actionable report with:
                 <Calendar className="w-4 h-4 mr-2 text-slate-400" />
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 <SelectItem value="7d">Last 7 days</SelectItem>
                 <SelectItem value="30d">Last 30 days</SelectItem>
                 <SelectItem value="90d">Last 90 days</SelectItem>

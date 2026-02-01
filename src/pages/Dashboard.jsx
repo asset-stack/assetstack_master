@@ -119,7 +119,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200">
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-200">
         <div className="px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
