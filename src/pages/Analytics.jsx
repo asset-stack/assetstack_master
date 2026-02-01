@@ -516,24 +516,6 @@ export default function Analytics() {
             />
           </TabsContent>
 
-          <TabsContent value="benchmarks" className="mt-0">
-            <BenchmarkDashboard 
-              equipment={equipment}
-              workOrders={workOrders}
-              maintenanceTasks={tasks}
-            />
-          </TabsContent>
-
-          <TabsContent value="optimization" className="mt-0">
-            <div className="bg-slate-900 rounded-xl p-6">
-              <CostOptimizationModule 
-                equipment={equipment}
-                predictions={predictions}
-                tasks={tasks}
-              />
-            </div>
-          </TabsContent>
-
           <TabsContent value="automation" className="mt-0">
             <div className="space-y-6">
               <RunPredictiveAnalysis
