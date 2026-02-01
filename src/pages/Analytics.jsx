@@ -15,12 +15,10 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MetricCard from '@/components/dashboard/MetricCard';
-import CostOptimizationModule from '@/components/analytics/CostOptimizationModule';
 import RULVisualization from '@/components/analytics/RULVisualization';
 import SparePartsInventory from '@/components/inventory/SparePartsInventory';
 import RootCausePanel from '@/components/analytics/RootCausePanel';
 import ResourceOptimizer from '@/components/analytics/ResourceOptimizer';
-import BenchmarkDashboard from '@/components/analytics/BenchmarkDashboard';
 import PredictiveWorkflowConfig from '@/components/maintenance/PredictiveWorkflowConfig';
 import SuggestedTasksPanel from '@/components/maintenance/SuggestedTasksPanel';
 import RunPredictiveAnalysis from '@/components/maintenance/RunPredictiveAnalysis';
