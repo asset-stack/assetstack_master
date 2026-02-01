@@ -4,7 +4,7 @@ import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
-  Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText
+  Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
@@ -15,6 +15,7 @@ const navItems = [
   { name: 'Digital Twin', icon: Box, page: 'DigitalTwin' },
   { name: 'Sensors', icon: Radio, page: 'SensorIntegration' },
   { name: 'Maintenance', icon: Wrench, page: 'Maintenance' },
+  { name: 'Depreciation', icon: TrendingDown, page: 'Depreciation' },
   { name: 'Predictions', icon: Brain, page: 'Predictions' },
   { name: 'Analytics', icon: BarChart3, page: 'Analytics' },
   { name: 'Reports', icon: FileText, page: 'Reports' },
