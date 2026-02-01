@@ -72,36 +72,21 @@ export default function WorkOrderDetails({
     t.availability_status === 'available' || t.availability_status === 'busy'
   );
 
-  // Send notification to technician
+  // Send notification to technician using professional HTML email
   const sendAssignmentNotification = async (technicianId, workOrderData) => {
     const technician = technicians.find(t => t.id === technicianId);
     if (!technician?.email) return;
 
     const equipmentName = equipmentMap[workOrderData.equipment_id]?.name || 'Unknown Equipment';
     
-    await base44.integrations.Core.SendEmail({
-      to: technician.email,
-      subject: `Work Order Assigned: ${workOrderData.title}`,
-      body: `
-Hello ${technician.name},
-
-You have been assigned a new work order:
-
-Work Order: ${workOrderData.work_order_number || 'New'}
-Title: ${workOrderData.title}
-Equipment: ${equipmentName}
-Priority: ${workOrderData.priority?.toUpperCase()}
-Type: ${workOrderData.type}
-Estimated Hours: ${workOrderData.estimated_hours || 'TBD'}
-${workOrderData.scheduled_start ? `Scheduled Start: ${format(new Date(workOrderData.scheduled_start), 'PPP')}` : ''}
-
-${workOrderData.description ? `Description:\n${workOrderData.description}` : ''}
-
-Please log into AssetStack to view the full details and begin work.
-
-Best regards,
-AssetStack Maintenance System
-      `.trim()
+    await base44.functions.invoke('sendNotificationEmail', {
+      type: 'work_order_assigned',
+      data: {
+        ...workOrderData,
+        equipment_name: equipmentName,
+        assigned_to: technician.name,
+        recipient_email: technician.email
+      }
     });
   };
 
