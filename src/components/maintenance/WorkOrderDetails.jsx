@@ -419,14 +419,14 @@ export default function WorkOrderDetails({
                     />
                   </div>
                   <Select 
-                    value={editedWorkOrder.assigned_to || ''} 
-                    onValueChange={(v) => setEditedWorkOrder({ ...editedWorkOrder, assigned_to: v })}
+                    value={editedWorkOrder.assigned_to || 'unassigned'} 
+                    onValueChange={(v) => setEditedWorkOrder({ ...editedWorkOrder, assigned_to: v === 'unassigned' ? '' : v })}
                   >
                     <SelectTrigger className="bg-white border-slate-200">
                       <SelectValue placeholder="Select technician" />
                     </SelectTrigger>
                     <SelectContent className="bg-white border-slate-200 max-h-60">
-                      <SelectItem value={null}>Unassigned</SelectItem>
+                      <SelectItem value="unassigned">Unassigned</SelectItem>
                       {availableTechnicians.map(tech => (
                         <SelectItem key={tech.id} value={tech.id}>
                           <div className="flex items-center gap-2">
