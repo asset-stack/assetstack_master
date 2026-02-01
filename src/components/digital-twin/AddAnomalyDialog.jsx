@@ -78,7 +78,7 @@ export default function AddAnomalyDialog({ open, onOpenChange, onAdd, scanBoundi
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   {anomalyTypes.map(t => (
                     <SelectItem key={t.value} value={t.value}>
                       <span className="flex items-center gap-2">
@@ -96,7 +96,7 @@ export default function AddAnomalyDialog({ open, onOpenChange, onAdd, scanBoundi
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   {severityLevels.map(s => (
                     <SelectItem key={s.value} value={s.value}>
                       <span className={`px-2 py-0.5 rounded text-xs ${s.color}`}>{s.label}</span>
@@ -182,7 +182,7 @@ export default function AddAnomalyDialog({ open, onOpenChange, onAdd, scanBoundi
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="mm">Millimeters (mm)</SelectItem>
                   <SelectItem value="cm">Centimeters (cm)</SelectItem>
                   <SelectItem value="m">Meters (m)</SelectItem>
