@@ -53,11 +53,12 @@ import DigitalTwin from './pages/DigitalTwin';
 import Equipment from './pages/Equipment';
 import MLModels from './pages/MLModels';
 import Maintenance from './pages/Maintenance';
+import MobileChecklist from './pages/MobileChecklist';
 import Onboarding from './pages/Onboarding';
 import Predictions from './pages/Predictions';
 import Reports from './pages/Reports';
 import SensorIntegration from './pages/SensorIntegration';
-import MobileChecklist from './pages/MobileChecklist';
+import Depreciation from './pages/Depreciation';
 import __Layout from './Layout.jsx';
 
 
@@ -68,11 +69,12 @@ export const PAGES = {
     "Equipment": Equipment,
     "MLModels": MLModels,
     "Maintenance": Maintenance,
+    "MobileChecklist": MobileChecklist,
     "Onboarding": Onboarding,
     "Predictions": Predictions,
     "Reports": Reports,
     "SensorIntegration": SensorIntegration,
-    "MobileChecklist": MobileChecklist,
+    "Depreciation": Depreciation,
 }
 
 export const pagesConfig = {
