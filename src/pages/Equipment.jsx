@@ -43,11 +43,25 @@ export default function Equipment() {
   const [groupBy, setGroupBy] = useState('location');
 
   const queryClient = useQueryClient();
+  
+  // Get equipment ID from URL params
+  const urlParams = new URLSearchParams(window.location.search);
+  const equipmentIdFromUrl = urlParams.get('id');
 
   const { data: equipment = [], isLoading } = useQuery({
     queryKey: ['equipment'],
     queryFn: () => base44.entities.Equipment.list('-created_date', 200),
   });
+
+  // Auto-select equipment from URL param
+  useEffect(() => {
+    if (equipmentIdFromUrl && equipment.length > 0 && !selectedEquipment) {
+      const eq = equipment.find(e => e.id === equipmentIdFromUrl);
+      if (eq) {
+        setSelectedEquipment(eq);
+      }
+    }
+  }, [equipmentIdFromUrl, equipment, selectedEquipment]);
 
   // Real-time subscription
   useEffect(() => {
