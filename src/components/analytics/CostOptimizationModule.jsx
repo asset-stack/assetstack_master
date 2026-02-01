@@ -5,7 +5,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, R
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 
-export default function CostOptimizationModule({ equipment, predictions, tasks }) {
+export default function CostOptimizationModule({ equipment = [], predictions = [], tasks = [] }) {
   const [maintenanceInterval, setMaintenanceInterval] = useState(90); // days
 
   const optimization = useMemo(() => {

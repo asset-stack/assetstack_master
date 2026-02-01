@@ -535,11 +535,13 @@ export default function Analytics() {
           </TabsContent>
 
           <TabsContent value="optimization" className="mt-0">
-            <CostOptimizationModule 
-              equipment={equipment}
-              predictions={predictions}
-              tasks={tasks}
-            />
+            <div className="bg-slate-900 rounded-xl p-6">
+              <CostOptimizationModule 
+                equipment={equipment}
+                predictions={predictions}
+                tasks={tasks}
+              />
+            </div>
           </TabsContent>
 
           <TabsContent value="automation" className="mt-0">
