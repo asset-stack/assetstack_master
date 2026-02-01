@@ -26,10 +26,15 @@ export default function WorkOrderAutoGenerator({
     setError(null);
 
     try {
+      // Check if we're in test mode based on URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const dataEnv = urlParams.get('base44_data_env') || 'prod';
+      
       const payload = {
         source_type: source.type,
         source_id: source.data?.id,
-        equipment_id: source.type === 'equipment' ? source.data?.id : source.data?.equipment_id
+        equipment_id: source.type === 'equipment' ? source.data?.id : source.data?.equipment_id,
+        data_env: dataEnv
       };
 
       const response = await base44.functions.invoke('autoGenerateWorkOrder', payload);
