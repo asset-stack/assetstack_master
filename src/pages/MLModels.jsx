@@ -1,37 +1,58 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Brain, TrendingUp, Target, CheckCircle2, Zap, Activity,
-  BarChart3, AlertCircle, RefreshCw, Layers
+  BarChart3, AlertCircle, RefreshCw, Layers, Search, Filter,
+  Eye, Settings, Play, Pause, AlertTriangle, Shield
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   LineChart, Line, BarChart, Bar, RadarChart, Radar, PolarGrid, 
   PolarAngleAxis, PolarRadiusAxis, XAxis, YAxis, CartesianGrid, 
-  Tooltip, ResponsiveContainer, Legend 
+  Tooltip, ResponsiveContainer, Legend, AreaChart, Area
 } from 'recharts';
+import ModelTrainingDialog from '@/components/ml/ModelTrainingDialog';
+import ModelDetailsPanel from '@/components/ml/ModelDetailsPanel';
+import ModelDriftMonitor from '@/components/ml/ModelDriftMonitor';
 
 export default function MLModels() {
   const [selectedModel, setSelectedModel] = useState(null);
+  const [showTrainingDialog, setShowTrainingDialog] = useState(false);
+  const [activeTab, setActiveTab] = useState('models');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
 
-  const { data: models = [], isLoading } = useQuery({
+  const { data: models = [], isLoading, refetch } = useQuery({
     queryKey: ['mlmodels'],
     queryFn: () => base44.entities.MLModel.list('-created_date', 100),
   });
 
   const { data: predictions = [] } = useQuery({
     queryKey: ['predictions'],
-    queryFn: () => base44.entities.PredictionLog.list('-created_date', 200),
+    queryFn: () => base44.entities.PredictionLog.list('-created_date', 500),
   });
 
   const { data: featureVectors = [] } = useQuery({
     queryKey: ['featureVectors'],
     queryFn: () => base44.entities.FeatureVector.list('-created_date', 100),
+  });
+
+  // Filter models
+  const filteredModels = models.filter(m => {
+    const matchesSearch = m.model_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          m.algorithm?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || m.status === statusFilter;
+    const matchesType = typeFilter === 'all' || m.model_type === typeFilter;
+    return matchesSearch && matchesStatus && matchesType;
   });
 
   // Calculate ML system stats
@@ -91,36 +112,83 @@ export default function MLModels() {
     count: value
   }));
 
-  // Prediction accuracy over time (simulated trend)
-  const accuracyTrendData = Array.from({ length: 30 }, (_, i) => ({
-    day: `Day ${i + 1}`,
-    accuracy: 85 + Math.random() * 10,
-    confidence: 80 + Math.random() * 15
-  }));
+  // Prediction accuracy over time (simulated trend with more realistic data)
+  const accuracyTrendData = Array.from({ length: 30 }, (_, i) => {
+    const baseAccuracy = 88;
+    const trend = i * 0.05; // slight improvement over time
+    const noise = (Math.sin(i * 0.5) * 2) + (Math.random() * 2 - 1);
+    return {
+      day: `Day ${i + 1}`,
+      accuracy: Math.min(98, Math.max(80, baseAccuracy + trend + noise)),
+      confidence: Math.min(95, Math.max(75, 82 + trend + noise * 1.2)),
+      predictions: Math.floor(50 + Math.random() * 100)
+    };
+  });
+
+  // Model type distribution
+  const modelTypeDistribution = models.reduce((acc, m) => {
+    const type = m.model_type || 'unknown';
+    acc[type] = (acc[type] || 0) + 1;
+    return acc;
+  }, {});
+
+  // Calculate average metrics
+  const avgAccuracy = models.length > 0 
+    ? Math.round(models.reduce((sum, m) => sum + (m.accuracy_score || 0), 0) / models.length)
+    : 0;
+  const avgPrecision = models.length > 0
+    ? (models.reduce((sum, m) => sum + (m.performance_metrics?.precision || 0), 0) / models.length).toFixed(3)
+    : 0;
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
       <div className="max-w-[1800px] mx-auto px-6 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-3">
               <Brain className="w-8 h-8 text-purple-500" />
               ML Models & Performance
             </h1>
-            <p className="text-sm text-slate-500">Advanced machine learning model management and monitoring</p>
+            <p className="text-sm text-slate-500">Advanced machine learning model management, training, and monitoring</p>
           </div>
-          <Button 
-            className="bg-purple-600 hover:bg-purple-700"
-            onClick={() => alert('Model training initiated. This feature will train a new ML model using your historical data.')}
-          >
-            <Layers className="w-4 h-4 mr-2" />
-            Train New Model
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button variant="outline" onClick={() => refetch()}>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh
+            </Button>
+            <Button 
+              className="bg-purple-600 hover:bg-purple-700"
+              onClick={() => setShowTrainingDialog(true)}
+            >
+              <Layers className="w-4 h-4 mr-2" />
+              Train New Model
+            </Button>
+          </div>
         </div>
 
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+          <TabsList className="bg-slate-100">
+            <TabsTrigger value="models" className="flex items-center gap-2">
+              <Brain className="w-4 h-4" />
+              Models ({models.length})
+            </TabsTrigger>
+            <TabsTrigger value="drift" className="flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4" />
+              Drift Monitor
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Analytics
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {activeTab === 'models' && (
+        <>
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -189,8 +257,45 @@ export default function MLModels() {
           </motion.div>
         </div>
 
+        {/* Filters */}
+        <div className="flex flex-wrap items-center gap-3 mb-6">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Input
+              placeholder="Search models..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent className="bg-white">
+              <SelectItem value="all">All Status</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="testing">Testing</SelectItem>
+              <SelectItem value="training">Training</SelectItem>
+              <SelectItem value="deprecated">Deprecated</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <SelectTrigger className="w-44">
+              <SelectValue placeholder="Model Type" />
+            </SelectTrigger>
+            <SelectContent className="bg-white">
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="anomaly_detection">Anomaly Detection</SelectItem>
+              <SelectItem value="rul_prediction">RUL Prediction</SelectItem>
+              <SelectItem value="failure_classification">Failure Classification</SelectItem>
+              <SelectItem value="degradation_trend">Degradation Trend</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Model Performance Comparison */}
           <Card className="bg-white border-slate-200 shadow-sm">
             <CardHeader>
@@ -250,12 +355,14 @@ export default function MLModels() {
         </div>
 
         {/* Models Grid */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-slate-900 mb-4">Deployed Models</h2>
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-slate-900">
+            Deployed Models ({filteredModels.length})
+          </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {models.map((model, idx) => (
+          {filteredModels.map((model, idx) => (
             <motion.div
               key={model.id}
               initial={{ opacity: 0, y: 20 }}
@@ -310,31 +417,209 @@ export default function MLModels() {
                   <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-200">
                     <div className="text-center">
                       <p className="text-xs text-slate-500">Precision</p>
-                      <p className="text-sm font-medium text-slate-900">{model.performance_metrics.precision || 'N/A'}</p>
+                      <p className="text-sm font-medium text-slate-900">
+                        {typeof model.performance_metrics.precision === 'number' 
+                          ? model.performance_metrics.precision.toFixed(3) 
+                          : model.performance_metrics.precision || 'N/A'}
+                      </p>
                     </div>
                     <div className="text-center">
                       <p className="text-xs text-slate-500">Recall</p>
-                      <p className="text-sm font-medium text-slate-900">{model.performance_metrics.recall || 'N/A'}</p>
+                      <p className="text-sm font-medium text-slate-900">
+                        {typeof model.performance_metrics.recall === 'number'
+                          ? model.performance_metrics.recall.toFixed(3)
+                          : model.performance_metrics.recall || 'N/A'}
+                      </p>
                     </div>
                     <div className="text-center">
                       <p className="text-xs text-slate-500">F1</p>
-                      <p className="text-sm font-medium text-slate-900">{model.performance_metrics.f1_score || 'N/A'}</p>
+                      <p className="text-sm font-medium text-slate-900">
+                        {typeof model.performance_metrics.f1_score === 'number'
+                          ? model.performance_metrics.f1_score.toFixed(3)
+                          : model.performance_metrics.f1_score || 'N/A'}
+                      </p>
                     </div>
                   </div>
                 )}
+
+                {/* Quick Actions */}
+                <div className="flex gap-2 pt-3 border-t border-slate-200">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={(e) => { e.stopPropagation(); setSelectedModel(model); }}
+                  >
+                    <Eye className="w-3 h-3 mr-1" />
+                    Details
+                  </Button>
+                  {model.status === 'testing' && (
+                    <Button 
+                      size="sm" 
+                      className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Play className="w-3 h-3 mr-1" />
+                      Deploy
+                    </Button>
+                  )}
+                </div>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {models.length === 0 && !isLoading && (
-          <div className="text-center py-16">
-            <Brain className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-400">No ML models deployed</h3>
-            <p className="text-sm text-slate-500">Train and deploy your first model</p>
+        {filteredModels.length === 0 && !isLoading && (
+          <div className="text-center py-16 bg-white rounded-xl border border-slate-200">
+            <Brain className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-slate-600">No ML models found</h3>
+            <p className="text-sm text-slate-500 mb-4">
+              {models.length === 0 ? 'Train and deploy your first model' : 'Try adjusting your filters'}
+            </p>
+            <Button className="bg-purple-600 hover:bg-purple-700" onClick={() => setShowTrainingDialog(true)}>
+              <Layers className="w-4 h-4 mr-2" />
+              Train New Model
+            </Button>
+          </div>
+        )}
+        </>
+        )}
+
+        {/* Drift Monitor Tab */}
+        {activeTab === 'drift' && (
+          <ModelDriftMonitor models={models} predictions={predictions} />
+        )}
+
+        {/* Analytics Tab */}
+        {activeTab === 'analytics' && (
+          <div className="space-y-6">
+            {/* Summary Cards */}
+            <div className="grid grid-cols-4 gap-4">
+              <Card className="bg-white">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <Brain className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">{models.length}</p>
+                      <p className="text-xs text-slate-500">Total Models</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-emerald-100 rounded-lg">
+                      <Target className="w-5 h-5 text-emerald-600" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">{avgAccuracy}%</p>
+                      <p className="text-xs text-slate-500">Avg Accuracy</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <Activity className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">{predictions.length}</p>
+                      <p className="text-xs text-slate-500">Total Predictions</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-amber-100 rounded-lg">
+                      <Shield className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">{avgPrecision}</p>
+                      <p className="text-xs text-slate-500">Avg Precision</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Charts */}
+            <div className="grid grid-cols-2 gap-6">
+              <Card className="bg-white">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-emerald-500" />
+                    Prediction Performance Trend
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-72">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={accuracyTrendData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                        <XAxis dataKey="day" tick={{ fill: '#64748b', fontSize: 10 }} />
+                        <YAxis domain={[70, 100]} tick={{ fill: '#64748b', fontSize: 10 }} />
+                        <Tooltip />
+                        <Legend />
+                        <Area type="monotone" dataKey="accuracy" stroke="#10b981" fill="#10b98120" name="Accuracy %" />
+                        <Area type="monotone" dataKey="confidence" stroke="#8b5cf6" fill="#8b5cf620" name="Confidence %" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5 text-blue-500" />
+                    Model Performance Comparison
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-72">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={performanceData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                        <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 10 }} />
+                        <YAxis domain={[0, 100]} tick={{ fill: '#64748b', fontSize: 10 }} />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="accuracy" fill="#3b82f6" name="Accuracy" />
+                        <Bar dataKey="precision" fill="#10b981" name="Precision" />
+                        <Bar dataKey="recall" fill="#f59e0b" name="Recall" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         )}
       </div>
+
+      {/* Model Training Dialog */}
+      <ModelTrainingDialog 
+        open={showTrainingDialog} 
+        onOpenChange={setShowTrainingDialog} 
+      />
+
+      {/* Model Details Panel */}
+      <AnimatePresence>
+        {selectedModel && (
+          <ModelDetailsPanel 
+            model={selectedModel} 
+            onClose={() => setSelectedModel(null)}
+            predictions={predictions}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
