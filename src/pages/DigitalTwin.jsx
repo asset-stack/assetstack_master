@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Box, Upload, FileUp, Scan, AlertTriangle, Layers,
   Search, ChevronRight, X, Loader2, Info,
-  CheckCircle2, Eye, Grid3X3, Plus, Ruler, FileText, Lightbulb
+  CheckCircle2, Eye, Grid3X3, Plus, Ruler, FileText, Lightbulb, MapPin
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,11 +14,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from 'date-fns';
 import AddAnomalyDialog from '@/components/digital-twin/AddAnomalyDialog';
 import AnomalyMeasurementPanel from '@/components/digital-twin/AnomalyMeasurementPanel';
 import AnomalyReportGenerator from '@/components/digital-twin/AnomalyReportGenerator';
 import AnomalyCausesPanel from '@/components/digital-twin/AnomalyCausesPanel';
+import InteractiveFloorPlan from '@/components/digital-twin/InteractiveFloorPlan';
 
 // 2D Visualization placeholder for scan data
 function ScanVisualization({ scan, showAnomalies, selectedAnomaly, onAnomalyClick }) {
@@ -380,6 +382,8 @@ function AnomalyPanel({ anomalies, selectedAnomaly, onSelect, onClose }) {
 // Main Digital Twin Page
 export default function DigitalTwin() {
   const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState('equipment');
+  const [selectedLocation, setSelectedLocation] = useState('all');
   const [selectedScan, setSelectedScan] = useState(null);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const [showAnomalies, setShowAnomalies] = useState(true);
@@ -443,15 +447,53 @@ export default function DigitalTwin() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="flex h-[calc(100vh-64px)]">
+      {/* Header with Tabs */}
+      <div className="bg-white border-b border-slate-200 px-6 py-4">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+              <Box className="w-6 h-6 text-indigo-600" />
+              Digital Twin
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">Interactive equipment visualization & LiDAR data</p>
+          </div>
+        </div>
+        
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="bg-slate-100">
+            <TabsTrigger value="equipment" className="flex items-center gap-2">
+              <MapPin className="w-4 h-4" />
+              Equipment Map
+            </TabsTrigger>
+            <TabsTrigger value="lidar" className="flex items-center gap-2">
+              <Scan className="w-4 h-4" />
+              LiDAR Scans
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
+      {/* Equipment Map Tab */}
+      {activeTab === 'equipment' && (
+        <div className="h-[calc(100vh-140px)]">
+          <InteractiveFloorPlan 
+            selectedLocation={selectedLocation}
+            onLocationChange={setSelectedLocation}
+          />
+        </div>
+      )}
+
+      {/* LiDAR Tab - Original Content */}
+      {activeTab === 'lidar' && (
+      <div className="flex h-[calc(100vh-140px)]">
         {/* Sidebar */}
         <div className="w-80 bg-white border-r border-slate-200 flex flex-col">
           <div className="p-4 border-b border-slate-100">
-            <h1 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <Box className="w-5 h-5 text-indigo-600" />
-              Digital Twin
-            </h1>
-            <p className="text-xs text-slate-500 mt-1">3D visualization & LiDAR data</p>
+            <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+              <Scan className="w-5 h-5 text-indigo-600" />
+              LiDAR Scans
+            </h2>
+            <p className="text-xs text-slate-500 mt-1">Point cloud data & anomaly detection</p>
           </div>
 
           <div className="p-4">
@@ -737,6 +779,8 @@ export default function DigitalTwin() {
         scan={currentScan}
         anomalies={anomalies}
       />
+      </div>
+      )}
     </div>
   );
 }

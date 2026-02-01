@@ -49,34 +49,34 @@
  */
 import Analytics from './pages/Analytics';
 import Dashboard from './pages/Dashboard';
+import Depreciation from './pages/Depreciation';
 import DigitalTwin from './pages/DigitalTwin';
 import Equipment from './pages/Equipment';
 import MLModels from './pages/MLModels';
 import Maintenance from './pages/Maintenance';
+import MaintenancePlanning from './pages/MaintenancePlanning';
 import MobileChecklist from './pages/MobileChecklist';
 import Onboarding from './pages/Onboarding';
 import Predictions from './pages/Predictions';
 import Reports from './pages/Reports';
 import SensorIntegration from './pages/SensorIntegration';
-import Depreciation from './pages/Depreciation';
-import MaintenancePlanning from './pages/MaintenancePlanning';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Analytics": Analytics,
     "Dashboard": Dashboard,
+    "Depreciation": Depreciation,
     "DigitalTwin": DigitalTwin,
     "Equipment": Equipment,
     "MLModels": MLModels,
     "Maintenance": Maintenance,
+    "MaintenancePlanning": MaintenancePlanning,
     "MobileChecklist": MobileChecklist,
     "Onboarding": Onboarding,
     "Predictions": Predictions,
     "Reports": Reports,
     "SensorIntegration": SensorIntegration,
-    "Depreciation": Depreciation,
-    "MaintenancePlanning": MaintenancePlanning,
 }
 
 export const pagesConfig = {
