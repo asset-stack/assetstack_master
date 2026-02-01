@@ -388,10 +388,12 @@ AssetStack Automation
         return Response.json({ success: false, message: 'Unknown notification type' });
     }
 
-    // Send email to all admins
-    const emailPromises = admins.map(admin => 
+    // Send email to all admins (or specific recipient if provided)
+    const recipients = data.recipient_email ? [{ email: data.recipient_email }] : admins;
+    
+    const emailPromises = recipients.map(recipient => 
       base44.integrations.Core.SendEmail({
-        to: admin.email,
+        to: recipient.email,
         subject,
         body
       })
