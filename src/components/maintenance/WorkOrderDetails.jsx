@@ -437,6 +437,9 @@ export default function WorkOrderDetails({
                             {tech.availability_status === 'busy' && (
                               <Badge variant="outline" className="text-xs bg-amber-50 text-amber-600 border-amber-200">Busy</Badge>
                             )}
+                            {tech.email && (
+                              <span className="text-xs text-indigo-500">• will be notified</span>
+                            )}
                           </div>
                         </SelectItem>
                       ))}
