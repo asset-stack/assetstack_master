@@ -205,14 +205,6 @@ export default function Analytics() {
                 <Package className="w-4 h-4 mr-2" />
                 Spare Parts
               </TabsTrigger>
-              <TabsTrigger value="benchmarks" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md rounded-lg px-4 py-2.5 text-sm font-medium transition-all">
-                <Award className="w-4 h-4 mr-2" />
-                Benchmarks
-              </TabsTrigger>
-              <TabsTrigger value="optimization" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md rounded-lg px-4 py-2.5 text-sm font-medium transition-all">
-                <DollarSign className="w-4 h-4 mr-2" />
-                Cost Optimization
-              </TabsTrigger>
               <TabsTrigger value="automation" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md rounded-lg px-4 py-2.5 text-sm font-medium transition-all">
                 <Sparkles className="w-4 h-4 mr-2" />
                 AI Automation
