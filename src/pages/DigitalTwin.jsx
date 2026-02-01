@@ -759,7 +759,9 @@ export default function DigitalTwin() {
 
         </div>
       </div>
+      )}
 
+      {/* Dialogs - outside tabs */}
       <UploadLiDARDialog
         open={showUploadDialog}
         onOpenChange={setShowUploadDialog}
@@ -779,8 +781,6 @@ export default function DigitalTwin() {
         scan={currentScan}
         anomalies={anomalies}
       />
-      </div>
-      )}
     </div>
   );
 }
