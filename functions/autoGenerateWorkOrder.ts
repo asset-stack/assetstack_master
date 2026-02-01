@@ -114,8 +114,8 @@ Deno.serve(async (req) => {
       work_order_number: woNumber,
       ...workOrderData,
       status: 'draft',
-      assigned_to: suggestedTechnician?.name || '',
-      assigned_team: suggestedTechnician ? [suggestedTechnician.name] : [],
+      assigned_to: suggestedTechnician?.id || '',
+      assigned_team: suggestedTechnician ? [suggestedTechnician.id] : [],
       parts_used: suggestedParts,
       estimated_cost: estimatedCost,
       history: [{
