@@ -106,111 +106,200 @@ export default function ExportDialog({ open, onOpenChange, report, data }) {
 
   const exportAsPDF = async () => {
     const filteredData = getFilteredData();
-    
-    // Create a printable HTML document
-    const printWindow = window.open('', '_blank');
-    
-    let html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>${report.name}</title>
-        <style>
-          body { font-family: Arial, sans-serif; padding: 20px; }
-          h1 { color: #1e293b; margin-bottom: 5px; }
-          .subtitle { color: #64748b; margin-bottom: 20px; }
-          .metrics { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
-          .metric { background: #f8fafc; padding: 15px; border-radius: 8px; min-width: 150px; }
-          .metric-label { font-size: 12px; color: #64748b; }
-          .metric-value { font-size: 24px; font-weight: bold; color: #1e293b; }
-          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-          th { background: #f1f5f9; text-align: left; padding: 10px; border-bottom: 2px solid #e2e8f0; font-size: 12px; text-transform: uppercase; color: #64748b; }
-          td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
-          tr:hover { background: #f8fafc; }
-          .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
-          .badge-success { background: #dcfce7; color: #166534; }
-          .badge-warning { background: #fef3c7; color: #92400e; }
-          .badge-danger { background: #fee2e2; color: #991b1b; }
-          .badge-info { background: #dbeafe; color: #1e40af; }
-          .footer { margin-top: 30px; padding-top: 15px; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94a3b8; }
-          @media print { body { padding: 0; } }
-        </style>
-      </head>
-      <body>
-        <h1>${report.name}</h1>
-        <p class="subtitle">Generated: ${format(new Date(), 'PPpp')} • ${filteredData.length} records</p>
-    `;
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    let yPos = margin;
 
-    // Add metrics
-    if (includeMetrics && report.metrics) {
-      html += '<div class="metrics">';
-      report.metrics.forEach(metric => {
-        html += `
-          <div class="metric">
-            <div class="metric-label">${metric.label}</div>
-            <div class="metric-value">${metric.calc(data)}</div>
-          </div>
-        `;
+    // Helper function to add new page if needed
+    const checkNewPage = (requiredHeight = 20) => {
+      if (yPos + requiredHeight > pageHeight - margin) {
+        doc.addPage();
+        yPos = margin;
+        return true;
+      }
+      return false;
+    };
+
+    // Header with gradient-like background
+    doc.setFillColor(79, 70, 229); // Indigo
+    doc.rect(0, 0, pageWidth, 45, 'F');
+    
+    // Logo area
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(margin, 10, 10, 10, 2, 2, 'F');
+    doc.setFontSize(8);
+    doc.setTextColor(79, 70, 229);
+    doc.text('AS', margin + 2.5, 17);
+
+    // Title
+    doc.setFontSize(20);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont(undefined, 'bold');
+    doc.text(report.name, margin + 15, 18);
+
+    // Subtitle
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(200, 200, 255);
+    doc.text(`Generated: ${format(new Date(), 'MMMM d, yyyy \'at\' h:mm a')}`, margin + 15, 26);
+    doc.text(`Total Records: ${filteredData.length}`, margin + 15, 33);
+
+    yPos = 55;
+
+    // Metrics section
+    if (includeMetrics && report.metrics && report.metrics.length > 0) {
+      doc.setFontSize(12);
+      doc.setTextColor(30, 41, 59);
+      doc.setFont(undefined, 'bold');
+      doc.text('Summary Metrics', margin, yPos);
+      yPos += 8;
+
+      const metricsPerRow = 3;
+      const metricWidth = (pageWidth - margin * 2 - 10) / metricsPerRow;
+      
+      report.metrics.forEach((metric, idx) => {
+        const col = idx % metricsPerRow;
+        const row = Math.floor(idx / metricsPerRow);
+        const xPos = margin + col * (metricWidth + 5);
+        const metricYPos = yPos + row * 25;
+
+        // Metric card background
+        doc.setFillColor(248, 250, 252);
+        doc.roundedRect(xPos, metricYPos, metricWidth, 22, 3, 3, 'F');
+
+        // Metric label
+        doc.setFontSize(8);
+        doc.setTextColor(100, 116, 139);
+        doc.setFont(undefined, 'normal');
+        doc.text(metric.label, xPos + 4, metricYPos + 7);
+
+        // Metric value
+        doc.setFontSize(14);
+        doc.setTextColor(30, 41, 59);
+        doc.setFont(undefined, 'bold');
+        const metricValue = String(metric.calc(data));
+        doc.text(metricValue, xPos + 4, metricYPos + 17);
       });
-      html += '</div>';
+
+      const metricRows = Math.ceil(report.metrics.length / metricsPerRow);
+      yPos += metricRows * 25 + 15;
     }
 
-    // Add table
-    html += '<table><thead><tr>';
-    report.columns.forEach(col => {
-      html += `<th>${col.replace(/_/g, ' ')}</th>`;
+    // Table section
+    checkNewPage(50);
+    doc.setFontSize(12);
+    doc.setTextColor(30, 41, 59);
+    doc.setFont(undefined, 'bold');
+    doc.text('Data', margin, yPos);
+    yPos += 8;
+
+    // Calculate column widths
+    const availableWidth = pageWidth - margin * 2;
+    const colCount = report.columns.length;
+    const colWidth = Math.min(availableWidth / colCount, 45);
+    const tableWidth = colWidth * colCount;
+
+    // Table header
+    doc.setFillColor(241, 245, 249);
+    doc.rect(margin, yPos, tableWidth, 10, 'F');
+    doc.setFontSize(7);
+    doc.setTextColor(71, 85, 105);
+    doc.setFont(undefined, 'bold');
+
+    report.columns.forEach((col, idx) => {
+      const headerText = col.replace(/_/g, ' ').toUpperCase();
+      const truncatedHeader = headerText.length > 12 ? headerText.substring(0, 10) + '..' : headerText;
+      doc.text(truncatedHeader, margin + idx * colWidth + 2, yPos + 7);
     });
-    html += '</tr></thead><tbody>';
+    yPos += 12;
 
-    filteredData.forEach(row => {
-      html += '<tr>';
-      report.columns.forEach(col => {
-        let value = row[col];
-        let cellContent = value ?? '-';
+    // Table rows
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(7);
 
-        // Format dates
-        if ((col.includes('date') || col.includes('_at')) && value) {
-          try {
-            cellContent = format(new Date(value), 'MMM d, yyyy');
-          } catch {}
+    const formatCellValue = (value, col) => {
+      if (value === null || value === undefined) return '-';
+      
+      if ((col.includes('date') || col.includes('_at')) && value) {
+        try {
+          return format(new Date(value), 'MMM d, yyyy');
+        } catch { return String(value); }
+      }
+      if ((col.includes('cost') || col.includes('price')) && typeof value === 'number') {
+        return '$' + value.toLocaleString();
+      }
+      if ((col.includes('score') || col.includes('probability')) && typeof value === 'number') {
+        return value.toFixed(1) + '%';
+      }
+      return String(value).replace(/_/g, ' ');
+    };
+
+    const getStatusColor = (value, col) => {
+      if (col !== 'status' && col !== 'priority' && col !== 'severity' && col !== 'risk_level') return null;
+      const v = String(value).toLowerCase();
+      if (['operational', 'completed', 'resolved', 'available', 'low'].includes(v)) return [220, 252, 231];
+      if (['degraded', 'in_progress', 'warning', 'medium', 'busy'].includes(v)) return [254, 243, 199];
+      if (['critical', 'overdue', 'emergency', 'high', 'urgent'].includes(v)) return [254, 226, 226];
+      return [219, 234, 254];
+    };
+
+    filteredData.forEach((row, rowIdx) => {
+      if (checkNewPage(12)) {
+        // Redraw header on new page
+        doc.setFillColor(241, 245, 249);
+        doc.rect(margin, yPos, tableWidth, 10, 'F');
+        doc.setFontSize(7);
+        doc.setTextColor(71, 85, 105);
+        doc.setFont(undefined, 'bold');
+        report.columns.forEach((col, idx) => {
+          const headerText = col.replace(/_/g, ' ').toUpperCase();
+          const truncatedHeader = headerText.length > 12 ? headerText.substring(0, 10) + '..' : headerText;
+          doc.text(truncatedHeader, margin + idx * colWidth + 2, yPos + 7);
+        });
+        yPos += 12;
+        doc.setFont(undefined, 'normal');
+      }
+
+      // Alternate row background
+      if (rowIdx % 2 === 0) {
+        doc.setFillColor(250, 250, 250);
+        doc.rect(margin, yPos - 3, tableWidth, 10, 'F');
+      }
+
+      doc.setTextColor(51, 65, 85);
+      report.columns.forEach((col, colIdx) => {
+        const value = row[col];
+        const cellText = formatCellValue(value, col);
+        const truncatedText = cellText.length > 15 ? cellText.substring(0, 13) + '..' : cellText;
+        const xPos = margin + colIdx * colWidth + 2;
+
+        // Status badge
+        const statusColor = getStatusColor(value, col);
+        if (statusColor) {
+          doc.setFillColor(...statusColor);
+          doc.roundedRect(xPos - 1, yPos - 2, colWidth - 4, 7, 1, 1, 'F');
         }
 
-        // Format currency
-        if ((col.includes('cost') || col.includes('price')) && typeof value === 'number') {
-          cellContent = '$' + value.toLocaleString();
-        }
-
-        // Format percentages
-        if ((col.includes('score') || col.includes('probability')) && typeof value === 'number') {
-          cellContent = value.toFixed(1) + '%';
-        }
-
-        // Format status badges
-        if (col === 'status' || col === 'priority' || col === 'severity' || col === 'risk_level') {
-          const badgeClass = 
-            ['operational', 'completed', 'resolved', 'available', 'low'].includes(String(value).toLowerCase()) ? 'badge-success' :
-            ['degraded', 'in_progress', 'warning', 'medium', 'busy'].includes(String(value).toLowerCase()) ? 'badge-warning' :
-            ['critical', 'overdue', 'emergency', 'high', 'urgent'].includes(String(value).toLowerCase()) ? 'badge-danger' :
-            'badge-info';
-          cellContent = `<span class="badge ${badgeClass}">${String(value).replace(/_/g, ' ')}</span>`;
-        }
-
-        html += `<td>${cellContent}</td>`;
+        doc.text(truncatedText, xPos, yPos + 3);
       });
-      html += '</tr>';
+      yPos += 10;
     });
 
-    html += '</tbody></table>';
-    html += `<div class="footer">Report: ${report.name} • AssetStack Platform</div>`;
-    html += '</body></html>';
+    // Footer
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(148, 163, 184);
+      doc.setFont(undefined, 'normal');
+      doc.text(`AssetStack Platform • ${report.name}`, margin, pageHeight - 10);
+      doc.text(`Page ${i} of ${totalPages}`, pageWidth - margin - 20, pageHeight - 10);
+    }
 
-    printWindow.document.write(html);
-    printWindow.document.close();
-    
-    // Wait for content to load then print
-    setTimeout(() => {
-      printWindow.print();
-    }, 250);
+    // Download
+    doc.save(`${report.name.replace(/\s+/g, '_')}_${format(new Date(), 'yyyy-MM-dd')}.pdf`);
   };
 
   const handleExport = async () => {
