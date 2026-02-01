@@ -8,6 +8,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { format } from 'date-fns';
+import { jsPDF } from 'jspdf';
 
 export default function ExportDialog({ open, onOpenChange, report, data }) {
   const [exportFormat, setExportFormat] = useState('csv');
