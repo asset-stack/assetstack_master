@@ -23,6 +23,7 @@ import CSVImportPanel from '@/components/sensors/CSVImportPanel';
 import APIDocumentation from '@/components/sensors/APIDocumentation';
 import SensorMonitoringDashboard from '@/components/sensors/SensorMonitoringDashboard';
 import DataIngestionLogs from '@/components/sensors/DataIngestionLogs';
+import GenerateSampleData from '@/components/sensors/GenerateSampleData';
 
 const SENSOR_TYPES = [
   'vibration', 'temperature', 'pressure', 'current', 'voltage', 'flow_rate',
@@ -271,6 +272,10 @@ export default function SensorIntegration() {
               <FileText className="w-4 h-4 mr-2" />
               Ingestion Logs
             </TabsTrigger>
+            <TabsTrigger value="generate" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <Zap className="w-4 h-4 mr-2" />
+              Generate Data
+            </TabsTrigger>
           </TabsList>
 
           {/* Sensor Configurations */}
@@ -405,6 +410,15 @@ export default function SensorIntegration() {
           {/* Ingestion Logs */}
           <TabsContent value="logs">
             <DataIngestionLogs logs={ingestionLogs} />
+          </TabsContent>
+
+          {/* Generate Sample Data */}
+          <TabsContent value="generate">
+            <GenerateSampleData 
+              equipment={equipment} 
+              sensorConfigs={sensorConfigs}
+              onDataGenerated={() => queryClient.invalidateQueries(['recentReadings', 'sensorConfigs'])}
+            />
           </TabsContent>
         </Tabs>
       </div>
