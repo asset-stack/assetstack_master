@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FileText, Download, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { jsPDF } from 'jspdf';
+import { format } from 'date-fns';
 
 export default function DepreciationReportGenerator({ open, onClose, depreciationRecords, equipment }) {
   const [generating, setGenerating] = useState(false);
