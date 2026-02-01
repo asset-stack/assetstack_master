@@ -60,6 +60,9 @@ export default function SuggestedTasksPanel({ suggestions, technicians, onRefres
   };
 
   const handleApprove = async (approvalData) => {
+    // Find technician details
+    const assignedTechnician = technicians?.find(t => t.id === approvalData.assigned_to);
+    
     // Create the actual maintenance task
     const newTask = await createTaskMutation.mutateAsync({
       equipment_id: selectedTask.equipment_id,
@@ -70,7 +73,7 @@ export default function SuggestedTasksPanel({ suggestions, technicians, onRefres
       status: 'scheduled',
       scheduled_date: approvalData.scheduled_date,
       estimated_duration_hours: approvalData.estimated_hours,
-      assigned_to: approvalData.assigned_to,
+      assigned_to: assignedTechnician?.name || approvalData.assigned_to,
       ai_recommended: true,
       ai_confidence: selectedTask.ai_confidence,
       parts_required: selectedTask.suggested_parts,
@@ -85,6 +88,28 @@ export default function SuggestedTasksPanel({ suggestions, technicians, onRefres
         reviewed_at: new Date().toISOString()
       }
     });
+
+    // Send email notification to assigned technician
+    if (assignedTechnician?.email) {
+      try {
+        await base44.functions.invoke('sendNotificationEmail', {
+          type: 'task_assigned',
+          data: {
+            title: selectedTask.title,
+            type: selectedTask.type,
+            priority: approvalData.priority,
+            equipment_name: selectedTask.equipment_name,
+            scheduled_date: approvalData.scheduled_date,
+            estimated_duration_hours: approvalData.estimated_hours,
+            description: selectedTask.description,
+            assigned_to: assignedTechnician.name,
+            recipient_email: assignedTechnician.email
+          }
+        });
+      } catch (err) {
+        console.error('Failed to send notification email:', err);
+      }
+    }
 
     setShowApproveDialog(false);
     setSelectedTask(null);
