@@ -56,43 +56,116 @@ export default function RootCausePanel({ equipment = [], alerts = [] }) {
     return configs[status] || configs.pending_review;
   };
 
-  // Trigger AI analysis for an alert
+  // Trigger AI analysis for an alert using LLM
   const runAIAnalysis = async (alert) => {
     setIsAnalyzing(true);
     
     const eq = equipmentMap[alert.equipment_id];
     
-    // Simulate AI analysis
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      // Use AI to generate real root cause analysis
+      const analysisResult = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are an expert industrial maintenance engineer performing root cause analysis.
+
+Alert Details:
+- Equipment: ${eq?.name || 'Unknown'} (Type: ${eq?.type || 'N/A'})
+- Alert Type: ${alert.type}
+- Severity: ${alert.severity}
+- Alert Title: ${alert.title}
+- Alert Message: ${alert.message || 'No message'}
+- Triggered Value: ${alert.triggered_value || 'N/A'}
+- Threshold Value: ${alert.threshold_value || 'N/A'}
+- Sensor Type: ${alert.sensor_type || 'N/A'}
+- Equipment Health Score: ${eq?.health_score || 'N/A'}%
+- Operating Hours: ${eq?.operating_hours || 'N/A'}
+- Last Maintenance: ${eq?.last_maintenance_date || 'Unknown'}
+
+Analyze this alert and provide:
+1. Top 3 probable root causes with probability percentages (must add up to around 100%)
+2. Technical description for each cause
+3. Recommended corrective actions with priority, time estimates, and cost estimates
+4. Any historical patterns that might be relevant`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            probable_causes: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  cause: { type: "string" },
+                  probability: { type: "number" },
+                  description: { type: "string" }
+                }
+              }
+            },
+            recommended_actions: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  action: { type: "string" },
+                  priority: { type: "string", enum: ["high", "medium", "low"] },
+                  estimated_time_hours: { type: "number" },
+                  estimated_cost: { type: "number" },
+                  parts_required: { type: "array", items: { type: "string" } }
+                }
+              }
+            },
+            historical_patterns: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  pattern: { type: "string" },
+                  occurrences: { type: "number" },
+                  correlation: { type: "number" }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      const newAnalysis = {
+        equipment_id: alert.equipment_id,
+        alert_id: alert.id,
+        anomaly_type: alert.sensor_type || 'other',
+        severity: alert.severity === 'emergency' ? 'critical' : alert.severity,
+        detected_at: alert.created_date,
+        sensor_readings: { value: alert.triggered_value, threshold: alert.threshold_value },
+        probable_causes: analysisResult.probable_causes || [],
+        recommended_actions: analysisResult.recommended_actions || [],
+        historical_patterns: analysisResult.historical_patterns || [],
+        status: 'pending_review'
+      };
+
+      await createMutation.mutateAsync(newAnalysis);
+    } catch (error) {
+      console.error('AI analysis error:', error);
+      // Fallback to basic analysis if AI fails
+      const fallbackAnalysis = {
+        equipment_id: alert.equipment_id,
+        alert_id: alert.id,
+        anomaly_type: alert.sensor_type || 'other',
+        severity: alert.severity === 'emergency' ? 'critical' : alert.severity,
+        detected_at: alert.created_date,
+        sensor_readings: { value: alert.triggered_value, threshold: alert.threshold_value },
+        probable_causes: [
+          { cause: 'Component degradation', probability: 60, description: 'Sensor readings indicate gradual wear or degradation' },
+          { cause: 'Calibration drift', probability: 25, description: 'Possible sensor calibration issues' },
+          { cause: 'Environmental factors', probability: 15, description: 'External conditions may be affecting performance' }
+        ],
+        recommended_actions: [
+          { action: 'Perform detailed inspection', priority: 'high', estimated_time_hours: 2, estimated_cost: 300, parts_required: [] },
+          { action: 'Check sensor calibration', priority: 'medium', estimated_time_hours: 1, estimated_cost: 100, parts_required: [] }
+        ],
+        historical_patterns: [],
+        status: 'pending_review'
+      };
+      await createMutation.mutateAsync(fallbackAnalysis);
+    }
     
-    const probableCauses = [
-      { cause: 'Bearing wear', probability: 78, description: 'Excessive vibration patterns indicate bearing degradation' },
-      { cause: 'Misalignment', probability: 62, description: 'Frequency analysis shows possible shaft misalignment' },
-      { cause: 'Lubrication failure', probability: 45, description: 'Temperature rise consistent with inadequate lubrication' }
-    ];
-
-    const recommendedActions = [
-      { action: 'Inspect and replace bearings', priority: 'high', estimated_time_hours: 4, estimated_cost: 850, parts_required: ['Bearing SKF-6205', 'Seal kit'] },
-      { action: 'Check shaft alignment', priority: 'medium', estimated_time_hours: 2, estimated_cost: 200, parts_required: [] },
-      { action: 'Replace lubricant and check oil quality', priority: 'medium', estimated_time_hours: 1, estimated_cost: 75, parts_required: ['Industrial lubricant 5L'] }
-    ];
-
-    const newAnalysis = {
-      equipment_id: alert.equipment_id,
-      alert_id: alert.id,
-      anomaly_type: alert.sensor_type || 'other',
-      severity: alert.severity === 'emergency' ? 'critical' : alert.severity,
-      detected_at: alert.created_date,
-      sensor_readings: { value: alert.triggered_value, threshold: alert.threshold_value },
-      probable_causes: probableCauses,
-      recommended_actions: recommendedActions,
-      historical_patterns: [
-        { pattern: 'Similar event occurred 3 months ago', occurrences: 2, correlation: 0.85 }
-      ],
-      status: 'pending_review'
-    };
-
-    await createMutation.mutateAsync(newAnalysis);
     setIsAnalyzing(false);
   };
 
