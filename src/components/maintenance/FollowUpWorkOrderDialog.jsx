@@ -88,12 +88,13 @@ export default function FollowUpWorkOrderDialog({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="bg-white border-slate-200 max-w-xl">
+      <DialogContent className="bg-white border-slate-200 max-w-xl" aria-describedby="followup-description">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Clock className="w-5 h-5 text-indigo-600" />
             Create Follow-up Work Order
           </DialogTitle>
+          <p id="followup-description" className="text-sm text-slate-500 mt-1">Create a follow-up work order for additional maintenance or inspection.</p>
         </DialogHeader>
 
         {!result && !isCreating && (
