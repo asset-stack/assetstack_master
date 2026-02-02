@@ -248,9 +248,10 @@ export default function Maintenance() {
                   Add Task
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-2xl">
+              <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-2xl" aria-describedby="create-task-description">
                 <DialogHeader>
                   <DialogTitle>Create Maintenance Task</DialogTitle>
+                  <p id="create-task-description" className="text-sm text-slate-500">Fill in the details below to create a new maintenance task.</p>
                 </DialogHeader>
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <div className="col-span-2 space-y-2">
