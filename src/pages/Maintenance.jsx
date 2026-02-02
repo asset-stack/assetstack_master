@@ -535,6 +535,7 @@ export default function Maintenance() {
               task={task}
               equipment={equipmentMap[task.equipment_id]}
               onStatusChange={handleStatusChange}
+              onViewDetails={handleViewDetails}
               delay={idx * 0.03}
             />
           ))}
