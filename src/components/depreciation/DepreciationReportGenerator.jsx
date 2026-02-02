@@ -357,12 +357,13 @@ Provide:
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto" aria-describedby="depreciation-report-description">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText className="w-5 h-5 text-indigo-600" />
             Generate Depreciation Report
           </DialogTitle>
+          <p id="depreciation-report-description" className="text-sm text-slate-500 mt-1">Configure and generate a comprehensive depreciation report.</p>
         </DialogHeader>
         
         <div className="space-y-6 py-4">
