@@ -255,12 +255,13 @@ function ApproveTaskDialog({ open, onOpenChange, suggestion, technicians, onAppr
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-white">
+      <DialogContent className="max-w-md bg-white" aria-describedby="approve-task-description">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Check className="w-5 h-5 text-green-600" />
             Approve & Schedule Task
           </DialogTitle>
+          <p id="approve-task-description" className="text-sm text-slate-500 mt-1">Review and approve this AI-suggested maintenance task.</p>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
