@@ -63,12 +63,13 @@ export default function WorkOrderAutoGenerator({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="bg-white border-slate-200 max-w-lg">
+      <DialogContent className="bg-white border-slate-200 max-w-lg" aria-describedby="auto-gen-description">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Brain className="w-5 h-5 text-violet-600" />
             Auto-Generate Work Order
           </DialogTitle>
+          <p id="auto-gen-description" className="text-sm text-slate-500 mt-1">Use AI to automatically create a work order from this source.</p>
         </DialogHeader>
 
         {!result && !isGenerating && (
