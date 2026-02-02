@@ -18,6 +18,7 @@ import MaintenanceCard from '@/components/maintenance/MaintenanceCard';
 import AIScheduleOptimizer from '@/components/maintenance/AIScheduleOptimizer';
 import WorkOrderList from '@/components/maintenance/WorkOrderList';
 import AISchedulerPanel from '@/components/maintenance/AISchedulerPanel';
+import TaskDetailsDialog from '@/components/maintenance/TaskDetailsDialog';
 
 const TASK_TYPES = ['preventive', 'predictive', 'corrective', 'emergency', 'inspection'];
 const PRIORITIES = ['low', 'medium', 'high', 'urgent'];
