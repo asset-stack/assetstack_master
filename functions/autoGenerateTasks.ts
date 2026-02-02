@@ -13,8 +13,10 @@ Deno.serve(async (req) => {
     
     for (const asset of equipment) {
       // Skip if already has scheduled/in-progress tasks
+      // Check both exact ID match and name-based match for legacy data
       const hasPendingTask = existingTasks.some(
-        t => t.equipment_id === asset.id && 
+        t => (t.equipment_id === asset.id || 
+              t.title?.toLowerCase().includes(asset.name?.toLowerCase())) && 
         (t.status === 'scheduled' || t.status === 'in_progress')
       );
       
