@@ -126,6 +126,29 @@ export default function Maintenance() {
     updateMutation.mutate({ id: taskId, data: updateData });
   };
 
+  const handleViewDetails = (task) => {
+    setSelectedTask(task);
+    setShowTaskDetails(true);
+  };
+
+  const handleTaskUpdate = async (taskId, data) => {
+    await updateMutation.mutateAsync({ id: taskId, data });
+    setSelectedTask(prev => prev ? {...prev, ...data} : prev);
+  };
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.MaintenanceTask.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['tasks']);
+      setShowTaskDetails(false);
+      setSelectedTask(null);
+    },
+  });
+
+  const handleTaskDelete = async (taskId) => {
+    await deleteMutation.mutateAsync(taskId);
+  };
+
   const generateAIRecommendations = async () => {
     setIsGenerating(true);
     try {
