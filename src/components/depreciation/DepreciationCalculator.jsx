@@ -221,12 +221,13 @@ Recommend the best depreciation method and useful life.`,
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" aria-describedby="depreciation-calc-description">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Calculator className="w-5 h-5 text-indigo-600" />
             {existingRecord ? 'Edit' : 'Configure'} Depreciation - {formData.equipment_name || equipment?.name}
           </DialogTitle>
+          <p id="depreciation-calc-description" className="text-sm text-slate-500 mt-1">Configure depreciation settings for this asset.</p>
         </DialogHeader>
         
         <div className="space-y-6 py-4">
