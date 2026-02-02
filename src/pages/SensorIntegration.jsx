@@ -127,9 +127,10 @@ export default function SensorIntegration() {
                   Add Sensor
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-white max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogContent className="bg-white max-w-2xl max-h-[90vh] overflow-y-auto" aria-describedby="sensor-dialog-description">
                 <DialogHeader>
                   <DialogTitle>Configure New Sensor</DialogTitle>
+                  <p id="sensor-dialog-description" className="text-sm text-slate-500">Set up a new sensor to collect data from your equipment.</p>
                 </DialogHeader>
                 <SensorConfigForm 
                   equipment={equipment}
@@ -427,9 +428,10 @@ export default function SensorIntegration() {
       <AnimatePresence>
         {selectedConfig && (
           <Dialog open={!!selectedConfig} onOpenChange={() => setSelectedConfig(null)}>
-            <DialogContent className="bg-white max-w-2xl">
+            <DialogContent className="bg-white max-w-2xl" aria-describedby="sensor-details-description">
               <DialogHeader>
                 <DialogTitle>Sensor Configuration Details</DialogTitle>
+                <p id="sensor-details-description" className="text-sm text-slate-500">View detailed information about this sensor configuration.</p>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
