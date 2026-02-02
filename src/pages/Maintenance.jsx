@@ -31,6 +31,8 @@ export default function Maintenance() {
   const [viewMode, setViewMode] = useState('tasks');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [showTaskDetails, setShowTaskDetails] = useState(false);
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
