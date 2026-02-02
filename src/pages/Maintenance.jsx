@@ -550,6 +550,21 @@ export default function Maintenance() {
         )}
           </>
         )}
+
+        {/* Task Details Dialog */}
+        <TaskDetailsDialog
+          open={showTaskDetails}
+          onClose={() => {
+            setShowTaskDetails(false);
+            setSelectedTask(null);
+          }}
+          task={selectedTask}
+          equipment={selectedTask ? equipmentMap[selectedTask.equipment_id] : null}
+          technicians={technicians}
+          onUpdate={handleTaskUpdate}
+          onDelete={handleTaskDelete}
+          onStatusChange={handleStatusChange}
+        />
       </div>
     </div>
   );
