@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from 'date-fns';
 
-export default function MaintenanceCard({ task, equipment, onStatusChange, delay = 0 }) {
+export default function MaintenanceCard({ task, equipment, onStatusChange, onViewDetails, delay = 0 }) {
   const getPriorityConfig = (priority) => {
     const configs = {
       urgent: { color: 'bg-rose-50 text-rose-700 border-rose-200', dot: 'bg-rose-500' },
@@ -153,7 +153,7 @@ export default function MaintenanceCard({ task, equipment, onStatusChange, delay
             className="text-slate-500 hover:text-slate-700 text-xs"
             onClick={(e) => {
               e.stopPropagation();
-              // Details button - could open a modal in the future
+              onViewDetails && onViewDetails(task);
             }}
           >
             Details <ChevronRight className="w-3 h-3 ml-1" />
