@@ -67,6 +67,11 @@ export default function Maintenance() {
     queryFn: () => base44.entities.Alert.list('-created_date', 100),
   });
 
+  const { data: technicians = [] } = useQuery({
+    queryKey: ['technicians'],
+    queryFn: () => base44.entities.Technician.list(),
+  });
+
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.MaintenanceTask.create(data),
     onSuccess: () => {
