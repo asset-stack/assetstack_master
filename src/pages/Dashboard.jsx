@@ -117,48 +117,48 @@ export default function Dashboard() {
   }));
 
   return (
-    <div className="min-h-screen bg-gray-50 text-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-200">
-        <div className="px-6 lg:px-8 py-4">
+      <header className="sticky top-0 z-30 bg-white/70 backdrop-blur-2xl border-b border-slate-100">
+        <div className="px-6 lg:px-8 py-5">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-semibold text-slate-900">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
                   Predictive Maintenance
                 </h1>
-                <div className="flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200 rounded-full">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50/80 border border-emerald-100 rounded-full">
                   <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-xs text-emerald-600 font-medium">LIVE</span>
+                  <span className="text-[11px] text-emerald-700 font-semibold tracking-wide">LIVE</span>
                 </div>
               </div>
-              <p className="text-sm text-slate-500 mt-0.5">AI-Powered Asset Health Monitoring</p>
+              <p className="text-sm text-slate-500 mt-1">AI-Powered Asset Health Monitoring</p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
+                <Search className="w-4 h-4 absolute left-3.5 top-1/2 transform -translate-y-1/2 text-slate-400" />
                 <Input
                   placeholder="Search equipment..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-64 bg-white border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-indigo-300 focus:ring-indigo-200"
+                  className="pl-10 w-72 h-10 bg-slate-50/50 border-slate-200/60 text-slate-900 placeholder:text-slate-400 rounded-xl focus:bg-white focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 transition-all"
                 />
               </div>
               <Button 
-                variant="outline" 
+                variant="ghost" 
                 size="icon" 
-                className="bg-white border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50 relative"
+                className="h-10 w-10 rounded-xl bg-slate-50/50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 relative transition-colors"
                 onClick={() => setShowNotifications(!showNotifications)}
               >
-                <Bell className="w-4 h-4" />
+                <Bell className="w-[18px] h-[18px]" />
                 {activeAlerts > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full text-xs text-white flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-gradient-to-br from-rose-500 to-rose-600 rounded-full text-[10px] font-semibold text-white flex items-center justify-center shadow-lg shadow-rose-500/30">
                     {activeAlerts}
                   </span>
                 )}
               </Button>
-              <Button variant="outline" size="icon" className="bg-white border-slate-200 text-slate-500 hover:text-slate-700 hover:bg-slate-50">
-                <Settings className="w-4 h-4" />
+              <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl bg-slate-50/50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+                <Settings className="w-[18px] h-[18px]" />
               </Button>
             </div>
           </div>
@@ -170,7 +170,7 @@ export default function Dashboard() {
         <OnboardingBanner />
         
         {/* Metrics Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
           <MetricCard 
             title="Total Assets" 
             value={totalEquipment} 
@@ -212,7 +212,7 @@ export default function Dashboard() {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
           {/* Fleet Overview */}
           <FleetOverview equipment={equipment} />
           
@@ -222,7 +222,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
           {/* Prediction Chart */}
           <div className="lg:col-span-2">
             <PredictionChart 
@@ -242,12 +242,12 @@ export default function Dashboard() {
 
         {/* Equipment Grid */}
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-slate-900">Equipment Fleet</h2>
+          <h2 className="text-xl font-bold text-slate-900">Equipment Fleet</h2>
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => queryClient.invalidateQueries(['equipment'])}
-            className="bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+            className="h-9 bg-white/80 border-slate-200/60 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-all"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
@@ -255,33 +255,35 @@ export default function Dashboard() {
         </div>
 
         {loadingEquipment ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-xl border border-slate-200 p-5 animate-pulse shadow-sm">
-                <div className="h-4 bg-slate-100 rounded w-1/3 mb-4" />
-                <div className="h-6 bg-slate-100 rounded w-2/3 mb-2" />
-                <div className="h-4 bg-slate-100 rounded w-1/2" />
+              <div key={i} className="bg-white rounded-2xl border border-slate-100 p-6 animate-pulse">
+                <div className="h-3 bg-slate-100 rounded-full w-1/3 mb-4" />
+                <div className="h-5 bg-slate-100 rounded-lg w-2/3 mb-3" />
+                <div className="h-3 bg-slate-100 rounded-full w-1/2" />
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {filteredEquipment.map((eq, idx) => (
               <EquipmentCard 
                 key={eq.id}
                 equipment={eq}
                 onClick={() => setSelectedEquipment(eq)}
-                delay={idx * 0.05}
+                delay={idx * 0.03}
               />
             ))}
           </div>
         )}
 
         {filteredEquipment.length === 0 && !loadingEquipment && (
-          <div className="text-center py-16">
-            <Cpu className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-600">No equipment found</h3>
-            <p className="text-sm text-slate-400">Add equipment to start monitoring</p>
+          <div className="text-center py-20">
+            <div className="w-20 h-20 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-5">
+              <Cpu className="w-10 h-10 text-slate-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-700">No equipment found</h3>
+            <p className="text-sm text-slate-500 mt-1">Add equipment to start monitoring</p>
           </div>
         )}
       </main>
