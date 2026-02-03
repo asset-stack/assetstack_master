@@ -45,12 +45,12 @@ export default function AlertsPanel({ alerts, onAcknowledge, onResolve }) {
   const activeAlerts = alerts.filter(a => a.status === 'active');
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-      <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+    <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
+      <div className="p-5 border-b border-slate-100/80 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h3 className="text-base font-semibold text-slate-900">Active Alerts</h3>
+          <h3 className="text-[15px] font-bold text-slate-900">Active Alerts</h3>
           {activeAlerts.length > 0 && (
-            <span className="px-2 py-0.5 bg-rose-100 text-rose-600 text-xs font-medium rounded-full">
+            <span className="px-2.5 py-1 bg-rose-50 text-rose-600 text-[11px] font-semibold rounded-full">
               {activeAlerts.length} active
             </span>
           )}

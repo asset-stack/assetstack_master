@@ -19,8 +19,8 @@ export default function RiskHeatmap({ equipment }) {
   }, {});
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-      <h3 className="text-base font-semibold text-slate-900 mb-4">Risk Heatmap by Location</h3>
+    <div className="bg-white rounded-2xl border border-slate-100 p-6">
+      <h3 className="text-[15px] font-bold text-slate-900 mb-5">Risk Heatmap by Location</h3>
       <div className="space-y-4">
         {Object.entries(groupedByLocation).map(([location, items], idx) => (
           <motion.div 
@@ -40,7 +40,7 @@ export default function RiskHeatmap({ equipment }) {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: idx * 0.1 + i * 0.05 }}
-                        className={`w-6 h-6 rounded-md ${getRiskColor(eq.risk_level)} cursor-pointer hover:scale-110 transition-transform shadow-sm`}
+                        className={`w-7 h-7 rounded-lg ${getRiskColor(eq.risk_level)} cursor-pointer hover:scale-110 transition-transform shadow-sm`}
                       />
                     </TooltipTrigger>
                     <TooltipContent className="bg-slate-900 border-slate-700">

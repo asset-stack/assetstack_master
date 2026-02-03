@@ -50,9 +50,9 @@ export default function FleetOverview({ equipment }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm"
+      className="bg-white rounded-2xl border border-slate-100 p-6"
     >
-      <h3 className="text-base font-semibold text-slate-900 mb-6">Fleet Overview</h3>
+      <h3 className="text-[15px] font-bold text-slate-900 mb-6">Fleet Overview</h3>
       
       <div className="grid grid-cols-2 gap-6">
         <div>
@@ -120,18 +120,18 @@ export default function FleetOverview({ equipment }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-100">
-        <div className="text-center">
-          <p className="text-2xl font-semibold text-slate-900">{equipment.length}</p>
-          <p className="text-xs text-slate-500">Total Assets</p>
+      <div className="grid grid-cols-3 gap-3 mt-6 pt-6 border-t border-slate-100/80">
+        <div className="text-center p-3 bg-slate-50/50 rounded-xl">
+          <p className="text-2xl font-bold text-slate-900">{equipment.length}</p>
+          <p className="text-[11px] text-slate-500 font-medium">Total Assets</p>
         </div>
-        <div className="text-center">
-          <p className="text-2xl font-semibold text-emerald-600">{avgHealth}%</p>
-          <p className="text-xs text-slate-500">Avg Health</p>
+        <div className="text-center p-3 bg-emerald-50/50 rounded-xl">
+          <p className="text-2xl font-bold text-emerald-600">{avgHealth}%</p>
+          <p className="text-[11px] text-slate-500 font-medium">Avg Health</p>
         </div>
-        <div className="text-center">
-          <p className="text-2xl font-semibold text-amber-600">{(riskCounts.high || 0) + (riskCounts.critical || 0)}</p>
-          <p className="text-xs text-slate-500">At Risk</p>
+        <div className="text-center p-3 bg-amber-50/50 rounded-xl">
+          <p className="text-2xl font-bold text-amber-600">{(riskCounts.high || 0) + (riskCounts.critical || 0)}</p>
+          <p className="text-[11px] text-slate-500 font-medium">At Risk</p>
         </div>
       </div>
     </motion.div>

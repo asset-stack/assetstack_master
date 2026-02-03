@@ -23,9 +23,9 @@ export default function PredictionChart({ data, title, dataKey = "value", predic
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm"
+      className="bg-white rounded-2xl border border-slate-100 p-6"
     >
-      <h3 className="text-base font-semibold text-slate-900 mb-4">{title}</h3>
+      <h3 className="text-[15px] font-bold text-slate-900 mb-5">{title}</h3>
       <div className="h-[250px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>

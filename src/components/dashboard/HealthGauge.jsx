@@ -49,7 +49,7 @@ export default function HealthGauge({ score, size = 120, label = "Health Score" 
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <motion.span 
-            className="text-lg font-semibold text-slate-900"
+            className="text-base font-bold text-slate-900"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
