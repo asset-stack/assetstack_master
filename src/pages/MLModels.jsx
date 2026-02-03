@@ -90,6 +90,24 @@ export default function MLModels() {
     return colors[status] || colors.testing;
   };
 
+  // Calculate average metrics from models with valid data (must be before accuracyTrendData)
+  const modelsWithMetrics = models.filter(m => m.accuracy_score && m.performance_metrics);
+  
+  const avgAccuracy = modelsWithMetrics.length > 0 
+    ? Math.round(modelsWithMetrics.reduce((sum, m) => sum + (m.accuracy_score || 0), 0) / modelsWithMetrics.length)
+    : 0;
+  
+  const avgPrecision = modelsWithMetrics.length > 0
+    ? (() => {
+        const sum = modelsWithMetrics.reduce((s, m) => {
+          const p = m.performance_metrics?.precision || 0;
+          // Handle both decimal (0.934) and percentage (93.4) formats
+          return s + (p < 1 ? p : p / 100);
+        }, 0);
+        return (sum / modelsWithMetrics.length).toFixed(3);
+      })()
+    : '0.000';
+
   // Model performance comparison data - normalize all values to 0-100 scale
   const performanceData = models
     .filter(m => m.performance_metrics && m.accuracy_score)
@@ -147,24 +165,6 @@ export default function MLModels() {
     acc[type] = (acc[type] || 0) + 1;
     return acc;
   }, {});
-
-  // Calculate average metrics from models with valid data
-  const modelsWithMetrics = models.filter(m => m.accuracy_score && m.performance_metrics);
-  
-  const avgAccuracy = modelsWithMetrics.length > 0 
-    ? Math.round(modelsWithMetrics.reduce((sum, m) => sum + (m.accuracy_score || 0), 0) / modelsWithMetrics.length)
-    : 0;
-  
-  const avgPrecision = modelsWithMetrics.length > 0
-    ? (() => {
-        const sum = modelsWithMetrics.reduce((s, m) => {
-          const p = m.performance_metrics?.precision || 0;
-          // Handle both decimal (0.934) and percentage (93.4) formats
-          return s + (p < 1 ? p : p / 100);
-        }, 0);
-        return (sum / modelsWithMetrics.length).toFixed(3);
-      })()
-    : '0.000';
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
