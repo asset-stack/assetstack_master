@@ -129,13 +129,19 @@ export default function Analytics() {
     value
   }));
 
-  // Trend data (simulated for now)
-  const trendData = Array.from({ length: 30 }, (_, i) => ({
-    day: `Day ${i + 1}`,
-    health: 75 + Math.random() * 15 - 7,
-    predictions: Math.floor(Math.random() * 10) + 1,
-    alerts: Math.floor(Math.random() * 8),
-  }));
+  // Trend data with seeded random for consistency
+  const trendData = React.useMemo(() => {
+    const seededRandom = (seed) => {
+      const x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+    };
+    return Array.from({ length: 30 }, (_, i) => ({
+      day: `Day ${i + 1}`,
+      health: 75 + seededRandom(i * 3.7) * 15 - 7,
+      predictions: Math.floor(seededRandom(i * 2.3) * 10) + 1,
+      alerts: Math.floor(seededRandom(i * 1.9) * 8),
+    }));
+  }, []);
 
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
