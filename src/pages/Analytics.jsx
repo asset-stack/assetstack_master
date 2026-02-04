@@ -314,7 +314,7 @@ export default function Analytics() {
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                       <XAxis dataKey="day" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
                       <YAxis stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 10 }} domain={[60, 100]} axisLine={false} tickLine={false} />
-                      <Tooltip content={<CustomTooltip />} />
+                      <RechartsTooltip content={<ChartTooltip />} />
                       <Area type="monotone" dataKey="health" stroke="#10b981" fill="url(#healthGradient)" strokeWidth={2.5} name="Health %" />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -344,7 +344,7 @@ export default function Analytics() {
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
                       <XAxis type="number" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
                       <YAxis dataKey="name" type="category" stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 11 }} width={100} axisLine={false} tickLine={false} />
-                      <Tooltip content={<CustomTooltip />} />
+                      <RechartsTooltip content={<ChartTooltip />} />
                       <Bar dataKey="value" fill="#3b82f6" radius={[0, 6, 6, 0]} name="Count" />
                     </BarChart>
                   </ResponsiveContainer>
@@ -383,7 +383,7 @@ export default function Analytics() {
                           <Cell key={index} fill={entry.color} stroke="transparent" />
                         ))}
                       </Pie>
-                      <Tooltip content={<CustomTooltip />} />
+                      <RechartsTooltip content={<ChartTooltip />} />
                       <Legend 
                         verticalAlign="bottom" 
                         height={50}
@@ -426,7 +426,7 @@ export default function Analytics() {
                           <Cell key={index} fill={entry.color} stroke="transparent" />
                         ))}
                       </Pie>
-                      <Tooltip content={<CustomTooltip />} />
+                      <RechartsTooltip content={<ChartTooltip />} />
                       <Legend 
                         verticalAlign="bottom" 
                         height={50}
@@ -501,7 +501,7 @@ export default function Analytics() {
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                       <XAxis dataKey="name" stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} />
                       <YAxis stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
-                      <Tooltip content={<CustomTooltip />} />
+                      <RechartsTooltip content={<ChartTooltip />} />
                       <Bar dataKey="value" radius={[6, 6, 0, 0]} name="Tasks">
                         {taskTypeData.map((entry, index) => (
                           <Cell key={index} fill={COLORS[index % COLORS.length]} />
@@ -542,7 +542,7 @@ export default function Analytics() {
                           <Cell key={index} fill={entry.color} stroke="transparent" />
                         ))}
                       </Pie>
-                      <Tooltip content={<CustomTooltip />} />
+                      <RechartsTooltip content={<ChartTooltip />} />
                       <Legend 
                         verticalAlign="bottom" 
                         height={40}
