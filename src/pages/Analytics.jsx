@@ -635,6 +635,204 @@ export default function Analytics() {
               </div>
             </div>
 
+            {/* Additional KPIs Row */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div className="relative">
+                <MetricCard title="Uptime" value={`${uptimePercent}%`} icon={Server} color={uptimePercent >= 90 ? "green" : "amber"} />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.uptime} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="Avg RUL" value={`${avgRUL}d`} icon={Clock} color={avgRUL > 60 ? "green" : avgRUL > 30 ? "amber" : "rose"} />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.avgRUL} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="Total Cost" value={`$${(totalMaintenanceCost / 1000).toFixed(1)}k`} icon={DollarSign} color="purple" />
+                <div className="absolute top-2 right-2"><MetricInfo definition="Total maintenance expenditure across all work orders." /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="Technicians" value={technicians.filter(t => t.availability_status === 'available').length} icon={Users} color="blue" />
+                <div className="absolute top-2 right-2"><MetricInfo definition="Number of technicians currently available for work." /></div>
+              </div>
+            </div>
+
+            {/* Advanced Analytics Section */}
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <h2 className="text-lg font-semibold text-slate-800">Advanced Analytics</h2>
+                <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">Deep Insights</span>
+              </div>
+              <p className="text-sm text-slate-500 mb-4">
+                Detailed breakdowns of technician performance, location-based status, weekly trends, and cost analysis to identify optimization opportunities.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              {/* Technician Performance */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                    <div className="p-2 bg-indigo-50 rounded-lg">
+                      <Award className="w-4 h-4 text-indigo-600" />
+                    </div>
+                    Technician Performance
+                    <MetricInfo definition={METRIC_DEFINITIONS.techPerformance} />
+                  </h3>
+                </div>
+                <div className="h-[280px]">
+                  {technicianPerformance.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <ComposedChart data={technicianPerformance} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                        <XAxis dataKey="name" stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} />
+                        <YAxis yAxisId="left" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
+                        <YAxis yAxisId="right" orientation="right" stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} domain={[0, 100]} />
+                        <RechartsTooltip content={<ChartTooltip />} />
+                        <Bar yAxisId="left" dataKey="completed" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Tasks Completed" />
+                        <Line yAxisId="right" type="monotone" dataKey="rating" stroke="#10b981" strokeWidth={2} dot={{ fill: '#10b981', r: 4 }} name="Rating %" />
+                      </ComposedChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-slate-400 text-sm">No technician data available</div>
+                  )}
+                </div>
+              </motion.div>
+
+              {/* Equipment Status by Location */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                    <div className="p-2 bg-teal-50 rounded-lg">
+                      <MapPin className="w-4 h-4 text-teal-600" />
+                    </div>
+                    Status by Location
+                    <MetricInfo definition={METRIC_DEFINITIONS.statusByLocation} />
+                  </h3>
+                </div>
+                <div className="h-[280px]">
+                  {locationData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={locationData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                        <XAxis dataKey="name" stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 10 }} axisLine={false} tickLine={false} />
+                        <YAxis stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
+                        <RechartsTooltip content={<ChartTooltip />} />
+                        <Legend formatter={(value) => <span className="text-slate-600 text-xs capitalize">{value}</span>} />
+                        <Bar dataKey="operational" stackId="a" fill="#10b981" name="Operational" />
+                        <Bar dataKey="degraded" stackId="a" fill="#f59e0b" name="Degraded" />
+                        <Bar dataKey="critical" stackId="a" fill="#f97316" name="Critical" />
+                        <Bar dataKey="offline" stackId="a" fill="#ef4444" name="Offline" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-slate-400 text-sm">No location data available</div>
+                  )}
+                </div>
+              </motion.div>
+
+              {/* Weekly Task Trend */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                    <div className="p-2 bg-violet-50 rounded-lg">
+                      <CalendarDays className="w-4 h-4 text-violet-600" />
+                    </div>
+                    Weekly Task Trend
+                    <MetricInfo definition={METRIC_DEFINITIONS.weeklyTrend} />
+                  </h3>
+                </div>
+                <div className="h-[280px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={weeklyTaskTrend} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="completedGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                        </linearGradient>
+                        <linearGradient id="scheduledGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                      <XAxis dataKey="week" stroke="#94a3b8" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
+                      <YAxis stroke="#94a3b8" tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
+                      <RechartsTooltip content={<ChartTooltip />} />
+                      <Legend formatter={(value) => <span className="text-slate-600 text-xs capitalize">{value}</span>} />
+                      <Area type="monotone" dataKey="completed" stroke="#10b981" fill="url(#completedGrad)" strokeWidth={2} name="Completed" />
+                      <Area type="monotone" dataKey="scheduled" stroke="#3b82f6" fill="url(#scheduledGrad)" strokeWidth={2} name="Scheduled" />
+                      <Line type="monotone" dataKey="overdue" stroke="#ef4444" strokeWidth={2} dot={{ fill: '#ef4444', r: 4 }} name="Overdue" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </motion.div>
+
+              {/* Cost Breakdown */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+                    <div className="p-2 bg-amber-50 rounded-lg">
+                      <DollarSign className="w-4 h-4 text-amber-600" />
+                    </div>
+                    Cost Breakdown
+                    <MetricInfo definition={METRIC_DEFINITIONS.costBreakdown} />
+                  </h3>
+                  <span className="text-xs text-slate-400 bg-slate-50 px-2 py-1 rounded-md">${totalMaintenanceCost.toLocaleString()} total</span>
+                </div>
+                <div className="h-[280px] flex items-center">
+                  {costBreakdown.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={costBreakdown}
+                          cx="50%"
+                          cy="45%"
+                          innerRadius={65}
+                          outerRadius={95}
+                          paddingAngle={4}
+                          dataKey="value"
+                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                          labelLine={false}
+                        >
+                          {costBreakdown.map((entry, index) => (
+                            <Cell key={index} fill={entry.color} stroke="transparent" />
+                          ))}
+                        </Pie>
+                        <RechartsTooltip 
+                          formatter={(value) => `$${value.toLocaleString()}`}
+                          content={<ChartTooltip />} 
+                        />
+                        <Legend 
+                          verticalAlign="bottom" 
+                          height={50}
+                          formatter={(value) => <span className="text-slate-600 text-xs">{value}</span>}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">No cost data available</div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+
             {/* Operations Summary Section */}
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-3">
