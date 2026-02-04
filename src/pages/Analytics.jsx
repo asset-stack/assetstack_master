@@ -526,6 +526,47 @@ export default function Analytics() {
               </motion.div>
             </div>
 
+            {/* NEW: Operational Performance Metrics */}
+            <div className="mb-6 mt-8">
+              <div className="flex items-center gap-2 mb-3">
+                <h2 className="text-lg font-semibold text-slate-800">Operational Performance</h2>
+                <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">Time & Efficiency Metrics</span>
+              </div>
+              <p className="text-sm text-slate-500 mb-4">
+                Key metrics measuring how efficiently your maintenance operations run. Track completion times, costs, and the balance between proactive and reactive maintenance.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-8">
+              <div className="relative">
+                <MetricCard title="Avg Completion" value={`${avgTaskCompletionTime}h`} icon={Timer} color="blue" />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.avgCompletionTime} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="MTTR" value={`${avgMTTR}h`} icon={Wrench} color="amber" />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.mttr} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="Overdue" value={overdueTasks} icon={TrendingDown} color={overdueTasks > 0 ? "rose" : "green"} />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.overdueTasks} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="First Time Fix" value={`${firstTimeFixRate}%`} icon={CheckCircle2} color={firstTimeFixRate >= 80 ? "green" : "amber"} />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.firstTimeFix} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="Avg Cost/Task" value={`$${avgCostPerTask}`} icon={DollarSign} color="purple" />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.avgCost} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="Efficiency" value={`${taskEfficiency}%`} icon={Gauge} color={taskEfficiency >= 90 ? "green" : "amber"} />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.efficiency} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="Preventive %" value={`${preventiveRatio}%`} icon={ShieldCheck} color={preventiveRatio >= 60 ? "green" : "amber"} />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.preventiveRatio} /></div>
+              </div>
+            </div>
+
             {/* Operations Summary Section */}
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-3">
