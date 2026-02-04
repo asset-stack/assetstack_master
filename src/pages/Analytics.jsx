@@ -493,6 +493,7 @@ export default function Analytics() {
                     <Activity className="w-4 h-4 text-violet-600" />
                   </div>
                   <h3 className="text-base font-semibold text-slate-900">Maintenance by Type</h3>
+                  <MetricInfo definition={METRIC_DEFINITIONS.maintenanceByType} />
                 </div>
                 <div className="h-[180px]">
                   <ResponsiveContainer width="100%" height="100%">
