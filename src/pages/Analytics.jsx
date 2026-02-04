@@ -6,7 +6,8 @@ import {
   Activity, TrendingUp, AlertTriangle, Clock, Brain, BarChart3, 
   PieChart as PieChartIcon, Calendar, Target, Zap,
   Package, Users, Search, Sparkles, Timer, Wrench, DollarSign, 
-  CheckCircle2, TrendingDown, Gauge, ShieldCheck
+  CheckCircle2, TrendingDown, Gauge, ShieldCheck, MapPin, CalendarDays,
+  Award, ArrowUpRight, Server
 } from 'lucide-react';
 import { 
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, 
