@@ -524,6 +524,7 @@ export default function Analytics() {
                     <Zap className="w-4 h-4 text-red-600" />
                   </div>
                   <h3 className="text-base font-semibold text-slate-900">Alert Severity</h3>
+                  <MetricInfo definition={METRIC_DEFINITIONS.alertSeverity} />
                 </div>
                 <div className="h-[180px] flex items-center">
                   <ResponsiveContainer width="100%" height="100%">
