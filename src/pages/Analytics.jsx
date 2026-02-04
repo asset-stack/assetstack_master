@@ -309,7 +309,15 @@ export default function Analytics() {
               </div>
             </div>
 
-            {/* Charts Grid */}
+            {/* Trends & Distribution Section */}
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <h2 className="text-lg font-semibold text-slate-800">Trends & Distribution Analysis</h2>
+              </div>
+              <p className="text-sm text-slate-500 mb-4">
+                Visual breakdowns of your fleet's health over time and how assets are distributed across different categories. Use these charts to identify patterns and areas needing attention.
+              </p>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               {/* Health Trend */}
               <motion.div
