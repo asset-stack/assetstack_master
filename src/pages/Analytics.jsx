@@ -272,7 +272,16 @@ export default function Analytics() {
           </div>
 
           <TabsContent value="overview" className="mt-0">
-            {/* Metrics with definitions */}
+            {/* Key Metrics Section */}
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <h2 className="text-lg font-semibold text-slate-800">Key Performance Indicators</h2>
+                <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">Hover ⓘ for details</span>
+              </div>
+              <p className="text-sm text-slate-500 mb-4">
+                These metrics provide a snapshot of your fleet's current status. Green indicates healthy values, amber/orange suggests caution, and red signals issues requiring attention.
+              </p>
+            </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
               <div className="relative">
                 <MetricCard title="Fleet Health" value={`${avgHealth}%`} icon={Activity} color="green" />
