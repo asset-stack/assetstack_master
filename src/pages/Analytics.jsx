@@ -163,7 +163,7 @@ export default function Analytics() {
 
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
-  const CustomTooltip = ({ active, payload, label }) => {
+  const ChartTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white border border-slate-200 rounded-xl p-3 shadow-xl">
