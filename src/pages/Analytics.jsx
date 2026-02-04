@@ -334,6 +334,7 @@ export default function Analytics() {
                       <BarChart3 className="w-4 h-4 text-blue-600" />
                     </div>
                     Equipment by Type
+                    <MetricInfo definition={METRIC_DEFINITIONS.equipmentByType} />
                   </h3>
                   <span className="text-xs text-slate-400 bg-slate-50 px-2 py-1 rounded-md">{totalEquipment} total</span>
                 </div>
