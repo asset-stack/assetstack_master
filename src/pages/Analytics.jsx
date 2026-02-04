@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import MetricCard from '@/components/dashboard/MetricCard';
 import RULVisualization from '@/components/analytics/RULVisualization';
 import SparePartsInventory from '@/components/inventory/SparePartsInventory';
@@ -22,6 +23,23 @@ import ResourceOptimizer from '@/components/analytics/ResourceOptimizer';
 import PredictiveWorkflowConfig from '@/components/maintenance/PredictiveWorkflowConfig';
 import SuggestedTasksPanel from '@/components/maintenance/SuggestedTasksPanel';
 import RunPredictiveAnalysis from '@/components/maintenance/RunPredictiveAnalysis';
+
+// Metric definitions for user education
+const METRIC_DEFINITIONS = {
+  fleetHealth: "Average health score across all equipment. Based on sensor readings, maintenance history, and age. 100% = perfect condition.",
+  atRisk: "Number of assets with 'high' or 'critical' risk levels that need attention soon.",
+  pendingTasks: "Maintenance tasks that are scheduled or currently in progress.",
+  completed: "Total maintenance tasks that have been successfully completed.",
+  activeAlerts: "Current alerts requiring attention. Includes warnings, critical issues, and emergencies.",
+  aiConfidence: "Average confidence level of AI predictions. Higher = more reliable predictions.",
+  healthTrend: "Daily average health score over the past 30 days. Shows fleet health trajectory.",
+  equipmentByType: "Distribution of equipment across different categories in your fleet.",
+  healthDistribution: "How equipment is distributed across health score ranges (excellent, good, fair, poor).",
+  riskDistribution: "Breakdown of assets by risk level (low, medium, high, critical).",
+  taskCompletion: "Percentage of all maintenance tasks that have been completed.",
+  maintenanceByType: "Distribution of maintenance tasks by type (preventive, corrective, etc.).",
+  alertSeverity: "Breakdown of alerts by severity level to prioritize response.",
+};
 
 export default function Analytics() {
   const [timeRange, setTimeRange] = useState('30d');
