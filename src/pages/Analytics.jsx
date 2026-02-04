@@ -407,6 +407,7 @@ export default function Analytics() {
                       <AlertTriangle className="w-4 h-4 text-amber-600" />
                     </div>
                     Risk Distribution
+                    <MetricInfo definition={METRIC_DEFINITIONS.riskDistribution} />
                   </h3>
                 </div>
                 <div className="h-[280px] flex items-center">
