@@ -184,18 +184,18 @@ export default function Analytics() {
 
   // Helper component for metric info tooltips
   const MetricInfo = ({ definition }) => (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={100}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button className="ml-1 text-slate-400 hover:text-slate-600 transition-colors">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button className="ml-1.5 p-0.5 rounded-full bg-slate-100 hover:bg-indigo-100 text-slate-400 hover:text-indigo-600 transition-all">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="10" strokeWidth="2" />
               <path strokeLinecap="round" strokeWidth="2" d="M12 16v-4M12 8h.01" />
             </svg>
           </button>
         </TooltipTrigger>
-        <TooltipContent className="max-w-xs bg-slate-900 text-white border-slate-700">
-          <p className="text-xs">{definition}</p>
+        <TooltipContent side="top" className="max-w-xs bg-slate-900 text-white border-slate-700 shadow-lg z-50">
+          <p className="text-xs leading-relaxed">{definition}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
