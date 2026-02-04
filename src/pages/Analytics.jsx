@@ -298,6 +298,7 @@ export default function Analytics() {
                       <TrendingUp className="w-4 h-4 text-emerald-600" />
                     </div>
                     Fleet Health Trend
+                    <MetricInfo definition={METRIC_DEFINITIONS.healthTrend} />
                   </h3>
                   <span className="text-xs text-slate-400 bg-slate-50 px-2 py-1 rounded-md">Last 30 days</span>
                 </div>
