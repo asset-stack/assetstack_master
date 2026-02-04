@@ -39,6 +39,14 @@ const METRIC_DEFINITIONS = {
   taskCompletion: "Percentage of all maintenance tasks that have been completed.",
   maintenanceByType: "Distribution of maintenance tasks by type (preventive, corrective, etc.).",
   alertSeverity: "Breakdown of alerts by severity level to prioritize response.",
+  // Operational metrics
+  avgCompletionTime: "Average time (in hours) to complete a maintenance task from start to finish.",
+  mttr: "Mean Time To Repair - average hours to restore equipment to operational status after a failure.",
+  overdueTasks: "Tasks that have passed their scheduled date but haven't been completed yet.",
+  firstTimeFix: "Percentage of work orders completed without requiring follow-up work. Higher = better quality.",
+  avgCost: "Average cost per completed maintenance task, including labor and parts.",
+  efficiency: "How well actual task duration matches estimates. 100% = perfectly on time, >100% = faster than expected.",
+  preventiveRatio: "Percentage of maintenance that is proactive (preventive/predictive) vs reactive (corrective/emergency). Higher = better strategy.",
 };
 
 export default function Analytics() {
