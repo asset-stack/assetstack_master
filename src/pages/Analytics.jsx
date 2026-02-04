@@ -364,6 +364,7 @@ export default function Analytics() {
                       <PieChartIcon className="w-4 h-4 text-emerald-600" />
                     </div>
                     Health Distribution
+                    <MetricInfo definition={METRIC_DEFINITIONS.healthDistribution} />
                   </h3>
                 </div>
                 <div className="h-[280px] flex items-center">
