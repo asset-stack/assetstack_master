@@ -685,6 +685,21 @@ export default function Analytics() {
           </TabsContent>
 
           <TabsContent value="automation" className="mt-0">
+            <div className="bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-100 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-pink-100 rounded-lg shrink-0">
+                  <Sparkles className="w-5 h-5 text-pink-600" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-semibold text-slate-900">AI-Powered Maintenance Automation</h2>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    Configure automated triggers that create maintenance tasks when conditions are met (e.g., health score drops below 50%). 
+                    <strong className="text-pink-700"> Run Predictive Analysis</strong> to scan all equipment and generate AI-suggested maintenance tasks. 
+                    Review and approve suggestions before they become actual work orders.
+                  </p>
+                </div>
+              </div>
+            </div>
             <div className="space-y-6">
               <RunPredictiveAnalysis
                 equipment={equipment}
