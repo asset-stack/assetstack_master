@@ -6,7 +6,7 @@ import { Brain, Play, Loader2, CheckCircle2, Sparkles, AlertTriangle, Zap } from
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
-export default function RunPredictiveAnalysis({ equipment, predictions, triggers, technicians, onComplete }) {
+export default function RunPredictiveAnalysis({ equipment = [], predictions = [], triggers = [], technicians = [], onComplete }) {
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState('');

@@ -37,7 +37,7 @@ const PRIORITIES = [
   { value: 'urgent', label: 'Urgent', color: 'bg-red-100 text-red-700' },
 ];
 
-export default function PredictiveWorkflowConfig({ triggers, onRefresh }) {
+export default function PredictiveWorkflowConfig({ triggers = [], onRefresh }) {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [editingTrigger, setEditingTrigger] = useState(null);
   const queryClient = useQueryClient();
