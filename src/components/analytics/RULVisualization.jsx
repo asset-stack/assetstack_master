@@ -16,14 +16,22 @@ export default function RULVisualization({ equipment, predictions = [] }) {
   const [expanded, setExpanded] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState(null);
 
+  // Seeded random for consistent visualization
+  const seededRandom = (seed) => {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  };
+
   // Generate RUL trend data with confidence intervals
-  const generateRULTrend = (eq) => {
+  const generateRULTrend = React.useCallback((eq) => {
     const baseRUL = eq.remaining_useful_life_days || 90;
     const degradationRate = (100 - (eq.health_score || 80)) / 100;
+    const eqSeed = eq.id ? eq.id.charCodeAt(0) : 42;
     
     return Array.from({ length: 60 }, (_, i) => {
       const day = addDays(new Date(), i);
-      const predicted = Math.max(0, baseRUL - i - (degradationRate * i * 0.5));
+      const noise = seededRandom(eqSeed + i * 0.7) * 2 - 1;
+      const predicted = Math.max(0, baseRUL - i - (degradationRate * i * 0.5) + noise);
       const upperBound = Math.min(predicted * 1.2, baseRUL);
       const lowerBound = Math.max(predicted * 0.8, 0);
       
@@ -35,15 +43,17 @@ export default function RULVisualization({ equipment, predictions = [] }) {
         threshold: 14
       };
     });
-  };
+  }, []);
 
   // Generate failure probability trend
-  const generateFailureProbability = (eq) => {
+  const generateFailureProbability = React.useCallback((eq) => {
     const baseProb = eq.failure_probability || 15;
+    const eqSeed = eq.id ? eq.id.charCodeAt(0) : 42;
     
     return Array.from({ length: 30 }, (_, i) => {
       const day = addDays(new Date(), i);
-      const probability = Math.min(100, baseProb + (i * 1.5) + (Math.random() * 5 - 2.5));
+      const noise = seededRandom(eqSeed + i * 1.3) * 5 - 2.5;
+      const probability = Math.min(100, baseProb + (i * 1.5) + noise);
       
       return {
         date: format(day, 'MMM d'),
@@ -51,7 +61,7 @@ export default function RULVisualization({ equipment, predictions = [] }) {
         critical: 70
       };
     });
-  };
+  }, []);
 
   const getRiskColor = (rul) => {
     if (rul <= 7) return 'text-rose-600 bg-rose-50';
