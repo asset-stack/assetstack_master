@@ -256,14 +256,32 @@ export default function Analytics() {
           </div>
 
           <TabsContent value="overview" className="mt-0">
-            {/* Metrics */}
+            {/* Metrics with definitions */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-              <MetricCard title="Fleet Health" value={`${avgHealth}%`} icon={Activity} color="green" />
-              <MetricCard title="At Risk Assets" value={criticalAssets} icon={AlertTriangle} color="amber" />
-              <MetricCard title="Pending Tasks" value={pendingTasks} icon={Clock} color="blue" />
-              <MetricCard title="Completed" value={completedTasks} icon={Target} color="green" />
-              <MetricCard title="Active Alerts" value={alerts.filter(a => a.status === 'active').length} icon={Zap} color="rose" />
-              <MetricCard title="AI Confidence" value={`${avgPredictionConfidence}%`} icon={Brain} color="purple" />
+              <div className="relative">
+                <MetricCard title="Fleet Health" value={`${avgHealth}%`} icon={Activity} color="green" />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.fleetHealth} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="At Risk Assets" value={criticalAssets} icon={AlertTriangle} color="amber" />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.atRisk} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="Pending Tasks" value={pendingTasks} icon={Clock} color="blue" />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.pendingTasks} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="Completed" value={completedTasks} icon={Target} color="green" />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.completed} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="Active Alerts" value={alerts.filter(a => a.status === 'active').length} icon={Zap} color="rose" />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.activeAlerts} /></div>
+              </div>
+              <div className="relative">
+                <MetricCard title="AI Confidence" value={`${avgPredictionConfidence}%`} icon={Brain} color="purple" />
+                <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.aiConfidence} /></div>
+              </div>
             </div>
 
             {/* Charts Grid */}
