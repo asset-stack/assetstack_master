@@ -182,6 +182,25 @@ export default function Analytics() {
     return null;
   };
 
+  // Helper component for metric info tooltips
+  const MetricInfo = ({ definition }) => (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button className="ml-1 text-slate-400 hover:text-slate-600 transition-colors">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" strokeWidth="2" />
+              <path strokeLinecap="round" strokeWidth="2" d="M12 16v-4M12 8h.01" />
+            </svg>
+          </button>
+        </TooltipTrigger>
+        <TooltipContent className="max-w-xs bg-slate-900 text-white border-slate-700">
+          <p className="text-xs">{definition}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-[1800px] mx-auto px-6 py-8">
