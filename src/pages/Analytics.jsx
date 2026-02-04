@@ -452,6 +452,7 @@ export default function Analytics() {
                     <Target className="w-4 h-4 text-green-600" />
                   </div>
                   <h3 className="text-base font-semibold text-slate-900">Task Completion</h3>
+                  <MetricInfo definition={METRIC_DEFINITIONS.taskCompletion} />
                 </div>
                 <div className="h-[180px] flex items-center justify-center relative">
                   <ResponsiveContainer width="100%" height="100%">
