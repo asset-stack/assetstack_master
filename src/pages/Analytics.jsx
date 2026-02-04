@@ -48,6 +48,13 @@ const METRIC_DEFINITIONS = {
   avgCost: "Average cost per completed maintenance task, including labor and parts.",
   efficiency: "How well actual task duration matches estimates. 100% = perfectly on time, >100% = faster than expected.",
   preventiveRatio: "Percentage of maintenance that is proactive (preventive/predictive) vs reactive (corrective/emergency). Higher = better strategy.",
+  // New advanced metrics
+  techPerformance: "Compares technician completed tasks, average completion time, and performance rating.",
+  statusByLocation: "Equipment status breakdown by physical location. Helps identify problem areas.",
+  weeklyTrend: "Weekly trend of completed, scheduled, and overdue tasks over the past month.",
+  costBreakdown: "Distribution of maintenance costs between labor, parts, and other expenses.",
+  uptime: "Percentage of equipment currently in operational status.",
+  avgRUL: "Average Remaining Useful Life across all equipment with predictions. Higher = healthier fleet.",
 };
 
 export default function Analytics() {
