@@ -109,68 +109,79 @@ export default function Dashboard() {
     e.location?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Generate prediction trend data
-  const predictionTrendData = Array.from({ length: 14 }, (_, i) => ({
-    name: `Day ${i + 1}`,
-    value: 75 + Math.random() * 10 - 5,
-    predicted: 73 + Math.random() * 12 - 6 + (i * 0.3)
-  }));
+  // Generate prediction trend data with seeded random for consistency
+  const predictionTrendData = React.useMemo(() => {
+    const seededRandom = (seed) => {
+      const x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+    };
+    return Array.from({ length: 14 }, (_, i) => ({
+      name: `Day ${i + 1}`,
+      value: 75 + seededRandom(i * 2.7) * 10 - 5,
+      predicted: 73 + seededRandom(i * 3.4) * 12 - 6 + (i * 0.3)
+    }));
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100/50">
       {/* Header */}
-      <header className="sticky top-0 z-30 bg-white/70 backdrop-blur-2xl border-b border-slate-100">
-        <div className="px-6 lg:px-8 py-5">
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-2xl border-b border-slate-200/50 shadow-sm shadow-slate-100/50">
+        <div className="px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                  Predictive Maintenance
-                </h1>
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50/80 border border-emerald-100 rounded-full">
-                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-[11px] text-emerald-700 font-semibold tracking-wide">LIVE</span>
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                  <Activity className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-slate-900">
+                    Dashboard
+                  </h1>
+                  <p className="text-xs text-slate-500">AI-Powered Asset Health Monitoring</p>
+                </div>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200/60 rounded-full ml-2">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                  <span className="text-[10px] text-emerald-700 font-semibold tracking-wide uppercase">Live</span>
                 </div>
               </div>
-              <p className="text-sm text-slate-500 mt-1">AI-Powered Asset Health Monitoring</p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <div className="relative">
-                <Search className="w-4 h-4 absolute left-3.5 top-1/2 transform -translate-y-1/2 text-slate-400" />
+                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
                 <Input
                   placeholder="Search equipment..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-72 h-10 bg-slate-50/50 border-slate-200/60 text-slate-900 placeholder:text-slate-400 rounded-xl focus:bg-white focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 transition-all"
+                  className="pl-9 w-64 h-9 bg-slate-50 border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 rounded-lg focus:bg-white focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 transition-all"
                 />
               </div>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-10 w-10 rounded-xl bg-slate-50/50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 relative transition-colors"
+                className="h-9 w-9 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 relative transition-colors"
                 onClick={() => setShowNotifications(!showNotifications)}
               >
-                <Bell className="w-[18px] h-[18px]" />
+                <Bell className="w-4 h-4" />
                 {activeAlerts > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-gradient-to-br from-rose-500 to-rose-600 rounded-full text-[10px] font-semibold text-white flex items-center justify-center shadow-lg shadow-rose-500/30">
-                    {activeAlerts}
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center">
+                    {activeAlerts > 9 ? '9+' : activeAlerts}
                   </span>
                 )}
               </Button>
-              <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl bg-slate-50/50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors">
-                <Settings className="w-[18px] h-[18px]" />
+              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+                <Settings className="w-4 h-4" />
               </Button>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="px-6 lg:px-8 py-8">
+      <main className="px-6 lg:px-8 py-6">
         {/* Onboarding Banner */}
         <OnboardingBanner />
         
         {/* Metrics Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
           <MetricCard 
             title="Total Assets" 
             value={totalEquipment} 
@@ -212,7 +223,7 @@ export default function Dashboard() {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
           {/* Fleet Overview */}
           <FleetOverview equipment={equipment} />
           
@@ -222,7 +233,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
           {/* Prediction Chart */}
           <div className="lg:col-span-2">
             <PredictionChart 
@@ -241,31 +252,31 @@ export default function Dashboard() {
         </div>
 
         {/* Equipment Grid */}
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-slate-900">Equipment Fleet</h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-slate-900">Equipment Fleet</h2>
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => queryClient.invalidateQueries(['equipment'])}
-            className="h-9 bg-white/80 border-slate-200/60 text-slate-600 hover:text-slate-900 hover:bg-white rounded-lg transition-all"
+            className="h-8 bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg text-xs transition-all"
           >
-            <RefreshCw className="w-4 h-4 mr-2" />
+            <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
             Refresh
           </Button>
         </div>
 
         {loadingEquipment ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-slate-100 p-6 animate-pulse">
-                <div className="h-3 bg-slate-100 rounded-full w-1/3 mb-4" />
-                <div className="h-5 bg-slate-100 rounded-lg w-2/3 mb-3" />
-                <div className="h-3 bg-slate-100 rounded-full w-1/2" />
+              <div key={i} className="bg-white rounded-xl border border-slate-200 p-5 animate-pulse">
+                <div className="h-2.5 bg-slate-100 rounded-full w-1/3 mb-3" />
+                <div className="h-4 bg-slate-100 rounded-lg w-2/3 mb-2" />
+                <div className="h-2.5 bg-slate-100 rounded-full w-1/2" />
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filteredEquipment.map((eq, idx) => (
               <EquipmentCard 
                 key={eq.id}
@@ -278,11 +289,11 @@ export default function Dashboard() {
         )}
 
         {filteredEquipment.length === 0 && !loadingEquipment && (
-          <div className="text-center py-20">
-            <div className="w-20 h-20 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-5">
-              <Cpu className="w-10 h-10 text-slate-400" />
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-slate-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Cpu className="w-8 h-8 text-slate-400" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-700">No equipment found</h3>
+            <h3 className="text-base font-semibold text-slate-700">No equipment found</h3>
             <p className="text-sm text-slate-500 mt-1">Add equipment to start monitoring</p>
           </div>
         )}
