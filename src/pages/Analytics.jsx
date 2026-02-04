@@ -96,6 +96,52 @@ export default function Analytics() {
     ? Math.round(predictions.reduce((sum, p) => sum + (p.confidence_score || 0), 0) / predictions.length)
     : 0;
 
+  // NEW: Calculate operational metrics
+  const tasksWithDuration = tasks.filter(t => t.actual_duration_hours && t.estimated_duration_hours);
+  const avgTaskCompletionTime = tasksWithDuration.length > 0
+    ? (tasksWithDuration.reduce((sum, t) => sum + (t.actual_duration_hours || 0), 0) / tasksWithDuration.length).toFixed(1)
+    : 0;
+  
+  const overdueTasks = tasks.filter(t => t.status === 'overdue' || (t.status !== 'completed' && t.scheduled_date && new Date(t.scheduled_date) < new Date())).length;
+  
+  // Work order metrics
+  const completedWorkOrders = workOrders.filter(wo => wo.status === 'completed' || wo.status === 'closed');
+  const avgMTTR = completedWorkOrders.length > 0
+    ? (completedWorkOrders.reduce((sum, wo) => {
+        if (wo.actual_start && wo.actual_end) {
+          const start = new Date(wo.actual_start);
+          const end = new Date(wo.actual_end);
+          return sum + ((end - start) / (1000 * 60 * 60)); // hours
+        }
+        return sum + (wo.actual_duration_hours || wo.estimated_hours || 0);
+      }, 0) / completedWorkOrders.length).toFixed(1)
+    : 0;
+
+  // First time fix rate (tasks completed without follow-up)
+  const tasksWithoutFollowUp = completedWorkOrders.filter(wo => !wo.follow_up_required).length;
+  const firstTimeFixRate = completedWorkOrders.length > 0 
+    ? Math.round((tasksWithoutFollowUp / completedWorkOrders.length) * 100)
+    : 0;
+
+  // Cost metrics
+  const totalMaintenanceCost = workOrders.reduce((sum, wo) => sum + (wo.actual_total_cost || wo.estimated_cost || 0), 0);
+  const avgCostPerTask = completedWorkOrders.length > 0 
+    ? Math.round(totalMaintenanceCost / completedWorkOrders.length)
+    : 0;
+
+  // Efficiency: actual vs estimated time
+  const efficiencyTasks = tasks.filter(t => t.actual_duration_hours && t.estimated_duration_hours && t.estimated_duration_hours > 0);
+  const taskEfficiency = efficiencyTasks.length > 0
+    ? Math.round((efficiencyTasks.reduce((sum, t) => sum + (t.estimated_duration_hours / t.actual_duration_hours), 0) / efficiencyTasks.length) * 100)
+    : 100;
+
+  // Preventive vs Reactive ratio
+  const preventiveTasks = tasks.filter(t => t.type === 'preventive' || t.type === 'predictive').length;
+  const reactiveTasks = tasks.filter(t => t.type === 'corrective' || t.type === 'emergency').length;
+  const preventiveRatio = (preventiveTasks + reactiveTasks) > 0 
+    ? Math.round((preventiveTasks / (preventiveTasks + reactiveTasks)) * 100)
+    : 0;
+
   // Equipment by type
   const equipmentByType = equipment.reduce((acc, e) => {
     const type = e.type || 'unknown';
