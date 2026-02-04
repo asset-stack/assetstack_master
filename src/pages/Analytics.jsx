@@ -204,7 +204,23 @@ export default function Analytics() {
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-[1800px] mx-auto px-6 py-8">
-        {/* Header */}
+        {/* Header with Explanation Banner */}
+        <div className="bg-gradient-to-r from-indigo-50 via-blue-50 to-violet-50 border border-indigo-100 rounded-xl p-4 mb-6">
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-indigo-100 rounded-lg shrink-0">
+              <Brain className="w-5 h-5 text-indigo-600" />
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-slate-900">Understanding Your Analytics</h2>
+              <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                This dashboard provides real-time insights into your fleet's health, maintenance operations, and AI predictions. 
+                Look for the <span className="inline-flex items-center px-1 py-0.5 bg-white rounded text-indigo-600 font-medium">ⓘ</span> icons 
+                next to metrics for detailed explanations. Use the tabs to explore RUL predictions, root cause analysis, and resource optimization.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Analytics Dashboard</h1>
