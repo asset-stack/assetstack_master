@@ -597,6 +597,21 @@ export default function Analytics() {
           </TabsContent>
 
           <TabsContent value="predictions" className="mt-0">
+            <div className="bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-100 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-violet-100 rounded-lg shrink-0">
+                  <Clock className="w-5 h-5 text-violet-600" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-semibold text-slate-900">Remaining Useful Life (RUL) Predictions</h2>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    RUL estimates how many days/hours an asset can operate before failure. 
+                    <strong className="text-violet-700"> Lower RUL = higher urgency</strong>. 
+                    Failure probability shows the likelihood of failure within 30 days. Use these predictions to prioritize maintenance and prevent unexpected downtime.
+                  </p>
+                </div>
+              </div>
+            </div>
             <RULVisualization 
               equipment={equipment}
               predictions={predictions}
@@ -604,6 +619,20 @@ export default function Analytics() {
           </TabsContent>
 
           <TabsContent value="rootcause" className="mt-0">
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-amber-100 rounded-lg shrink-0">
+                  <Search className="w-5 h-5 text-amber-600" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-semibold text-slate-900">Root Cause Analysis</h2>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    When anomalies or failures occur, root cause analysis identifies <strong className="text-amber-700">probable causes</strong> ranked by likelihood. 
+                    This helps technicians fix the underlying issue rather than just symptoms. Higher probability percentages indicate more confident diagnoses.
+                  </p>
+                </div>
+              </div>
+            </div>
             <RootCausePanel 
               equipment={equipment}
               alerts={alerts}
@@ -611,6 +640,21 @@ export default function Analytics() {
           </TabsContent>
 
           <TabsContent value="resources" className="mt-0">
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-emerald-100 rounded-lg shrink-0">
+                  <Users className="w-5 h-5 text-emerald-600" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-semibold text-slate-900">Resource Optimization</h2>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    Balance technician workloads and optimize scheduling to maximize efficiency. 
+                    <strong className="text-emerald-700"> Green bars</strong> indicate available capacity, while 
+                    <strong className="text-amber-700"> orange/red</strong> shows overloaded resources that may cause delays.
+                  </p>
+                </div>
+              </div>
+            </div>
             <ResourceOptimizer 
               workOrders={workOrders}
               maintenanceTasks={tasks}
@@ -619,6 +663,21 @@ export default function Analytics() {
           </TabsContent>
 
           <TabsContent value="inventory" className="mt-0">
+            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-100 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-blue-100 rounded-lg shrink-0">
+                  <Package className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-semibold text-slate-900">Spare Parts Inventory</h2>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                    Monitor stock levels and predicted demand for spare parts. 
+                    <strong className="text-red-600"> Low stock</strong> items need reordering soon. 
+                    <strong className="text-blue-700"> AI-predicted demand</strong> helps you order proactively before running out.
+                  </p>
+                </div>
+              </div>
+            </div>
             <SparePartsInventory 
               workOrders={workOrders}
               maintenanceTasks={tasks}
