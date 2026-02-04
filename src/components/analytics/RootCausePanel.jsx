@@ -33,7 +33,7 @@ export default function RootCausePanel({ equipment = [], alerts = [] }) {
     onSuccess: () => queryClient.invalidateQueries(['rootCauseAnalyses']),
   });
 
-  const equipmentMap = equipment.reduce((acc, e) => { acc[e.id] = e; return acc; }, {});
+  const equipmentMap = (equipment || []).reduce((acc, e) => { acc[e.id] = e; return acc; }, {});
 
   const getSeverityConfig = (severity) => {
     const configs = {

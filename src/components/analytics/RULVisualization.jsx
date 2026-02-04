@@ -12,7 +12,7 @@ import {
 } from 'recharts';
 import { format, addDays } from 'date-fns';
 
-export default function RULVisualization({ equipment, predictions = [] }) {
+export default function RULVisualization({ equipment = [], predictions = [] }) {
   const [expanded, setExpanded] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState(null);
 
