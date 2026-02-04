@@ -471,7 +471,15 @@ export default function Analytics() {
               </motion.div>
             </div>
 
-            {/* Bottom Row */}
+            {/* Operations Summary Section */}
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3">
+                <h2 className="text-lg font-semibold text-slate-800">Operations Summary</h2>
+              </div>
+              <p className="text-sm text-slate-500 mb-4">
+                Track maintenance task completion rates, work order distribution by type, and alert severity levels to understand your operational efficiency.
+              </p>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Task Completion */}
               <motion.div
