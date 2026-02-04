@@ -13,36 +13,47 @@ import {
 } from 'recharts';
 
 export default function ModelDriftMonitor({ models = [], predictions = [] }) {
-  // Calculate drift metrics for each model
-  const modelDriftData = models.filter(m => m.status === 'active').map(model => {
-    // Simulate drift detection
-    const baseAccuracy = model.accuracy_score || 85;
-    const currentAccuracy = baseAccuracy - (Math.random() * 5);
-    const drift = baseAccuracy - currentAccuracy;
-    const driftPercent = (drift / baseAccuracy) * 100;
-    
-    // Simulate confidence trend
-    const confidenceTrend = Array.from({ length: 14 }, (_, i) => ({
-      day: `Day ${i + 1}`,
-      confidence: baseAccuracy - (i * (drift / 14)) + (Math.random() * 2 - 1),
-      baseline: baseAccuracy
-    }));
+  // Seeded random for consistent drift metrics
+  const seededRandom = (seed) => {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  };
 
-    return {
-      ...model,
-      currentAccuracy: currentAccuracy.toFixed(1),
-      drift: drift.toFixed(2),
-      driftPercent: driftPercent.toFixed(1),
-      status: driftPercent > 5 ? 'critical' : driftPercent > 2 ? 'warning' : 'healthy',
-      confidenceTrend,
-      predictionsLastWeek: Math.floor(Math.random() * 500 + 100),
-      dataDistributionShift: (Math.random() * 0.1).toFixed(3),
-      featureDrift: model.features?.slice(0, 3).map(f => ({
-        feature: f,
-        drift: (Math.random() * 0.15).toFixed(3)
-      })) || []
-    };
-  });
+  // Calculate drift metrics for each model using memoization for consistency
+  const modelDriftData = React.useMemo(() => {
+    return models.filter(m => m.status === 'active').map((model, modelIdx) => {
+      // Use model index as seed for consistent values
+      const baseSeed = modelIdx * 100 + (model.id ? model.id.charCodeAt(0) : 0);
+      
+      // Simulate drift detection with seeded random
+      const baseAccuracy = model.accuracy_score || 85;
+      const currentAccuracy = baseAccuracy - (seededRandom(baseSeed) * 5);
+      const drift = baseAccuracy - currentAccuracy;
+      const driftPercent = (drift / baseAccuracy) * 100;
+      
+      // Simulate confidence trend with seeded random
+      const confidenceTrend = Array.from({ length: 14 }, (_, i) => ({
+        day: `Day ${i + 1}`,
+        confidence: baseAccuracy - (i * (drift / 14)) + (seededRandom(baseSeed + i) * 2 - 1),
+        baseline: baseAccuracy
+      }));
+
+      return {
+        ...model,
+        currentAccuracy: currentAccuracy.toFixed(1),
+        drift: drift.toFixed(2),
+        driftPercent: driftPercent.toFixed(1),
+        status: driftPercent > 5 ? 'critical' : driftPercent > 2 ? 'warning' : 'healthy',
+        confidenceTrend,
+        predictionsLastWeek: Math.floor(seededRandom(baseSeed + 50) * 500 + 100),
+        dataDistributionShift: (seededRandom(baseSeed + 60) * 0.1).toFixed(3),
+        featureDrift: model.features?.slice(0, 3).map((f, fIdx) => ({
+          feature: f,
+          drift: (seededRandom(baseSeed + 70 + fIdx) * 0.15).toFixed(3)
+        })) || []
+      };
+    });
+  }, [models]);
 
   const criticalCount = modelDriftData.filter(m => m.status === 'critical').length;
   const warningCount = modelDriftData.filter(m => m.status === 'warning').length;
