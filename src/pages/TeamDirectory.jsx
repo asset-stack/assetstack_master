@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import PendingContractorsBanner from '@/components/team/PendingContractorsBanner';
 
 const LEVEL_COLORS = {
   junior: 'bg-slate-100 text-slate-700',
@@ -49,7 +50,9 @@ export default function TeamDirectory() {
     return acc;
   }, {});
 
-  const filtered = technicians.filter(t => {
+  const approvedTechnicians = technicians.filter(t => t.approval_status !== 'pending' && t.approval_status !== 'rejected');
+
+  const filtered = approvedTechnicians.filter(t => {
     const matchSearch = !search || 
       t.name?.toLowerCase().includes(search.toLowerCase()) ||
       t.email?.toLowerCase().includes(search.toLowerCase()) ||
@@ -60,9 +63,9 @@ export default function TeamDirectory() {
     return matchSearch && matchType && matchLevel && matchStatus;
   });
 
-  const employees = technicians.filter(t => (t.worker_type || 'employee') === 'employee').length;
-  const contractors = technicians.filter(t => t.worker_type === 'contractor').length;
-  const available = technicians.filter(t => t.availability_status === 'available').length;
+  const employees = approvedTechnicians.filter(t => (t.worker_type || 'employee') === 'employee').length;
+  const contractors = approvedTechnicians.filter(t => t.worker_type === 'contractor').length;
+  const available = approvedTechnicians.filter(t => t.availability_status === 'available').length;
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -104,6 +107,9 @@ export default function TeamDirectory() {
             <p className="text-2xl font-bold text-slate-900">{available}</p>
           </div>
         </div>
+
+        {/* Pending Contractors */}
+        <PendingContractorsBanner technicians={technicians} />
 
         {/* Filters */}
         <div className="flex flex-wrap gap-3 mb-6">
