@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
       phone: phone || '',
       employee_id: employeeId,
       worker_type: 'contractor',
-      approval_status: 'pending',
+      approval_status: 'pending', // becomes 'approved' when an org invites and contractor accepts
       company_name: company_name || '',
       tax_id: tax_id || '',
       bio: bio || '',
