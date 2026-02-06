@@ -60,6 +60,8 @@ import Onboarding from './pages/Onboarding';
 import Predictions from './pages/Predictions';
 import Reports from './pages/Reports';
 import SensorIntegration from './pages/SensorIntegration';
+import MyProfile from './pages/MyProfile';
+import TeamDirectory from './pages/TeamDirectory';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +79,8 @@ export const PAGES = {
     "Predictions": Predictions,
     "Reports": Reports,
     "SensorIntegration": SensorIntegration,
+    "MyProfile": MyProfile,
+    "TeamDirectory": TeamDirectory,
 }
 
 export const pagesConfig = {

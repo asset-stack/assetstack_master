@@ -4,12 +4,15 @@ import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
-  Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock
+  Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock,
+  UserCircle, Users
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const navItems = [
   { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
+  { name: 'My Profile', icon: UserCircle, page: 'MyProfile' },
+  { name: 'Team', icon: Users, page: 'TeamDirectory' },
   { name: 'Setup', icon: Sparkles, page: 'Onboarding' },
   { name: 'Equipment', icon: Cpu, page: 'Equipment' },
   { name: 'Digital Twin', icon: Box, page: 'DigitalTwin' },
