@@ -6,13 +6,15 @@ import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { 
   Search, Users, Filter, Shield, Mail, Phone,
-  Star, CheckCircle2, Clock, Zap, Building2
+  Star, CheckCircle2, Clock, Zap, Building2, UserPlus
 } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import PendingContractorsBanner from '@/components/team/PendingContractorsBanner';
+import InviteContractorDialog from '@/components/team/InviteContractorDialog';
+import PendingInvitations from '@/components/team/PendingInvitations';
 
 const LEVEL_COLORS = {
   junior: 'bg-slate-100 text-slate-700',
@@ -34,6 +36,7 @@ export default function TeamDirectory() {
   const [typeFilter, setTypeFilter] = useState('all');
   const [levelFilter, setLevelFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [inviteOpen, setInviteOpen] = useState(false);
 
   const { data: technicians = [] } = useQuery({
     queryKey: ['technicians'],
@@ -71,9 +74,14 @@ export default function TeamDirectory() {
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-[1400px] mx-auto px-6 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-slate-900">Team Directory</h1>
-          <p className="text-sm text-slate-500 mt-1">Browse team members, view profiles, and send recognition</p>
+        <div className="flex items-start justify-between mb-8">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Team Directory</h1>
+            <p className="text-sm text-slate-500 mt-1">Browse team members, view profiles, and send recognition</p>
+          </div>
+          <Button onClick={() => setInviteOpen(true)} className="bg-indigo-600 hover:bg-indigo-700">
+            <UserPlus className="w-4 h-4 mr-2" /> Invite Contractor
+          </Button>
         </div>
 
         {/* Stats */}
@@ -108,8 +116,13 @@ export default function TeamDirectory() {
           </div>
         </div>
 
-        {/* Pending Contractors */}
+        {/* Pending Invitations (for contractors) */}
+        <PendingInvitations />
+
+        {/* Pending Contractors (for admins) */}
         <PendingContractorsBanner technicians={technicians} />
+
+        <InviteContractorDialog open={inviteOpen} onOpenChange={setInviteOpen} />
 
         {/* Filters */}
         <div className="flex flex-wrap gap-3 mb-6">
