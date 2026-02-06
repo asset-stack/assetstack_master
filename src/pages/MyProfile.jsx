@@ -70,20 +70,25 @@ export default function MyProfile() {
   // Download PDF report
   const handleDownloadPDF = async () => {
     setDownloading(true);
-    const response = await base44.functions.invoke('generateWorkReport', { 
-      technician_id: technician.id 
-    });
-    
-    const blob = new Blob([response.data], { type: 'application/pdf' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${technician.name?.replace(/\s+/g, '_')}_Work_Report.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-    a.remove();
-    setDownloading(false);
+    try {
+      const response = await base44.functions.invoke('generateWorkReport', { 
+        technician_id: technician.id 
+      });
+      
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${technician.name?.replace(/\s+/g, '_')}_Work_Report.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+    } catch (err) {
+      console.error('Failed to generate report:', err);
+    } finally {
+      setDownloading(false);
+    }
   };
 
   if (!technician) {

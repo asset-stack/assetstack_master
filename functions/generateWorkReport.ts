@@ -15,7 +15,12 @@ Deno.serve(async (req) => {
     }
 
     // Fetch technician
-    const technician = await base44.asServiceRole.entities.Technician.get(technician_id);
+    let technician;
+    try {
+      technician = await base44.asServiceRole.entities.Technician.get(technician_id);
+    } catch (e) {
+      return Response.json({ error: 'Technician not found' }, { status: 404 });
+    }
     if (!technician) {
       return Response.json({ error: 'Technician not found' }, { status: 404 });
     }
