@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
     }
 
     // Invite the user to the app (they'll get a login)
-    await base44.asServiceRole.users.inviteUser(email, 'user');
+    await base44.users.inviteUser(email, 'user');
 
     // Generate a contractor employee_id
     const employeeId = 'CTR-' + Date.now().toString(36).toUpperCase();
