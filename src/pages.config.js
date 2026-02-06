@@ -62,6 +62,7 @@ import Reports from './pages/Reports';
 import SensorIntegration from './pages/SensorIntegration';
 import MyProfile from './pages/MyProfile';
 import TeamDirectory from './pages/TeamDirectory';
+import ContractorRegister from './pages/ContractorRegister';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +82,7 @@ export const PAGES = {
     "SensorIntegration": SensorIntegration,
     "MyProfile": MyProfile,
     "TeamDirectory": TeamDirectory,
+    "ContractorRegister": ContractorRegister,
 }
 
 export const pagesConfig = {
