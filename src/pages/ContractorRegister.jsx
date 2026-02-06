@@ -58,12 +58,12 @@ export default function ContractorRegister() {
           <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-5">
             <CheckCircle2 className="w-8 h-8 text-emerald-600" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Registration Submitted!</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Profile Created!</h2>
           <p className="text-slate-600 mb-4">
-            Your contractor application has been submitted for review. You'll receive a login invitation at <strong>{form.email}</strong> shortly.
+            Your contractor profile has been created. You'll receive a login invitation at <strong>{form.email}</strong> shortly.
           </p>
           <p className="text-sm text-slate-500">
-            An admin will review and approve your profile before you can access the full platform.
+            Organisations can now find and invite you to their teams by searching your email address.
           </p>
         </motion.div>
       </div>
@@ -83,7 +83,7 @@ export default function ContractorRegister() {
             <Cpu className="w-7 h-7 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-slate-900">Join AssetStack</h1>
-          <p className="text-slate-500 mt-2">Register as a contractor to collaborate with maintenance teams</p>
+          <p className="text-slate-500 mt-2">Create your contractor profile so organisations can find and invite you</p>
         </motion.div>
 
         {/* Form */}
@@ -232,7 +232,7 @@ export default function ContractorRegister() {
           </Button>
 
           <p className="text-xs text-slate-400 text-center">
-            By registering, your application will be reviewed by an admin before access is granted.
+            By registering, you create a public contractor profile. Organisations can invite you to their teams.
           </p>
         </motion.form>
       </div>
