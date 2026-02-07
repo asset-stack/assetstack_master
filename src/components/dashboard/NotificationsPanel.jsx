@@ -82,7 +82,8 @@ export default function NotificationsPanel({
         initial={{ opacity: 0, x: 20, scale: 0.95 }}
         animate={{ opacity: 1, x: 0, scale: 1 }}
         exit={{ opacity: 0, x: 20, scale: 0.95 }}
-        className="fixed top-16 right-4 w-96 max-h-[calc(100vh-100px)] bg-white rounded-xl shadow-2xl border border-slate-200 z-50 overflow-hidden"
+        className="fixed top-0 sm:top-16 right-0 sm:right-4 w-full sm:w-96 h-full sm:h-auto sm:max-h-[calc(100vh-100px)] bg-white sm:rounded-xl shadow-2xl border-0 sm:border border-slate-200 z-50 overflow-hidden"
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50">

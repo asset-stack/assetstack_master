@@ -18,6 +18,7 @@ import EquipmentCard from '@/components/dashboard/EquipmentCard';
 import EquipmentDetails from '@/components/equipment/EquipmentDetails';
 import OnboardingBanner from '@/components/onboarding/OnboardingBanner';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 export default function Dashboard() {
   const [selectedEquipment, setSelectedEquipment] = useState(null);
@@ -184,6 +185,11 @@ export default function Dashboard() {
         </div>
       </header>
 
+      <PullToRefresh onRefresh={async () => {
+        await queryClient.invalidateQueries(['equipment']);
+        await queryClient.invalidateQueries(['alerts']);
+        await queryClient.invalidateQueries(['tasks']);
+      }}>
       <main className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Onboarding Banner */}
         <OnboardingBanner />
@@ -306,6 +312,7 @@ export default function Dashboard() {
           </div>
         )}
       </main>
+      </PullToRefresh>
 
       {/* Equipment Details Modal */}
       <AnimatePresence>
