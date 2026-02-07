@@ -84,7 +84,7 @@ export default function Predictions() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
-      <div className="max-w-[1800px] mx-auto px-6 py-8">
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
@@ -119,7 +119,7 @@ export default function Predictions() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -290,7 +290,7 @@ export default function Predictions() {
                     <HealthGauge score={selectedEquipment.health_score || 0} size={100} />
                   </div>
 
-                  <div className="grid grid-cols-4 gap-4 mt-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-6">
                     <div className="bg-slate-50 rounded-xl p-3 text-center">
                       <Clock className="w-5 h-5 text-blue-600 mx-auto mb-1" />
                       <p className="text-lg font-bold text-slate-900">{selectedEquipment.remaining_useful_life_days || 'N/A'}</p>

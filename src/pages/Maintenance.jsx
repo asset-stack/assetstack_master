@@ -222,63 +222,37 @@ export default function Maintenance() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
-      <div className="max-w-[1800px] mx-auto px-6 py-8">
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-2xl font-semibold text-slate-900">Maintenance Tasks</h1>
-            <p className="text-sm text-slate-500">{tasks.length} total tasks • {aiCount} AI recommended</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex bg-white rounded-lg border border-slate-200 p-1">
-              <Button
-                variant={viewMode === 'tasks' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('tasks')}
-                className={viewMode === 'tasks' ? 'bg-indigo-600 hover:bg-indigo-700' : 'text-slate-500'}
-              >
-                <Wrench className="w-4 h-4 mr-1" />
-                Tasks
-              </Button>
-              <Button
-                variant={viewMode === 'workorders' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('workorders')}
-                className={viewMode === 'workorders' ? 'bg-indigo-600 hover:bg-indigo-700' : 'text-slate-500'}
-              >
-                <FileText className="w-4 h-4 mr-1" />
-                Work Orders
-              </Button>
-              <Button
-                variant={viewMode === 'scheduler' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('scheduler')}
-                className={viewMode === 'scheduler' ? 'bg-violet-600 hover:bg-violet-700' : 'text-slate-500'}
-              >
-                <Brain className="w-4 h-4 mr-1" />
-                AI Scheduler
-              </Button>
+        <div className="flex flex-col gap-4 mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-semibold text-slate-900">Maintenance Tasks</h1>
+              <p className="text-sm text-slate-500">{tasks.length} total tasks • {aiCount} AI recommended</p>
             </div>
-            <Button 
-              variant="outline"
-              onClick={generateAIRecommendations}
-              disabled={isGenerating}
-              className="border-violet-300 text-violet-600 hover:bg-violet-50"
-            >
-              {isGenerating ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Sparkles className="w-4 h-4 mr-2" />
-              )}
-              Generate AI Tasks
-            </Button>
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-indigo-600 hover:bg-indigo-700">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Task
-                </Button>
-              </DialogTrigger>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="outline"
+                size="sm"
+                onClick={generateAIRecommendations}
+                disabled={isGenerating}
+                className="border-violet-300 text-violet-600 hover:bg-violet-50 h-10"
+              >
+                {isGenerating ? (
+                  <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                ) : (
+                  <Sparkles className="w-4 h-4 mr-1" />
+                )}
+                <span className="hidden sm:inline">Generate AI Tasks</span>
+                <span className="sm:hidden">AI Tasks</span>
+              </Button>
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-indigo-600 hover:bg-indigo-700 h-10">
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Task
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-2xl" aria-describedby="create-task-description">
                 <DialogHeader>
                   <DialogTitle>Create Maintenance Task</DialogTitle>
@@ -390,6 +364,36 @@ export default function Maintenance() {
                 </div>
               </DialogContent>
             </Dialog>
+            </div>
+          </div>
+          <div className="flex bg-white rounded-lg border border-slate-200 p-1 overflow-x-auto">
+            <Button
+              variant={viewMode === 'tasks' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('tasks')}
+              className={`h-9 ${viewMode === 'tasks' ? 'bg-indigo-600 hover:bg-indigo-700' : 'text-slate-500'}`}
+            >
+              <Wrench className="w-4 h-4 mr-1" />
+              Tasks
+            </Button>
+            <Button
+              variant={viewMode === 'workorders' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('workorders')}
+              className={`h-9 ${viewMode === 'workorders' ? 'bg-indigo-600 hover:bg-indigo-700' : 'text-slate-500'}`}
+            >
+              <FileText className="w-4 h-4 mr-1" />
+              Work Orders
+            </Button>
+            <Button
+              variant={viewMode === 'scheduler' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('scheduler')}
+              className={`h-9 ${viewMode === 'scheduler' ? 'bg-violet-600 hover:bg-violet-700' : 'text-slate-500'}`}
+            >
+              <Brain className="w-4 h-4 mr-1" />
+              AI Scheduler
+            </Button>
           </div>
         </div>
 
@@ -422,7 +426,7 @@ export default function Maintenance() {
         {viewMode === 'tasks' && (
           <>
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-indigo-100 rounded-lg">
@@ -470,36 +474,36 @@ export default function Maintenance() {
         </div>
 
         {/* Tabs & Filters */}
-        <div className="flex flex-wrap items-center gap-4 mb-6">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full md:w-auto">
-            <TabsList className="bg-white border border-slate-200">
-              <TabsTrigger value="scheduled" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+        <div className="space-y-3 mb-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="bg-white border border-slate-200 w-full sm:w-auto overflow-x-auto flex-nowrap">
+              <TabsTrigger value="scheduled" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-xs sm:text-sm">
                 Scheduled ({scheduledCount})
               </TabsTrigger>
-              <TabsTrigger value="overdue" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <TabsTrigger value="overdue" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-xs sm:text-sm">
                 Overdue ({overdueCount})
               </TabsTrigger>
-              <TabsTrigger value="completed" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <TabsTrigger value="completed" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-xs sm:text-sm">
                 Completed ({completedCount})
               </TabsTrigger>
-              <TabsTrigger value="all" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <TabsTrigger value="all" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white text-xs sm:text-sm">
                 All
               </TabsTrigger>
             </TabsList>
           </Tabs>
           
-          <div className="flex items-center gap-4 ml-auto">
-            <div className="relative">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div className="relative w-full sm:w-auto sm:flex-1 sm:max-w-xs">
               <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
               <Input
                 placeholder="Search tasks..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 w-56 bg-white border-slate-200 text-slate-900"
+                className="pl-10 h-10 bg-white border-slate-200 text-slate-900"
               />
             </div>
             <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger className="w-36 bg-white border-slate-200">
+              <SelectTrigger className="w-[calc(50%-4px)] sm:w-36 h-10 bg-white border-slate-200">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent className="bg-white border-slate-200">
@@ -512,7 +516,7 @@ export default function Maintenance() {
               </SelectContent>
             </Select>
             <Select value={filterPriority} onValueChange={setFilterPriority}>
-              <SelectTrigger className="w-36 bg-white border-slate-200">
+              <SelectTrigger className="w-[calc(50%-4px)] sm:w-36 h-10 bg-white border-slate-200">
                 <SelectValue placeholder="Priority" />
               </SelectTrigger>
               <SelectContent className="bg-white border-slate-200">
@@ -528,7 +532,7 @@ export default function Maintenance() {
         </div>
 
         {/* Tasks Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {filteredTasks.map((task, idx) => (
             <MaintenanceCard
               key={task.id}

@@ -99,9 +99,9 @@ export default function SensorIntegration() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
-      <div className="max-w-[1800px] mx-auto px-6 py-8">
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
           <div>
             <h1 className="text-2xl font-semibold text-slate-900 flex items-center gap-3">
               <Radio className="w-7 h-7 text-indigo-600" />
@@ -147,7 +147,7 @@ export default function SensorIntegration() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-6 sm:mb-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -252,7 +252,7 @@ export default function SensorIntegration() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="bg-white border border-slate-200 flex-wrap h-auto p-1">
+          <TabsList className="bg-white border border-slate-200 flex-wrap h-auto p-1 w-full sm:w-auto overflow-x-auto">
             <TabsTrigger value="overview" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
               <Settings className="w-4 h-4 mr-2" />
               Sensor Configs

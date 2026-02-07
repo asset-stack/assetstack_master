@@ -59,7 +59,7 @@ export default function MaintenancePlanning() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="max-w-[1800px] mx-auto px-6 py-8">
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
@@ -128,7 +128,7 @@ export default function MaintenancePlanning() {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-indigo-100 rounded-lg">

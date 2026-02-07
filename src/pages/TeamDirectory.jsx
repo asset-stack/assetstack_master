@@ -72,20 +72,20 @@ export default function TeamDirectory() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="max-w-[1400px] mx-auto px-6 py-8">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header */}
-        <div className="flex items-start justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-6 sm:mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Team Directory</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900">Team Directory</h1>
             <p className="text-sm text-slate-500 mt-1">Browse team members, view profiles, and send recognition</p>
           </div>
-          <Button onClick={() => setInviteOpen(true)} className="bg-indigo-600 hover:bg-indigo-700">
+          <Button onClick={() => setInviteOpen(true)} className="bg-indigo-600 hover:bg-indigo-700 h-11 shrink-0">
             <UserPlus className="w-4 h-4 mr-2" /> Invite Contractor
           </Button>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
           <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
             <div className="flex items-center gap-2 mb-1">
               <Users className="w-4 h-4 text-indigo-500" />
@@ -125,18 +125,18 @@ export default function TeamDirectory() {
         <InviteContractorDialog open={inviteOpen} onOpenChange={setInviteOpen} />
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-6">
-          <div className="relative flex-1 min-w-[200px]">
+        <div className="flex flex-wrap gap-2 sm:gap-3 mb-6">
+          <div className="relative w-full sm:flex-1 sm:min-w-[200px]">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <Input
               placeholder="Search by name, email, or skills..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="pl-9 bg-white"
+              className="pl-9 h-10 bg-white"
             />
           </div>
           <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-36 bg-white"><SelectValue placeholder="Type" /></SelectTrigger>
+            <SelectTrigger className="w-[calc(33%-5px)] sm:w-36 h-10 bg-white"><SelectValue placeholder="Type" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Types</SelectItem>
               <SelectItem value="employee">Employees</SelectItem>
@@ -144,7 +144,7 @@ export default function TeamDirectory() {
             </SelectContent>
           </Select>
           <Select value={levelFilter} onValueChange={setLevelFilter}>
-            <SelectTrigger className="w-36 bg-white"><SelectValue placeholder="Level" /></SelectTrigger>
+            <SelectTrigger className="w-[calc(33%-5px)] sm:w-36 h-10 bg-white"><SelectValue placeholder="Level" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Levels</SelectItem>
               <SelectItem value="junior">Junior</SelectItem>
@@ -155,7 +155,7 @@ export default function TeamDirectory() {
             </SelectContent>
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-36 bg-white"><SelectValue placeholder="Status" /></SelectTrigger>
+            <SelectTrigger className="w-[calc(33%-5px)] sm:w-36 h-10 bg-white"><SelectValue placeholder="Status" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Status</SelectItem>
               <SelectItem value="available">Available</SelectItem>
@@ -167,7 +167,7 @@ export default function TeamDirectory() {
         </div>
 
         {/* Team Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {filtered.map((tech, i) => (
             <motion.div
               key={tech.id}

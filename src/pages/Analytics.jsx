@@ -326,7 +326,7 @@ export default function Analytics() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="max-w-[1800px] mx-auto px-6 py-8">
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header with Explanation Banner */}
         <div className="bg-gradient-to-r from-indigo-50 via-blue-50 to-violet-50 border border-indigo-100 rounded-xl p-4 mb-6">
           <div className="flex items-start gap-3">
@@ -405,7 +405,7 @@ export default function Analytics() {
                 These metrics provide a snapshot of your fleet's current status. Green indicates healthy values, amber/orange suggests caution, and red signals issues requiring attention.
               </p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-6 sm:mb-8">
               <div className="relative">
                 <MetricCard title="Fleet Health" value={`${avgHealth}%`} icon={Activity} color="green" />
                 <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.fleetHealth} /></div>
@@ -604,7 +604,7 @@ export default function Analytics() {
                 Key metrics measuring how efficiently your maintenance operations run. Track completion times, costs, and the balance between proactive and reactive maintenance.
               </p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4 mb-6 sm:mb-8">
               <div className="relative">
                 <MetricCard title="Avg Completion" value={`${avgTaskCompletionTime}h`} icon={Timer} color="blue" />
                 <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.avgCompletionTime} /></div>
@@ -636,7 +636,7 @@ export default function Analytics() {
             </div>
 
             {/* Additional KPIs Row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
               <div className="relative">
                 <MetricCard title="Uptime" value={`${uptimePercent}%`} icon={Server} color={uptimePercent >= 90 ? "green" : "amber"} />
                 <div className="absolute top-2 right-2"><MetricInfo definition={METRIC_DEFINITIONS.uptime} /></div>

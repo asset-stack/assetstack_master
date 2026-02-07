@@ -173,16 +173,16 @@ export default function Equipment() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
-      <div className="max-w-[1800px] mx-auto px-6 py-8">
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
           <div>
-            <h1 className="text-2xl font-semibold text-slate-900">Equipment Management</h1>
+            <h1 className="text-xl sm:text-2xl font-semibold text-slate-900">Equipment Management</h1>
             <p className="text-sm text-slate-500">{equipment.length} total assets registered</p>
           </div>
           <Button 
             onClick={() => { setEditingEquipment(null); setIsFormOpen(true); }}
-            className="bg-indigo-600 hover:bg-indigo-700"
+            className="bg-indigo-600 hover:bg-indigo-700 h-11"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Equipment
@@ -195,18 +195,18 @@ export default function Equipment() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-3 mb-6 p-4 bg-white rounded-xl border border-slate-200">
-          <div className="relative flex-1 min-w-[200px] max-w-sm">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-6 p-3 sm:p-4 bg-white rounded-xl border border-slate-200">
+          <div className="relative w-full sm:flex-1 sm:min-w-[200px] sm:max-w-sm">
             <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
             <Input
-              placeholder="Search name, type, location, serial..."
+              placeholder="Search name, type, location..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-slate-50 border-slate-200 text-slate-900"
+              className="pl-10 h-10 bg-slate-50 border-slate-200 text-slate-900"
             />
           </div>
           <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className="w-36 bg-slate-50 border-slate-200">
+            <SelectTrigger className="w-[calc(50%-4px)] sm:w-36 bg-slate-50 border-slate-200 h-10">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent className="bg-white border-slate-200 max-h-60">
@@ -219,7 +219,7 @@ export default function Equipment() {
             </SelectContent>
           </Select>
           <Select value={filterLocation} onValueChange={setFilterLocation}>
-            <SelectTrigger className="w-44 bg-slate-50 border-slate-200">
+            <SelectTrigger className="w-[calc(50%-4px)] sm:w-44 bg-slate-50 border-slate-200 h-10">
               <SelectValue placeholder="Location" />
             </SelectTrigger>
             <SelectContent className="bg-white border-slate-200 max-h-60">
@@ -230,7 +230,7 @@ export default function Equipment() {
             </SelectContent>
           </Select>
           <Select value={filterStatus} onValueChange={setFilterStatus}>
-            <SelectTrigger className="w-36 bg-slate-50 border-slate-200">
+            <SelectTrigger className="w-[calc(50%-4px)] sm:w-36 bg-slate-50 border-slate-200 h-10">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent className="bg-white border-slate-200">
@@ -243,7 +243,7 @@ export default function Equipment() {
             </SelectContent>
           </Select>
           <Select value={filterRisk} onValueChange={setFilterRisk}>
-            <SelectTrigger className="w-32 bg-slate-50 border-slate-200">
+            <SelectTrigger className="w-[calc(50%-4px)] sm:w-32 bg-slate-50 border-slate-200 h-10">
               <SelectValue placeholder="Risk" />
             </SelectTrigger>
             <SelectContent className="bg-white border-slate-200">
@@ -266,19 +266,19 @@ export default function Equipment() {
                 setFilterRisk('all');
                 setFilterLocation('all');
               }}
-              className="text-slate-500 hover:text-slate-700"
+              className="text-slate-500 hover:text-slate-700 h-10"
             >
               <X className="w-4 h-4 mr-1" />
               Clear
             </Button>
           )}
 
-          <div className="flex items-center gap-1 ml-auto border-l border-slate-200 pl-3">
+          <div className="flex items-center gap-1 sm:ml-auto sm:border-l sm:border-slate-200 sm:pl-3">
             <Button
               variant={viewMode === 'grid' ? 'default' : 'outline'}
               size="icon"
               onClick={() => setViewMode('grid')}
-              className={viewMode === 'grid' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-white border-slate-200 text-slate-600'}
+              className={`h-10 w-10 ${viewMode === 'grid' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-white border-slate-200 text-slate-600'}`}
             >
               <Grid3X3 className="w-4 h-4" />
             </Button>
@@ -286,7 +286,7 @@ export default function Equipment() {
               variant={viewMode === 'list' ? 'default' : 'outline'}
               size="icon"
               onClick={() => setViewMode('list')}
-              className={viewMode === 'list' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-white border-slate-200 text-slate-600'}
+              className={`h-10 w-10 ${viewMode === 'list' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-white border-slate-200 text-slate-600'}`}
             >
               <List className="w-4 h-4" />
             </Button>
@@ -294,7 +294,7 @@ export default function Equipment() {
               variant={viewMode === 'hierarchy' ? 'default' : 'outline'}
               size="icon"
               onClick={() => setViewMode('hierarchy')}
-              className={viewMode === 'hierarchy' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-white border-slate-200 text-slate-600'}
+              className={`h-10 w-10 ${viewMode === 'hierarchy' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-white border-slate-200 text-slate-600'}`}
             >
               <Layers className="w-4 h-4" />
             </Button>
@@ -388,7 +388,7 @@ export default function Equipment() {
             </div>
           </div>
         ) : viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
             {filteredEquipment.map((eq, idx) => {
               const hasRecentUpdate = recentUpdates.some(u => u.id === eq.id && Date.now() - u.timestamp < 3000);
               return (

@@ -107,7 +107,7 @@ export default function MyProfile() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="max-w-[1200px] mx-auto px-6 py-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header */}
         <ProfileHeader technician={technician} onEdit={() => setEditOpen(true)} />
 
@@ -126,18 +126,18 @@ export default function MyProfile() {
 
         {/* Tabs */}
         <Tabs defaultValue="performance" className="mt-6">
-          <TabsList className="bg-white border border-slate-200 shadow-sm p-1 rounded-xl">
-            <TabsTrigger value="performance" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-lg px-4 py-2 text-sm">
-              <BarChart3 className="w-4 h-4 mr-2" /> Performance
+          <TabsList className="bg-white border border-slate-200 shadow-sm p-1 rounded-xl w-full sm:w-auto overflow-x-auto flex-nowrap">
+            <TabsTrigger value="performance" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-lg px-3 sm:px-4 py-2 text-xs sm:text-sm">
+              <BarChart3 className="w-4 h-4 mr-1 sm:mr-2" /> <span className="hidden sm:inline">Performance</span><span className="sm:hidden">Stats</span>
             </TabsTrigger>
-            <TabsTrigger value="history" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-lg px-4 py-2 text-sm">
-              <Wrench className="w-4 h-4 mr-2" /> Work History
+            <TabsTrigger value="history" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-lg px-3 sm:px-4 py-2 text-xs sm:text-sm">
+              <Wrench className="w-4 h-4 mr-1 sm:mr-2" /> History
             </TabsTrigger>
-            <TabsTrigger value="badges" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-lg px-4 py-2 text-sm">
-              <Award className="w-4 h-4 mr-2" /> Achievements
+            <TabsTrigger value="badges" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-lg px-3 sm:px-4 py-2 text-xs sm:text-sm">
+              <Award className="w-4 h-4 mr-1 sm:mr-2" /> Badges
             </TabsTrigger>
-            <TabsTrigger value="kudos" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-lg px-4 py-2 text-sm">
-              <Heart className="w-4 h-4 mr-2" /> Recognition
+            <TabsTrigger value="kudos" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white rounded-lg px-3 sm:px-4 py-2 text-xs sm:text-sm">
+              <Heart className="w-4 h-4 mr-1 sm:mr-2" /> Kudos
             </TabsTrigger>
           </TabsList>
 
