@@ -7,6 +7,7 @@ import {
   Cpu, MapPin, Clock, AlertTriangle, Save, Loader2, Check,
   ArrowLeft, User, Calendar, Upload
 } from 'lucide-react';
+import HapticButton from "@/components/mobile/HapticButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -332,22 +333,22 @@ export default function MobileChecklist() {
 
               {currentItem?.type === 'boolean' && (
                 <div className="flex gap-3">
-                  <Button
+                  <HapticButton
                     variant={answers[currentItem.id] === 'yes' ? 'default' : 'outline'}
                     className={`flex-1 h-14 text-base ${answers[currentItem.id] === 'yes' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}`}
                     onClick={() => handleAnswerChange(currentItem.id, 'yes')}
                   >
                     <CheckCircle2 className="w-5 h-5 mr-2" />
                     Yes
-                  </Button>
-                  <Button
+                  </HapticButton>
+                  <HapticButton
                     variant={answers[currentItem.id] === 'no' ? 'default' : 'outline'}
                     className={`flex-1 h-14 text-base ${answers[currentItem.id] === 'no' ? 'bg-rose-600 hover:bg-rose-700' : ''}`}
                     onClick={() => handleAnswerChange(currentItem.id, 'no')}
                   >
                     <Circle className="w-5 h-5 mr-2" />
                     No
-                  </Button>
+                  </HapticButton>
                 </div>
               )}
 
