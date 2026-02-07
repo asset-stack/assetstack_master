@@ -126,51 +126,59 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100/50">
       {/* Header */}
       <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-2xl border-b border-slate-200/50 shadow-sm shadow-slate-100/50">
-        <div className="px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                  <Activity className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-slate-900">
-                    Dashboard
-                  </h1>
-                  <p className="text-xs text-slate-500">AI-Powered Asset Health Monitoring</p>
-                </div>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200/60 rounded-full ml-2">
-                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-[10px] text-emerald-700 font-semibold tracking-wide uppercase">Live</span>
-                </div>
+        <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
+                <Activity className="w-5 h-5 text-white" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-xl font-bold text-slate-900 truncate">Dashboard</h1>
+                <p className="text-xs text-slate-500 hidden sm:block">AI-Powered Asset Health Monitoring</p>
+              </div>
+              <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200/60 rounded-full ml-2">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                <span className="text-[10px] text-emerald-700 font-semibold tracking-wide uppercase">Live</span>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="relative">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <div className="relative hidden sm:block">
                 <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
                 <Input
                   placeholder="Search equipment..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 w-64 h-9 bg-slate-50 border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 rounded-lg focus:bg-white focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 transition-all"
+                  className="pl-9 w-48 lg:w-64 h-10 bg-slate-50 border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 rounded-lg focus:bg-white focus:border-indigo-300 focus:ring-2 focus:ring-indigo-100 transition-all"
                 />
               </div>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-9 w-9 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 relative transition-colors"
+                className="h-11 w-11 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 relative transition-colors"
                 onClick={() => setShowNotifications(!showNotifications)}
               >
-                <Bell className="w-4 h-4" />
+                <Bell className="w-5 h-5" />
                 {activeAlerts > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 rounded-full text-[10px] font-bold text-white flex items-center justify-center">
                     {activeAlerts > 9 ? '9+' : activeAlerts}
                   </span>
                 )}
               </Button>
-              <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors">
-                <Settings className="w-4 h-4" />
+              <Button variant="ghost" size="icon" className="h-11 w-11 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+                <Settings className="w-5 h-5" />
               </Button>
+            </div>
+          </div>
+          {/* Mobile search */}
+          <div className="sm:hidden mt-3">
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
+              <Input
+                placeholder="Search equipment..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 w-full h-10 bg-slate-50 border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 rounded-lg"
+              />
             </div>
           </div>
         </div>
