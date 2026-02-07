@@ -184,7 +184,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="px-6 lg:px-8 py-6">
+      <main className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Onboarding Banner */}
         <OnboardingBanner />
         
