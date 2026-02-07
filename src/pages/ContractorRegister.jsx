@@ -72,7 +72,7 @@ export default function ContractorRegister() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-slate-50">
-      <div className="max-w-2xl mx-auto px-6 py-12">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 24px)' }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

@@ -448,24 +448,24 @@ export default function DigitalTwin() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header with Tabs */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4">
-        <div className="flex items-center justify-between mb-4">
+      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 sm:py-4">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
           <div>
-            <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <Box className="w-6 h-6 text-indigo-600" />
+            <h1 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
+              <Box className="w-5 sm:w-6 h-5 sm:h-6 text-indigo-600" />
               Digital Twin
             </h1>
-            <p className="text-sm text-slate-500 mt-1">Interactive equipment visualization & LiDAR data</p>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">Interactive equipment visualization & LiDAR data</p>
           </div>
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="bg-slate-100">
-            <TabsTrigger value="equipment" className="flex items-center gap-2">
+          <TabsList className="bg-slate-100 w-full sm:w-auto">
+            <TabsTrigger value="equipment" className="flex items-center gap-1.5 text-xs sm:text-sm flex-1 sm:flex-none">
               <MapPin className="w-4 h-4" />
               Equipment Map
             </TabsTrigger>
-            <TabsTrigger value="lidar" className="flex items-center gap-2">
+            <TabsTrigger value="lidar" className="flex items-center gap-1.5 text-xs sm:text-sm flex-1 sm:flex-none">
               <Scan className="w-4 h-4" />
               LiDAR Scans
             </TabsTrigger>
@@ -485,9 +485,9 @@ export default function DigitalTwin() {
 
       {/* LiDAR Tab - Original Content */}
       {activeTab === 'lidar' && (
-      <div className="flex h-[calc(100vh-140px)]">
+      <div className="flex flex-col lg:flex-row h-[calc(100vh-140px)]">
         {/* Sidebar */}
-        <div className="w-80 bg-white border-r border-slate-200 flex flex-col">
+        <div className="w-full lg:w-80 bg-white border-b lg:border-b-0 lg:border-r border-slate-200 flex flex-col max-h-[40vh] lg:max-h-none">
           <div className="p-4 border-b border-slate-100">
             <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
               <Scan className="w-5 h-5 text-indigo-600" />
