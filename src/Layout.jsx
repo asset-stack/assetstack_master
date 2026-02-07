@@ -156,11 +156,12 @@ export default function Layout({ children, currentPageName }) {
         )}
       </AnimatePresence>
 
-      {/* Main Content */}
+      {/* Main Content - safe area aware */}
       <main 
         className={`flex-1 transition-all duration-300 ${
           sidebarOpen ? 'lg:ml-[260px]' : 'lg:ml-[76px]'
-        } pt-16 lg:pt-0`}
+        } lg:pt-0`}
+        style={{ paddingTop: 'calc(56px + env(safe-area-inset-top, 0px))' }}
       >
         <div className="max-w-[1480px] mx-auto">
           {children}
