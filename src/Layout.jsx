@@ -12,6 +12,7 @@ import OfflineIndicator from '@/components/mobile/OfflineIndicator';
 import MobileBottomNav from '@/components/mobile/MobileBottomNav';
 import QuickActionsFAB from '@/components/mobile/QuickActionsFAB';
 import GuidedTour from '@/components/mobile/GuidedTour';
+import OfflineSyncEngine from '@/components/mobile/OfflineSyncEngine';
 
 const navItems = [
   { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
@@ -38,6 +39,7 @@ export default function Layout({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-slate-50 flex">
       <OfflineIndicator />
+      <OfflineSyncEngine />
       <GuidedTour />
       {/* Desktop Sidebar */}
       <motion.aside

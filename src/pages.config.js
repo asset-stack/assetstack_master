@@ -56,6 +56,7 @@ import Equipment from './pages/Equipment';
 import MLModels from './pages/MLModels';
 import Maintenance from './pages/Maintenance';
 import MaintenancePlanning from './pages/MaintenancePlanning';
+import ManagerDashboard from './pages/ManagerDashboard';
 import MobileChecklist from './pages/MobileChecklist';
 import MyProfile from './pages/MyProfile';
 import Onboarding from './pages/Onboarding';
@@ -63,7 +64,6 @@ import Predictions from './pages/Predictions';
 import Reports from './pages/Reports';
 import SensorIntegration from './pages/SensorIntegration';
 import TeamDirectory from './pages/TeamDirectory';
-import ManagerDashboard from './pages/ManagerDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -77,6 +77,7 @@ export const PAGES = {
     "MLModels": MLModels,
     "Maintenance": Maintenance,
     "MaintenancePlanning": MaintenancePlanning,
+    "ManagerDashboard": ManagerDashboard,
     "MobileChecklist": MobileChecklist,
     "MyProfile": MyProfile,
     "Onboarding": Onboarding,
@@ -84,7 +85,6 @@ export const PAGES = {
     "Reports": Reports,
     "SensorIntegration": SensorIntegration,
     "TeamDirectory": TeamDirectory,
-    "ManagerDashboard": ManagerDashboard,
 }
 
 export const pagesConfig = {
