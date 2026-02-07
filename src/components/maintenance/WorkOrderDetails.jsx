@@ -5,7 +5,8 @@ import { base44 } from '@/api/base44Client';
 import { 
   X, Calendar, Clock, User, Users, Cpu, DollarSign, Package, 
   FileText, Plus, Trash2, Save, History, AlertTriangle, CheckCircle2,
-  Play, Pause, Square, RefreshCw, Mail, Loader2, ClipboardList, ExternalLink
+  Play, Pause, Square, RefreshCw, Mail, Loader2, ClipboardList, ExternalLink,
+  MessageSquare, Camera
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
@@ -21,6 +22,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { format } from 'date-fns';
 import DynamicTaskAssignment from './DynamicTaskAssignment';
+import WorkOrderChat from './WorkOrderChat';
+import WorkOrderMediaPanel from './WorkOrderMediaPanel';
 
 const STATUSES = ['draft', 'open', 'assigned', 'in_progress', 'on_hold', 'completed', 'closed', 'cancelled'];
 const PRIORITIES = ['low', 'medium', 'high', 'urgent'];
@@ -311,11 +314,19 @@ export default function WorkOrderDetails({
         <div className="overflow-y-auto max-h-[calc(90vh-200px)]">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="px-6 pt-4 border-b border-slate-100">
-              <TabsList className="bg-slate-100">
+              <TabsList className="bg-slate-100 flex-wrap">
                 <TabsTrigger value="details">Details</TabsTrigger>
                 <TabsTrigger value="checklist" className="flex items-center gap-1">
                   <ClipboardList className="w-3.5 h-3.5" />
                   Checklist ({checklist.length})
+                </TabsTrigger>
+                <TabsTrigger value="chat" className="flex items-center gap-1">
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  Chat
+                </TabsTrigger>
+                <TabsTrigger value="media" className="flex items-center gap-1">
+                  <Camera className="w-3.5 h-3.5" />
+                  Media
                 </TabsTrigger>
                 <TabsTrigger value="labor">Labor ({editedWorkOrder.labor_entries?.length || 0})</TabsTrigger>
                 <TabsTrigger value="parts">Parts ({editedWorkOrder.parts_used?.length || 0})</TabsTrigger>
@@ -584,6 +595,14 @@ export default function WorkOrderDetails({
                 checklist={checklist}
                 onChange={setChecklist}
               />
+            </TabsContent>
+
+            <TabsContent value="chat" className="p-6">
+              <WorkOrderChat workOrderId={workOrder?.id} />
+            </TabsContent>
+
+            <TabsContent value="media" className="p-6">
+              <WorkOrderMediaPanel workOrderId={workOrder?.id} />
             </TabsContent>
 
             <TabsContent value="labor" className="p-6 space-y-4">
