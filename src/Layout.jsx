@@ -122,16 +122,16 @@ export default function Layout({ children, currentPageName }) {
         </Button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - safe area aware */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, x: -300 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -300 }}
-            className="lg:hidden fixed inset-0 z-40 bg-white pt-16"
+            className="lg:hidden fixed inset-0 z-40 bg-white" style={{ paddingTop: 'calc(56px + env(safe-area-inset-top, 0px))' }}
           >
-            <nav className="p-4 space-y-1">
+            <nav className="p-4 space-y-1 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 56px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
               {navItems.map((item) => {
                 const isActive = currentPageName === item.page;
                 const Icon = item.icon;
@@ -140,14 +140,14 @@ export default function Layout({ children, currentPageName }) {
                     key={item.page}
                     to={createPageUrl(item.page)}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors min-h-[48px] ${
                       isActive 
                         ? 'bg-indigo-50 text-indigo-600' 
                         : 'text-slate-600 hover:bg-slate-50'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
-                    <span className="font-medium">{item.name}</span>
+                    <span className="font-medium text-base">{item.name}</span>
                   </Link>
                 );
               })}
