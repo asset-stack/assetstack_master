@@ -48,6 +48,7 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import Analytics from './pages/Analytics';
+import ContractorRegister from './pages/ContractorRegister';
 import Dashboard from './pages/Dashboard';
 import Depreciation from './pages/Depreciation';
 import DigitalTwin from './pages/DigitalTwin';
@@ -56,18 +57,18 @@ import MLModels from './pages/MLModels';
 import Maintenance from './pages/Maintenance';
 import MaintenancePlanning from './pages/MaintenancePlanning';
 import MobileChecklist from './pages/MobileChecklist';
+import MyProfile from './pages/MyProfile';
 import Onboarding from './pages/Onboarding';
 import Predictions from './pages/Predictions';
 import Reports from './pages/Reports';
 import SensorIntegration from './pages/SensorIntegration';
-import MyProfile from './pages/MyProfile';
 import TeamDirectory from './pages/TeamDirectory';
-import ContractorRegister from './pages/ContractorRegister';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Analytics": Analytics,
+    "ContractorRegister": ContractorRegister,
     "Dashboard": Dashboard,
     "Depreciation": Depreciation,
     "DigitalTwin": DigitalTwin,
@@ -76,13 +77,12 @@ export const PAGES = {
     "Maintenance": Maintenance,
     "MaintenancePlanning": MaintenancePlanning,
     "MobileChecklist": MobileChecklist,
+    "MyProfile": MyProfile,
     "Onboarding": Onboarding,
     "Predictions": Predictions,
     "Reports": Reports,
     "SensorIntegration": SensorIntegration,
-    "MyProfile": MyProfile,
     "TeamDirectory": TeamDirectory,
-    "ContractorRegister": ContractorRegister,
 }
 
 export const pagesConfig = {

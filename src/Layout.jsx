@@ -104,8 +104,8 @@ export default function Layout({ children, currentPageName }) {
         </div>
         </motion.aside>
 
-      {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-50 flex items-center justify-between px-4 shadow-sm">
+      {/* Mobile Header - safe area aware */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-slate-200 z-50 flex items-center justify-between px-4 shadow-sm" style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 8px)', height: 'calc(56px + env(safe-area-inset-top, 0px))' }}>
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center">
             <Cpu className="w-4 h-4 text-white" />
@@ -116,7 +116,7 @@ export default function Layout({ children, currentPageName }) {
           variant="ghost"
           size="icon"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="text-slate-600"
+          className="text-slate-600 h-11 w-11"
         >
           {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
