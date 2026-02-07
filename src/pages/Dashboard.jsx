@@ -274,7 +274,7 @@ export default function Dashboard() {
         </div>
 
         {loadingEquipment ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="bg-white rounded-xl border border-slate-200 p-5 animate-pulse">
                 <div className="h-2.5 bg-slate-100 rounded-full w-1/3 mb-3" />
@@ -284,7 +284,7 @@ export default function Dashboard() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
             {filteredEquipment.map((eq, idx) => (
               <EquipmentCard 
                 key={eq.id}
