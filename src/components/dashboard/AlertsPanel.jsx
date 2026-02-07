@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, AlertCircle, Info, Zap, Clock, CheckCircle2, Bell } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from 'date-fns';
+import SwipeableCard from '@/components/mobile/SwipeableCard';
 
 export default function AlertsPanel({ alerts = [], onAcknowledge, onResolve }) {
   const getSeverityConfig = (severity) => {
@@ -55,8 +56,17 @@ export default function AlertsPanel({ alerts = [], onAcknowledge, onResolve }) {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
                   transition={{ delay: idx * 0.03 }}
-                  className={`p-3 border-b border-slate-100 ${config.bg} hover:bg-slate-50/50 transition-colors`}
                 >
+                <SwipeableCard
+                  onSwipeRight={alert.status === 'active' ? () => onAcknowledge?.(alert.id) : undefined}
+                  onSwipeLeft={alert.status === 'active' ? () => onResolve?.(alert.id) : undefined}
+                  rightLabel="Acknowledge"
+                  leftLabel="Resolve"
+                  rightColor="bg-amber-500"
+                  leftColor="bg-emerald-500"
+                  disabled={alert.status !== 'active'}
+                >
+                <div className={`p-3 border-b border-slate-100 ${config.bg} hover:bg-slate-50/50 transition-colors`}>
                   <div className="flex gap-2.5">
                     <div className={`relative ${config.iconColor} mt-0.5`}>
                       <Icon className="w-4 h-4" />
@@ -94,6 +104,8 @@ export default function AlertsPanel({ alerts = [], onAcknowledge, onResolve }) {
                       )}
                     </div>
                   </div>
+                </div>
+                </SwipeableCard>
                 </motion.div>
               );
             })
