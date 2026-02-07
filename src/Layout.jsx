@@ -8,6 +8,10 @@ import {
   UserCircle, Users
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import OfflineIndicator from '@/components/mobile/OfflineIndicator';
+import MobileBottomNav from '@/components/mobile/MobileBottomNav';
+import QuickActionsFAB from '@/components/mobile/QuickActionsFAB';
+import GuidedTour from '@/components/mobile/GuidedTour';
 
 const navItems = [
   { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
@@ -32,6 +36,8 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
+      <OfflineIndicator />
+      <GuidedTour />
       {/* Desktop Sidebar */}
       <motion.aside
         initial={false}
@@ -163,10 +169,16 @@ export default function Layout({ children, currentPageName }) {
         } lg:pt-0`}
         style={{ paddingTop: 'calc(56px + env(safe-area-inset-top, 0px))' }}
       >
-        <div className="max-w-[1480px] mx-auto">
+        <div className="max-w-[1480px] mx-auto pb-20 lg:pb-0">
           {children}
         </div>
       </main>
-    </div>
-  );
+
+      {/* Mobile Bottom Nav */}
+      <MobileBottomNav currentPageName={currentPageName} />
+
+      {/* Quick Actions FAB */}
+      <QuickActionsFAB />
+      </div>
+      );
 }
