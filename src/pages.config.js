@@ -63,6 +63,7 @@ import Predictions from './pages/Predictions';
 import Reports from './pages/Reports';
 import SensorIntegration from './pages/SensorIntegration';
 import TeamDirectory from './pages/TeamDirectory';
+import ManagerDashboard from './pages/ManagerDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -83,6 +84,7 @@ export const PAGES = {
     "Reports": Reports,
     "SensorIntegration": SensorIntegration,
     "TeamDirectory": TeamDirectory,
+    "ManagerDashboard": ManagerDashboard,
 }
 
 export const pagesConfig = {
