@@ -49,9 +49,7 @@ export default function Layout({ children, currentPageName }) {
       >
         <div className="p-5 border-b border-slate-100/60">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-              <Cpu className="w-5 h-5 text-white" />
-            </div>
+            <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6970c68cc08dbe7897c72f22/b4bbff453_WhatsAppImage2026-02-11at124516.jpeg" alt="AssetStack" className="w-11 h-11 rounded-2xl shadow-lg shadow-indigo-500/25 object-cover" />
             <AnimatePresence>
               {sidebarOpen && (
                 <motion.div
@@ -116,9 +114,7 @@ export default function Layout({ children, currentPageName }) {
       {/* Mobile Header - safe area aware */}
       <div className="lg:hidden fixed top-0 left-0 right-0 bg-white border-b border-slate-200 z-50 flex items-center justify-between px-4 shadow-sm" style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 8px)', height: 'calc(56px + env(safe-area-inset-top, 0px))' }}>
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center">
-            <Cpu className="w-4 h-4 text-white" />
-          </div>
+          <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6970c68cc08dbe7897c72f22/b4bbff453_WhatsAppImage2026-02-11at124516.jpeg" alt="AssetStack" className="w-9 h-9 rounded-lg object-cover" />
           <span className="font-semibold text-slate-900">AssetStack</span>
         </div>
         <Button
