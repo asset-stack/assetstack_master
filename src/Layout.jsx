@@ -33,7 +33,7 @@ const navItems = [
   { name: 'Predictions', icon: Brain, page: 'Predictions' },
   { name: 'Analytics', icon: BarChart3, page: 'Analytics' },
   { name: 'Reports', icon: FileText, page: 'Reports' },
-  { name: 'ML Models', icon: Settings, page: 'MLModels' },
+  { name: 'ML Models', icon: Brain, page: 'MLModels' },
   { name: 'Job Board', icon: Briefcase, page: 'JobBoard' },
   { name: 'Contractor Portal', icon: Hammer, page: 'ContractorPortal' },
   { name: 'Roles & Permissions', icon: KeyRound, page: 'RoleManagement' },
