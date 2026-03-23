@@ -26,6 +26,11 @@ export default function AIAssistant() {
   const scrollRef = useRef(null);
   const queryClient = useQueryClient();
 
+  // Get user info
+  const { user } = useAuth();
+  const userName = user?.full_name || '';
+  const userEmail = user?.email || '';
+
   // Network status
   useEffect(() => {
     const goOnline = () => setIsOnline(true);
@@ -90,11 +95,6 @@ export default function AIAssistant() {
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages, isLoading]);
-
-  // Get user info
-  const { user } = useAuth();
-  const userName = user?.full_name || '';
-  const userEmail = user?.email || '';
 
   // Save session to server
   const saveSession = async (msgs, sessionId, woId, woTitle) => {
