@@ -5,6 +5,7 @@ import { Upload, FileText, Cpu, Radio, Wrench, Users, MapPin, Package, CheckCirc
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import ImportCard from '@/components/data-import/ImportCard';
+import PowerBIEmbed from '@/components/data-import/PowerBIEmbed';
 
 const IMPORT_TARGETS = [
   { entity: 'Equipment', label: 'Equipment / Assets', icon: Cpu, color: 'bg-blue-50 text-blue-600', description: 'Import motors, pumps, HVAC units, buildings, and other assets' },
@@ -45,7 +46,14 @@ export default function DataImport() {
           </div>
         </div>
 
-        {/* Import cards */}
+        {/* Power BI */}
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-slate-900 mb-3">Power BI</h2>
+          <PowerBIEmbed />
+        </div>
+
+        {/* File Import */}
+        <h2 className="text-lg font-semibold text-slate-900 mb-3">File Import</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {IMPORT_TARGETS.map((target) => (
             <ImportCard key={target.entity} target={target} />
