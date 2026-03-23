@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, Search, Filter, Calendar, Clock, Wrench, FileText,
-  CheckCircle2, AlertTriangle, Sparkles, Loader2, Brain
+  CheckCircle2, AlertTriangle, Sparkles, Loader2, Brain, MessageSquare
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,7 @@ import AIScheduleOptimizer from '@/components/maintenance/AIScheduleOptimizer';
 import WorkOrderList from '@/components/maintenance/WorkOrderList';
 import AISchedulerPanel from '@/components/maintenance/AISchedulerPanel';
 import TaskDetailsDialog from '@/components/maintenance/TaskDetailsDialog';
+import InlineAssetMind from '@/components/ai-chat/InlineAssetMind';
 
 const TASK_TYPES = ['preventive', 'predictive', 'corrective', 'emergency', 'inspection'];
 const PRIORITIES = ['low', 'medium', 'high', 'urgent'];
@@ -33,6 +34,7 @@ export default function Maintenance() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskDetails, setShowTaskDetails] = useState(false);
+  const [showAssetMind, setShowAssetMind] = useState(false);
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
@@ -231,6 +233,15 @@ export default function Maintenance() {
               <p className="text-sm text-slate-500">{tasks.length} total tasks • {aiCount} AI recommended</p>
             </div>
             <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowAssetMind(true)}
+                className="border-indigo-300 text-indigo-600 hover:bg-indigo-50 h-10"
+              >
+                <MessageSquare className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">AssetMind</span>
+              </Button>
               <Button 
                 variant="outline"
                 size="sm"
@@ -568,6 +579,12 @@ export default function Maintenance() {
           onUpdate={handleTaskUpdate}
           onDelete={handleTaskDelete}
           onStatusChange={handleStatusChange}
+        />
+        {/* Inline AssetMind Panel */}
+        <InlineAssetMind
+          open={showAssetMind}
+          onClose={() => setShowAssetMind(false)}
+          contextHint={`There are ${tasks.length} maintenance tasks total: ${scheduledCount} scheduled/in-progress, ${overdueCount} overdue, ${completedCount} completed. ${aiCount} are AI-recommended.`}
         />
       </div>
     </div>
