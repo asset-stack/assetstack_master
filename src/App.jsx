@@ -10,6 +10,8 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AIAssistant from './pages/AIAssistant';
 import Locations from './pages/Locations';
 import RoleManagement from './pages/RoleManagement';
+import JobBoard from './pages/JobBoard';
+import ContractorPortal from './pages/ContractorPortal';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -74,6 +76,16 @@ const AuthenticatedApp = () => {
       <Route path="/RoleManagement" element={
             <LayoutWrapper currentPageName="RoleManagement">
               <RoleManagement />
+            </LayoutWrapper>
+          } />
+      <Route path="/JobBoard" element={
+            <LayoutWrapper currentPageName="JobBoard">
+              <JobBoard />
+            </LayoutWrapper>
+          } />
+      <Route path="/ContractorPortal" element={
+            <LayoutWrapper currentPageName="ContractorPortal">
+              <ContractorPortal />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />

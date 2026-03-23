@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
   Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock,
-  UserCircle, Users, Shield, MessageSquare, MapPin, KeyRound
+  UserCircle, Users, Shield, MessageSquare, MapPin, KeyRound, Briefcase, HardHat
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
@@ -32,6 +32,8 @@ const navItems = [
   { name: 'Analytics', icon: BarChart3, page: 'Analytics' },
   { name: 'Reports', icon: FileText, page: 'Reports' },
   { name: 'ML Models', icon: Settings, page: 'MLModels' },
+  { name: 'Job Board', icon: Briefcase, page: 'JobBoard' },
+  { name: 'Contractor Portal', icon: HardHat, page: 'ContractorPortal' },
   { name: 'Roles & Permissions', icon: KeyRound, page: 'RoleManagement' },
 ];
 
