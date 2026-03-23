@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useAuth } from '@/lib/AuthContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Loader2, Trash2, BookOpen, History, Wrench, WifiOff } from 'lucide-react';
+import { Loader2, Trash2, BookOpen, History, Wrench, WifiOff, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ChatMessage from '@/components/ai-chat/ChatMessage';
 import ChatInput from '@/components/ai-chat/ChatInput';
@@ -43,7 +44,12 @@ export default function AIAssistant() {
   const { data: spareParts = [] } = useQuery({ queryKey: ['ai-spareparts'], queryFn: () => base44.entities.SparePart.list(), initialData: [] });
   const { data: sensors = [] } = useQuery({ queryKey: ['ai-sensors'], queryFn: () => base44.entities.SensorConfiguration.list(), initialData: [] });
   const { data: documents = [] } = useQuery({ queryKey: ['asset-documents'], queryFn: () => base44.entities.AssetDocument.list(), initialData: [] });
-  const { data: chatSessions = [] } = useQuery({ queryKey: ['chat-sessions'], queryFn: () => base44.entities.ChatSession.list('-created_date', 50), initialData: [] });
+  const { data: chatSessions = [] } = useQuery({
+    queryKey: ['chat-sessions', userEmail],
+    queryFn: () => base44.entities.ChatSession.filter({ technician_email: userEmail }, '-created_date', 50),
+    enabled: !!userEmail,
+    initialData: [],
+  });
 
   // Cache data for offline use whenever it changes
   useEffect(() => {
@@ -86,11 +92,9 @@ export default function AIAssistant() {
   }, [messages, isLoading]);
 
   // Get user info
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  useEffect(() => {
-    base44.auth.me().then(u => { setUserName(u.full_name || ''); setUserEmail(u.email || ''); });
-  }, []);
+  const { user } = useAuth();
+  const userName = user?.full_name || '';
+  const userEmail = user?.email || '';
 
   // Save session to server
   const saveSession = async (msgs, sessionId, woId, woTitle) => {
@@ -265,8 +269,8 @@ ${text}`;
               <span className="hidden sm:inline">Docs ({documents.length})</span>
             </Button>
             {messages.length > 0 && (
-              <Button variant="ghost" size="sm" onClick={handleNewChat} className="text-slate-400 hover:text-slate-600 text-xs">
-                <Trash2 className="h-3.5 w-3.5 mr-1" /> New
+              <Button variant="outline" size="sm" onClick={handleNewChat} className="text-indigo-600 border-indigo-200 hover:bg-indigo-50 text-xs">
+                <Plus className="h-3.5 w-3.5 mr-1" /> New Chat
               </Button>
             )}
           </div>
