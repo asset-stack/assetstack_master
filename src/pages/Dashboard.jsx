@@ -170,9 +170,11 @@ export default function Dashboard() {
                   </span>
                 )}
               </Button>
-              <Button variant="ghost" size="icon" className="h-11 w-11 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors">
-                <Settings className="w-5 h-5" />
-              </Button>
+              <Link to="/DataImport">
+                <Button variant="ghost" size="icon" className="h-11 w-11 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+                  <Settings className="w-5 h-5" />
+                </Button>
+              </Link>
             </div>
           </div>
           {/* Mobile search */}
