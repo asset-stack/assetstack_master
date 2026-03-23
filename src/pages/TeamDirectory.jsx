@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '../utils';
+
 import { motion } from 'framer-motion';
 import { 
   Search, Users, Filter, Shield, Mail, Phone,
@@ -176,7 +176,7 @@ export default function TeamDirectory() {
               transition={{ delay: i * 0.03 }}
             >
               <Link
-                to={createPageUrl('MyProfile') + `?id=${tech.id}`}
+                to={`/MyProfile?id=${tech.id}`}
                 className="block bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all group"
               >
                 <div className="flex items-start gap-4">
