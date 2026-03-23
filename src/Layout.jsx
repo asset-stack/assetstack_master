@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
   Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock,
-  UserCircle, Users, Shield
+  UserCircle, Users, Shield, MessageSquare
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
@@ -15,6 +15,7 @@ import GuidedTour from '@/components/mobile/GuidedTour';
 import OfflineSyncEngine from '@/components/mobile/OfflineSyncEngine';
 
 const navItems = [
+  { name: 'AI Assistant', icon: MessageSquare, page: 'AIAssistant' },
   { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
   { name: 'Manager View', icon: Shield, page: 'ManagerDashboard' },
   { name: 'My Profile', icon: UserCircle, page: 'MyProfile' },
