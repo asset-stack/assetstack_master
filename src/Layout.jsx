@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
   Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock,
-  UserCircle, Users, Shield, MessageSquare, MapPin, KeyRound, Briefcase, Hammer, Settings
+  UserCircle, Users, Shield, MessageSquare, MapPin, KeyRound, Briefcase, Hammer
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
