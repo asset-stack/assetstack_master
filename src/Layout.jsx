@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
   Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock,
-  UserCircle, Users, Shield, MessageSquare
+  UserCircle, Users, Shield, MessageSquare, MapPin
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
@@ -21,6 +21,7 @@ const navItems = [
   { name: 'My Profile', icon: UserCircle, page: 'MyProfile' },
   { name: 'Team', icon: Users, page: 'TeamDirectory' },
   { name: 'Setup', icon: Sparkles, page: 'Onboarding' },
+  { name: 'Locations', icon: MapPin, page: 'Locations' },
   { name: 'Equipment', icon: Cpu, page: 'Equipment' },
   { name: 'Digital Twin', icon: Box, page: 'DigitalTwin' },
   { name: 'Sensors', icon: Radio, page: 'SensorIntegration' },
