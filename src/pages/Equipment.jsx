@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from 'date-fns';
+import { Link } from 'react-router-dom';
 import EquipmentCard from '@/components/dashboard/EquipmentCard';
 import EquipmentDetails from '@/components/equipment/EquipmentDetails';
 import EquipmentForm from '@/components/equipment/EquipmentForm';
@@ -44,13 +45,24 @@ export default function Equipment() {
 
   const queryClient = useQueryClient();
   
-  // Get equipment ID from URL params
+  // Get URL params
   const urlParams = new URLSearchParams(window.location.search);
   const equipmentIdFromUrl = urlParams.get('id');
+  const locationFromUrl = urlParams.get('location');
+
+  // Set location filter from URL
+  useEffect(() => {
+    if (locationFromUrl) setFilterLocation(locationFromUrl);
+  }, [locationFromUrl]);
 
   const { data: equipment = [], isLoading } = useQuery({
     queryKey: ['equipment'],
     queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+  });
+
+  const { data: locations = [] } = useQuery({
+    queryKey: ['locations'],
+    queryFn: () => base44.entities.Location.list('-created_date', 100),
   });
 
   // Auto-select equipment from URL param
@@ -116,8 +128,10 @@ export default function Equipment() {
     },
   });
 
-  // Get unique locations for filter
-  const uniqueLocations = [...new Set(equipment.map(e => e.location).filter(Boolean))];
+  // Get unique locations — prefer Location entity, fall back to equipment data
+  const locationNames = locations.map(l => l.name);
+  const equipmentLocations = [...new Set(equipment.map(e => e.location).filter(Boolean))];
+  const uniqueLocations = [...new Set([...locationNames, ...equipmentLocations])].sort();
 
   const filteredEquipment = equipment.filter(e => {
     const matchesSearch = !searchQuery || 
@@ -174,19 +188,46 @@ export default function Equipment() {
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
       <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
+        {/* Location breadcrumb if filtered */}
+        {filterLocation !== 'all' && (
+          <div className="flex items-center gap-2 mb-4 text-sm">
+            <Link to="/Locations" className="text-indigo-600 hover:text-indigo-700 font-medium">Locations</Link>
+            <span className="text-slate-400">/</span>
+            <span className="text-slate-700 font-medium flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5" />
+              {filterLocation}
+            </span>
+            <Button variant="ghost" size="sm" onClick={() => setFilterLocation('all')} className="text-xs text-slate-400 ml-2 h-7">
+              <X className="w-3 h-3 mr-1" /> Clear
+            </Button>
+          </div>
+        )}
+
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
           <div>
             <h1 className="text-xl sm:text-2xl font-semibold text-slate-900">Equipment Management</h1>
-            <p className="text-sm text-slate-500">{equipment.length} total assets registered</p>
+            <p className="text-sm text-slate-500">
+              {filterLocation !== 'all'
+                ? `${filteredEquipment.length} assets at ${filterLocation}`
+                : `${equipment.length} total assets across ${uniqueLocations.length} locations`
+              }
+            </p>
           </div>
-          <Button 
-            onClick={() => { setEditingEquipment(null); setIsFormOpen(true); }}
-            className="bg-indigo-600 hover:bg-indigo-700 h-11"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Equipment
-          </Button>
+          <div className="flex items-center gap-2">
+            <Link to="/Locations">
+              <Button variant="outline" className="h-11">
+                <MapPin className="w-4 h-4 mr-2" /> Locations
+              </Button>
+            </Link>
+            <Button 
+              onClick={() => { setEditingEquipment(null); setIsFormOpen(true); }}
+              className="bg-indigo-600 hover:bg-indigo-700 h-11"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Equipment
+            </Button>
+          </div>
         </div>
 
         {/* Stats */}
@@ -507,6 +548,8 @@ export default function Equipment() {
         equipment={editingEquipment}
         onSave={handleSaveEquipment}
         isSaving={createMutation.isPending || updateMutation.isPending}
+        locations={locations}
+        defaultLocation={filterLocation !== 'all' ? filterLocation : ''}
       />
     </div>
   );

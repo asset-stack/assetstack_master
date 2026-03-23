@@ -22,7 +22,7 @@ const STATUSES = ['operational', 'degraded', 'critical', 'maintenance', 'offline
 const RISK_LEVELS = ['low', 'medium', 'high', 'critical'];
 const CRITICALITIES = ['low', 'medium', 'high', 'mission_critical'];
 
-export default function EquipmentForm({ open, onOpenChange, equipment, onSave, isSaving }) {
+export default function EquipmentForm({ open, onOpenChange, equipment, onSave, isSaving, locations = [], defaultLocation = '' }) {
   const isEditing = !!equipment?.id;
   
   const [formData, setFormData] = useState({
@@ -76,7 +76,7 @@ export default function EquipmentForm({ open, onOpenChange, equipment, onSave, i
       setFormData({
         name: '',
         type: 'motor',
-        location: '',
+        location: defaultLocation || '',
         manufacturer: '',
         model: '',
         serial_number: '',
@@ -170,12 +170,27 @@ export default function EquipmentForm({ open, onOpenChange, equipment, onSave, i
                 </div>
                 <div className="space-y-2">
                   <Label>Location *</Label>
-                  <Input
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    placeholder="Building / Zone / Area"
-                    required
-                  />
+                  {locations.length > 0 ? (
+                    <Select value={formData.location} onValueChange={(v) => setFormData({ ...formData, location: v })}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select location" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-60 bg-white">
+                        {locations.map(loc => (
+                          <SelectItem key={loc.id} value={loc.name}>
+                            {loc.name}{loc.code ? ` (${loc.code})` : ''}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Input
+                      value={formData.location}
+                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                      placeholder="Building / Zone / Area"
+                      required
+                    />
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label>Manufacturer</Label>
