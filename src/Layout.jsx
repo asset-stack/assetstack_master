@@ -37,6 +37,7 @@ const navItems = [
   { name: 'Job Board', icon: Briefcase, page: 'JobBoard' },
   { name: 'Contractor Portal', icon: Hammer, page: 'ContractorPortal' },
   { name: 'Roles & Permissions', icon: KeyRound, page: 'RoleManagement' },
+  { name: 'Settings', icon: Settings, page: 'Settings' },
 ];
 
 export default function Layout({ children, currentPageName }) {

@@ -14,6 +14,7 @@ import JobBoard from './pages/JobBoard';
 import ContractorPortal from './pages/ContractorPortal';
 import SetupGuide from './pages/SetupGuide';
 import DataImport from './pages/DataImport';
+import Settings from './pages/Settings';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -98,6 +99,11 @@ const AuthenticatedApp = () => {
       <Route path="/DataImport" element={
             <LayoutWrapper currentPageName="DataImport">
               <DataImport />
+            </LayoutWrapper>
+          } />
+      <Route path="/Settings" element={
+            <LayoutWrapper currentPageName="Settings">
+              <Settings />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />
