@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, Trash2 } from 'lucide-react';
+import { Loader2, Trash2, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ChatMessage from '@/components/ai-chat/ChatMessage';
 import ChatInput from '@/components/ai-chat/ChatInput';
 import SuggestedQuestions from '@/components/ai-chat/SuggestedQuestions';
+import DocumentManager from '@/components/ai-chat/DocumentManager';
 
 function buildContextSummary(data) {
   const lines = [];
@@ -65,6 +66,7 @@ function buildContextSummary(data) {
 export default function AIAssistant() {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showDocManager, setShowDocManager] = useState(false);
   const scrollRef = useRef(null);
 
   const { data: equipment } = useQuery({ queryKey: ['ai-equipment'], queryFn: () => base44.entities.Equipment.list(), initialData: [] });
@@ -74,6 +76,7 @@ export default function AIAssistant() {
   const { data: alerts } = useQuery({ queryKey: ['ai-alerts'], queryFn: () => base44.entities.Alert.list(), initialData: [] });
   const { data: spareParts } = useQuery({ queryKey: ['ai-spareparts'], queryFn: () => base44.entities.SparePart.list(), initialData: [] });
   const { data: sensors } = useQuery({ queryKey: ['ai-sensors'], queryFn: () => base44.entities.SensorConfiguration.list(), initialData: [] });
+  const { data: documents } = useQuery({ queryKey: ['asset-documents'], queryFn: () => base44.entities.AssetDocument.list(), initialData: [] });
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -88,12 +91,21 @@ export default function AIAssistant() {
 
     const context = buildContextSummary({ equipment, tasks, workOrders, technicians, alerts, spareParts, sensors });
 
+    // Build documentation knowledge base
+    const docsKnowledge = documents
+      .filter(d => d.extracted_content)
+      .map(d => `### ${d.name} (${d.document_type})\n${d.extracted_content}`)
+      .join('\n\n');
+
     const conversationHistory = messages.slice(-10).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
 
-    const prompt = `You are an expert AI assistant for AssetStack, an industrial asset management platform. You have access to all the organization's live data below. Answer the user's question accurately, concisely, and helpfully using ONLY the data provided. If data is insufficient, say so. Use markdown for formatting. Be specific with names, numbers, and dates.
+    const prompt = `You are an expert AI assistant for AssetStack, an industrial asset management platform. You have access to all the organization's live data AND their documentation library (user manuals, maintenance guides, SOPs, etc.). Answer questions accurately using both the live data and documentation. Use markdown for formatting. Be specific with names, numbers, and dates. Reference documentation when applicable.
 
 ## LIVE DATA SNAPSHOT
 ${context}
+
+## DOCUMENTATION & KNOWLEDGE BASE
+${docsKnowledge || 'No documentation uploaded yet.'}
 
 ## CONVERSATION HISTORY
 ${conversationHistory}
@@ -101,7 +113,10 @@ ${conversationHistory}
 ## USER QUESTION
 ${text}`;
 
-    const response = await base44.integrations.Core.InvokeLLM({ prompt });
+    const response = await base44.integrations.Core.InvokeLLM({ 
+      prompt,
+      model: 'claude_sonnet_4_6'
+    });
     setMessages(prev => [...prev, { role: 'assistant', content: response }]);
     setIsLoading(false);
   };
@@ -114,11 +129,16 @@ ${text}`;
           <h1 className="text-lg font-semibold text-slate-900">AI Assistant</h1>
           <p className="text-xs text-slate-500">Ask anything about your assets, tasks, and team</p>
         </div>
-        {messages.length > 0 && (
-          <Button variant="ghost" size="sm" onClick={() => setMessages([])} className="text-slate-400 hover:text-slate-600">
-            <Trash2 className="h-4 w-4 mr-1" /> Clear
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => setShowDocManager(true)} className="text-slate-600">
+            <BookOpen className="h-4 w-4 mr-1" /> Knowledge Base ({documents.length})
           </Button>
-        )}
+          {messages.length > 0 && (
+            <Button variant="ghost" size="sm" onClick={() => setMessages([])} className="text-slate-400 hover:text-slate-600">
+              <Trash2 className="h-4 w-4 mr-1" /> Clear
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Messages area */}
@@ -150,6 +170,9 @@ ${text}`;
 
       {/* Input */}
       <ChatInput onSend={handleSend} isLoading={isLoading} />
+
+      {/* Document Manager */}
+      <DocumentManager open={showDocManager} onClose={() => setShowDocManager(false)} />
     </div>
   );
 }
