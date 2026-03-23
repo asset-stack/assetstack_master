@@ -198,6 +198,7 @@ ${text}`;
     setMessages([]);
     setActiveSessionId(null);
     setLinkedWorkOrder({ id: null, title: null });
+    setShowHistory(false);
   };
 
   const handleSelectSession = (session) => {
