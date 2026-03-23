@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
 Deno.serve(async (req) => {
   const startTime = Date.now();
@@ -6,17 +6,13 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     
-    // This endpoint can be called with or without auth for webhook/IoT scenarios
-    // For production, you'd want to validate an API key from headers
-    const apiKey = req.headers.get('x-api-key');
-    
     const body = await req.json();
     const { readings, equipment_external_id, sensor_external_id, batch_id } = body;
     
     // Validate input
-    if (!readings || !Array.isArray(readings)) {
+    if (!readings || !Array.isArray(readings) || readings.length === 0) {
       return Response.json({ 
-        error: 'Invalid payload. Expected { readings: [...] }' 
+        error: 'Invalid payload. Expected { readings: [{equipment_id, sensor_type, value}, ...] }' 
       }, { status: 400 });
     }
     
@@ -44,48 +40,75 @@ Deno.serve(async (req) => {
           external_sensor_id
         } = reading;
         
-        // Determine equipment_id - either direct or lookup by external ID
+        // Determine equipment_id — either direct or lookup by external ID
         let resolvedEquipmentId = equipment_id;
         
         if (!resolvedEquipmentId && (external_equipment_id || equipment_external_id)) {
-          // Look up equipment by external ID or serial number
           const extId = external_equipment_id || equipment_external_id;
           const equipmentList = await base44.asServiceRole.entities.Equipment.filter({ 
             serial_number: extId 
           });
           if (equipmentList.length > 0) {
             resolvedEquipmentId = equipmentList[0].id;
+          } else {
+            // Try by name
+            const byName = await base44.asServiceRole.entities.Equipment.filter({ name: extId });
+            if (byName.length > 0) {
+              resolvedEquipmentId = byName[0].id;
+            }
           }
         }
         
-        if (!resolvedEquipmentId || !sensor_type || value === undefined) {
+        if (!resolvedEquipmentId || !sensor_type || value === undefined || value === null) {
           results.failed++;
-          results.errors.push(`Missing required fields for reading: ${JSON.stringify(reading).slice(0, 100)}`);
+          results.errors.push(`Missing required fields (equipment_id, sensor_type, value) for reading: ${JSON.stringify(reading).slice(0, 120)}`);
           continue;
         }
         
-        // Check if value exceeds thresholds
+        // Look up thresholds from sensor config if not provided
+        let effectiveThresholdMin = threshold_min;
+        let effectiveThresholdMax = threshold_max;
+        const sensorExtId = external_sensor_id || sensor_external_id;
+        
+        let matchedSensorConfig = null;
+        if (sensorExtId) {
+          const configs = await base44.asServiceRole.entities.SensorConfiguration.filter({ external_sensor_id: sensorExtId });
+          if (configs.length > 0) matchedSensorConfig = configs[0];
+        }
+        if (!matchedSensorConfig) {
+          const configs = await base44.asServiceRole.entities.SensorConfiguration.filter({ equipment_id: resolvedEquipmentId, sensor_type });
+          if (configs.length > 0) matchedSensorConfig = configs[0];
+        }
+        
+        if (matchedSensorConfig) {
+          if (effectiveThresholdMin === undefined) effectiveThresholdMin = matchedSensorConfig.threshold_min;
+          if (effectiveThresholdMax === undefined) effectiveThresholdMax = matchedSensorConfig.threshold_max;
+        }
+        
+        // Check anomaly
         let isAnomaly = false;
         let anomalyScore = 0;
         
-        if (threshold_min !== undefined && value < threshold_min) {
+        if (effectiveThresholdMin !== undefined && effectiveThresholdMin !== null && value < effectiveThresholdMin) {
           isAnomaly = true;
-          anomalyScore = Math.min(100, Math.abs((threshold_min - value) / threshold_min) * 100);
+          const denominator = Math.abs(effectiveThresholdMin) || 1;
+          anomalyScore = Math.min(100, Math.abs((effectiveThresholdMin - value) / denominator) * 100);
         }
-        if (threshold_max !== undefined && value > threshold_max) {
+        if (effectiveThresholdMax !== undefined && effectiveThresholdMax !== null && value > effectiveThresholdMax) {
           isAnomaly = true;
-          anomalyScore = Math.min(100, Math.abs((value - threshold_max) / threshold_max) * 100);
+          const denominator = Math.abs(effectiveThresholdMax) || 1;
+          anomalyScore = Math.min(100, Math.abs((value - effectiveThresholdMax) / denominator) * 100);
         }
         
         // Create sensor reading
         await base44.asServiceRole.entities.SensorReading.create({
           equipment_id: resolvedEquipmentId,
           sensor_type,
-          value,
+          value: parseFloat(value),
           unit: unit || getDefaultUnit(sensor_type),
           timestamp: timestamp || new Date().toISOString(),
-          threshold_min,
-          threshold_max,
+          threshold_min: effectiveThresholdMin,
+          threshold_max: effectiveThresholdMax,
           is_anomaly: isAnomaly,
           anomaly_score: anomalyScore
         });
@@ -96,35 +119,32 @@ Deno.serve(async (req) => {
         
         // If anomaly detected, create an alert
         if (isAnomaly && anomalyScore > 30) {
-          const equipment = await base44.asServiceRole.entities.Equipment.filter({ id: resolvedEquipmentId });
-          const equipmentName = equipment.length > 0 ? equipment[0].name : 'Unknown Equipment';
+          let equipmentName = 'Unknown Equipment';
+          try {
+            const eqList = await base44.asServiceRole.entities.Equipment.filter({ id: resolvedEquipmentId });
+            if (eqList.length > 0) equipmentName = eqList[0].name;
+          } catch (_) { /* ignore lookup failure */ }
           
           await base44.asServiceRole.entities.Alert.create({
             equipment_id: resolvedEquipmentId,
-            title: `${sensor_type} threshold exceeded on ${equipmentName}`,
-            message: `${sensor_type} reading of ${value} ${unit || ''} exceeded configured thresholds`,
+            title: `${sensor_type.replace(/_/g, ' ')} threshold exceeded on ${equipmentName}`,
+            message: `${sensor_type.replace(/_/g, ' ')} reading of ${value} ${unit || getDefaultUnit(sensor_type)} exceeded configured thresholds`,
             severity: anomalyScore > 70 ? 'critical' : anomalyScore > 50 ? 'warning' : 'info',
             type: 'threshold_exceeded',
             triggered_value: value,
-            threshold_value: value > (threshold_max || Infinity) ? threshold_max : threshold_min,
+            threshold_value: value > (effectiveThresholdMax || Infinity) ? effectiveThresholdMax : effectiveThresholdMin,
             sensor_type,
             status: 'active'
           });
         }
         
         // Update sensor configuration last reading
-        if (external_sensor_id || sensor_external_id) {
-          const sensorId = external_sensor_id || sensor_external_id;
-          const sensorConfigs = await base44.asServiceRole.entities.SensorConfiguration.filter({
-            external_sensor_id: sensorId
+        if (matchedSensorConfig) {
+          await base44.asServiceRole.entities.SensorConfiguration.update(matchedSensorConfig.id, {
+            last_reading_at: new Date().toISOString(),
+            last_reading_value: parseFloat(value),
+            status: 'online'
           });
-          if (sensorConfigs.length > 0) {
-            await base44.asServiceRole.entities.SensorConfiguration.update(sensorConfigs[0].id, {
-              last_reading_at: new Date().toISOString(),
-              last_reading_value: value,
-              status: 'online'
-            });
-          }
         }
         
       } catch (readingError) {
@@ -134,17 +154,19 @@ Deno.serve(async (req) => {
     }
     
     // Log the ingestion
-    await base44.asServiceRole.entities.DataIngestionLog.create({
-      source: apiKey ? 'api' : 'webhook',
-      status: results.failed === 0 ? 'success' : results.processed > 0 ? 'partial' : 'failed',
-      records_received: results.received,
-      records_processed: results.processed,
-      records_failed: results.failed,
-      equipment_ids: Array.from(results.equipment_ids),
-      sensor_types: Array.from(results.sensor_types),
-      error_message: results.errors.length > 0 ? results.errors.slice(0, 5).join('; ') : null,
-      processing_time_ms: Date.now() - startTime
-    });
+    try {
+      await base44.asServiceRole.entities.DataIngestionLog.create({
+        source: 'api',
+        status: results.failed === 0 ? 'success' : results.processed > 0 ? 'partial' : 'failed',
+        records_received: results.received,
+        records_processed: results.processed,
+        records_failed: results.failed,
+        equipment_ids: Array.from(results.equipment_ids),
+        sensor_types: Array.from(results.sensor_types),
+        error_message: results.errors.length > 0 ? results.errors.slice(0, 5).join('; ') : null,
+        processing_time_ms: Date.now() - startTime
+      });
+    } catch (_) { /* don't fail if logging fails */ }
     
     return Response.json({
       success: true,

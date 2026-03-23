@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 
 Deno.serve(async (req) => {
   const startTime = Date.now();
@@ -28,8 +28,8 @@ Deno.serve(async (req) => {
     
     // Default column mapping or use provided
     const mapping = column_mapping || {
-      equipment_id: headers.find(h => h.includes('equipment') && h.includes('id')) || 'equipment_id',
-      sensor_type: headers.find(h => h.includes('sensor') && h.includes('type')) || 'sensor_type',
+      equipment_id: headers.find(h => h.includes('equipment') && h.includes('id')) || headers.find(h => h === 'equipment_id') || 'equipment_id',
+      sensor_type: headers.find(h => h.includes('sensor') && h.includes('type')) || headers.find(h => h === 'sensor_type') || 'sensor_type',
       value: headers.find(h => h === 'value' || h === 'reading') || 'value',
       timestamp: headers.find(h => h.includes('timestamp') || h.includes('time') || h.includes('date')) || 'timestamp',
       unit: headers.find(h => h === 'unit') || 'unit'
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
     for (let i = 1; i < lines.length; i++) {
       try {
         const values = parseCSVLine(lines[i]);
-        if (values.length === 0) continue;
+        if (values.length === 0 || values.every(v => !v.trim())) continue;
         
         const row = {};
         headers.forEach((header, idx) => {
@@ -63,14 +63,14 @@ Deno.serve(async (req) => {
         
         if (!equipment_id || !sensor_type || isNaN(value)) {
           results.failed++;
-          results.errors.push(`Row ${i + 1}: Missing required fields`);
+          results.errors.push(`Row ${i + 1}: Missing required fields (equipment_id="${equipment_id}", sensor_type="${sensor_type}", value="${row[mapping.value]}")`);
           continue;
         }
         
         // Lookup equipment
         let resolvedEquipmentId = equipment_id;
         
-        // Check if it's a valid ID format or need to lookup
+        // Check if it's a valid UUID format or need to lookup
         if (!equipment_id.match(/^[a-f0-9-]{36}$/i)) {
           // Try to find by name or serial number
           const equipmentList = await base44.entities.Equipment.filter({ name: equipment_id });
@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
               resolvedEquipmentId = bySerial[0].id;
             } else {
               results.failed++;
-              results.errors.push(`Row ${i + 1}: Equipment not found: ${equipment_id}`);
+              results.errors.push(`Row ${i + 1}: Equipment not found: "${equipment_id}"`);
               continue;
             }
           }
@@ -102,13 +102,15 @@ Deno.serve(async (req) => {
         // Check anomaly
         let isAnomaly = false;
         let anomalyScore = 0;
-        if (threshold_min !== undefined && value < threshold_min) {
+        if (threshold_min !== undefined && threshold_min !== null && value < threshold_min) {
           isAnomaly = true;
-          anomalyScore = Math.min(100, Math.abs((threshold_min - value) / threshold_min) * 100);
+          const denom = Math.abs(threshold_min) || 1;
+          anomalyScore = Math.min(100, Math.abs((threshold_min - value) / denom) * 100);
         }
-        if (threshold_max !== undefined && value > threshold_max) {
+        if (threshold_max !== undefined && threshold_max !== null && value > threshold_max) {
           isAnomaly = true;
-          anomalyScore = Math.min(100, Math.abs((value - threshold_max) / threshold_max) * 100);
+          const denom = Math.abs(threshold_max) || 1;
+          anomalyScore = Math.min(100, Math.abs((value - threshold_max) / denom) * 100);
         }
         
         await base44.entities.SensorReading.create({
@@ -122,6 +124,15 @@ Deno.serve(async (req) => {
           is_anomaly: isAnomaly,
           anomaly_score: anomalyScore
         });
+        
+        // Update sensor config last reading
+        if (sensorConfigs.length > 0) {
+          await base44.entities.SensorConfiguration.update(sensorConfigs[0].id, {
+            last_reading_at: new Date().toISOString(),
+            last_reading_value: value,
+            status: 'online'
+          });
+        }
         
         results.processed++;
         results.equipment_ids.add(resolvedEquipmentId);
@@ -146,14 +157,6 @@ Deno.serve(async (req) => {
       processing_time_ms: Date.now() - startTime,
       file_name
     });
-    
-    // Update onboarding progress
-    const progress = await base44.entities.OnboardingProgress.filter({});
-    if (progress.length > 0 && results.processed > 0) {
-      await base44.entities.OnboardingProgress.update(progress[0].id, {
-        step_sensor_data_received: true
-      });
-    }
     
     return Response.json({
       success: true,
