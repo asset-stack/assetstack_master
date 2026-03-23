@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { 
   Activity, AlertTriangle, Wrench, Cpu, TrendingUp, Clock, 
-  RefreshCw, Settings, Bell, Search
+  RefreshCw, Settings, Bell, Search, ArrowRight
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -267,6 +268,56 @@ export default function Dashboard() {
             onAcknowledge={handleAcknowledgeAlert}
             onResolve={handleResolveAlert}
           />
+        </div>
+
+        {/* Active Tasks Quick View */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold text-slate-900">Active Tasks</h2>
+            <Link to="/Maintenance">
+              <Button variant="outline" size="sm" className="h-8 text-xs text-indigo-600 border-indigo-200 hover:bg-indigo-50">
+                View All Tasks <ArrowRight className="w-3.5 h-3.5 ml-1" />
+              </Button>
+            </Link>
+          </div>
+          {tasks.filter(t => t.status === 'scheduled' || t.status === 'in_progress').length === 0 ? (
+            <div className="bg-white rounded-xl border border-slate-200 p-6 text-center">
+              <Wrench className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+              <p className="text-sm text-slate-500">No active tasks</p>
+              <Link to="/Maintenance">
+                <Button size="sm" className="mt-3 bg-indigo-600 hover:bg-indigo-700 text-xs">Create a Task</Button>
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {tasks
+                .filter(t => t.status === 'scheduled' || t.status === 'in_progress')
+                .slice(0, 6)
+                .map(task => {
+                  const eq = equipment.find(e => e.id === task.equipment_id);
+                  const priorityColors = { urgent: 'bg-rose-100 text-rose-700', high: 'bg-amber-100 text-amber-700', medium: 'bg-blue-100 text-blue-700', low: 'bg-slate-100 text-slate-600' };
+                  return (
+                    <Link key={task.id} to="/Maintenance" className="block">
+                      <div className="bg-white rounded-xl border border-slate-200 p-4 hover:shadow-md hover:border-indigo-200 transition-all cursor-pointer">
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <p className="text-sm font-medium text-slate-800 line-clamp-1">{task.title}</p>
+                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0 ${priorityColors[task.priority] || 'bg-slate-100 text-slate-600'}`}>
+                            {task.priority}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 mb-2">{eq?.name || 'Unknown equipment'}</p>
+                        <div className="flex items-center justify-between">
+                          <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${task.status === 'in_progress' ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-600'}`}>
+                            {task.status === 'in_progress' ? 'In Progress' : 'Scheduled'}
+                          </span>
+                          {task.assigned_to && <span className="text-[10px] text-slate-400">{task.assigned_to}</span>}
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+            </div>
+          )}
         </div>
 
         {/* Equipment Grid */}
