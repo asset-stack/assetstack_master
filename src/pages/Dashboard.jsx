@@ -135,7 +135,11 @@ export default function Dashboard() {
               </div>
               <div className="min-w-0">
                 <h1 className="text-lg sm:text-xl font-bold text-slate-900 truncate">Dashboard</h1>
-                <p className="text-xs text-slate-500 hidden sm:block">AI-Powered Asset Health Monitoring</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-xs text-slate-500 hidden sm:block">Bunbury Council</p>
+                  <span className="hidden sm:inline text-xs text-slate-300">•</span>
+                  <p className="text-xs text-indigo-600 font-medium hidden sm:block">South West Sports Centre</p>
+                </div>
               </div>
               <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200/60 rounded-full ml-2">
                 <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />

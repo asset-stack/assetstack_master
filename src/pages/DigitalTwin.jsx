@@ -382,7 +382,7 @@ function AnomalyPanel({ anomalies, selectedAnomaly, onSelect, onClose }) {
 // Main Digital Twin Page
 export default function DigitalTwin() {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState('equipment');
+  const [activeTab, setActiveTab] = useState('walkthrough');
   const [selectedLocation, setSelectedLocation] = useState('all');
   const [selectedScan, setSelectedScan] = useState(null);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
@@ -461,6 +461,10 @@ export default function DigitalTwin() {
         
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="bg-slate-100 w-full sm:w-auto">
+            <TabsTrigger value="walkthrough" className="flex items-center gap-1.5 text-xs sm:text-sm flex-1 sm:flex-none">
+              <Eye className="w-4 h-4" />
+              3D Walkthrough
+            </TabsTrigger>
             <TabsTrigger value="equipment" className="flex items-center gap-1.5 text-xs sm:text-sm flex-1 sm:flex-none">
               <MapPin className="w-4 h-4" />
               Equipment Map
@@ -472,6 +476,23 @@ export default function DigitalTwin() {
           </TabsList>
         </Tabs>
       </div>
+
+      {/* 3D Walkthrough Tab */}
+      {activeTab === 'walkthrough' && (
+        <div className="h-[calc(100vh-140px)] bg-slate-900 relative">
+          <iframe
+            src="https://my.matterport.com/show/?m=4xXzHXiFbDV"
+            title="Matterport 3D Walkthrough"
+            className="w-full h-full border-0"
+            allowFullScreen
+            allow="xr-spatial-tracking"
+          />
+          <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm rounded-lg px-4 py-2 text-white">
+            <p className="text-sm font-medium">South West Sports Centre</p>
+            <p className="text-xs text-slate-300">Bunbury Council — Live Matterport Feed</p>
+          </div>
+        </div>
+      )}
 
       {/* Equipment Map Tab */}
       {activeTab === 'equipment' && (
