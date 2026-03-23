@@ -19,6 +19,7 @@ export default function AIAssistant() {
   const [isLoading, setIsLoading] = useState(false);
   const [showDocManager, setShowDocManager] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [historyCollapsed, setHistoryCollapsed] = useState(false);
   const [showSaveToWO, setShowSaveToWO] = useState(false);
   const [activeSessionId, setActiveSessionId] = useState(null);
   const [linkedWorkOrder, setLinkedWorkOrder] = useState({ id: null, title: null });
@@ -237,6 +238,8 @@ ${text}`;
         onDeleteSession={handleDeleteSession}
         isOpen={showHistory}
         onClose={() => setShowHistory(false)}
+        collapsed={historyCollapsed}
+        onToggleCollapse={() => setHistoryCollapsed(c => !c)}
       />
 
       {/* Main Chat Area */}
