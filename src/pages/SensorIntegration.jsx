@@ -24,6 +24,7 @@ import APIDocumentation from '@/components/sensors/APIDocumentation';
 import SensorMonitoringDashboard from '@/components/sensors/SensorMonitoringDashboard';
 import DataIngestionLogs from '@/components/sensors/DataIngestionLogs';
 import GenerateSampleData from '@/components/sensors/GenerateSampleData';
+import SendTestReading from '@/components/sensors/SendTestReading';
 
 const SENSOR_TYPES = [
   'vibration', 'temperature', 'pressure', 'current', 'voltage', 'flow_rate',
@@ -273,8 +274,12 @@ export default function SensorIntegration() {
               <FileText className="w-4 h-4 mr-2" />
               Ingestion Logs
             </TabsTrigger>
-            <TabsTrigger value="generate" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+            <TabsTrigger value="test" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
               <Zap className="w-4 h-4 mr-2" />
+              Test Reading
+            </TabsTrigger>
+            <TabsTrigger value="generate" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
+              <Server className="w-4 h-4 mr-2" />
               Generate Data
             </TabsTrigger>
           </TabsList>
@@ -411,6 +416,14 @@ export default function SensorIntegration() {
           {/* Ingestion Logs */}
           <TabsContent value="logs">
             <DataIngestionLogs logs={ingestionLogs} />
+          </TabsContent>
+
+          {/* Test Reading */}
+          <TabsContent value="test">
+            <SendTestReading 
+              equipment={equipment}
+              sensorConfigs={sensorConfigs}
+            />
           </TabsContent>
 
           {/* Generate Sample Data */}
