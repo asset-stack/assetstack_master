@@ -13,6 +13,7 @@ import RoleManagement from './pages/RoleManagement';
 import JobBoard from './pages/JobBoard';
 import ContractorPortal from './pages/ContractorPortal';
 import SetupGuide from './pages/SetupGuide';
+import DataImport from './pages/DataImport';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -92,6 +93,11 @@ const AuthenticatedApp = () => {
       <Route path="/SetupGuide" element={
             <LayoutWrapper currentPageName="SetupGuide">
               <SetupGuide />
+            </LayoutWrapper>
+          } />
+      <Route path="/DataImport" element={
+            <LayoutWrapper currentPageName="DataImport">
+              <DataImport />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />

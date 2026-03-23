@@ -20,6 +20,7 @@ const navItems = [
   { name: 'Manager View', icon: Shield, page: 'ManagerDashboard' },
   { name: 'My Profile', icon: UserCircle, page: 'MyProfile' },
   { name: 'Team', icon: Users, page: 'TeamDirectory' },
+  { name: 'Import Data', icon: Settings, page: 'DataImport' },
   { name: 'Setup Guide', icon: Sparkles, page: 'SetupGuide' },
   { name: 'Setup', icon: Settings, page: 'Onboarding' },
   { name: 'Locations', icon: MapPin, page: 'Locations' },
