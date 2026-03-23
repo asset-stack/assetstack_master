@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
   Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock,
-  UserCircle, Users, Shield, MessageSquare, MapPin
+  UserCircle, Users, Shield, MessageSquare, MapPin, KeyRound
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
@@ -32,6 +32,7 @@ const navItems = [
   { name: 'Analytics', icon: BarChart3, page: 'Analytics' },
   { name: 'Reports', icon: FileText, page: 'Reports' },
   { name: 'ML Models', icon: Settings, page: 'MLModels' },
+  { name: 'Roles & Permissions', icon: KeyRound, page: 'RoleManagement' },
 ];
 
 export default function Layout({ children, currentPageName }) {

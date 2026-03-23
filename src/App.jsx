@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AIAssistant from './pages/AIAssistant';
 import Locations from './pages/Locations';
+import RoleManagement from './pages/RoleManagement';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -68,6 +69,11 @@ const AuthenticatedApp = () => {
       <Route path="/Locations" element={
             <LayoutWrapper currentPageName="Locations">
               <Locations />
+            </LayoutWrapper>
+          } />
+      <Route path="/RoleManagement" element={
+            <LayoutWrapper currentPageName="RoleManagement">
+              <RoleManagement />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />
