@@ -16,7 +16,7 @@ export default function SuggestedQuestions({ onSelect }) {
       <div className="w-16 h-16 rounded-2xl bg-indigo-100 flex items-center justify-center mb-4">
         <MessageSquare className="w-8 h-8 text-indigo-600" />
       </div>
-      <h2 className="text-xl font-semibold text-slate-900 mb-1">AI Assistant</h2>
+      <h2 className="text-xl font-semibold text-slate-900 mb-1">AssetMind</h2>
       <p className="text-sm text-slate-500 mb-6 text-center max-w-sm">
         Ask me anything about your equipment, tasks, technicians, sensors, or inventory.
       </p>

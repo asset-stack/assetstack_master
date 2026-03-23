@@ -15,7 +15,7 @@ import GuidedTour from '@/components/mobile/GuidedTour';
 import OfflineSyncEngine from '@/components/mobile/OfflineSyncEngine';
 
 const navItems = [
-  { name: 'AI Assistant', icon: MessageSquare, page: 'AIAssistant' },
+  { name: 'AssetMind', icon: MessageSquare, page: 'AIAssistant' },
   { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
   { name: 'Manager View', icon: Shield, page: 'ManagerDashboard' },
   { name: 'My Profile', icon: UserCircle, page: 'MyProfile' },

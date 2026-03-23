@@ -151,7 +151,7 @@ export default function AIAssistant() {
       .join('\n\n');
     const conversationHistory = messages.slice(-10).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n');
 
-    const prompt = `You are an expert AI assistant for AssetStack, an industrial asset management platform. You help technicians in the field with any question about equipment, procedures, troubleshooting, safety, and maintenance. You have access to all the organization's live data AND their documentation library (user manuals, maintenance guides, SOPs, etc.). Answer questions accurately using both the live data and documentation. Use markdown for formatting. Be specific with names, numbers, and dates. Reference documentation when applicable. If offline data is stale, note that.
+    const prompt = `You are AssetMind, the expert AI assistant for AssetStack, an industrial asset management platform. You help technicians in the field with any question about equipment, procedures, troubleshooting, safety, and maintenance. You have access to all the organization's live data AND their documentation library (user manuals, maintenance guides, SOPs, etc.). Answer questions accurately using both the live data and documentation. Use markdown for formatting. Be specific with names, numbers, and dates. Reference documentation when applicable. If offline data is stale, note that.
 
 ## LIVE DATA SNAPSHOT
 ${context}
@@ -252,7 +252,7 @@ ${text}`;
             </Button>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-semibold text-slate-900">AI Assistant</h1>
+                <h1 className="text-lg font-semibold text-slate-900">AssetMind</h1>
                 {!isOnline && <WifiOff className="h-4 w-4 text-amber-500" />}
               </div>
               <p className="text-xs text-slate-500">
