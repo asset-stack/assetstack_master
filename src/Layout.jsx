@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
 import MobileBottomNav from '@/components/mobile/MobileBottomNav';
+import MobileHeader from '@/components/mobile/MobileHeader';
 import QuickActionsFAB from '@/components/mobile/QuickActionsFAB';
 import GuidedTour from '@/components/mobile/GuidedTour';
 import OfflineSyncEngine from '@/components/mobile/OfflineSyncEngine';
@@ -176,6 +177,7 @@ export default function Layout({ children, currentPageName }) {
         } lg:pt-0`}
         style={{ paddingTop: 'calc(56px + env(safe-area-inset-top, 0px))' }}
       >
+        <MobileHeader currentPageName={currentPageName} />
         <div className="max-w-[1480px] mx-auto pb-20 lg:pb-0">
           {children}
         </div>

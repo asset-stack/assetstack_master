@@ -51,6 +51,20 @@ html, body, #root {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Prevent text selection on non-text UI elements */
+button, a, [role="button"], nav, aside, header, footer,
+label, .select-none, img, svg, [data-radix-popper-content-wrapper] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Allow selection on text content areas */
+p, span, h1, h2, h3, h4, h5, h6, td, th, li, pre, code,
+input, textarea, [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 /* Focus visible for accessibility */
 :focus-visible {
   outline: 2px solid hsl(var(--ring));

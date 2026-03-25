@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Settings as SettingsIcon, Building2, Users, Shield, Bell, Database, ChevronRight } from 'lucide-react';
+import { Settings as SettingsIcon, Building2, Users, Shield, Bell, Database, ChevronRight, UserCog } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import GeneralSettings from '@/components/settings/GeneralSettings';
 import TeamSettings from '@/components/settings/TeamSettings';
 import NotificationSettings from '@/components/settings/NotificationSettings';
 import DataSettings from '@/components/settings/DataSettings';
+import AccountSettings from '@/components/settings/AccountSettings';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -23,6 +24,7 @@ const TAB_ITEMS = [
   { value: 'permissions', label: 'Roles & Permissions', icon: Shield, mobileLabel: 'Roles' },
   { value: 'notifications', label: 'Notifications', icon: Bell, mobileLabel: 'Alerts' },
   { value: 'data', label: 'Data & Integrations', icon: Database, mobileLabel: 'Data' },
+  { value: 'account', label: 'Account', icon: UserCog, mobileLabel: 'Account' },
 ];
 
 export default function Settings() {
@@ -96,6 +98,7 @@ export default function Settings() {
               {activeTab === 'permissions' && <EmbeddedRoleManagement />}
               {activeTab === 'notifications' && <NotificationSettings />}
               {activeTab === 'data' && <DataSettings />}
+              {activeTab === 'account' && <AccountSettings />}
             </div>
           </div>
         </div>
