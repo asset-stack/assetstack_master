@@ -33,8 +33,11 @@ const TECHNICIAN_PERMISSIONS = {
   admin: { manage_roles: false, manage_users: false, system_settings: false, view_analytics: false, manage_ml_models: false },
 };
 
+const USER_PERMISSIONS = ADMIN_PERMISSIONS;
+
 const BUILT_IN_ROLES = {
   admin: ADMIN_PERMISSIONS,
+  user: USER_PERMISSIONS,
   manager: MANAGER_PERMISSIONS,
   technician: TECHNICIAN_PERMISSIONS,
 };

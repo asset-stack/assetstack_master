@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 Deno.serve(async (req) => {
   try {
@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
       phone: phone || '',
       employee_id: employeeId,
       worker_type: 'contractor',
-      approval_status: 'pending', // becomes 'approved' when an org invites and contractor accepts
+      approval_status: 'approved',
       company_name: company_name || '',
       tax_id: tax_id || '',
       bio: bio || '',

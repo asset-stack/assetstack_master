@@ -60,10 +60,10 @@ export default function ContractorRegister() {
           </div>
           <h2 className="text-2xl font-bold text-slate-900 mb-2">Profile Created!</h2>
           <p className="text-slate-600 mb-4">
-            Your contractor profile has been created. You'll receive a login invitation at <strong>{form.email}</strong> shortly.
+            Your contractor profile has been created. You can now log in at <strong>{form.email}</strong> and access everything.
           </p>
           <p className="text-sm text-slate-500">
-            Organisations can now find and invite you to their teams by searching your email address.
+            Head to the Contractor Portal or Job Board to get started.
           </p>
         </motion.div>
       </div>
