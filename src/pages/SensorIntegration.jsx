@@ -25,6 +25,7 @@ import SensorMonitoringDashboard from '@/components/sensors/SensorMonitoringDash
 import DataIngestionLogs from '@/components/sensors/DataIngestionLogs';
 import GenerateSampleData from '@/components/sensors/GenerateSampleData';
 import SendTestReading from '@/components/sensors/SendTestReading';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 const SENSOR_TYPES = [
   'vibration', 'temperature', 'pressure', 'current', 'voltage', 'flow_rate',
@@ -100,6 +101,7 @@ export default function SensorIntegration() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
+      <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(['sensorConfigs']); await queryClient.invalidateQueries(['recentReadings']); }}>
       <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
@@ -436,6 +438,7 @@ export default function SensorIntegration() {
           </TabsContent>
         </Tabs>
       </div>
+      </PullToRefresh>
 
       {/* Sensor Config Detail Dialog */}
       <AnimatePresence>

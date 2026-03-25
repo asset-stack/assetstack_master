@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { motion } from 'framer-motion';
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import JobApplicationDialog from '@/components/contractor/JobApplicationDialog';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 const CATEGORY_COLORS = {
   maintenance: 'bg-blue-100 text-blue-700',
@@ -36,6 +37,7 @@ export default function JobBoard() {
   const [typeFilter, setTypeFilter] = useState('all');
   const [selectedJob, setSelectedJob] = useState(null);
   const [showApplyDialog, setShowApplyDialog] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: jobs = [], isLoading } = useQuery({
     queryKey: ['publicJobs'],
@@ -72,6 +74,7 @@ export default function JobBoard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-slate-50">
+      <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(['publicJobs']); }}>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
         {/* Header */}
         <div className="text-center mb-8">
@@ -232,6 +235,7 @@ export default function JobBoard() {
           </div>
         )}
       </div>
+      </PullToRefresh>
 
       {selectedJob && (
         <JobApplicationDialog

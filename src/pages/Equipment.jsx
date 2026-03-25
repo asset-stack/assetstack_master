@@ -19,6 +19,7 @@ import EquipmentForm from '@/components/equipment/EquipmentForm';
 import EquipmentStats from '@/components/equipment/EquipmentStats';
 import AssetHierarchy from '@/components/equipment/AssetHierarchy';
 import HealthGauge from '@/components/dashboard/HealthGauge';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 const EQUIPMENT_TYPES = [
   'motor', 'pump', 'compressor', 'turbine', 'conveyor', 
@@ -187,6 +188,7 @@ export default function Equipment() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
+      <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(['equipment']); await queryClient.invalidateQueries(['locations']); }}>
       <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Location breadcrumb if filtered */}
         {filterLocation !== 'all' && (
@@ -529,6 +531,7 @@ export default function Equipment() {
           </div>
         )}
       </div>
+      </PullToRefresh>
 
       <AnimatePresence>
         {selectedEquipment && viewMode !== 'hierarchy' && (

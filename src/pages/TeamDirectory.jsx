@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 
@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import PendingContractorsBanner from '@/components/team/PendingContractorsBanner';
 import InviteContractorDialog from '@/components/team/InviteContractorDialog';
 import PendingInvitations from '@/components/team/PendingInvitations';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 const LEVEL_COLORS = {
   junior: 'bg-slate-100 text-slate-700',
@@ -37,6 +38,7 @@ export default function TeamDirectory() {
   const [levelFilter, setLevelFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [inviteOpen, setInviteOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: technicians = [] } = useQuery({
     queryKey: ['technicians'],
@@ -72,6 +74,7 @@ export default function TeamDirectory() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(['technicians']); await queryClient.invalidateQueries(['kudos']); }}>
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-6 sm:mb-8">
@@ -233,6 +236,7 @@ export default function TeamDirectory() {
           </div>
         )}
       </div>
+      </PullToRefresh>
     </div>
   );
 }

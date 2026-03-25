@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
@@ -25,6 +25,7 @@ import ResourceOptimizer from '@/components/analytics/ResourceOptimizer';
 import PredictiveWorkflowConfig from '@/components/maintenance/PredictiveWorkflowConfig';
 import SuggestedTasksPanel from '@/components/maintenance/SuggestedTasksPanel';
 import RunPredictiveAnalysis from '@/components/maintenance/RunPredictiveAnalysis';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 // Metric definitions for user education
 const METRIC_DEFINITIONS = {
@@ -60,6 +61,7 @@ const METRIC_DEFINITIONS = {
 
 export default function Analytics() {
   const [timeRange, setTimeRange] = useState('30d');
+  const queryClient = useQueryClient();
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipment'],
@@ -326,6 +328,7 @@ export default function Analytics() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(['equipment']); await queryClient.invalidateQueries(['tasks']); await queryClient.invalidateQueries(['alerts']); }}>
       <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header with Explanation Banner */}
         <div className="bg-gradient-to-r from-indigo-50 via-blue-50 to-violet-50 border border-indigo-100 rounded-xl p-4 mb-6">
@@ -1091,6 +1094,7 @@ export default function Analytics() {
           </TabsContent>
         </Tabs>
       </div>
+      </PullToRefresh>
     </div>
   );
 }

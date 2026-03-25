@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import LocationForm from '@/components/locations/LocationForm';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 const TYPE_ICONS = {
   building: Building2,
@@ -64,6 +65,7 @@ export default function Locations() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
+      <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(['locations']); await queryClient.invalidateQueries(['equipment']); }}>
       <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
@@ -163,6 +165,7 @@ export default function Locations() {
           </div>
         )}
       </div>
+      </PullToRefresh>
 
       <LocationForm
         open={isFormOpen}

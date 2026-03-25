@@ -20,6 +20,7 @@ import WorkOrderList from '@/components/maintenance/WorkOrderList';
 import AISchedulerPanel from '@/components/maintenance/AISchedulerPanel';
 import TaskDetailsDialog from '@/components/maintenance/TaskDetailsDialog';
 import InlineAssetMind from '@/components/ai-chat/InlineAssetMind';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 const TASK_TYPES = ['preventive', 'predictive', 'corrective', 'emergency', 'inspection'];
 const PRIORITIES = ['low', 'medium', 'high', 'urgent'];
@@ -224,6 +225,7 @@ export default function Maintenance() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
+      <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(['tasks']); await queryClient.invalidateQueries(['workOrders']); await queryClient.invalidateQueries(['equipment']); }}>
       <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header */}
         <div className="flex flex-col gap-4 mb-6 sm:mb-8">
@@ -587,6 +589,7 @@ export default function Maintenance() {
           contextHint={`There are ${tasks.length} maintenance tasks total: ${scheduledCount} scheduled/in-progress, ${overdueCount} overdue, ${completedCount} completed. ${aiCount} are AI-recommended.`}
         />
       </div>
+      </PullToRefresh>
     </div>
   );
 }

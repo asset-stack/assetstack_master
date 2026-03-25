@@ -15,6 +15,7 @@ import { format } from 'date-fns';
 import PredictionPanel from '@/components/predictions/PredictionPanel';
 import HealthGauge from '@/components/dashboard/HealthGauge';
 import FailurePredictionModule from '@/components/predictions/FailurePredictionModule';
+import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 export default function Predictions() {
   const [selectedEquipment, setSelectedEquipment] = useState(null);
@@ -84,6 +85,7 @@ export default function Predictions() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-slate-900">
+      <PullToRefresh onRefresh={async () => { await queryClient.invalidateQueries(['equipment']); await queryClient.invalidateQueries(['predictions']); }}>
       <div className="max-w-[1800px] mx-auto px-4 sm:px-6 py-4 sm:py-8" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -372,6 +374,7 @@ export default function Predictions() {
           </TabsContent>
         </Tabs>
       </div>
+      </PullToRefresh>
     </div>
   );
 }
