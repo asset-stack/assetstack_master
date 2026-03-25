@@ -37,12 +37,19 @@ export default function ContractorRegister() {
       hourly_rate: form.hourly_rate ? parseFloat(form.hourly_rate) : 0,
     };
 
-    const response = await base44.functions.invoke('registerContractor', payload);
-    
-    if (response.data?.success) {
-      setSuccess(true);
-    } else {
-      setError(response.data?.error || 'Registration failed. Please try again.');
+    try {
+      const response = await base44.functions.invoke('registerContractor', payload);
+      if (response.data?.success) {
+        setSuccess(true);
+      } else {
+        setError(response.data?.error || 'Registration failed. Please try again.');
+      }
+    } catch (err) {
+      if (err?.response?.status === 409) {
+        setError('A contractor with this email already exists. Please log in instead.');
+      } else {
+        setError(err?.response?.data?.error || 'Registration failed. Please try again.');
+      }
     }
     setSubmitting(false);
   };
