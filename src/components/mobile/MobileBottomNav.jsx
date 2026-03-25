@@ -1,31 +1,34 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { LayoutDashboard, Cpu, Wrench, Brain, UserCircle } from 'lucide-react';
+import { LayoutDashboard, Cpu, Wrench, MessageSquare, UserCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const NAV_ITEMS = [
-  { name: 'Home', icon: LayoutDashboard, page: 'Dashboard' },
-  { name: 'Assets', icon: Cpu, page: 'Equipment' },
-  { name: 'Tasks', icon: Wrench, page: 'Maintenance' },
-  { name: 'AI', icon: Brain, page: 'Predictions' },
-  { name: 'Profile', icon: UserCircle, page: 'MyProfile' },
+  { name: 'Home', icon: LayoutDashboard, page: 'Dashboard', path: '/' },
+  { name: 'Assets', icon: Cpu, page: 'Equipment', path: '/Equipment' },
+  { name: 'Tasks', icon: Wrench, page: 'Maintenance', path: '/Maintenance' },
+  { name: 'AI Chat', icon: MessageSquare, page: 'AIAssistant', path: '/AIAssistant' },
+  { name: 'Profile', icon: UserCircle, page: 'MyProfile', path: '/MyProfile' },
 ];
 
 export default function MobileBottomNav({ currentPageName }) {
+  const location = useLocation();
+
   return (
     <div
-      className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200/80 z-50"
+      className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200/80 z-50 select-none"
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
       <nav className="flex items-center justify-around px-2 pt-1.5 pb-1">
         {NAV_ITEMS.map((item) => {
-          const isActive = currentPageName === item.page;
+          const isActive = currentPageName === item.page || 
+            (item.page === 'Dashboard' && location.pathname === '/');
           const Icon = item.icon;
           return (
             <Link
               key={item.page}
-              to={createPageUrl(item.page)}
+              to={item.path}
               className="flex flex-col items-center gap-0.5 py-1 px-3 min-w-[56px] relative"
             >
               {isActive && (
