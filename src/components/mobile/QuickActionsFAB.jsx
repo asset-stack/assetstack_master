@@ -15,7 +15,7 @@ export default function QuickActionsFAB() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="lg:hidden fixed z-50" style={{ bottom: 'calc(70px + env(safe-area-inset-bottom, 0px))', right: '16px' }}>
+    <div className="lg:hidden fixed z-50" style={{ bottom: 'calc(76px + env(safe-area-inset-bottom, 0px))', right: '16px' }}>
       <AnimatePresence>
         {open && (
           <>

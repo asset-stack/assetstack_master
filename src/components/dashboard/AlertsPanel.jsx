@@ -22,27 +22,28 @@ export default function AlertsPanel({ alerts = [], onAcknowledge, onResolve }) {
   const activeAlerts = alerts.filter(a => a.status === 'active');
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden h-full flex flex-col">
+    <div className="bg-white rounded-xl border border-slate-200/80 overflow-hidden h-full flex flex-col">
       <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <div className="p-2 bg-rose-50 rounded-lg">
             <Bell className="w-4 h-4 text-rose-600" />
           </div>
           <h3 className="text-sm font-semibold text-slate-900">Alerts</h3>
           {activeAlerts.length > 0 && (
-            <span className="px-2 py-0.5 bg-rose-50 text-rose-600 text-[10px] font-semibold rounded-full">
+            <span className="px-2 py-0.5 bg-rose-100 text-rose-600 text-[11px] font-semibold rounded-full">
               {activeAlerts.length}
             </span>
           )}
         </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto max-h-[280px]">
+      <div className="flex-1 overflow-y-auto max-h-[300px]">
         <AnimatePresence>
           {alerts.length === 0 ? (
-            <div className="p-6 text-center">
-              <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
-              <p className="text-sm text-slate-500">All systems operational</p>
+            <div className="p-8 text-center">
+              <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto mb-2" />
+              <p className="text-sm text-slate-500 font-medium">All systems operational</p>
+              <p className="text-xs text-slate-400 mt-0.5">No alerts at this time</p>
             </div>
           ) : (
             alerts.slice(0, 6).map((alert, idx) => {
@@ -66,36 +67,36 @@ export default function AlertsPanel({ alerts = [], onAcknowledge, onResolve }) {
                   leftColor="bg-emerald-500"
                   disabled={alert.status !== 'active'}
                 >
-                <div className={`p-3 border-b border-slate-100 ${config.bg} hover:bg-slate-50/50 transition-colors`}>
-                  <div className="flex gap-2.5">
-                    <div className={`relative ${config.iconColor} mt-0.5`}>
+                <div className={`p-3.5 border-b border-slate-100 ${config.bg} hover:brightness-[0.98] transition-all`}>
+                  <div className="flex gap-3">
+                    <div className={`relative ${config.iconColor} mt-0.5 shrink-0`}>
                       <Icon className="w-4 h-4" />
                       {config.pulse && alert.status === 'active' && (
-                        <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-rose-500 rounded-full animate-ping" />
+                        <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-rose-500 rounded-full animate-ping" />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
-                        <h4 className="text-xs font-medium text-slate-900 truncate">{alert.title}</h4>
-                        <span className="text-[10px] text-slate-400 whitespace-nowrap flex items-center gap-0.5">
-                          <Clock className="w-2.5 h-2.5" />
+                        <h4 className="text-xs font-semibold text-slate-900 line-clamp-1">{alert.title}</h4>
+                        <span className="text-[11px] text-slate-400 whitespace-nowrap flex items-center gap-0.5 shrink-0">
+                          <Clock className="w-3 h-3" />
                           {formatDistanceToNow(new Date(alert.created_date), { addSuffix: true })}
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-1">{alert.message}</p>
+                      <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{alert.message}</p>
                       {alert.status === 'active' && (
-                        <div className="flex gap-1.5 mt-2">
+                        <div className="flex gap-2 mt-2">
                           <Button 
                             size="sm" 
                             variant="outline" 
-                            className="h-6 text-[10px] px-2 bg-white border-slate-200 text-slate-600"
+                            className="h-7 text-[11px] px-2.5 bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
                             onClick={() => onAcknowledge && onAcknowledge(alert.id)}
                           >
                             Acknowledge
                           </Button>
                           <Button 
                             size="sm" 
-                            className="h-6 text-[10px] px-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+                            className="h-7 text-[11px] px-2.5 bg-emerald-600 hover:bg-emerald-700 text-white"
                             onClick={() => onResolve && onResolve(alert.id)}
                           >
                             Resolve

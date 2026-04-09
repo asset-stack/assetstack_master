@@ -27,17 +27,15 @@ body {
   padding-left: var(--sal);
 }
 
-/* Minimum touch target sizes (48x48px per Apple/Google guidelines) */
-button, a, [role="button"], input, select, textarea {
-  min-height: 44px;
-  min-width: 44px;
+/* Minimum touch target sizes — only for interactive standalone elements on mobile */
+@media (max-width: 1023px) {
+  button:not([class*="h-"]):not([class*="min-h"]),
+  [role="button"]:not([class*="h-"]):not([class*="min-h"]) {
+    min-height: 44px;
+  }
 }
 
-/* Exception for inline text links and icon-only buttons that handle their own sizing */
-a.inline-link, span > a {
-  min-height: unset;
-  min-width: unset;
-}
+/* Links keep standard sizing — touch targets handled by padding in components */
 
 /* Prevent horizontal overflow on mobile */
 html, body, #root {
@@ -49,6 +47,21 @@ html, body, #root {
 * {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Minimal scrollbar for sidebar and lists */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
 }
 
 /* Prevent text selection on non-text UI elements */

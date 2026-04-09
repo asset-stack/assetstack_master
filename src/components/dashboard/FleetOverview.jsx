@@ -40,8 +40,8 @@ export default function FleetOverview({ equipment = [] }) {
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 shadow-lg">
-          <p className="text-xs font-medium text-slate-900">{payload[0].name}: {payload[0].value}</p>
+        <div className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 shadow-xl">
+          <p className="text-xs font-medium text-white">{payload[0].name}: <span className="font-bold">{payload[0].value}</span></p>
         </div>
       );
     }
@@ -50,12 +50,12 @@ export default function FleetOverview({ equipment = [] }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
-      className="bg-white rounded-xl border border-slate-200 p-4 h-full"
+      transition={{ duration: 0.3 }}
+      className="bg-white rounded-xl border border-slate-200/80 p-4 h-full"
     >
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2.5 mb-4">
         <div className="p-2 bg-indigo-50 rounded-lg">
           <Activity className="w-4 h-4 text-indigo-600" />
         </div>
@@ -64,11 +64,11 @@ export default function FleetOverview({ equipment = [] }) {
       
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div>
-          <p className="text-[10px] text-slate-500 text-center uppercase tracking-wide mb-1">By Status</p>
-          <div className="h-[90px]">
+          <p className="text-[11px] text-slate-500 text-center uppercase tracking-wide mb-1">By Status</p>
+          <div className="h-[100px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={statusData} cx="50%" cy="50%" innerRadius={22} outerRadius={38} paddingAngle={3} dataKey="value">
+                <Pie data={statusData} cx="50%" cy="50%" innerRadius={24} outerRadius={40} paddingAngle={3} dataKey="value">
                   {statusData.map((entry, index) => (
                     <Cell key={index} fill={entry.color} stroke="transparent" />
                   ))}
@@ -79,11 +79,11 @@ export default function FleetOverview({ equipment = [] }) {
           </div>
         </div>
         <div>
-          <p className="text-[10px] text-slate-500 text-center uppercase tracking-wide mb-1">By Risk</p>
-          <div className="h-[90px]">
+          <p className="text-[11px] text-slate-500 text-center uppercase tracking-wide mb-1">By Risk</p>
+          <div className="h-[100px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={riskData} cx="50%" cy="50%" innerRadius={22} outerRadius={38} paddingAngle={3} dataKey="value">
+                <Pie data={riskData} cx="50%" cy="50%" innerRadius={24} outerRadius={40} paddingAngle={3} dataKey="value">
                   {riskData.map((entry, index) => (
                     <Cell key={index} fill={entry.color} stroke="transparent" />
                   ))}
@@ -95,21 +95,32 @@ export default function FleetOverview({ equipment = [] }) {
         </div>
       </div>
 
+      {/* Legend */}
+      <div className="flex flex-wrap gap-x-3 gap-y-1 mb-4 px-1">
+        {statusData.map(d => (
+          <div key={d.name} className="flex items-center gap-1">
+            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }} />
+            <span className="text-[10px] text-slate-500">{d.name} ({d.value})</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Summary stats */}
       <div className="grid grid-cols-3 gap-2">
         <div className="bg-slate-50 rounded-lg p-2.5 text-center">
-          <Cpu className="w-3.5 h-3.5 text-slate-500 mx-auto mb-0.5" />
-          <p className="text-base font-bold text-slate-900">{equipment.length}</p>
-          <p className="text-[9px] text-slate-500">Total</p>
+          <Cpu className="w-3.5 h-3.5 text-slate-500 mx-auto mb-1" />
+          <p className="text-base font-bold text-slate-900 tabular-nums">{equipment.length}</p>
+          <p className="text-[10px] text-slate-500">Total</p>
         </div>
         <div className="bg-emerald-50 rounded-lg p-2.5 text-center">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 mx-auto mb-0.5" />
-          <p className="text-base font-bold text-emerald-700">{avgHealth}%</p>
-          <p className="text-[9px] text-slate-500">Health</p>
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 mx-auto mb-1" />
+          <p className="text-base font-bold text-emerald-700 tabular-nums">{avgHealth}%</p>
+          <p className="text-[10px] text-slate-500">Health</p>
         </div>
         <div className="bg-rose-50 rounded-lg p-2.5 text-center">
-          <ShieldAlert className="w-3.5 h-3.5 text-rose-600 mx-auto mb-0.5" />
-          <p className="text-base font-bold text-rose-700">{atRisk}</p>
-          <p className="text-[9px] text-slate-500">At Risk</p>
+          <ShieldAlert className="w-3.5 h-3.5 text-rose-600 mx-auto mb-1" />
+          <p className="text-base font-bold text-rose-700 tabular-nums">{atRisk}</p>
+          <p className="text-[10px] text-slate-500">At Risk</p>
         </div>
       </div>
     </motion.div>

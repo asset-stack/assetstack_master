@@ -126,29 +126,29 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100/50">
-      {/* Header */}
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-2xl border-b border-slate-200/50 shadow-sm shadow-slate-100/50">
-        <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-          <div className="flex items-center justify-between gap-2">
+      {/* Header — desktop only sticky, mobile uses layout header */}
+      <header className="hidden lg:block sticky top-0 z-30 bg-white/80 backdrop-blur-2xl border-b border-slate-200/50 shadow-sm shadow-slate-100/50">
+        <div className="px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
                 <Activity className="w-5 h-5 text-white" />
               </div>
               <div className="min-w-0">
-                <h1 className="text-lg sm:text-xl font-bold text-slate-900 truncate">Dashboard</h1>
+                <h1 className="text-xl font-bold text-slate-900 truncate">Dashboard</h1>
                 <div className="flex items-center gap-2">
-                  <p className="text-xs text-slate-500 hidden sm:block">Bunbury Council</p>
-                  <span className="hidden sm:inline text-xs text-slate-300">•</span>
-                  <p className="text-xs text-indigo-600 font-medium hidden sm:block">South West Sports Centre</p>
+                  <p className="text-xs text-slate-500">Bunbury Council</p>
+                  <span className="text-xs text-slate-300">•</span>
+                  <p className="text-xs text-indigo-600 font-medium">South West Sports Centre</p>
                 </div>
               </div>
-              <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200/60 rounded-full ml-2">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200/60 rounded-full ml-2">
                 <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
                 <span className="text-[10px] text-emerald-700 font-semibold tracking-wide uppercase">Live</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-              <div className="relative hidden sm:block">
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="relative">
                 <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
                 <Input
                   placeholder="Search equipment..."
@@ -160,7 +160,7 @@ export default function Dashboard() {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-11 w-11 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 relative transition-colors"
+                className="h-10 w-10 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 relative transition-colors"
                 onClick={() => setShowNotifications(!showNotifications)}
               >
                 <Bell className="w-5 h-5" />
@@ -171,38 +171,52 @@ export default function Dashboard() {
                 )}
               </Button>
               <Link to="/Settings">
-                <Button variant="ghost" size="icon" className="h-11 w-11 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+                <Button variant="ghost" size="icon" className="h-10 w-10 rounded-lg bg-slate-50 text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors">
                   <Settings className="w-5 h-5" />
                 </Button>
               </Link>
             </div>
           </div>
-          {/* Mobile search */}
-          <div className="sm:hidden mt-3">
-            <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
-              <Input
-                placeholder="Search equipment..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 w-full h-10 bg-slate-50 border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 rounded-lg"
-              />
-            </div>
-          </div>
         </div>
       </header>
+
+      {/* Mobile sub-header: search + actions */}
+      <div className="lg:hidden px-4 pt-3 pb-2 flex items-center gap-2">
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
+          <Input
+            placeholder="Search equipment..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 w-full h-10 bg-white border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 rounded-lg"
+          />
+        </div>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="h-10 w-10 rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-slate-700 relative shrink-0"
+          onClick={() => setShowNotifications(!showNotifications)}
+        >
+          <Bell className="w-4 h-4" />
+          {activeAlerts > 0 && (
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center">
+              {activeAlerts > 9 ? '9+' : activeAlerts}
+            </span>
+          )}
+        </Button>
+      </div>
 
       <PullToRefresh onRefresh={async () => {
         await queryClient.invalidateQueries(['equipment']);
         await queryClient.invalidateQueries(['alerts']);
         await queryClient.invalidateQueries(['tasks']);
       }}>
-      <main className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
+      <main className="px-4 sm:px-6 lg:px-8 py-3 sm:py-6" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         {/* Onboarding Banner */}
         <OnboardingBanner />
         
-        {/* Metrics Row */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
+        {/* Metrics Row — 2 cols mobile, wraps cleanly with 5 items */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
           <MetricCard 
             title="Total Assets" 
             value={totalEquipment} 
@@ -242,6 +256,8 @@ export default function Dashboard() {
             color="rose"
             delay={0.4}
           />
+          {/* Invisible spacer to fill 6th slot on 2-col mobile grid, prevents orphan */}
+          <div className="sm:hidden" />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 mb-6">

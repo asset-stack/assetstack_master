@@ -2,10 +2,9 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
 
-// Pages considered "root" tabs — no back button shown
+// Pages that are bottom-tab roots — no back button shown
 const ROOT_PAGES = ['Dashboard', 'Equipment', 'Maintenance', 'AIAssistant', 'MyProfile'];
 
-// Titles for pages
 const PAGE_TITLES = {
   Dashboard: 'Dashboard',
   Equipment: 'Equipment',
@@ -39,24 +38,19 @@ export default function MobileHeader({ currentPageName }) {
   const isRoot = ROOT_PAGES.includes(currentPageName);
   const title = PAGE_TITLES[currentPageName] || currentPageName || '';
 
-  // Don't render on Dashboard — it has its own sticky header
-  if (currentPageName === 'Dashboard') return null;
+  // Root tabs don't need a sub-header (Dashboard has its own, others use layout header)
+  if (isRoot) return null;
 
   return (
-    <div
-      className="lg:hidden sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-slate-200/60 select-none"
-      style={{ minHeight: 48 }}
-    >
-      <div className="flex items-center gap-2 px-3 py-2">
-        {!isRoot && (
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center justify-center w-9 h-9 -ml-1 rounded-lg hover:bg-slate-100 active:bg-slate-200 transition-colors"
-          >
-            <ChevronLeft className="w-5 h-5 text-slate-700" />
-          </button>
-        )}
-        <h1 className={`text-base font-semibold text-slate-900 truncate ${isRoot ? 'pl-1' : ''}`}>
+    <div className="lg:hidden bg-white border-b border-slate-100 select-none">
+      <div className="flex items-center gap-1 px-2 py-1.5">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-slate-100 active:bg-slate-200 transition-colors"
+        >
+          <ChevronLeft className="w-5 h-5 text-slate-600" />
+        </button>
+        <h1 className="text-sm font-semibold text-slate-900 truncate">
           {title}
         </h1>
       </div>
