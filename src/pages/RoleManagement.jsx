@@ -16,10 +16,6 @@ export default function RoleManagement() {
   const [showDialog, setShowDialog] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
 
-  if (!can('admin', 'manage_roles')) {
-    return <AccessDenied message="Only administrators can manage roles and permissions." />;
-  }
-
   const { data: roles = [], isLoading } = useQuery({
     queryKey: ['roles'],
     queryFn: () => base44.entities.Role.list('name', 100),
@@ -39,6 +35,10 @@ export default function RoleManagement() {
     mutationFn: (id) => base44.entities.Role.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['roles'] }),
   });
+
+  if (!can('admin', 'manage_roles')) {
+    return <AccessDenied message="Only administrators can manage roles and permissions." />;
+  }
 
   // Build display list: system roles first, then custom
   const systemRoleEntries = ['admin', 'manager', 'technician'].map(name => {

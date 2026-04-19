@@ -114,10 +114,6 @@ function EmbeddedRoleManagement() {
   const [showDialog, setShowDialog] = React.useState(false);
   const [showUsers, setShowUsers] = React.useState(false);
 
-  if (!can('admin', 'manage_roles')) {
-    return <AccessDenied message="Only administrators can manage roles and permissions." />;
-  }
-
   const { data: roles = [] } = useQuery({
     queryKey: ['roles'],
     queryFn: () => base44.entities.Role.list('name', 100),
@@ -137,6 +133,10 @@ function EmbeddedRoleManagement() {
     mutationFn: (id) => base44.entities.Role.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['roles'] }),
   });
+
+  if (!can('admin', 'manage_roles')) {
+    return <AccessDenied message="Only administrators can manage roles and permissions." />;
+  }
 
   const systemRoleEntries = ['admin', 'manager', 'technician'].map(name => {
     const existing = roles.find(r => r.name === name && r.is_system_role);
