@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Cpu, Wrench, MessageSquare, UserCircle } from 'lucide-react';
+import { Sparkles, Cpu, Wrench, MessageSquare, UserCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const NAV_ITEMS = [
-  { name: 'Home', icon: LayoutDashboard, page: 'Dashboard', path: '/' },
+  { name: 'Home', icon: Sparkles, page: 'CommandCenter', path: '/' },
   { name: 'Assets', icon: Cpu, page: 'Equipment', path: '/Equipment' },
   { name: 'Tasks', icon: Wrench, page: 'Maintenance', path: '/Maintenance' },
   { name: 'AI', icon: MessageSquare, page: 'AIAssistant', path: '/AIAssistant' },
@@ -22,7 +22,7 @@ export default function MobileBottomNav({ currentPageName }) {
       <nav className="flex items-center justify-around px-1 h-[56px]">
         {NAV_ITEMS.map((item) => {
           const isActive = currentPageName === item.page || 
-            (item.page === 'Dashboard' && location.pathname === '/');
+            (item.page === 'CommandCenter' && location.pathname === '/');
           const Icon = item.icon;
           return (
             <Link

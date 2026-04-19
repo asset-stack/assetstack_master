@@ -15,6 +15,7 @@ import ContractorPortal from './pages/ContractorPortal';
 import SetupGuide from './pages/SetupGuide';
 import DataImport from './pages/DataImport';
 import Settings from './pages/Settings';
+import CommandCenter from './pages/CommandCenter';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -51,7 +52,17 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/" element={
-        <LayoutWrapper currentPageName={mainPageKey}>
+        <LayoutWrapper currentPageName="CommandCenter">
+          <CommandCenter />
+        </LayoutWrapper>
+      } />
+      <Route path="/CommandCenter" element={
+        <LayoutWrapper currentPageName="CommandCenter">
+          <CommandCenter />
+        </LayoutWrapper>
+      } />
+      <Route path="/Dashboard" element={
+        <LayoutWrapper currentPageName="Dashboard">
           <MainPage />
         </LayoutWrapper>
       } />

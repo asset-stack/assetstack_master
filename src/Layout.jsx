@@ -20,6 +20,7 @@ const navSections = [
   {
     label: null,
     items: [
+      { name: 'Command Center', icon: Sparkles, page: 'CommandCenter' },
       { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
       { name: 'AssetMind', icon: MessageSquare, page: 'AIAssistant' },
     ]
