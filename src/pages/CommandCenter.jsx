@@ -110,6 +110,38 @@ export default function CommandCenter() {
             </div>
           </div>
 
+          {/* Quick links */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5"
+          >
+            {[
+              { label: 'Equipment', to: '/Equipment', icon: Cpu, iconBg: 'bg-blue-50', iconColor: 'text-blue-600' },
+              { label: 'Maintenance', to: '/Maintenance', icon: Wrench, iconBg: 'bg-indigo-50', iconColor: 'text-indigo-600' },
+              { label: 'Predictions', to: '/Predictions', icon: TrendingUp, iconBg: 'bg-violet-50', iconColor: 'text-violet-600' },
+              { label: 'Analytics', to: '/Analytics', icon: Activity, iconBg: 'bg-emerald-50', iconColor: 'text-emerald-600' },
+            ].map(link => {
+              const Icon = link.icon;
+              return (
+                <Link key={link.to} to={link.to}>
+                  <div className="bg-white rounded-xl border border-slate-200 p-4 hover:border-indigo-300 hover:shadow-md transition-all group">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-9 h-9 rounded-lg ${link.iconBg} flex items-center justify-center`}>
+                          <Icon className={`w-4 h-4 ${link.iconColor}`} />
+                        </div>
+                        <span className="text-sm font-semibold text-slate-700">{link.label}</span>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-indigo-500 group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </motion.div>
+
           {/* Morning Briefing */}
           <div className="mb-5">
             <MorningBriefing
@@ -154,37 +186,6 @@ export default function CommandCenter() {
             </div>
           </div>
 
-          {/* Quick links footer */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-3"
-          >
-            {[
-              { label: 'Equipment', to: '/Equipment', icon: Cpu, iconBg: 'bg-blue-50', iconColor: 'text-blue-600' },
-              { label: 'Maintenance', to: '/Maintenance', icon: Wrench, iconBg: 'bg-indigo-50', iconColor: 'text-indigo-600' },
-              { label: 'Predictions', to: '/Predictions', icon: TrendingUp, iconBg: 'bg-violet-50', iconColor: 'text-violet-600' },
-              { label: 'Analytics', to: '/Analytics', icon: Activity, iconBg: 'bg-emerald-50', iconColor: 'text-emerald-600' },
-            ].map(link => {
-              const Icon = link.icon;
-              return (
-                <Link key={link.to} to={link.to}>
-                  <div className="bg-white rounded-xl border border-slate-200 p-4 hover:border-indigo-300 hover:shadow-md transition-all group">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-9 h-9 rounded-lg ${link.iconBg} flex items-center justify-center`}>
-                          <Icon className={`w-4 h-4 ${link.iconColor}`} />
-                        </div>
-                        <span className="text-sm font-semibold text-slate-700">{link.label}</span>
-                      </div>
-                      <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-indigo-500 group-hover:translate-x-0.5 transition-all" />
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </motion.div>
         </main>
       </PullToRefresh>
     </div>
