@@ -1,0 +1,78 @@
+{
+  "name": "NetworkNode",
+  "type": "object",
+  "properties": {
+    "network_id": {
+      "type": "string",
+      "description": "Reference to parent AssetNetwork"
+    },
+    "name": {
+      "type": "string",
+      "description": "Node name (e.g. 'Central Station', 'Pump #42', 'Signal Box 7')"
+    },
+    "node_type": {
+      "type": "string",
+      "enum": [
+        "station",
+        "junction",
+        "sensor",
+        "checkpoint",
+        "facility",
+        "equipment",
+        "endpoint",
+        "substation",
+        "valve",
+        "custom"
+      ],
+      "default": "custom"
+    },
+    "lat": {
+      "type": "number",
+      "description": "Latitude"
+    },
+    "lng": {
+      "type": "number",
+      "description": "Longitude"
+    },
+    "zone": {
+      "type": "string",
+      "description": "Zone or region label"
+    },
+    "condition": {
+      "type": "string",
+      "enum": [
+        "operational",
+        "degraded",
+        "critical",
+        "maintenance",
+        "offline"
+      ],
+      "default": "operational"
+    },
+    "sensors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of sensor types attached (vibration, temperature, voltage, etc.)"
+    },
+    "equipment_id": {
+      "type": "string",
+      "description": "Optional link to an Equipment record"
+    },
+    "order_index": {
+      "type": "number",
+      "description": "Position in the network sequence (for path drawing)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-text notes"
+    }
+  },
+  "required": [
+    "network_id",
+    "name",
+    "lat",
+    "lng"
+  ]
+}

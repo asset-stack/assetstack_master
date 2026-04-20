@@ -90,6 +90,8 @@ export default function NetworkDrilldownMap({
   focusStation,
   onClose,
   onSelectStation,
+  onNodeAction, // (node) => void — fires when user clicks a node/checkpoint for actions
+  title = 'Network Drill-down',
 }) {
   const [mapRef, setMapRef] = useState(null);
   const [viewInfo, setViewInfo] = useState({ zoom: 10, center: null });
@@ -138,7 +140,7 @@ export default function NetworkDrilldownMap({
           </button>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-bold text-white truncate">Network Drill-down</h2>
+              <h2 className="text-lg font-bold text-white truncate">{title}</h2>
               <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-indigo-500 to-fuchsia-500 text-white text-[10px] font-bold tracking-wider uppercase">
                 Live • Zoom {viewInfo.zoom}
               </span>
@@ -270,6 +272,14 @@ export default function NetworkDrilldownMap({
                       <div className="mt-2 font-mono text-[10px] text-slate-500">
                         {cp.lat.toFixed(6)}°, {cp.lng.toFixed(6)}°
                       </div>
+                      {onNodeAction && (
+                        <button
+                          onClick={() => onNodeAction(cp)}
+                          className="mt-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-1.5 rounded transition-colors"
+                        >
+                          ⚡ Create Task / Work Order
+                        </button>
+                      )}
                     </div>
                   </Popup>
                 </CircleMarker>
@@ -325,6 +335,14 @@ export default function NetworkDrilldownMap({
                         <div>lat: {s.lat.toFixed(6)}°</div>
                         <div>lng: {s.lng.toFixed(6)}°</div>
                       </div>
+                      {onNodeAction && (
+                        <button
+                          onClick={() => onNodeAction(s)}
+                          className="mt-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-1.5 rounded transition-colors"
+                        >
+                          ⚡ Create Task / Work Order
+                        </button>
+                      )}
                     </div>
                   </Popup>
                 </CircleMarker>

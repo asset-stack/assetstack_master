@@ -1,0 +1,68 @@
+{
+  "name": "AssetNetwork",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the network (e.g. 'Western Rail Line', 'Power Grid North')"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this network represents"
+    },
+    "asset_category": {
+      "type": "string",
+      "enum": [
+        "rail",
+        "power",
+        "water",
+        "gas",
+        "telecom",
+        "road",
+        "building",
+        "pipeline",
+        "sensor_network",
+        "other"
+      ],
+      "default": "other",
+      "description": "Type of infrastructure"
+    },
+    "color": {
+      "type": "string",
+      "default": "#6366f1",
+      "description": "Hex color used to draw this network on the map"
+    },
+    "focus_lat": {
+      "type": "number",
+      "description": "Center latitude for the globe view"
+    },
+    "focus_lng": {
+      "type": "number",
+      "description": "Center longitude for the globe view"
+    },
+    "node_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Cached count of nodes in this network"
+    },
+    "line_order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ordered list of NetworkNode IDs \u2014 defines the polyline path"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived",
+        "draft"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
