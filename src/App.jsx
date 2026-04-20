@@ -17,6 +17,7 @@ import DataImport from './pages/DataImport';
 import Settings from './pages/Settings';
 import CommandCenter from './pages/CommandCenter';
 import AssetTree from './pages/AssetTree';
+import NetworkGlobePage from './pages/NetworkGlobe';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -121,6 +122,11 @@ const AuthenticatedApp = () => {
       <Route path="/AssetTree" element={
             <LayoutWrapper currentPageName="AssetTree">
               <AssetTree />
+            </LayoutWrapper>
+          } />
+      <Route path="/NetworkGlobe" element={
+            <LayoutWrapper currentPageName="NetworkGlobe">
+              <NetworkGlobePage />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />
