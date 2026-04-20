@@ -1,11 +1,12 @@
 import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Globe2, Train, Sparkles, Activity, AlertTriangle, CheckCircle2, Radio,
-  ZoomIn, ZoomOut, Play, Pause, Locate, RotateCcw, Crosshair
+  ZoomIn, ZoomOut, Play, Pause, Locate, RotateCcw, Crosshair, Maximize
 } from 'lucide-react';
 import NetworkGlobe from '@/components/network-globe/NetworkGlobe';
 import NetworkLineOverlay from '@/components/network-globe/NetworkLineOverlay';
+import NetworkDrilldownMap from '@/components/network-globe/NetworkDrilldownMap';
 import StationList from '@/components/network-globe/StationList';
 import { WESTERN_LINE_STATIONS, NSW_FOCUS } from '@/components/network-globe/westernLineData';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +20,8 @@ export default function NetworkGlobePage() {
   const [zoom, setZoom] = useState(1);
   const [autoRotate, setAutoRotate] = useState(true);
   const [view, setView] = useState({ phi: 0, theta: 0, size: 640 });
+  const [drilldownOpen, setDrilldownOpen] = useState(false);
+  const [drilldownStation, setDrilldownStation] = useState(null);
 
   const markers = useMemo(() => (showDemo ? WESTERN_LINE_STATIONS : []), [showDemo]);
 
@@ -33,9 +36,8 @@ export default function NetworkGlobePage() {
 
   const flyToStation = useCallback((station) => {
     setSelected(station);
-    setAutoRotate(false);
-    setZoom((z) => Math.max(z, 2.2));
-    globeRef.current?.flyTo(station.lat, station.lng);
+    setDrilldownStation(station);
+    setDrilldownOpen(true);
   }, []);
 
   const resetView = useCallback(() => {
@@ -89,13 +91,21 @@ export default function NetworkGlobePage() {
 
           <div className="flex items-center gap-2 flex-wrap">
             <Button
+              size="sm"
+              onClick={() => { setDrilldownStation(null); setDrilldownOpen(true); }}
+              className="bg-gradient-to-r from-fuchsia-500 to-indigo-500 border-0 hover:opacity-90 gap-2 shadow-lg shadow-fuchsia-500/30"
+            >
+              <Maximize className="w-4 h-4" />
+              Inspect Network
+            </Button>
+            <Button
               variant="outline"
               size="sm"
               onClick={focusOnNetwork}
               className="bg-gradient-to-r from-indigo-500/20 to-violet-500/20 border-indigo-400/40 text-white hover:bg-indigo-500/30 gap-2"
             >
               <Crosshair className="w-4 h-4" />
-              Focus Network
+              Focus Globe
             </Button>
             <Button
               variant={showDemo ? 'default' : 'outline'}
@@ -285,9 +295,21 @@ export default function NetworkGlobePage() {
 
         <p className="text-center text-[11px] text-white/30 mt-4">
           Station coordinates from Transport for NSW open data (GTFS) •
-          Any geotagged asset — rail, power, water, buildings, sensors — can be plotted here.
+          Click "Inspect Network" or any station to drill down to street-level detail.
         </p>
       </main>
+
+      {/* Street-level drill-down */}
+      <AnimatePresence>
+        {drilldownOpen && (
+          <NetworkDrilldownMap
+            stations={markers}
+            focusStation={drilldownStation}
+            onClose={() => setDrilldownOpen(false)}
+            onSelectStation={(s) => { setSelected(s); setDrilldownStation(s); }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
