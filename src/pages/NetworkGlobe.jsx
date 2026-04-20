@@ -1,15 +1,24 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Globe2, Train, Sparkles, Activity, AlertTriangle, CheckCircle2, Radio } from 'lucide-react';
+import {
+  Globe2, Train, Sparkles, Activity, AlertTriangle, CheckCircle2, Radio,
+  ZoomIn, ZoomOut, Play, Pause, Locate, RotateCcw, Crosshair
+} from 'lucide-react';
 import NetworkGlobe from '@/components/network-globe/NetworkGlobe';
+import NetworkLineOverlay from '@/components/network-globe/NetworkLineOverlay';
 import StationList from '@/components/network-globe/StationList';
 import { WESTERN_LINE_STATIONS, NSW_FOCUS } from '@/components/network-globe/westernLineData';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 export default function NetworkGlobePage() {
+  const globeRef = useRef(null);
   const [hovered, setHovered] = useState(null);
+  const [selected, setSelected] = useState(null);
   const [showDemo, setShowDemo] = useState(true);
+  const [zoom, setZoom] = useState(1);
+  const [autoRotate, setAutoRotate] = useState(true);
+  const [view, setView] = useState({ phi: 0, theta: 0, size: 640 });
 
   const markers = useMemo(() => (showDemo ? WESTERN_LINE_STATIONS : []), [showDemo]);
 
@@ -20,9 +29,30 @@ export default function NetworkGlobePage() {
     critical: markers.filter((s) => s.condition === 'critical').length,
   }), [markers]);
 
+  const handleViewChange = useCallback((v) => setView(v), []);
+
+  const flyToStation = useCallback((station) => {
+    setSelected(station);
+    setAutoRotate(false);
+    setZoom((z) => Math.max(z, 2.2));
+    globeRef.current?.flyTo(station.lat, station.lng);
+  }, []);
+
+  const resetView = useCallback(() => {
+    setZoom(1);
+    setAutoRotate(true);
+    setSelected(null);
+    globeRef.current?.flyTo(NSW_FOCUS.lat, NSW_FOCUS.lng);
+  }, []);
+
+  const focusOnNetwork = useCallback(() => {
+    setAutoRotate(false);
+    setZoom(2.4);
+    globeRef.current?.flyTo(NSW_FOCUS.lat, NSW_FOCUS.lng);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white">
-      {/* Animated grid background */}
       <div
         className="fixed inset-0 pointer-events-none opacity-30"
         style={{
@@ -51,13 +81,22 @@ export default function NetworkGlobePage() {
                   </Badge>
                 </div>
                 <p className="text-sm text-white/50 mt-0.5">
-                  Geospatial asset visualization • WebGL-powered
+                  Geospatial asset visualization • WebGL-powered • Drill down into intersections
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={focusOnNetwork}
+              className="bg-gradient-to-r from-indigo-500/20 to-violet-500/20 border-indigo-400/40 text-white hover:bg-indigo-500/30 gap-2"
+            >
+              <Crosshair className="w-4 h-4" />
+              Focus Network
+            </Button>
             <Button
               variant={showDemo ? 'default' : 'outline'}
               size="sm"
@@ -68,7 +107,7 @@ export default function NetworkGlobePage() {
               }
             >
               <Train className="w-4 h-4" />
-              {showDemo ? 'Demo: NSW T1 Western Line' : 'Load NSW Demo'}
+              {showDemo ? 'NSW T1 Western' : 'Load Demo'}
             </Button>
           </div>
         </div>
@@ -91,13 +130,11 @@ export default function NetworkGlobePage() {
             className="relative rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-br from-slate-900/80 via-slate-900/50 to-indigo-950/60 backdrop-blur-xl"
             style={{ minHeight: 640 }}
           >
-            {/* Corner frame decorations */}
             <FrameCorner pos="top-left" />
             <FrameCorner pos="top-right" />
             <FrameCorner pos="bottom-left" />
             <FrameCorner pos="bottom-right" />
 
-            {/* Scan line */}
             <motion.div
               className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-400/70 to-transparent pointer-events-none z-10"
               animate={{ top: ['0%', '100%', '0%'] }}
@@ -115,28 +152,105 @@ export default function NetworkGlobePage() {
               </span>
             </div>
 
-            {/* Region chip */}
-            <div className="absolute top-4 right-4 z-10 bg-black/40 backdrop-blur-sm border border-white/10 rounded-full px-3 py-1.5">
-              <span className="text-[10px] font-semibold tracking-wider uppercase text-white/80">
-                NSW, Australia • 33°S 150°E
-              </span>
+            {/* Region + zoom chip */}
+            <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+              <div className="bg-black/40 backdrop-blur-sm border border-white/10 rounded-full px-3 py-1.5">
+                <span className="text-[10px] font-semibold tracking-wider uppercase text-white/80 font-mono">
+                  {zoom.toFixed(1)}× • NSW, AU
+                </span>
+              </div>
             </div>
 
-            {/* Globe canvas */}
-            <div className="w-full flex items-center justify-center" style={{ height: 640 }}>
+            {/* Globe canvas + line overlay */}
+            <div className="relative w-full flex items-center justify-center" style={{ height: 640 }}>
               <NetworkGlobe
+                ref={globeRef}
                 markers={markers}
                 focus={NSW_FOCUS}
                 onMarkerHover={setHovered}
                 theme="dark"
-                autoRotate
+                autoRotate={autoRotate}
+                zoom={zoom}
+                onViewChange={handleViewChange}
               />
+
+              {/* Network line overlay — only visible when zoomed in */}
+              {showDemo && zoom >= 1.6 && (
+                <div
+                  className="absolute pointer-events-none"
+                  style={{
+                    width: view.size,
+                    height: view.size,
+                    opacity: Math.min(1, (zoom - 1.4) / 0.8),
+                    transition: 'opacity 0.3s ease',
+                  }}
+                >
+                  <NetworkLineOverlay
+                    stations={markers}
+                    phi={view.phi}
+                    theta={view.theta}
+                    size={view.size}
+                    label="T1 Western Line"
+                  />
+                </div>
+              )}
             </div>
 
-            {/* Hint */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-black/40 backdrop-blur-sm border border-white/10 rounded-full px-4 py-1.5">
+            {/* Zoom / playback control cluster */}
+            <div className="absolute bottom-4 right-4 z-20 flex flex-col gap-1.5 bg-black/50 backdrop-blur-md border border-white/10 rounded-xl p-1.5 shadow-2xl">
+              <ControlBtn
+                onClick={() => setZoom((z) => Math.min(4, +(z + 0.4).toFixed(2)))}
+                title="Zoom in"
+              >
+                <ZoomIn className="w-4 h-4" />
+              </ControlBtn>
+              <div className="text-[9px] text-white/50 text-center font-mono py-0.5">
+                {zoom.toFixed(1)}×
+              </div>
+              <ControlBtn
+                onClick={() => setZoom((z) => Math.max(1, +(z - 0.4).toFixed(2)))}
+                title="Zoom out"
+              >
+                <ZoomOut className="w-4 h-4" />
+              </ControlBtn>
+              <div className="h-px bg-white/10 my-1" />
+              <ControlBtn
+                onClick={() => setAutoRotate((r) => !r)}
+                title={autoRotate ? 'Pause rotation' : 'Resume rotation'}
+                active={!autoRotate}
+              >
+                {autoRotate ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              </ControlBtn>
+              <ControlBtn onClick={resetView} title="Reset view">
+                <RotateCcw className="w-4 h-4" />
+              </ControlBtn>
+            </div>
+
+            {/* Selected station coordinate readout */}
+            {selected && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute bottom-4 left-4 z-10 bg-black/60 backdrop-blur-md border border-indigo-400/40 rounded-xl px-4 py-2.5 shadow-2xl"
+              >
+                <div className="flex items-center gap-2">
+                  <Locate className="w-3.5 h-3.5 text-indigo-300" />
+                  <span className="text-[10px] font-semibold tracking-wider uppercase text-indigo-200">
+                    Focused Station
+                  </span>
+                </div>
+                <p className="text-sm font-bold text-white mt-0.5">{selected.name}</p>
+                <p className="text-[10px] text-white/50 font-mono mt-0.5">
+                  {selected.lat.toFixed(5)}° S, {selected.lng.toFixed(5)}° E
+                </p>
+                <p className="text-[10px] text-white/40 mt-0.5">{selected.zone}</p>
+              </motion.div>
+            )}
+
+            {/* Hint bar */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-black/40 backdrop-blur-sm border border-white/10 rounded-full px-4 py-1.5 hidden md:block">
               <span className="text-[10px] font-medium text-white/60">
-                🖱️ Drag to rotate • Hover stations for details
+                🖱️ Drag to rotate • Scroll wheel or buttons to zoom • Click a station to drill down
               </span>
             </div>
           </motion.div>
@@ -157,22 +271,40 @@ export default function NetworkGlobePage() {
               <p className="text-xs text-white/50 mt-1">
                 Sydney Central → Lithgow • NSW Trains
               </p>
+              <p className="text-[10px] text-white/40 mt-2">
+                👆 Click any station to fly in & inspect
+              </p>
             </div>
             <StationList
               stations={markers}
-              hoveredName={hovered?.name}
-              onSelect={() => {}}
+              hoveredName={hovered?.name || selected?.name}
+              onSelect={flyToStation}
             />
           </motion.aside>
         </div>
 
-        {/* Footer caption */}
         <p className="text-center text-[11px] text-white/30 mt-4">
-          Station coordinates sourced from Transport for NSW open data (GTFS).
-          Any geotagged asset can be plotted — rail, power, water, buildings or sensors.
+          Station coordinates from Transport for NSW open data (GTFS) •
+          Any geotagged asset — rail, power, water, buildings, sensors — can be plotted here.
         </p>
       </main>
     </div>
+  );
+}
+
+function ControlBtn({ children, onClick, title, active }) {
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
+        active
+          ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/40'
+          : 'text-white/70 hover:bg-white/10 hover:text-white'
+      }`}
+    >
+      {children}
+    </button>
   );
 }
 
