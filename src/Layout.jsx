@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
   Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock,
   UserCircle, Users, Shield, MessageSquare, MapPin, KeyRound, Briefcase, Hammer, Upload,
-  ChevronDown
+  ChevronDown, GitBranch
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
@@ -37,6 +37,7 @@ const navSections = [
     label: 'Assets',
     items: [
       { name: 'Equipment', icon: Cpu, page: 'Equipment' },
+      { name: 'Asset Tree', icon: GitBranch, page: 'AssetTree' },
       { name: 'Locations', icon: MapPin, page: 'Locations' },
       { name: 'Digital Twin', icon: Box, page: 'DigitalTwin' },
       { name: 'Sensors', icon: Radio, page: 'SensorIntegration' },

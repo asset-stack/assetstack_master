@@ -16,6 +16,7 @@ import SetupGuide from './pages/SetupGuide';
 import DataImport from './pages/DataImport';
 import Settings from './pages/Settings';
 import CommandCenter from './pages/CommandCenter';
+import AssetTree from './pages/AssetTree';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -115,6 +116,11 @@ const AuthenticatedApp = () => {
       <Route path="/Settings" element={
             <LayoutWrapper currentPageName="Settings">
               <Settings />
+            </LayoutWrapper>
+          } />
+      <Route path="/AssetTree" element={
+            <LayoutWrapper currentPageName="AssetTree">
+              <AssetTree />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />
