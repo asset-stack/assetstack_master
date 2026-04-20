@@ -1,9 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Polyline, Popup, useMap, LayersControl, Tooltip } from 'react-leaflet';
-import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { motion } from 'framer-motion';
-import { X, ZoomIn, ZoomOut, Locate, Layers, MapPin, Activity, AlertTriangle, CheckCircle2, Crosshair } from 'lucide-react';
+import { X, ZoomIn, ZoomOut, Locate, Layers, MapPin, Activity, AlertTriangle, CheckCircle2, Crosshair, Radio, Cpu, Zap, GitBranch, Train } from 'lucide-react';
+
+const CHECKPOINT_ICONS = {
+  signal_box: GitBranch,
+  substation: Zap,
+  track_monitor: Activity,
+  level_crossing: AlertTriangle,
+  points_machine: Cpu,
+};
 
 const conditionColor = {
   operational: '#10b981',
@@ -13,11 +20,11 @@ const conditionColor = {
   offline: '#94a3b8',
 };
 
-// Compute sensible bounds for the network
-function computeBounds(stations) {
-  if (!stations.length) return null;
-  const lats = stations.map((s) => s.lat);
-  const lngs = stations.map((s) => s.lng);
+// Compute sensible bounds for an array of { lat, lng } points
+function computeBounds(points) {
+  if (!points || !points.length) return null;
+  const lats = points.map((s) => s.lat);
+  const lngs = points.map((s) => s.lng);
   return [
     [Math.min(...lats), Math.min(...lngs)],
     [Math.max(...lats), Math.max(...lngs)],
@@ -76,38 +83,41 @@ function FloatingControls({ onZoomIn, onZoomOut, onFit, onLocate }) {
   );
 }
 
-export default function NetworkDrilldownMap({ stations, focusStation, onClose, onSelectStation }) {
+export default function NetworkDrilldownMap({
+  lines = [],
+  stations = [],
+  checkpoints = [],
+  focusStation,
+  onClose,
+  onSelectStation,
+}) {
   const [mapRef, setMapRef] = useState(null);
   const [viewInfo, setViewInfo] = useState({ zoom: 10, center: null });
   const [hovered, setHovered] = useState(null);
+  const [hoveredCp, setHoveredCp] = useState(null);
+  const [visibleLines, setVisibleLines] = useState(() => new Set(lines.map((l) => l.id)));
+  const [showCheckpoints, setShowCheckpoints] = useState(true);
 
   const bounds = useMemo(() => computeBounds(stations), [stations]);
-  const path = useMemo(() => stations.map((s) => [s.lat, s.lng]), [stations]);
-
-  const totalDistanceKm = useMemo(() => {
-    let d = 0;
-    for (let i = 1; i < stations.length; i++) {
-      const a = stations[i - 1];
-      const b = stations[i];
-      // Haversine
-      const R = 6371;
-      const dLat = ((b.lat - a.lat) * Math.PI) / 180;
-      const dLng = ((b.lng - a.lng) * Math.PI) / 180;
-      const h =
-        Math.sin(dLat / 2) ** 2 +
-        Math.cos((a.lat * Math.PI) / 180) *
-          Math.cos((b.lat * Math.PI) / 180) *
-          Math.sin(dLng / 2) ** 2;
-      d += 2 * R * Math.asin(Math.sqrt(h));
-    }
-    return d;
-  }, [stations]);
 
   const stats = useMemo(() => ({
-    operational: stations.filter((s) => s.condition === 'operational').length,
-    degraded: stations.filter((s) => s.condition === 'degraded').length,
-    critical: stations.filter((s) => s.condition === 'critical').length,
-  }), [stations]);
+    stations: stations.length,
+    lines: lines.length,
+    checkpoints: checkpoints.length,
+    criticalCheckpoints: checkpoints.filter((c) => c.condition === 'critical').length,
+  }), [stations, lines, checkpoints]);
+
+  const toggleLine = (id) => {
+    setVisibleLines((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  const visibleCheckpoints = showCheckpoints
+    ? checkpoints.filter((c) => visibleLines.has(c.line))
+    : [];
 
   return (
     <motion.div
@@ -134,15 +144,15 @@ export default function NetworkDrilldownMap({ stations, focusStation, onClose, o
               </span>
             </div>
             <p className="text-xs text-white/50 truncate">
-              {stations.length} stations • {totalDistanceKm.toFixed(1)} km • OpenStreetMap tiles
+              {stats.lines} lines • {stats.stations} stations • {stats.checkpoints} sensor checkpoints
             </p>
           </div>
         </div>
 
         <div className="hidden md:flex items-center gap-2">
-          <StatPill icon={CheckCircle2} label={stats.operational} color="text-emerald-400" />
-          <StatPill icon={Activity} label={stats.degraded} color="text-amber-400" />
-          <StatPill icon={AlertTriangle} label={stats.critical} color="text-rose-400" />
+          <StatPill icon={Train} label={stats.stations} color="text-indigo-400" />
+          <StatPill icon={Radio} label={stats.checkpoints} color="text-fuchsia-400" />
+          <StatPill icon={AlertTriangle} label={stats.criticalCheckpoints} color="text-rose-400" />
         </div>
       </div>
 
@@ -180,21 +190,92 @@ export default function NetworkDrilldownMap({ stations, focusStation, onClose, o
             </LayersControl.BaseLayer>
           </LayersControl>
 
-          {/* Line glow (wider, soft) */}
-          <Polyline
-            positions={path}
-            pathOptions={{ color: '#6366f1', weight: 12, opacity: 0.18, lineCap: 'round', lineJoin: 'round' }}
-          />
-          {/* Line main */}
-          <Polyline
-            positions={path}
-            pathOptions={{ color: '#a78bfa', weight: 4, opacity: 0.95, lineCap: 'round', lineJoin: 'round' }}
-          />
-          {/* Line accent */}
-          <Polyline
-            positions={path}
-            pathOptions={{ color: '#ffffff', weight: 1.5, opacity: 0.6, dashArray: '6 10', lineCap: 'round' }}
-          />
+          {/* Train lines — each in its own colour with glow + accent */}
+          {lines.filter((l) => visibleLines.has(l.id)).map((line) => {
+            const path = line.stations.map((s) => [s.lat, s.lng]);
+            return (
+              <React.Fragment key={line.id}>
+                <Polyline
+                  positions={path}
+                  pathOptions={{ color: line.color, weight: 12, opacity: 0.15, lineCap: 'round', lineJoin: 'round' }}
+                />
+                <Polyline
+                  positions={path}
+                  pathOptions={{ color: line.color, weight: 4, opacity: 0.95, lineCap: 'round', lineJoin: 'round' }}
+                />
+              </React.Fragment>
+            );
+          })}
+
+          {/* Maintenance checkpoints (sensor pickup points) */}
+          {visibleCheckpoints.map((cp) => {
+            const color = conditionColor[cp.condition] || conditionColor.offline;
+            const isCritical = cp.condition === 'critical';
+            return (
+              <React.Fragment key={cp.id}>
+                {isCritical && (
+                  <CircleMarker
+                    center={[cp.lat, cp.lng]}
+                    radius={14}
+                    pathOptions={{ color, fillColor: color, fillOpacity: 0.2, weight: 0 }}
+                  />
+                )}
+                <CircleMarker
+                  center={[cp.lat, cp.lng]}
+                  radius={4}
+                  pathOptions={{
+                    color: '#fff',
+                    weight: 1.5,
+                    fillColor: color,
+                    fillOpacity: 1,
+                    dashArray: '2 2',
+                  }}
+                  eventHandlers={{
+                    mouseover: () => setHoveredCp(cp),
+                    mouseout: () => setHoveredCp(null),
+                  }}
+                >
+                  <Tooltip direction="top" offset={[0, -4]} opacity={1} className="station-tooltip">
+                    <div className="text-xs font-semibold">{cp.name}</div>
+                    <div className="text-[10px] opacity-70">{cp.between}</div>
+                    <div className="text-[10px] opacity-70 capitalize">{cp.condition}</div>
+                  </Tooltip>
+                  <Popup>
+                    <div className="min-w-[200px]">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Radio className="w-3.5 h-3.5" style={{ color: cp.lineColor }} />
+                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: cp.lineColor }}>
+                          {cp.line} Line
+                        </span>
+                      </div>
+                      <div className="font-bold text-sm">{cp.name}</div>
+                      <div className="text-xs text-slate-600 mt-0.5">{cp.label}</div>
+                      <div className="text-[11px] text-slate-500 mt-1">{cp.between}</div>
+                      <div className="mt-2 flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full" style={{ background: color }} />
+                        <span className="text-xs capitalize">{cp.condition}</span>
+                      </div>
+                      <div className="mt-2 pt-2 border-t border-slate-200">
+                        <div className="text-[10px] font-semibold uppercase text-slate-500 mb-1">
+                          Sensors ({cp.sensors.length})
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {cp.sensors.map((s) => (
+                            <span key={s} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 capitalize">
+                              {s.replace(/_/g, ' ')}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="mt-2 font-mono text-[10px] text-slate-500">
+                        {cp.lat.toFixed(6)}°, {cp.lng.toFixed(6)}°
+                      </div>
+                    </div>
+                  </Popup>
+                </CircleMarker>
+              </React.Fragment>
+            );
+          })}
 
           {/* Stations */}
           {stations.map((s) => {
@@ -296,18 +377,68 @@ export default function NetworkDrilldownMap({ stations, focusStation, onClose, o
           </motion.div>
         )}
 
-        {/* Legend */}
-        <div className="absolute bottom-4 right-4 z-[1000] bg-slate-900/85 backdrop-blur-md border border-white/10 rounded-xl p-3 shadow-2xl">
+        {/* Line toggle panel (bottom-right) */}
+        <div className="absolute bottom-4 right-4 z-[1000] bg-slate-900/90 backdrop-blur-md border border-white/10 rounded-xl p-3 shadow-2xl max-w-[260px]">
           <div className="flex items-center gap-2 mb-2">
             <Layers className="w-3 h-3 text-white/60" />
-            <span className="text-[9px] font-bold tracking-wider uppercase text-white/60">Status</span>
+            <span className="text-[9px] font-bold tracking-wider uppercase text-white/60">Lines & Sensors</span>
           </div>
+          <div className="space-y-1">
+            {lines.map((l) => {
+              const on = visibleLines.has(l.id);
+              return (
+                <button
+                  key={l.id}
+                  onClick={() => toggleLine(l.id)}
+                  className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all ${
+                    on ? 'bg-white/10' : 'opacity-40 hover:opacity-70'
+                  }`}
+                >
+                  <span className="w-3 h-3 rounded-sm flex-shrink-0" style={{ background: l.color }} />
+                  <span className="text-[11px] font-semibold text-white">{l.id}</span>
+                  <span className="text-[10px] text-white/60 truncate text-left flex-1">{l.name.replace(/^T\d+\s/, '')}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="h-px bg-white/10 my-2" />
+          <button
+            onClick={() => setShowCheckpoints((v) => !v)}
+            className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all ${
+              showCheckpoints ? 'bg-fuchsia-500/20 text-fuchsia-200' : 'opacity-40 hover:opacity-70 text-white'
+            }`}
+          >
+            <Radio className="w-3 h-3" />
+            <span className="text-[11px] font-semibold">Sensor Checkpoints</span>
+            <span className="text-[10px] ml-auto font-mono">{checkpoints.length}</span>
+          </button>
+          <div className="h-px bg-white/10 my-2" />
           <div className="space-y-1.5">
             <LegendRow color="#10b981" label="Operational" />
             <LegendRow color="#f59e0b" label="Degraded" />
             <LegendRow color="#ef4444" label="Critical" />
           </div>
         </div>
+
+        {/* Hovered checkpoint readout (top-center of map) */}
+        {hoveredCp && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-slate-900/90 backdrop-blur-md border border-fuchsia-400/40 rounded-xl px-4 py-2 shadow-2xl"
+          >
+            <div className="flex items-center gap-2">
+              <Radio className="w-3.5 h-3.5 text-fuchsia-300" />
+              <span className="text-sm font-bold text-white">{hoveredCp.name}</span>
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold" style={{ background: hoveredCp.lineColor + '33', color: hoveredCp.lineColor }}>
+                {hoveredCp.line}
+              </span>
+            </div>
+            <p className="text-[10px] text-white/60 mt-0.5">
+              {hoveredCp.sensors.length} sensors • {hoveredCp.between}
+            </p>
+          </motion.div>
+        )}
       </div>
 
       {/* Custom styles */}

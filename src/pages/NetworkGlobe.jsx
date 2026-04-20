@@ -8,7 +8,7 @@ import NetworkGlobe from '@/components/network-globe/NetworkGlobe';
 import NetworkLineOverlay from '@/components/network-globe/NetworkLineOverlay';
 import NetworkDrilldownMap from '@/components/network-globe/NetworkDrilldownMap';
 import StationList from '@/components/network-globe/StationList';
-import { WESTERN_LINE_STATIONS, NSW_FOCUS } from '@/components/network-globe/westernLineData';
+import { TRAIN_LINES, ALL_STATIONS, MAINTENANCE_CHECKPOINTS, NSW_FOCUS } from '@/components/network-globe/westernLineData';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
@@ -23,13 +23,14 @@ export default function NetworkGlobePage() {
   const [drilldownOpen, setDrilldownOpen] = useState(false);
   const [drilldownStation, setDrilldownStation] = useState(null);
 
-  const markers = useMemo(() => (showDemo ? WESTERN_LINE_STATIONS : []), [showDemo]);
+  const markers = useMemo(() => (showDemo ? ALL_STATIONS : []), [showDemo]);
 
   const stats = useMemo(() => ({
     total: markers.length,
     operational: markers.filter((s) => s.condition === 'operational').length,
     degraded: markers.filter((s) => s.condition === 'degraded').length,
     critical: markers.filter((s) => s.condition === 'critical').length,
+    checkpoints: MAINTENANCE_CHECKPOINTS.length,
   }), [markers]);
 
   const handleViewChange = useCallback((v) => setView(v), []);
@@ -83,7 +84,7 @@ export default function NetworkGlobePage() {
                   </Badge>
                 </div>
                 <p className="text-sm text-white/50 mt-0.5">
-                  Geospatial asset visualization • WebGL-powered • Drill down into intersections
+                  {TRAIN_LINES.length} Sydney Trains lines • {ALL_STATIONS.length} stations • {MAINTENANCE_CHECKPOINTS.length} sensor checkpoints
                 </p>
               </div>
             </div>
@@ -117,14 +118,15 @@ export default function NetworkGlobePage() {
               }
             >
               <Train className="w-4 h-4" />
-              {showDemo ? 'NSW T1 Western' : 'Load Demo'}
+              {showDemo ? 'Sydney Trains Network' : 'Load Demo'}
             </Button>
           </div>
         </div>
 
         {/* Stats strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <StatCard icon={Radio} label="Stations" value={stats.total} color="indigo" />
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+          <StatCard icon={Train} label="Stations" value={stats.total} color="indigo" />
+          <StatCard icon={Radio} label="Sensor Points" value={stats.checkpoints} color="violet" />
           <StatCard icon={CheckCircle2} label="Operational" value={stats.operational} color="emerald" />
           <StatCard icon={Activity} label="Degraded" value={stats.degraded} color="amber" />
           <StatCard icon={AlertTriangle} label="Critical" value={stats.critical} color="rose" />
@@ -303,7 +305,9 @@ export default function NetworkGlobePage() {
       <AnimatePresence>
         {drilldownOpen && (
           <NetworkDrilldownMap
-            stations={markers}
+            lines={TRAIN_LINES}
+            stations={ALL_STATIONS}
+            checkpoints={MAINTENANCE_CHECKPOINTS}
             focusStation={drilldownStation}
             onClose={() => setDrilldownOpen(false)}
             onSelectStation={(s) => { setSelected(s); setDrilldownStation(s); }}
@@ -333,6 +337,7 @@ function ControlBtn({ children, onClick, title, active }) {
 function StatCard({ icon: Icon, label, value, color }) {
   const colors = {
     indigo: 'from-indigo-500/20 to-indigo-500/5 border-indigo-400/30 text-indigo-300',
+    violet: 'from-violet-500/20 to-violet-500/5 border-violet-400/30 text-violet-300',
     emerald: 'from-emerald-500/20 to-emerald-500/5 border-emerald-400/30 text-emerald-300',
     amber: 'from-amber-500/20 to-amber-500/5 border-amber-400/30 text-amber-300',
     rose: 'from-rose-500/20 to-rose-500/5 border-rose-400/30 text-rose-300',
