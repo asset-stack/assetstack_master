@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import * as THREE from 'three';
 import { Html } from '@react-three/drei';
 
 // Condition score → color (1 = excellent/green, 5 = failed/red)
@@ -34,139 +35,132 @@ function ConditionBadge({ position, score, name }) {
   );
 }
 
-// --- Furniture pieces ---
+// Build a mesh imperatively — bypasses JSX reconciliation issues
+const makeBox = (size, color, position) => {
+  const mesh = new THREE.Mesh(
+    new THREE.BoxGeometry(size[0], size[1], size[2]),
+    new THREE.MeshStandardMaterial({ color })
+  );
+  mesh.position.set(position[0], position[1], position[2]);
+  return mesh;
+};
+
+const makePlane = (size, color, position, rotation) => {
+  const mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(size[0], size[1]),
+    new THREE.MeshStandardMaterial({ color, side: THREE.DoubleSide })
+  );
+  mesh.position.set(position[0], position[1], position[2]);
+  if (rotation) mesh.rotation.set(rotation[0], rotation[1], rotation[2]);
+  return mesh;
+};
+
+const makeCone = (args, color, position, emissive) => {
+  const mesh = new THREE.Mesh(
+    new THREE.ConeGeometry(args[0], args[1], args[2] || 16),
+    new THREE.MeshStandardMaterial({ color, emissive: emissive || '#000000', emissiveIntensity: emissive ? 0.3 : 0 })
+  );
+  mesh.position.set(position[0], position[1], position[2]);
+  return mesh;
+};
+
+const makeCylinder = (args, color, position) => {
+  const mesh = new THREE.Mesh(
+    new THREE.CylinderGeometry(args[0], args[1], args[2], args[3] || 8),
+    new THREE.MeshStandardMaterial({ color })
+  );
+  mesh.position.set(position[0], position[1], position[2]);
+  return mesh;
+};
 
 function Bookshelf({ position, rotation = [0, 0, 0], score, name }) {
+  const group = useMemo(() => {
+    const g = new THREE.Group();
+    g.add(makeBox([2, 3, 0.4], '#5b3a1e', [0, 1.5, 0]));
+    const shelfColors = ['#b45309', '#7f1d1d', '#1e3a8a', '#134e4a', '#581c87'];
+    [0.3, 0.9, 1.5, 2.1, 2.7].forEach((y, i) => {
+      g.add(makeBox([1.8, 0.35, 0.3], shelfColors[i], [0, y, 0.05]));
+    });
+    return g;
+  }, []);
   return (
     <group position={position} rotation={rotation}>
-      {/* Outer frame */}
-      <mesh position={[0, 1.5, 0]}>
-        <boxGeometry args={[2, 3, 0.4]} />
-        <meshStandardMaterial color="#5b3a1e" />
-      </mesh>
-      {/* Shelves (books) */}
-      {[0.3, 0.9, 1.5, 2.1, 2.7].map((y, i) => (
-        <mesh key={i} position={[0, y, 0.05]}>
-          <boxGeometry args={[1.8, 0.35, 0.3]} />
-          <meshStandardMaterial color={['#b45309', '#7f1d1d', '#1e3a8a', '#134e4a', '#581c87'][i]} />
-        </mesh>
-      ))}
+      <primitive object={group} />
       <ConditionBadge position={[0, 3.4, 0]} score={score} name={name} />
     </group>
   );
 }
 
 function ReadingTable({ position, score, name }) {
+  const group = useMemo(() => {
+    const g = new THREE.Group();
+    g.add(makeBox([2.4, 0.1, 1.2], '#92400e', [0, 0.75, 0]));
+    [[-1.05, 0.35, -0.5], [1.05, 0.35, -0.5], [-1.05, 0.35, 0.5], [1.05, 0.35, 0.5]].forEach((p) => {
+      g.add(makeBox([0.1, 0.7, 0.1], '#5b3a1e', p));
+    });
+    g.add(makeCylinder([0.05, 0.05, 0.3, 8], '#1f2937', [0.8, 0.95, 0]));
+    g.add(makeCone([0.15, 0.2, 16], '#fcd34d', [0.8, 1.15, 0], '#fcd34d'));
+    return g;
+  }, []);
   return (
     <group position={position}>
-      {/* Tabletop */}
-      <mesh position={[0, 0.75, 0]}>
-        <boxGeometry args={[2.4, 0.1, 1.2]} />
-        <meshStandardMaterial color="#92400e" />
-      </mesh>
-      {/* Legs */}
-      {[[-1.05, 0.35, -0.5], [1.05, 0.35, -0.5], [-1.05, 0.35, 0.5], [1.05, 0.35, 0.5]].map((p, i) => (
-        <mesh key={i} position={p}>
-          <boxGeometry args={[0.1, 0.7, 0.1]} />
-          <meshStandardMaterial color="#5b3a1e" />
-        </mesh>
-      ))}
-      {/* Lamp */}
-      <mesh position={[0.8, 0.95, 0]}>
-        <cylinderGeometry args={[0.05, 0.05, 0.3, 8]} />
-        <meshStandardMaterial color="#1f2937" />
-      </mesh>
-      <mesh position={[0.8, 1.15, 0]}>
-        <coneGeometry args={[0.15, 0.2, 16]} />
-        <meshStandardMaterial color="#fcd34d" emissive="#fcd34d" emissiveIntensity={0.3} />
-      </mesh>
+      <primitive object={group} />
       <ConditionBadge position={[0, 1.6, 0]} score={score} name={name} />
     </group>
   );
 }
 
 function Chair({ position, rotation = [0, 0, 0], score, name }) {
+  const group = useMemo(() => {
+    const g = new THREE.Group();
+    g.add(makeBox([0.5, 0.08, 0.5], '#7c2d12', [0, 0.45, 0]));
+    g.add(makeBox([0.5, 0.7, 0.06], '#7c2d12', [0, 0.85, -0.22]));
+    [[-0.22, 0.22, -0.22], [0.22, 0.22, -0.22], [-0.22, 0.22, 0.22], [0.22, 0.22, 0.22]].forEach((p) => {
+      g.add(makeBox([0.06, 0.45, 0.06], '#451a03', p));
+    });
+    return g;
+  }, []);
   return (
     <group position={position} rotation={rotation}>
-      {/* Seat */}
-      <mesh position={[0, 0.45, 0]}>
-        <boxGeometry args={[0.5, 0.08, 0.5]} />
-        <meshStandardMaterial color="#7c2d12" />
-      </mesh>
-      {/* Back */}
-      <mesh position={[0, 0.85, -0.22]}>
-        <boxGeometry args={[0.5, 0.7, 0.06]} />
-        <meshStandardMaterial color="#7c2d12" />
-      </mesh>
-      {/* Legs */}
-      {[[-0.22, 0.22, -0.22], [0.22, 0.22, -0.22], [-0.22, 0.22, 0.22], [0.22, 0.22, 0.22]].map((p, i) => (
-        <mesh key={i} position={p}>
-          <boxGeometry args={[0.06, 0.45, 0.06]} />
-          <meshStandardMaterial color="#451a03" />
-        </mesh>
-      ))}
+      <primitive object={group} />
       <ConditionBadge position={[0, 1.5, 0]} score={score} name={name} />
     </group>
   );
 }
 
 function LibrarianDesk({ position, score, name }) {
+  const group = useMemo(() => {
+    const g = new THREE.Group();
+    g.add(makeBox([3, 1, 1], '#78350f', [0, 0.5, 0]));
+    g.add(makeBox([3.2, 0.1, 1.2], '#92400e', [0, 1.05, 0]));
+    g.add(makeBox([0.6, 0.4, 0.05], '#0f172a', [0.8, 1.35, 0]));
+    return g;
+  }, []);
   return (
     <group position={position}>
-      {/* Main desk body */}
-      <mesh position={[0, 0.5, 0]}>
-        <boxGeometry args={[3, 1, 1]} />
-        <meshStandardMaterial color="#78350f" />
-      </mesh>
-      {/* Top */}
-      <mesh position={[0, 1.05, 0]}>
-        <boxGeometry args={[3.2, 0.1, 1.2]} />
-        <meshStandardMaterial color="#92400e" />
-      </mesh>
-      {/* Computer */}
-      <mesh position={[0.8, 1.35, 0]}>
-        <boxGeometry args={[0.6, 0.4, 0.05]} />
-        <meshStandardMaterial color="#0f172a" />
-      </mesh>
+      <primitive object={group} />
       <ConditionBadge position={[0, 1.9, 0]} score={score} name={name} />
     </group>
   );
 }
 
-function Rug({ position }) {
-  return (
-    <mesh position={position} rotation={[-Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[5, 3.5]} />
-      <meshStandardMaterial color="#9f1239" />
-    </mesh>
-  );
-}
-
 export default function LibraryRoomScene() {
+  const staticScene = useMemo(() => {
+    const g = new THREE.Group();
+    // Floor
+    g.add(makePlane([18, 14], '#d4a574', [0, 0, 0], [-Math.PI / 2, 0, 0]));
+    // Walls
+    g.add(makeBox([18, 4, 0.2], '#fef3c7', [0, 2, -7]));
+    g.add(makeBox([0.2, 4, 14], '#fef3c7', [-9, 2, 0]));
+    g.add(makeBox([0.2, 4, 14], '#fef3c7', [9, 2, 0]));
+    // Rug
+    g.add(makePlane([5, 3.5], '#9f1239', [0, 0.01, 0], [-Math.PI / 2, 0, 0]));
+    return g;
+  }, []);
+
   return (
     <group>
-      {/* Floor — wooden */}
-      <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[18, 14]} />
-        <meshStandardMaterial color="#d4a574" />
-      </mesh>
-
-      {/* Walls — warm cream */}
-      <mesh position={[0, 2, -7]}>
-        <boxGeometry args={[18, 4, 0.2]} />
-        <meshStandardMaterial color="#fef3c7" />
-      </mesh>
-      <mesh position={[-9, 2, 0]}>
-        <boxGeometry args={[0.2, 4, 14]} />
-        <meshStandardMaterial color="#fef3c7" />
-      </mesh>
-      <mesh position={[9, 2, 0]}>
-        <boxGeometry args={[0.2, 4, 14]} />
-        <meshStandardMaterial color="#fef3c7" />
-      </mesh>
-
-      {/* Central rug */}
-      <Rug position={[0, 0.01, 0]} />
+      <primitive object={staticScene} />
 
       {/* Bookshelves along back wall */}
       <Bookshelf position={[-6, 0, -6.6]} score={1} name="Bookshelf A" />
