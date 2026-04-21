@@ -1,107 +1,51 @@
-import React, { Suspense, useRef, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Html, useGLTF } from '@react-three/drei';
-import * as THREE from 'three';
-import LibraryRoomScene from './LibraryRoomScene';
-
-function GLTFModel({ url }) {
-  const { scene } = useGLTF(url);
-  return <primitive object={scene} />;
-}
-
-function Model({ url, type }) {
-  // Show the demo library scene when type is 'demo' or no valid GLTF url provided
-  if (url && (type === 'gltf' || type === 'glb')) {
-    return <GLTFModel url={url} />;
-  }
-  return <LibraryRoomScene />;
-}
-
-function AssetMarker({ position, label, condition = 'operational', onClick }) {
-  const ref = useRef();
-  const [hovered, setHovered] = useState(false);
-
-  useFrame(({ clock }) => {
-    if (ref.current) {
-      ref.current.position.y = position[1] + Math.sin(clock.elapsedTime * 2) * 0.05;
-    }
-  });
-
-  const color = condition === 'critical' ? '#ef4444' : condition === 'degraded' ? '#f59e0b' : '#10b981';
-
-  return (
-    <group
-      ref={ref}
-      position={position}
-      onClick={(e) => { e.stopPropagation(); onClick && onClick(); }}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
-    >
-      {/* Pin */}
-      <mesh>
-        <coneGeometry args={[0.2, 0.6, 8]} />
-        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={hovered ? 0.8 : 0.3} />
-      </mesh>
-      <mesh position={[0, 0.5, 0]}>
-        <sphereGeometry args={[0.18, 16, 16]} />
-        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={hovered ? 1 : 0.4} />
-      </mesh>
-      {/* Halo when hovered */}
-      {hovered && (
-        <mesh>
-          <sphereGeometry args={[0.5, 16, 16]} />
-          <meshStandardMaterial color={color} transparent opacity={0.2} />
-        </mesh>
-      )}
-      <Html distanceFactor={10} position={[0, 1, 0]} center>
-        <div className={`px-2 py-1 rounded-md text-[10px] font-semibold whitespace-nowrap shadow-lg transition-all ${
-          hovered ? 'bg-slate-900 text-white scale-110' : 'bg-white/90 text-slate-800'
-        }`}>
-          {label}
-        </div>
-      </Html>
-    </group>
-  );
-}
+import React, { useState } from 'react';
+import LibraryRoomView2D from './LibraryRoomView2D';
 
 export default function ScanViewer3D({ modelUrl, modelType = 'demo', overlays = [], onAssetClick }) {
+  const [hoveredAsset, setHoveredAsset] = useState(null);
+
   return (
     <div className="w-full h-full relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-xl overflow-hidden">
-      <Canvas camera={{ position: [8, 8, 12], fov: 50 }}>
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[10, 15, 10]} intensity={1.2} />
-        <Suspense fallback={
-          <Html center>
-            <div className="text-white text-sm">Loading scan…</div>
-          </Html>
-        }>
-          <Model url={modelUrl} type={modelType} />
-          {overlays.map((o, i) => (
-            <AssetMarker
-              key={i}
-              position={[o.x || 0, o.y || 0.5, o.z || 0]}
-              label={o.equipment_name || `Asset ${i + 1}`}
-              condition={o.condition}
-              onClick={() => onAssetClick && onAssetClick(o)}
-            />
-          ))}
-        </Suspense>
-        <hemisphereLight args={['#ffffff', '#64748b', 0.6]} />
-        <pointLight position={[-5, 8, 5]} intensity={0.4} />
-        <gridHelper args={[30, 30, '#475569', '#334155']} position={[0, -0.01, 0]} />
-        <OrbitControls makeDefault enableDamping dampingFactor={0.08} />
-      </Canvas>
+      {/* If a real model was uploaded, show preview fallback (3D rendering disabled) */}
+      {modelUrl && (modelType === 'gltf' || modelType === 'glb') ? (
+        <div className="w-full h-full flex flex-col items-center justify-center text-white/80 p-8 text-center">
+          <div className="w-16 h-16 rounded-xl bg-white/10 flex items-center justify-center mb-4">
+            <span className="text-3xl">🏛️</span>
+          </div>
+          <p className="font-semibold text-white">3D Model Uploaded</p>
+          <p className="text-xs text-white/60 mt-1 max-w-sm">
+            Interactive 3D rendering is temporarily unavailable. The model file is saved and assets can still be tagged.
+          </p>
+        </div>
+      ) : (
+        <LibraryRoomView2D
+          overlays={overlays}
+          hoveredAsset={hoveredAsset}
+          setHoveredAsset={setHoveredAsset}
+          onAssetClick={onAssetClick}
+        />
+      )}
 
       {/* HUD */}
       <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2 text-white text-xs">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-          <span className="font-semibold">3D Scan Viewer</span>
+          <span className="font-semibold">Scan Viewer — Library Room</span>
         </div>
-        <p className="text-[10px] text-white/60 mt-0.5">Drag to rotate • Scroll to zoom • Click pins</p>
+        <p className="text-[10px] text-white/60 mt-0.5">Hover assets for details • Click to inspect</p>
       </div>
       <div className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md border border-white/10 rounded-lg px-3 py-1.5 text-[10px] text-white/70">
         {overlays.length} assets overlaid
+      </div>
+
+      {/* Legend */}
+      <div className="absolute bottom-3 right-3 bg-slate-900/80 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2 text-[10px] text-white/80">
+        <div className="font-semibold text-white mb-1">Condition</div>
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-500" /> Good</span>
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500" /> Fair</span>
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500" /> Critical</span>
+        </div>
       </div>
     </div>
   );
