@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Scan, Eye, CheckCircle2, Sparkles, Play, RotateCcw } from 'lucide-react';
+import { Scan, Eye, CheckCircle2, Sparkles, Play, RotateCcw, AlertTriangle, Activity, Ruler } from 'lucide-react';
 
 // Condition score → color
 const scoreColor = (score) => {
@@ -13,7 +13,7 @@ const scoreColor = (score) => {
 
 const scoreLabel = (score) => ({ 1: 'Excellent', 2: 'Good', 3: 'Fair', 4: 'Poor', 5: 'Failed' }[score] || 'Unknown');
 
-// Descriptive AI classification per object type
+// AI classification per asset type
 const AI_CLASSIFICATION = {
   chair: { class: 'Chair', features: ['4 legs detected', 'Seat surface', 'Backrest'], category: 'Seating' },
   table: { class: 'Reading Table', features: ['Flat top surface', '4 support legs', 'Rectangular'], category: 'Furniture' },
@@ -21,24 +21,33 @@ const AI_CLASSIFICATION = {
   desk: { class: 'Service Desk', features: ['Large top surface', 'Computer detected', 'Desk body'], category: 'Workstation' },
 };
 
+// Condition analysis findings per score (what LiDAR revealed)
+const CONDITION_FINDINGS = {
+  1: { summary: 'No surface deviations detected', findings: ['Geometry matches reference model', 'Surface reflectance uniform', 'No structural anomalies'], action: 'No action required' },
+  2: { summary: 'Minor wear detected', findings: ['Surface reflectance variance: 4%', 'Minor edge rounding observed', 'No structural issues'], action: 'Routine inspection in 12 months' },
+  3: { summary: 'Moderate wear detected', findings: ['Surface deviation: 8mm from reference', 'Visible material degradation', 'Joint alignment shifted 2°'], action: 'Schedule maintenance within 3 months' },
+  4: { summary: 'Significant damage detected', findings: ['Surface deviation: 18mm from reference', 'Structural integrity compromised', 'Missing material in 2 regions'], action: 'Repair required — priority medium' },
+  5: { summary: 'Critical failure detected', findings: ['Structural fracture identified', 'Surface deviation: 45mm', 'Component separation detected'], action: 'Replace immediately — do not use' },
+};
+
 // Library room layout — top-down plan view
 const FURNITURE = [
   { id: 'bs-a', type: 'bookshelf', x: 150, y: 60, w: 120, h: 40, score: 1, name: 'Bookshelf A' },
   { id: 'bs-b', type: 'bookshelf', x: 290, y: 60, w: 120, h: 40, score: 2, name: 'Bookshelf B' },
-  { id: 'bs-c', type: 'bookshelf', x: 430, y: 60, w: 120, h: 40, score: 3, name: 'Bookshelf C (worn)' },
+  { id: 'bs-c', type: 'bookshelf', x: 430, y: 60, w: 120, h: 40, score: 3, name: 'Bookshelf C' },
   { id: 'bs-d', type: 'bookshelf', x: 570, y: 60, w: 120, h: 40, score: 2, name: 'Bookshelf D' },
-  { id: 'bs-e', type: 'bookshelf', x: 710, y: 60, w: 120, h: 40, score: 4, name: 'Bookshelf E (damaged)' },
+  { id: 'bs-e', type: 'bookshelf', x: 710, y: 60, w: 120, h: 40, score: 4, name: 'Bookshelf E' },
   { id: 'ref-a', type: 'bookshelf', x: 50, y: 180, w: 40, h: 100, score: 1, name: 'Reference A' },
   { id: 'ref-b', type: 'bookshelf', x: 50, y: 320, w: 40, h: 100, score: 2, name: 'Reference B' },
   { id: 't1', type: 'table', x: 220, y: 260, w: 160, h: 90, score: 1, name: 'Reading Table 1' },
   { id: 't2', type: 'table', x: 520, y: 260, w: 160, h: 90, score: 2, name: 'Reading Table 2' },
   { id: 'c1a', type: 'chair', x: 240, y: 220, w: 40, h: 40, score: 2, name: 'Chair 1A' },
-  { id: 'c1b', type: 'chair', x: 320, y: 220, w: 40, h: 40, score: 3, name: 'Chair 1B (loose)' },
+  { id: 'c1b', type: 'chair', x: 320, y: 220, w: 40, h: 40, score: 3, name: 'Chair 1B' },
   { id: 'c1c', type: 'chair', x: 240, y: 360, w: 40, h: 40, score: 2, name: 'Chair 1C' },
   { id: 'c1d', type: 'chair', x: 320, y: 360, w: 40, h: 40, score: 1, name: 'Chair 1D' },
   { id: 'c2a', type: 'chair', x: 540, y: 220, w: 40, h: 40, score: 1, name: 'Chair 2A' },
   { id: 'c2b', type: 'chair', x: 620, y: 220, w: 40, h: 40, score: 2, name: 'Chair 2B' },
-  { id: 'c2c', type: 'chair', x: 540, y: 360, w: 40, h: 40, score: 5, name: 'Chair 2C (broken)' },
+  { id: 'c2c', type: 'chair', x: 540, y: 360, w: 40, h: 40, score: 5, name: 'Chair 2C' },
   { id: 'c2d', type: 'chair', x: 620, y: 360, w: 40, h: 40, score: 1, name: 'Chair 2D' },
   { id: 'desk', type: 'desk', x: 780, y: 480, w: 160, h: 70, score: 2, name: 'Librarian Desk' },
   { id: 'sc', type: 'chair', x: 840, y: 560, w: 40, h: 40, score: 1, name: 'Staff Chair' },
@@ -57,15 +66,18 @@ const confidenceFor = (item) => {
   return Math.min(99, base);
 };
 
-function FurnitureItem({ item, isDetected, isFocused, scanPhase }) {
+function FurnitureItem({ item, isDetected, isFocused, phase }) {
   const color = scoreColor(item.score);
   const fill = furnitureFillByType(item.type);
-  const dimmed = scanPhase === 'scanning' && !isDetected;
+  const dimmed = phase === 'identifying' && !isDetected;
+
+  // Show condition pill only after analysis phase
+  const showCondition = phase === 'analyzing' || phase === 'done';
 
   return (
     <motion.g
       initial={{ opacity: 0 }}
-      animate={{ opacity: dimmed ? 0.25 : 1 }}
+      animate={{ opacity: dimmed ? 0.2 : 1 }}
       transition={{ duration: 0.3 }}
     >
       <rect
@@ -75,12 +87,12 @@ function FurnitureItem({ item, isDetected, isFocused, scanPhase }) {
         height={item.h}
         rx={item.type === 'chair' ? 6 : 4}
         fill={fill}
-        stroke={color}
+        stroke={showCondition ? color : '#64748b'}
         strokeWidth={2.5}
         opacity={0.85}
       />
-      {/* Condition pill — only show once detected */}
-      {(isDetected || scanPhase === 'done' || scanPhase === 'idle') && (
+      {/* Condition pill — only visible after condition analysis */}
+      {showCondition && (
         <motion.g initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300 }}>
           <rect
             x={item.x + item.w / 2 - 14}
@@ -105,7 +117,7 @@ function FurnitureItem({ item, isDetected, isFocused, scanPhase }) {
         </motion.g>
       )}
 
-      {/* Highlight ring on focused item */}
+      {/* Focus ring */}
       {isFocused && (
         <rect
           x={item.x - 6}
@@ -114,7 +126,7 @@ function FurnitureItem({ item, isDetected, isFocused, scanPhase }) {
           height={item.h + 12}
           rx={10}
           fill="none"
-          stroke="#22d3ee"
+          stroke={phase === 'analyzing' || phase === 'done' ? '#a78bfa' : '#22d3ee'}
           strokeWidth={3}
           strokeDasharray="6 4"
         >
@@ -126,7 +138,6 @@ function FurnitureItem({ item, isDetected, isFocused, scanPhase }) {
 }
 
 function DetectionBox({ item, showLabel }) {
-  const color = scoreColor(item.score);
   const classification = AI_CLASSIFICATION[item.type];
   const confidence = confidenceFor(item);
   const labelW = Math.max(130, classification.class.length * 8 + 50);
@@ -138,7 +149,6 @@ function DetectionBox({ item, showLabel }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
     >
-      {/* Corner brackets */}
       {[
         [item.x - 4, item.y - 4],
         [item.x + item.w + 4, item.y - 4],
@@ -158,7 +168,6 @@ function DetectionBox({ item, showLabel }) {
           />
         );
       })}
-      {/* Dashed box */}
       <rect
         x={item.x - 4}
         y={item.y - 4}
@@ -170,23 +179,9 @@ function DetectionBox({ item, showLabel }) {
         strokeDasharray="3 3"
       />
 
-      {/* Classification label */}
       {showLabel && (
-        <motion.g
-          initial={{ opacity: 0, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-        >
-          <rect
-            x={item.x - 4}
-            y={item.y - 28}
-            width={labelW}
-            height={22}
-            rx={4}
-            fill="#0f172a"
-            stroke="#22d3ee"
-            strokeWidth={1.5}
-          />
+        <motion.g initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
+          <rect x={item.x - 4} y={item.y - 28} width={labelW} height={22} rx={4} fill="#0f172a" stroke="#22d3ee" strokeWidth={1.5} />
           <circle cx={item.x + 6} cy={item.y - 17} r={3} fill="#22d3ee">
             <animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite" />
           </circle>
@@ -198,6 +193,37 @@ function DetectionBox({ item, showLabel }) {
           </text>
         </motion.g>
       )}
+    </motion.g>
+  );
+}
+
+// Condition analysis overlay — shows point-cloud deviation heatmap on focused item
+function ConditionHeatmap({ item }) {
+  const color = scoreColor(item.score);
+  // More "heat" dots for worse condition
+  const density = item.score * 4 + 4;
+  const dots = useMemo(() => {
+    const arr = [];
+    for (let i = 0; i < density; i++) {
+      const seed = (i * 9301 + 49297 + item.id.charCodeAt(0)) % 233280;
+      const rx = (seed / 233280);
+      const ry = ((seed * 7) % 233280) / 233280;
+      arr.push({
+        cx: item.x + rx * item.w,
+        cy: item.y + ry * item.h,
+        r: 2 + (ry * 3),
+      });
+    }
+    return arr;
+  }, [item, density]);
+
+  return (
+    <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      {dots.map((d, i) => (
+        <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill={color} opacity={0.55}>
+          <animate attributeName="opacity" values="0.2;0.7;0.2" dur={`${1.5 + (i % 3) * 0.5}s`} repeatCount="indefinite" begin={`${i * 0.08}s`} />
+        </circle>
+      ))}
     </motion.g>
   );
 }
@@ -225,16 +251,7 @@ function AssetOverlay({ overlay, index, hoveredAsset, setHoveredAsset, onAssetCl
 
       {isHovered && (
         <g>
-          <rect
-            x={sx + 14}
-            y={sy - 24}
-            width={Math.max(120, (overlay.equipment_name?.length || 8) * 7)}
-            height={28}
-            rx={6}
-            fill="#0f172a"
-            stroke={color}
-            strokeWidth={1.5}
-          />
+          <rect x={sx + 14} y={sy - 24} width={Math.max(120, (overlay.equipment_name?.length || 8) * 7)} height={28} rx={6} fill="#0f172a" stroke={color} strokeWidth={1.5} />
           <text x={sx + 22} y={sy - 6} fontSize={12} fontWeight={600} fill="white">
             {overlay.equipment_name || `Asset ${index + 1}`}
           </text>
@@ -244,133 +261,178 @@ function AssetOverlay({ overlay, index, hoveredAsset, setHoveredAsset, onAssetCl
   );
 }
 
-// AI Inspection side-panel
-function InspectionPanel({ item }) {
+// AI Inspection panel — different content per phase
+function InspectionPanel({ item, phase }) {
   if (!item) return null;
   const classification = AI_CLASSIFICATION[item.type];
   const confidence = confidenceFor(item);
   const color = scoreColor(item.score);
+  const findings = CONDITION_FINDINGS[item.score];
+
+  const isConditionPhase = phase === 'analyzing' || phase === 'done';
+  const headerColor = isConditionPhase ? 'text-violet-400' : 'text-cyan-400';
+  const headerBg = isConditionPhase ? 'bg-violet-500/20' : 'bg-cyan-500/20';
+  const borderColor = isConditionPhase ? 'border-violet-400/30' : 'border-cyan-400/30';
 
   return (
     <motion.div
+      key={phase + item.id}
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
-      className="absolute right-3 top-16 w-72 bg-slate-900/95 backdrop-blur-xl border border-cyan-400/30 rounded-xl p-4 text-white shadow-2xl"
+      className={`absolute right-3 top-16 w-80 bg-slate-900/95 backdrop-blur-xl border ${borderColor} rounded-xl p-4 text-white shadow-2xl`}
     >
       <div className="flex items-center gap-2 mb-3 pb-3 border-b border-white/10">
-        <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
-          <Eye className="w-4 h-4 text-cyan-400" />
+        <div className={`w-8 h-8 rounded-lg ${headerBg} flex items-center justify-center`}>
+          {isConditionPhase ? <Activity className={`w-4 h-4 ${headerColor}`} /> : <Eye className={`w-4 h-4 ${headerColor}`} />}
         </div>
         <div>
-          <div className="text-[10px] uppercase tracking-wider text-cyan-400 font-semibold">AI Inspecting</div>
+          <div className={`text-[10px] uppercase tracking-wider ${headerColor} font-semibold`}>
+            {isConditionPhase ? 'Condition Analysis' : 'Asset Identification'}
+          </div>
           <div className="text-sm font-bold">{item.name}</div>
         </div>
       </div>
 
-      {/* Classification */}
-      <div className="mb-3">
-        <div className="text-[10px] uppercase text-white/50 font-semibold mb-1">Classification</div>
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold">{classification.class}</span>
-          <span className="text-xs font-mono text-cyan-400">{confidence}%</span>
-        </div>
-        <div className="text-[10px] text-white/60 mt-0.5">{classification.category}</div>
-        <div className="w-full h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${confidence}%` }}
-            transition={{ duration: 0.8 }}
-            className="h-full bg-gradient-to-r from-cyan-500 to-cyan-300"
-          />
-        </div>
-      </div>
+      {/* PHASE 1 — IDENTIFICATION */}
+      {!isConditionPhase && (
+        <>
+          <div className="mb-3">
+            <div className="text-[10px] uppercase text-white/50 font-semibold mb-1">Classification</div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold">{classification.class}</span>
+              <span className="text-xs font-mono text-cyan-400">{confidence}%</span>
+            </div>
+            <div className="text-[10px] text-white/60 mt-0.5">{classification.category}</div>
+            <div className="w-full h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
+              <motion.div initial={{ width: 0 }} animate={{ width: `${confidence}%` }} transition={{ duration: 0.8 }} className="h-full bg-gradient-to-r from-cyan-500 to-cyan-300" />
+            </div>
+          </div>
+          <div>
+            <div className="text-[10px] uppercase text-white/50 font-semibold mb-1.5">Detected Features</div>
+            <div className="space-y-1">
+              {classification.features.map((f, i) => (
+                <motion.div key={f} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} className="flex items-center gap-2 text-xs">
+                  <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
+                  <span className="text-white/80">{f}</span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
-      {/* Detected features */}
-      <div className="mb-3">
-        <div className="text-[10px] uppercase text-white/50 font-semibold mb-1.5">Detected Features</div>
-        <div className="space-y-1">
-          {classification.features.map((f, i) => (
-            <motion.div
-              key={f}
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="flex items-center gap-2 text-xs"
-            >
-              <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
-              <span className="text-white/80">{f}</span>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+      {/* PHASE 2 — CONDITION ANALYSIS */}
+      {isConditionPhase && (
+        <>
+          <div className="mb-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] uppercase text-white/50 font-semibold">Condition Score</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ backgroundColor: color, color: 'white' }}>
+                {item.score}/5 · {scoreLabel(item.score)}
+              </span>
+            </div>
+            <div className="text-xs text-white/80 mt-2">{findings.summary}</div>
+          </div>
 
-      {/* Condition assessment */}
-      <div className="pt-3 border-t border-white/10">
-        <div className="text-[10px] uppercase text-white/50 font-semibold mb-1.5">Condition Assessment</div>
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold">{scoreLabel(item.score)}</span>
-          <span
-            className="px-2 py-0.5 rounded-full text-[10px] font-bold"
-            style={{ backgroundColor: color, color: 'white' }}
-          >
-            {item.score}/5
-          </span>
-        </div>
-      </div>
+          <div className="mb-3">
+            <div className="text-[10px] uppercase text-white/50 font-semibold mb-1.5 flex items-center gap-1.5">
+              <Ruler className="w-3 h-3" /> LiDAR Findings
+            </div>
+            <div className="space-y-1.5">
+              {findings.findings.map((f, i) => (
+                <motion.div key={f} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} className="flex items-start gap-2 text-xs">
+                  <div className="w-1 h-1 rounded-full mt-1.5 shrink-0" style={{ backgroundColor: color }} />
+                  <span className="text-white/80">{f}</span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-white/10">
+            <div className="text-[10px] uppercase text-white/50 font-semibold mb-1 flex items-center gap-1.5">
+              <AlertTriangle className="w-3 h-3" /> Recommended Action
+            </div>
+            <div className="text-xs font-semibold" style={{ color }}>{findings.action}</div>
+          </div>
+        </>
+      )}
     </motion.div>
   );
 }
 
 export default function LibraryRoomView2D({ overlays = [], hoveredAsset, setHoveredAsset, onAssetClick }) {
-  const [scanPhase, setScanPhase] = useState('idle'); // idle | scanning | done
-  const [detectedIds, setDetectedIds] = useState(new Set(FURNITURE.map(f => f.id)));
+  // Phases: idle → identifying → identified → analyzing → done
+  const [phase, setPhase] = useState('idle');
+  const [detectedIds, setDetectedIds] = useState(new Set());
   const [focusedId, setFocusedId] = useState(null);
-  const [scanProgress, setScanProgress] = useState(100);
+  const [progress, setProgress] = useState(0);
 
   const focusedItem = useMemo(() => FURNITURE.find(f => f.id === focusedId), [focusedId]);
 
-  // Run the scan animation sequence
-  const runScan = () => {
-    setScanPhase('scanning');
+  // ===== PHASE 1: Run Asset Identification =====
+  const runIdentification = () => {
+    setPhase('identifying');
     setDetectedIds(new Set());
     setFocusedId(null);
-    setScanProgress(0);
+    setProgress(0);
 
-    // Ordered reveal — simulates the sweep detecting objects
     const order = [...FURNITURE].sort((a, b) => a.y - b.y || a.x - b.x);
     order.forEach((item, i) => {
       setTimeout(() => {
         setDetectedIds(prev => new Set([...prev, item.id]));
-        setScanProgress(Math.round(((i + 1) / order.length) * 100));
-      }, 200 + i * 180);
+        setProgress(Math.round(((i + 1) / order.length) * 100));
+      }, 200 + i * 150);
     });
 
-    // Focus on a representative chair after full scan
     setTimeout(() => {
-      setScanPhase('done');
-      setFocusedId('c1b');
-    }, 200 + order.length * 180 + 400);
+      setPhase('identified');
+      setFocusedId('c1b'); // focus on a chair to demo classification
+    }, 200 + order.length * 150 + 400);
   };
 
-  const resetScan = () => {
-    setScanPhase('idle');
-    setDetectedIds(new Set(FURNITURE.map(f => f.id)));
+  // ===== PHASE 2: Run Condition Analysis =====
+  const runConditionAnalysis = () => {
+    setPhase('analyzing');
+    setProgress(0);
+
+    // Cycle through assets to show condition heatmap, then settle on a critical one
+    const samples = ['c2c', 'bs-e', 'bs-c', 'c1b', 't2'];
+    samples.forEach((id, i) => {
+      setTimeout(() => {
+        setFocusedId(id);
+        setProgress(Math.round(((i + 1) / samples.length) * 100));
+      }, 400 + i * 900);
+    });
+
+    setTimeout(() => {
+      setPhase('done');
+      setFocusedId('c2c'); // critical broken chair — final focus
+    }, 400 + samples.length * 900 + 400);
+  };
+
+  const reset = () => {
+    setPhase('idle');
+    setDetectedIds(new Set());
     setFocusedId(null);
-    setScanProgress(100);
+    setProgress(0);
   };
 
-  // Auto-cycle focus through furniture types after scan completes
+  // After "done", cycle focus through a few assets to showcase variety
   useEffect(() => {
-    if (scanPhase !== 'done') return;
-    const samples = ['c1b', 't1', 'bs-c', 'desk'];
+    if (phase !== 'done') return;
+    const samples = ['c2c', 'bs-e', 'bs-c', 't2', 'c1b'];
     let i = 0;
     const interval = setInterval(() => {
       i = (i + 1) % samples.length;
       setFocusedId(samples[i]);
-    }, 3500);
+    }, 4000);
     return () => clearInterval(interval);
-  }, [scanPhase]);
+  }, [phase]);
+
+  const isIdentifying = phase === 'identifying';
+  const isAnalyzing = phase === 'analyzing';
+  const showDetectionBoxes = phase === 'identifying' || phase === 'identified' || phase === 'analyzing' || phase === 'done';
 
   return (
     <div className="relative w-full h-full">
@@ -384,57 +446,36 @@ export default function LibraryRoomView2D({ overlays = [], hoveredAsset, setHove
             <stop offset="0%" stopColor="#9f1239" />
             <stop offset="100%" stopColor="#7f1d1d" />
           </linearGradient>
-          <linearGradient id="scan-beam" x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient id="scan-beam-cyan" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#22d3ee" stopOpacity="0" />
             <stop offset="50%" stopColor="#22d3ee" stopOpacity="0.6" />
             <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
           </linearGradient>
-          <radialGradient id="scan-pulse" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
-          </radialGradient>
+          <linearGradient id="scan-beam-violet" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#a78bfa" stopOpacity="0" />
+            <stop offset="50%" stopColor="#a78bfa" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#a78bfa" stopOpacity="0" />
+          </linearGradient>
         </defs>
 
-        {/* Floor */}
         <rect x="40" y="40" width="920" height="620" fill="url(#floor-pattern)" rx="4" />
-        {/* Walls */}
         <rect x="40" y="40" width="920" height="620" fill="none" stroke="#fef3c7" strokeWidth="12" rx="4" />
-        {/* Central rug */}
         <rect x="200" y="230" width="520" height="180" fill="url(#rug-gradient)" rx="6" opacity="0.7" />
 
         {/* LiDAR grid overlay during scanning */}
-        {scanPhase === 'scanning' && (
+        {(isIdentifying || isAnalyzing) && (
           <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             {Array.from({ length: 20 }).map((_, i) => (
-              <line
-                key={`h${i}`}
-                x1={40}
-                y1={40 + i * 32}
-                x2={960}
-                y2={40 + i * 32}
-                stroke="#22d3ee"
-                strokeWidth={0.5}
-                opacity={0.15}
-              />
+              <line key={`h${i}`} x1={40} y1={40 + i * 32} x2={960} y2={40 + i * 32} stroke={isAnalyzing ? '#a78bfa' : '#22d3ee'} strokeWidth={0.5} opacity={0.15} />
             ))}
             {Array.from({ length: 30 }).map((_, i) => (
-              <line
-                key={`v${i}`}
-                x1={40 + i * 32}
-                y1={40}
-                x2={40 + i * 32}
-                y2={660}
-                stroke="#22d3ee"
-                strokeWidth={0.5}
-                opacity={0.15}
-              />
+              <line key={`v${i}`} x1={40 + i * 32} y1={40} x2={40 + i * 32} y2={660} stroke={isAnalyzing ? '#a78bfa' : '#22d3ee'} strokeWidth={0.5} opacity={0.15} />
             ))}
           </motion.g>
         )}
 
-        {/* Room label */}
         <text x="500" y="680" textAnchor="middle" fontSize="12" fill="#94a3b8" fontWeight={500}>
-          Library Room — AI Spatial Scan Analysis
+          Library Room — LiDAR Asset Identification &amp; Condition Analysis
         </text>
 
         {/* Furniture */}
@@ -444,30 +485,48 @@ export default function LibraryRoomView2D({ overlays = [], hoveredAsset, setHove
             item={item}
             isDetected={detectedIds.has(item.id)}
             isFocused={focusedId === item.id}
-            scanPhase={scanPhase}
+            phase={phase}
           />
         ))}
 
-        {/* Detection boxes — visible on detected items during/after scan */}
-        {(scanPhase === 'scanning' || scanPhase === 'done') &&
-          FURNITURE.filter(f => detectedIds.has(f.id)).map((item) => (
+        {/* Detection boxes — shown from Phase 1 onward */}
+        {showDetectionBoxes &&
+          FURNITURE.filter(f => detectedIds.has(f.id) || phase !== 'identifying').map((item) => (
             <DetectionBox
               key={`det-${item.id}`}
               item={item}
-              showLabel={focusedId === item.id || scanPhase === 'done'}
+              showLabel={focusedId === item.id || phase === 'identified'}
             />
           ))}
 
-        {/* Scanning beam — sweeps from top to bottom */}
-        {scanPhase === 'scanning' && (
+        {/* Condition heatmap on focused asset during/after Phase 2 */}
+        {(isAnalyzing || phase === 'done') && focusedItem && (
+          <ConditionHeatmap item={focusedItem} />
+        )}
+
+        {/* Phase 1 sweep beam (cyan, top→bottom) */}
+        {isIdentifying && (
           <motion.rect
             initial={{ y: 40 }}
             animate={{ y: 620 }}
-            transition={{ duration: FURNITURE.length * 0.18, ease: 'linear' }}
+            transition={{ duration: FURNITURE.length * 0.15, ease: 'linear' }}
             x={40}
             width={920}
             height={60}
-            fill="url(#scan-beam)"
+            fill="url(#scan-beam-cyan)"
+          />
+        )}
+
+        {/* Phase 2 sweep beam (violet, left→right) */}
+        {isAnalyzing && (
+          <motion.rect
+            initial={{ x: 40 }}
+            animate={{ x: 900 }}
+            transition={{ duration: 4, ease: 'linear' }}
+            y={40}
+            width={60}
+            height={620}
+            fill="url(#scan-beam-violet)"
           />
         )}
 
@@ -484,70 +543,94 @@ export default function LibraryRoomView2D({ overlays = [], hoveredAsset, setHove
         ))}
       </svg>
 
-      {/* Scan controls */}
+      {/* Controls */}
       <div className="absolute top-3 right-3 flex gap-2">
-        {scanPhase !== 'scanning' && (
-          <button
-            onClick={runScan}
-            className="flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg shadow-cyan-500/30 transition-all"
-          >
-            {scanPhase === 'done' ? <RotateCcw className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-            {scanPhase === 'done' ? 'Re-scan' : 'Run AI Scan'}
+        {phase === 'idle' && (
+          <button onClick={runIdentification} className="flex items-center gap-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg shadow-cyan-500/30 transition-all">
+            <Play className="w-3.5 h-3.5" />
+            Step 1 · Identify Assets
           </button>
         )}
-        {scanPhase === 'done' && (
-          <button
-            onClick={resetScan}
-            className="flex items-center gap-1.5 bg-slate-800/80 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/10"
-          >
-            Reset
+        {phase === 'identified' && (
+          <>
+            <button onClick={runConditionAnalysis} className="flex items-center gap-1.5 bg-violet-500 hover:bg-violet-400 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg shadow-violet-500/30 transition-all">
+              <Activity className="w-3.5 h-3.5" />
+              Step 2 · Analyse Condition
+            </button>
+            <button onClick={reset} className="flex items-center gap-1.5 bg-slate-800/80 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/10">
+              Reset
+            </button>
+          </>
+        )}
+        {phase === 'done' && (
+          <button onClick={reset} className="flex items-center gap-1.5 bg-slate-800/80 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/10">
+            <RotateCcw className="w-3.5 h-3.5" />
+            Reset Demo
           </button>
         )}
       </div>
 
-      {/* Scan progress bar */}
-      {scanPhase === 'scanning' && (
+      {/* Phase indicator / progress */}
+      {(isIdentifying || isAnalyzing) && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute top-16 right-3 w-56 bg-slate-900/90 backdrop-blur-md border border-cyan-400/30 rounded-lg p-3 text-white"
+          className={`absolute top-16 right-3 w-60 bg-slate-900/90 backdrop-blur-md border rounded-lg p-3 text-white ${isAnalyzing ? 'border-violet-400/30' : 'border-cyan-400/30'}`}
         >
           <div className="flex items-center gap-2 mb-2">
-            <Scan className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-            <span className="text-[11px] font-bold uppercase tracking-wide text-cyan-400">LiDAR Scanning</span>
-            <span className="ml-auto text-xs font-mono">{scanProgress}%</span>
+            {isAnalyzing ? <Activity className="w-3.5 h-3.5 text-violet-400 animate-pulse" /> : <Scan className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />}
+            <span className={`text-[11px] font-bold uppercase tracking-wide ${isAnalyzing ? 'text-violet-400' : 'text-cyan-400'}`}>
+              {isAnalyzing ? 'Condition Scan' : 'LiDAR Scan'}
+            </span>
+            <span className="ml-auto text-xs font-mono">{progress}%</span>
           </div>
           <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-            <motion.div
-              animate={{ width: `${scanProgress}%` }}
-              className="h-full bg-gradient-to-r from-cyan-500 to-cyan-300"
-            />
+            <motion.div animate={{ width: `${progress}%` }} className={`h-full bg-gradient-to-r ${isAnalyzing ? 'from-violet-500 to-violet-300' : 'from-cyan-500 to-cyan-300'}`} />
           </div>
           <div className="mt-2 text-[10px] text-white/60">
-            Objects detected: <span className="text-cyan-400 font-semibold">{detectedIds.size}</span> / {FURNITURE.length}
+            {isAnalyzing
+              ? <>Measuring surface deviation & wear…</>
+              : <>Objects identified: <span className="text-cyan-400 font-semibold">{detectedIds.size}</span> / {FURNITURE.length}</>}
           </div>
         </motion.div>
       )}
 
-      {/* AI Inspection panel */}
-      <AnimatePresence>
-        {scanPhase === 'done' && focusedItem && <InspectionPanel item={focusedItem} />}
+      {/* AI inspection panel */}
+      <AnimatePresence mode="wait">
+        {(phase === 'identified' || phase === 'analyzing' || phase === 'done') && focusedItem && (
+          <InspectionPanel item={focusedItem} phase={phase} />
+        )}
       </AnimatePresence>
 
       {/* Idle prompt */}
-      {scanPhase === 'idle' && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="absolute top-16 right-3 bg-slate-900/80 backdrop-blur-md border border-white/10 rounded-lg p-3 text-white max-w-[220px]"
-        >
-          <div className="flex items-center gap-2 mb-1">
+      {phase === 'idle' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute top-16 right-3 w-60 bg-slate-900/85 backdrop-blur-md border border-white/10 rounded-lg p-3 text-white">
+          <div className="flex items-center gap-2 mb-2">
             <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="text-[11px] font-bold uppercase tracking-wide text-cyan-400">AI Demo</span>
+            <span className="text-[11px] font-bold uppercase tracking-wide text-cyan-400">2-Step AI Workflow</span>
           </div>
-          <p className="text-[11px] text-white/70 leading-relaxed">
-            Click <span className="font-semibold text-white">Run AI Scan</span> to watch the system detect, classify and assess every object in the room.
-          </p>
+          <div className="space-y-1.5 text-[11px] text-white/70">
+            <div className="flex items-start gap-2">
+              <span className="w-4 h-4 rounded-full bg-cyan-500/20 text-cyan-400 font-bold text-[9px] flex items-center justify-center shrink-0 mt-px">1</span>
+              <span><span className="font-semibold text-white">Identify</span> every asset in the room (chair, table, shelf…)</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="w-4 h-4 rounded-full bg-violet-500/20 text-violet-400 font-bold text-[9px] flex items-center justify-center shrink-0 mt-px">2</span>
+              <span><span className="font-semibold text-white">Analyse</span> each asset's condition from LiDAR data</span>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Transition prompt after Phase 1 */}
+      {phase === 'identified' && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute bottom-14 left-1/2 -translate-x-1/2 bg-violet-500/90 backdrop-blur-md border border-violet-300/40 rounded-lg px-4 py-2 text-white text-xs font-semibold shadow-xl flex items-center gap-2"
+        >
+          <CheckCircle2 className="w-4 h-4" />
+          {FURNITURE.length} assets identified · Ready for condition analysis →
         </motion.div>
       )}
     </div>
