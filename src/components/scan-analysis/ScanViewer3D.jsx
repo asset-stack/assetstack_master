@@ -1,6 +1,6 @@
 import React, { Suspense, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Html, useGLTF, Bounds } from '@react-three/drei';
+import { OrbitControls, Html, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import LibraryRoomScene from './LibraryRoomScene';
 
@@ -75,9 +75,7 @@ export default function ScanViewer3D({ modelUrl, modelType = 'demo', overlays = 
             <div className="text-white text-sm">Loading scan…</div>
           </Html>
         }>
-          <Bounds fit clip observe margin={1.2}>
-            <Model url={modelUrl} type={modelType} />
-          </Bounds>
+          <Model url={modelUrl} type={modelType} />
           {overlays.map((o, i) => (
             <AssetMarker
               key={i}
