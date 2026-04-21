@@ -30,9 +30,9 @@ export default function ScanViewer3D({ modelUrl, modelType = 'demo', overlays = 
       <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2 text-white text-xs">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-          <span className="font-semibold">Scan Viewer — Library Room</span>
+          <span className="font-semibold">Library Room — AI Scan</span>
         </div>
-        <p className="text-[10px] text-white/60 mt-0.5">Hover assets for details • Click to inspect</p>
+        <p className="text-[10px] text-white/60 mt-0.5">Run the scan to see objects classified in real time</p>
       </div>
       <div className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md border border-white/10 rounded-lg px-3 py-1.5 text-[10px] text-white/70">
         {overlays.length} assets overlaid
