@@ -1,0 +1,109 @@
+{
+  "name": "DigitalTwinModel",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Display name (e.g. 'Ground Floor Scan - Q2 2026')"
+    },
+    "description": {
+      "type": "string"
+    },
+    "location_id": {
+      "type": "string",
+      "description": "Reference to Location entity"
+    },
+    "location_name": {
+      "type": "string"
+    },
+    "model_type": {
+      "type": "string",
+      "enum": [
+        "obj",
+        "gltf",
+        "glb",
+        "lidar_mesh",
+        "photogrammetry",
+        "bim"
+      ],
+      "default": "gltf"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of the uploaded 3D model file"
+    },
+    "preview_image_url": {
+      "type": "string",
+      "description": "2D preview / screenshot of the scan"
+    },
+    "file_size_mb": {
+      "type": "number"
+    },
+    "scan_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "is_geo_referenced": {
+      "type": "boolean",
+      "default": false
+    },
+    "origin_lat": {
+      "type": "number"
+    },
+    "origin_lng": {
+      "type": "number"
+    },
+    "scale_factor": {
+      "type": "number",
+      "default": 1,
+      "description": "Unit scale (1 = meters)"
+    },
+    "asset_overlays": {
+      "type": "array",
+      "description": "Assets tagged in this scan with their 3D positions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "equipment_id": {
+            "type": "string"
+          },
+          "equipment_name": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "z": {
+            "type": "number"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "total_anomalies": {
+      "type": "number",
+      "default": 0
+    },
+    "pending_review_count": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "processing",
+        "ready",
+        "archived"
+      ],
+      "default": "ready"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

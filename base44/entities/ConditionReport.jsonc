@@ -1,0 +1,137 @@
+{
+  "name": "ConditionReport",
+  "type": "object",
+  "properties": {
+    "digital_twin_model_id": {
+      "type": "string",
+      "description": "Reference to the DigitalTwinModel scan"
+    },
+    "digital_twin_model_name": {
+      "type": "string"
+    },
+    "equipment_id": {
+      "type": "string",
+      "description": "Linked asset (optional)"
+    },
+    "equipment_name": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Image/screenshot of the detected anomaly"
+    },
+    "anomaly_type": {
+      "type": "string",
+      "enum": [
+        "scratch",
+        "dent",
+        "crack",
+        "corrosion",
+        "stain",
+        "broken_part",
+        "missing_part",
+        "wear",
+        "water_damage",
+        "graffiti",
+        "misalignment",
+        "other"
+      ],
+      "default": "other"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "minor",
+        "moderate",
+        "major",
+        "critical"
+      ],
+      "default": "minor"
+    },
+    "condition_score": {
+      "type": "number",
+      "description": "1-5 condition score (1=excellent, 5=failed)"
+    },
+    "ai_confidence": {
+      "type": "number",
+      "description": "AI confidence 0-100"
+    },
+    "ai_description": {
+      "type": "string",
+      "description": "AI-generated description of the anomaly"
+    },
+    "ai_model_version": {
+      "type": "string",
+      "description": "ML model version used"
+    },
+    "bounding_box": {
+      "type": "object",
+      "description": "Normalized bbox (0-1) in the image",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        }
+      }
+    },
+    "location_3d": {
+      "type": "object",
+      "description": "3D position within the scan",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        }
+      }
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "corrected"
+      ],
+      "default": "pending"
+    },
+    "reviewed_by": {
+      "type": "string"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reviewer_notes": {
+      "type": "string"
+    },
+    "corrected_anomaly_type": {
+      "type": "string",
+      "description": "If reviewer corrected the AI, this is the true type"
+    },
+    "corrected_severity": {
+      "type": "string"
+    },
+    "used_for_training": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this report has been fed back into ML training"
+    }
+  },
+  "required": [
+    "digital_twin_model_id",
+    "anomaly_type"
+  ]
+}

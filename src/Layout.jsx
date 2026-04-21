@@ -39,6 +39,7 @@ const navSections = [
       { name: 'Equipment', icon: Cpu, page: 'Equipment' },
       { name: 'Asset Tree', icon: GitBranch, page: 'AssetTree' },
       { name: 'Network Globe', icon: Globe2, page: 'NetworkGlobe' },
+      { name: 'Scan Analysis', icon: Sparkles, page: 'ScanAnalysis' },
       { name: 'Locations', icon: MapPin, page: 'Locations' },
       { name: 'Digital Twin', icon: Box, page: 'DigitalTwin' },
       { name: 'Sensors', icon: Radio, page: 'SensorIntegration' },
