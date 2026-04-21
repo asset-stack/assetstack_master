@@ -2,6 +2,7 @@ import React, { Suspense, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Grid, Environment, Html, useGLTF, Bounds } from '@react-three/drei';
 import * as THREE from 'three';
+import LibraryRoomScene from './LibraryRoomScene';
 
 function GLTFModel({ url }) {
   const { scene } = useGLTF(url);
@@ -9,42 +10,12 @@ function GLTFModel({ url }) {
 }
 
 function Model({ url, type }) {
-  // GLTF/GLB loader (drei handles it). For OBJ, fall back to a placeholder box.
+  // GLTF/GLB loader (drei handles it). For OBJ, fall back to the demo library scene.
   if (url && (type === 'gltf' || type === 'glb')) {
     return <GLTFModel url={url} />;
   }
-  // Placeholder geometry for demo when no model is loaded
-  return (
-    <group>
-      {/* Floor */}
-      <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[20, 20]} />
-        <meshStandardMaterial color="#cbd5e1" />
-      </mesh>
-      {/* Walls */}
-      <mesh position={[0, 2, -10]} castShadow receiveShadow>
-        <boxGeometry args={[20, 4, 0.2]} />
-        <meshStandardMaterial color="#94a3b8" />
-      </mesh>
-      <mesh position={[-10, 2, 0]} castShadow receiveShadow>
-        <boxGeometry args={[0.2, 4, 20]} />
-        <meshStandardMaterial color="#94a3b8" />
-      </mesh>
-      {/* Demo equipment */}
-      <mesh position={[3, 0.5, 2]} castShadow>
-        <boxGeometry args={[1.5, 1, 1]} />
-        <meshStandardMaterial color="#6366f1" />
-      </mesh>
-      <mesh position={[-4, 0.75, -3]} castShadow>
-        <cylinderGeometry args={[0.6, 0.6, 1.5, 16]} />
-        <meshStandardMaterial color="#8b5cf6" />
-      </mesh>
-      <mesh position={[0, 0.3, 5]} castShadow>
-        <boxGeometry args={[2, 0.6, 1]} />
-        <meshStandardMaterial color="#ec4899" />
-      </mesh>
-    </group>
-  );
+  // Demo: library room with furnishings and condition scores
+  return <LibraryRoomScene />;
 }
 
 function AssetMarker({ position, label, condition = 'operational', onClick }) {
