@@ -1,6 +1,6 @@
 import React, { Suspense, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Grid, Environment, Html, useGLTF, Bounds } from '@react-three/drei';
+import { OrbitControls, Grid, Html, useGLTF, Bounds } from '@react-three/drei';
 import * as THREE from 'three';
 import LibraryRoomScene from './LibraryRoomScene';
 
@@ -87,8 +87,9 @@ export default function ScanViewer3D({ modelUrl, modelType = 'demo', overlays = 
               onClick={() => onAssetClick && onAssetClick(o)}
             />
           ))}
-          <Environment preset="city" />
         </Suspense>
+        <hemisphereLight args={['#ffffff', '#64748b', 0.6]} />
+        <pointLight position={[-5, 8, 5]} intensity={0.4} />
         <Grid args={[30, 30]} cellColor="#334155" sectionColor="#475569" fadeDistance={30} fadeStrength={1} />
         <OrbitControls makeDefault enableDamping dampingFactor={0.08} />
       </Canvas>
