@@ -40,13 +40,13 @@ function Bookshelf({ position, rotation = [0, 0, 0], score, name }) {
   return (
     <group position={position} rotation={rotation}>
       {/* Outer frame */}
-      <mesh position={[0, 1.5, 0]} castShadow receiveShadow>
+      <mesh position={[0, 1.5, 0]}>
         <boxGeometry args={[2, 3, 0.4]} />
         <meshStandardMaterial color="#5b3a1e" />
       </mesh>
       {/* Shelves (books) */}
       {[0.3, 0.9, 1.5, 2.1, 2.7].map((y, i) => (
-        <mesh key={i} position={[0, y, 0.05]} castShadow>
+        <mesh key={i} position={[0, y, 0.05]}>
           <boxGeometry args={[1.8, 0.35, 0.3]} />
           <meshStandardMaterial color={['#b45309', '#7f1d1d', '#1e3a8a', '#134e4a', '#581c87'][i]} />
         </mesh>
@@ -60,23 +60,23 @@ function ReadingTable({ position, score, name }) {
   return (
     <group position={position}>
       {/* Tabletop */}
-      <mesh position={[0, 0.75, 0]} castShadow receiveShadow>
+      <mesh position={[0, 0.75, 0]}>
         <boxGeometry args={[2.4, 0.1, 1.2]} />
         <meshStandardMaterial color="#92400e" />
       </mesh>
       {/* Legs */}
       {[[-1.05, 0.35, -0.5], [1.05, 0.35, -0.5], [-1.05, 0.35, 0.5], [1.05, 0.35, 0.5]].map((p, i) => (
-        <mesh key={i} position={p} castShadow>
+        <mesh key={i} position={p}>
           <boxGeometry args={[0.1, 0.7, 0.1]} />
           <meshStandardMaterial color="#5b3a1e" />
         </mesh>
       ))}
       {/* Lamp */}
-      <mesh position={[0.8, 0.95, 0]} castShadow>
+      <mesh position={[0.8, 0.95, 0]}>
         <cylinderGeometry args={[0.05, 0.05, 0.3, 8]} />
         <meshStandardMaterial color="#1f2937" />
       </mesh>
-      <mesh position={[0.8, 1.15, 0]} castShadow>
+      <mesh position={[0.8, 1.15, 0]}>
         <coneGeometry args={[0.15, 0.2, 16]} />
         <meshStandardMaterial color="#fcd34d" emissive="#fcd34d" emissiveIntensity={0.3} />
       </mesh>
@@ -89,18 +89,18 @@ function Chair({ position, rotation = [0, 0, 0], score, name }) {
   return (
     <group position={position} rotation={rotation}>
       {/* Seat */}
-      <mesh position={[0, 0.45, 0]} castShadow>
+      <mesh position={[0, 0.45, 0]}>
         <boxGeometry args={[0.5, 0.08, 0.5]} />
         <meshStandardMaterial color="#7c2d12" />
       </mesh>
       {/* Back */}
-      <mesh position={[0, 0.85, -0.22]} castShadow>
+      <mesh position={[0, 0.85, -0.22]}>
         <boxGeometry args={[0.5, 0.7, 0.06]} />
         <meshStandardMaterial color="#7c2d12" />
       </mesh>
       {/* Legs */}
       {[[-0.22, 0.22, -0.22], [0.22, 0.22, -0.22], [-0.22, 0.22, 0.22], [0.22, 0.22, 0.22]].map((p, i) => (
-        <mesh key={i} position={p} castShadow>
+        <mesh key={i} position={p}>
           <boxGeometry args={[0.06, 0.45, 0.06]} />
           <meshStandardMaterial color="#451a03" />
         </mesh>
@@ -114,17 +114,17 @@ function LibrarianDesk({ position, score, name }) {
   return (
     <group position={position}>
       {/* Main desk body */}
-      <mesh position={[0, 0.5, 0]} castShadow receiveShadow>
+      <mesh position={[0, 0.5, 0]}>
         <boxGeometry args={[3, 1, 1]} />
         <meshStandardMaterial color="#78350f" />
       </mesh>
       {/* Top */}
-      <mesh position={[0, 1.05, 0]} castShadow>
+      <mesh position={[0, 1.05, 0]}>
         <boxGeometry args={[3.2, 0.1, 1.2]} />
         <meshStandardMaterial color="#92400e" />
       </mesh>
       {/* Computer */}
-      <mesh position={[0.8, 1.35, 0]} castShadow>
+      <mesh position={[0.8, 1.35, 0]}>
         <boxGeometry args={[0.6, 0.4, 0.05]} />
         <meshStandardMaterial color="#0f172a" />
       </mesh>
@@ -135,7 +135,7 @@ function LibrarianDesk({ position, score, name }) {
 
 function Rug({ position }) {
   return (
-    <mesh position={position} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+    <mesh position={position} rotation={[-Math.PI / 2, 0, 0]}>
       <planeGeometry args={[5, 3.5]} />
       <meshStandardMaterial color="#9f1239" />
     </mesh>
@@ -146,21 +146,21 @@ export default function LibraryRoomScene() {
   return (
     <group>
       {/* Floor — wooden */}
-      <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+      <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[18, 14]} />
         <meshStandardMaterial color="#d4a574" />
       </mesh>
 
       {/* Walls — warm cream */}
-      <mesh position={[0, 2, -7]} receiveShadow>
+      <mesh position={[0, 2, -7]}>
         <boxGeometry args={[18, 4, 0.2]} />
         <meshStandardMaterial color="#fef3c7" />
       </mesh>
-      <mesh position={[-9, 2, 0]} receiveShadow>
+      <mesh position={[-9, 2, 0]}>
         <boxGeometry args={[0.2, 4, 14]} />
         <meshStandardMaterial color="#fef3c7" />
       </mesh>
-      <mesh position={[9, 2, 0]} receiveShadow>
+      <mesh position={[9, 2, 0]}>
         <boxGeometry args={[0.2, 4, 14]} />
         <meshStandardMaterial color="#fef3c7" />
       </mesh>

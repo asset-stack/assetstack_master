@@ -67,9 +67,9 @@ function AssetMarker({ position, label, condition = 'operational', onClick }) {
 export default function ScanViewer3D({ modelUrl, modelType = 'demo', overlays = [], onAssetClick }) {
   return (
     <div className="w-full h-full relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-xl overflow-hidden">
-      <Canvas shadows camera={{ position: [8, 8, 12], fov: 50 }}>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 15, 10]} intensity={1.2} castShadow shadow-mapSize={[2048, 2048]} />
+      <Canvas camera={{ position: [8, 8, 12], fov: 50 }}>
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[10, 15, 10]} intensity={1.2} />
         <Suspense fallback={
           <Html center>
             <div className="text-white text-sm">Loading scan…</div>
