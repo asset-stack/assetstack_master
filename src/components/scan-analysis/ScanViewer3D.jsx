@@ -10,11 +10,10 @@ function GLTFModel({ url }) {
 }
 
 function Model({ url, type }) {
-  // GLTF/GLB loader (drei handles it). For OBJ, fall back to the demo library scene.
+  // Show the demo library scene when type is 'demo' or no valid GLTF url provided
   if (url && (type === 'gltf' || type === 'glb')) {
     return <GLTFModel url={url} />;
   }
-  // Demo: library room with furnishings and condition scores
   return <LibraryRoomScene />;
 }
 
