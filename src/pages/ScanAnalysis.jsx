@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,8 @@ import AnomalyReviewCard from '@/components/scan-analysis/AnomalyReviewCard';
 import MLTrainingPanel from '@/components/scan-analysis/MLTrainingPanel';
 import DeskConditionDemo from '@/components/scan-analysis/DeskConditionDemo';
 import QuickAnalyzeImage from '@/components/scan-analysis/QuickAnalyzeImage';
+import OBJFrameCapture from '@/components/scan-analysis/OBJFrameCapture';
+import ScanFramesGallery from '@/components/scan-analysis/ScanFramesGallery';
 
 export default function ScanAnalysisPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -21,6 +23,8 @@ export default function ScanAnalysisPage() {
   const [selectedScanId, setSelectedScanId] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [filter, setFilter] = useState('pending');
+  const [selectedFrameId, setSelectedFrameId] = useState(null);
+  const [extracting, setExtracting] = useState(false);
   const qc = useQueryClient();
 
   const { data: scans = [], isLoading } = useQuery({
@@ -46,6 +50,33 @@ export default function ScanAnalysisPage() {
     },
     enabled: !!selectedScan?.id,
   });
+
+  const { data: frames = [] } = useQuery({
+    queryKey: ['scanFrames', selectedScan?.id],
+    queryFn: async () => {
+      if (!selectedScan?.id) return [];
+      return base44.entities.ScanFrame.filter({ digital_twin_model_id: selectedScan.id }, 'frame_index', 50);
+    },
+    enabled: !!selectedScan?.id,
+    refetchInterval: extracting ? 2000 : false,
+  });
+
+  const selectedFrame = useMemo(
+    () => frames.find((f) => f.id === selectedFrameId) || frames[0],
+    [frames, selectedFrameId]
+  );
+
+  // Auto-trigger frame extraction when a scan has an OBJ file but no frames yet
+  const needsExtraction = !!(
+    selectedScan?.file_url &&
+    ['obj', 'gltf', 'glb'].includes(selectedScan.model_type) &&
+    frames.length === 0
+  );
+
+  // Kick off extraction state when conditions are met
+  useEffect(() => {
+    if (needsExtraction && !extracting) setExtracting(true);
+  }, [needsExtraction, extracting, selectedScan?.id]);
 
   const filteredReports = useMemo(() => {
     if (filter === 'all') return reports;
@@ -190,15 +221,44 @@ export default function ScanAnalysisPage() {
               </div>
             )}
 
-            {/* Preview image with bboxes */}
-            {selectedScan.preview_image_url && (
+            {/* Frame extraction banner */}
+            {(needsExtraction || extracting) && (
+              <OBJFrameCapture
+                scan={selectedScan}
+                onComplete={() => {
+                  setExtracting(false);
+                  qc.invalidateQueries({ queryKey: ['scanFrames', selectedScan.id] });
+                  qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
+                  qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
+                }}
+              />
+            )}
+
+            {/* Frames gallery */}
+            {frames.length > 0 && (
+              <ScanFramesGallery
+                frames={frames}
+                selectedFrameId={selectedFrame?.id}
+                onSelect={(f) => setSelectedFrameId(f.id)}
+              />
+            )}
+
+            {/* Preview image with bboxes — uses selected frame if available, else scan preview */}
+            {(selectedFrame?.image_url || selectedScan.preview_image_url) && (
               <div className="bg-white rounded-xl border border-slate-200 p-4">
                 <h4 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
-                  <Filter className="w-4 h-4" /> Analyzed Image
+                  <Filter className="w-4 h-4" />
+                  Analyzed Image {selectedFrame ? `— ${selectedFrame.angle_label}` : ''}
                 </h4>
                 <div className="relative rounded-lg overflow-hidden bg-slate-100">
-                  <img src={selectedScan.preview_image_url} alt="Scan preview" className="w-full" />
-                  {reports.filter((r) => r.bounding_box).map((r) => (
+                  <img
+                    src={selectedFrame?.image_url || selectedScan.preview_image_url}
+                    alt="Scan preview"
+                    className="w-full"
+                  />
+                  {reports
+                    .filter((r) => r.bounding_box && r.image_url === (selectedFrame?.image_url || selectedScan.preview_image_url))
+                    .map((r) => (
                     <div
                       key={r.id}
                       className={`absolute border-2 rounded ${

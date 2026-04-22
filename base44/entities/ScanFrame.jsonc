@@ -1,0 +1,57 @@
+{
+  "name": "ScanFrame",
+  "type": "object",
+  "properties": {
+    "digital_twin_model_id": {
+      "type": "string",
+      "description": "Parent DigitalTwinModel scan"
+    },
+    "digital_twin_model_name": {
+      "type": "string"
+    },
+    "frame_index": {
+      "type": "number",
+      "description": "Order of this frame (0-7 for 8 angles)"
+    },
+    "angle_label": {
+      "type": "string",
+      "description": "Human-readable angle (e.g. 'Front', 'Top-Down', 'Oblique-NE')"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "JPEG URL of the captured frame"
+    },
+    "camera_position": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        }
+      }
+    },
+    "analysis_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "analyzing",
+        "completed",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "findings_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "digital_twin_model_id",
+    "image_url"
+  ]
+}
