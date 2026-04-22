@@ -15,6 +15,7 @@ import MLTrainingPanel from '@/components/scan-analysis/MLTrainingPanel';
 import DeskConditionDemo from '@/components/scan-analysis/DeskConditionDemo';
 import QuickAnalyzeImage from '@/components/scan-analysis/QuickAnalyzeImage';
 import OBJFrameCapture from '@/components/scan-analysis/OBJFrameCapture';
+import SVGFrameCapture from '@/components/scan-analysis/SVGFrameCapture';
 import ScanFramesGallery from '@/components/scan-analysis/ScanFramesGallery';
 
 export default function ScanAnalysisPage() {
@@ -66,12 +67,12 @@ export default function ScanAnalysisPage() {
     [frames, selectedFrameId]
   );
 
-  // Auto-trigger frame extraction when a scan has an OBJ file but no frames yet
-  const needsExtraction = !!(
-    selectedScan?.file_url &&
-    ['obj', 'gltf', 'glb'].includes(selectedScan.model_type) &&
-    frames.length === 0
-  );
+  // Auto-trigger frame extraction when a scan has no frames yet
+  // - OBJ/GLTF/GLB with file_url → 3D renderer
+  // - Demo scans (no file_url) → SVG scene renderer (uses built-in library room)
+  const hasModelFile = !!(selectedScan?.file_url && ['obj', 'gltf', 'glb'].includes(selectedScan.model_type));
+  const isDemoScene = !!(selectedScan && !selectedScan.file_url);
+  const needsExtraction = !!(selectedScan && frames.length === 0 && (hasModelFile || isDemoScene));
 
   // Kick off extraction state when conditions are met
   useEffect(() => {
@@ -223,15 +224,27 @@ export default function ScanAnalysisPage() {
 
             {/* Frame extraction banner */}
             {(needsExtraction || extracting) && (
-              <OBJFrameCapture
-                scan={selectedScan}
-                onComplete={() => {
-                  setExtracting(false);
-                  qc.invalidateQueries({ queryKey: ['scanFrames', selectedScan.id] });
-                  qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
-                  qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
-                }}
-              />
+              hasModelFile ? (
+                <OBJFrameCapture
+                  scan={selectedScan}
+                  onComplete={() => {
+                    setExtracting(false);
+                    qc.invalidateQueries({ queryKey: ['scanFrames', selectedScan.id] });
+                    qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
+                    qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
+                  }}
+                />
+              ) : (
+                <SVGFrameCapture
+                  scan={selectedScan}
+                  onComplete={() => {
+                    setExtracting(false);
+                    qc.invalidateQueries({ queryKey: ['scanFrames', selectedScan.id] });
+                    qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
+                    qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
+                  }}
+                />
+              )
             )}
 
             {/* Frames gallery */}
