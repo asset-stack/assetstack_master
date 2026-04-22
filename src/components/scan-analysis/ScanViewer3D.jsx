@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import LibraryRoomView2D from './LibraryRoomView2D';
+import DeskConditionDemo from './DeskConditionDemo';
 
 export default function ScanViewer3D({ modelUrl, modelType = 'demo', overlays = [], onAssetClick }) {
   const [hoveredAsset, setHoveredAsset] = useState(null);
@@ -18,35 +18,8 @@ export default function ScanViewer3D({ modelUrl, modelType = 'demo', overlays = 
           </p>
         </div>
       ) : (
-        <LibraryRoomView2D
-          overlays={overlays}
-          hoveredAsset={hoveredAsset}
-          setHoveredAsset={setHoveredAsset}
-          onAssetClick={onAssetClick}
-        />
+        <DeskConditionDemo />
       )}
-
-      {/* HUD */}
-      <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2 text-white text-xs">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-          <span className="font-semibold">Library Room — AI Scan</span>
-        </div>
-        <p className="text-[10px] text-white/60 mt-0.5">Run the scan to see objects classified in real time</p>
-      </div>
-      <div className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md border border-white/10 rounded-lg px-3 py-1.5 text-[10px] text-white/70">
-        {overlays.length} assets overlaid
-      </div>
-
-      {/* Legend */}
-      <div className="absolute bottom-3 right-3 bg-slate-900/80 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2 text-[10px] text-white/80">
-        <div className="font-semibold text-white mb-1">Condition</div>
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-500" /> Good</span>
-          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500" /> Fair</span>
-          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500" /> Critical</span>
-        </div>
-      </div>
     </div>
   );
 }
