@@ -17,6 +17,7 @@ import QuickAnalyzeImage from '@/components/scan-analysis/QuickAnalyzeImage';
 import OBJFrameCapture from '@/components/scan-analysis/OBJFrameCapture';
 import SVGFrameCapture from '@/components/scan-analysis/SVGFrameCapture';
 import ScanFramesGallery from '@/components/scan-analysis/ScanFramesGallery';
+import HowItWorks from '@/components/scan-analysis/HowItWorks';
 
 export default function ScanAnalysisPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -150,6 +151,9 @@ export default function ScanAnalysisPage() {
           </Button>
         </div>
       </div>
+
+      {/* How it works */}
+      <HowItWorks />
 
       {/* Scans gallery */}
       <div className="mb-6">
