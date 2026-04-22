@@ -115,14 +115,18 @@ Return an array of findings. If no issues are visible, return an empty array.`;
       created.push(report);
     }
 
-    // Update model counts
-    const allReports = await base44.asServiceRole.entities.ConditionReport.filter({
-      digital_twin_model_id,
-    });
-    await base44.asServiceRole.entities.DigitalTwinModel.update(digital_twin_model_id, {
-      total_anomalies: allReports.length,
-      pending_review_count: allReports.filter((r) => r.review_status === 'pending').length,
-    });
+    // Update model counts (best-effort — don't fail the whole call if scan was deleted)
+    try {
+      const allReports = await base44.asServiceRole.entities.ConditionReport.filter({
+        digital_twin_model_id,
+      });
+      await base44.asServiceRole.entities.DigitalTwinModel.update(digital_twin_model_id, {
+        total_anomalies: allReports.length,
+        pending_review_count: allReports.filter((r) => r.review_status === 'pending').length,
+      });
+    } catch (e) {
+      console.warn('Could not update scan counts:', e.message);
+    }
 
     return Response.json({
       success: true,

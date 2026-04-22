@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Upload, Sparkles, Loader2, Box, Brain, Filter, CheckCircle2 } from 'lucide-react';
+import { Upload, Sparkles, Loader2, Box, Brain, Filter, CheckCircle2, ImagePlus } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import ScanViewer3D from '@/components/scan-analysis/ScanViewer3D';
@@ -13,9 +13,11 @@ import ScanUploadDialog from '@/components/scan-analysis/ScanUploadDialog';
 import AnomalyReviewCard from '@/components/scan-analysis/AnomalyReviewCard';
 import MLTrainingPanel from '@/components/scan-analysis/MLTrainingPanel';
 import DeskConditionDemo from '@/components/scan-analysis/DeskConditionDemo';
+import QuickAnalyzeImage from '@/components/scan-analysis/QuickAnalyzeImage';
 
 export default function ScanAnalysisPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
+  const [quickAnalyzeOpen, setQuickAnalyzeOpen] = useState(false);
   const [selectedScanId, setSelectedScanId] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [filter, setFilter] = useState('pending');
@@ -105,7 +107,13 @@ export default function ScanAnalysisPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={() => setUploadOpen(true)} className="bg-indigo-600 hover:bg-indigo-700">
+          <Button
+            onClick={() => setQuickAnalyzeOpen(true)}
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+          >
+            <ImagePlus className="w-4 h-4 mr-2" /> Analyze Image
+          </Button>
+          <Button onClick={() => setUploadOpen(true)} variant="outline">
             <Upload className="w-4 h-4 mr-2" /> Upload Scan
           </Button>
         </div>
@@ -298,6 +306,16 @@ export default function ScanAnalysisPage() {
         open={uploadOpen}
         onClose={() => setUploadOpen(false)}
         onCreated={() => qc.invalidateQueries({ queryKey: ['digitalTwinScans'] })}
+      />
+
+      <QuickAnalyzeImage
+        open={quickAnalyzeOpen}
+        onClose={() => setQuickAnalyzeOpen(false)}
+        onCompleted={(newScanId) => {
+          qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
+          qc.invalidateQueries({ queryKey: ['conditionReports', newScanId] });
+          setSelectedScanId(newScanId);
+        }}
       />
     </div>
   );
