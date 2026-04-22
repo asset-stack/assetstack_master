@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import DeskConditionDemo from './DeskConditionDemo';
+import LibraryRoomView2D from './LibraryRoomView2D';
 
 export default function ScanViewer3D({ modelUrl, modelType = 'demo', overlays = [], onAssetClick }) {
   const [hoveredAsset, setHoveredAsset] = useState(null);
@@ -18,7 +18,12 @@ export default function ScanViewer3D({ modelUrl, modelType = 'demo', overlays = 
           </p>
         </div>
       ) : (
-        <DeskConditionDemo />
+        <LibraryRoomView2D
+          overlays={overlays}
+          hoveredAsset={hoveredAsset}
+          setHoveredAsset={setHoveredAsset}
+          onAssetClick={onAssetClick}
+        />
       )}
     </div>
   );

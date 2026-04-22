@@ -12,6 +12,7 @@ import ScanCard from '@/components/scan-analysis/ScanCard';
 import ScanUploadDialog from '@/components/scan-analysis/ScanUploadDialog';
 import AnomalyReviewCard from '@/components/scan-analysis/AnomalyReviewCard';
 import MLTrainingPanel from '@/components/scan-analysis/MLTrainingPanel';
+import DeskConditionDemo from '@/components/scan-analysis/DeskConditionDemo';
 
 export default function ScanAnalysisPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -168,6 +169,18 @@ export default function ScanAnalysisPage() {
                 />
               </div>
             </div>
+
+            {/* Analyzed Image — Desk condition demo when no preview available */}
+            {!selectedScan.preview_image_url && (
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <h4 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+                  <Filter className="w-4 h-4" /> Analyzed Asset — Condition Detail
+                </h4>
+                <div className="h-[420px]">
+                  <DeskConditionDemo />
+                </div>
+              </div>
+            )}
 
             {/* Preview image with bboxes */}
             {selectedScan.preview_image_url && (
