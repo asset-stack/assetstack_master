@@ -32,6 +32,7 @@ Deno.serve(async (req) => {
     
     const reports = [];
     const equipmentMap = new Map();
+    const equipmentPromises = [];
     
     for (const row of data.slice(0, 1000)) { // process 1000 rows
         const eqName = row['Room /\r\nLocation'] || row['Room /\nLocation'] || row['Room / Location'] || row['Location'] || 'Unknown Area';
@@ -42,17 +43,28 @@ Deno.serve(async (req) => {
         if (type.includes('hvac') || type.includes('air con')) eqType = 'hvac_system';
         else if (type.includes('building') || type.includes('wall') || type.includes('door')) eqType = 'building';
         
-        let eqId = equipmentMap.get(eqName);
-        if (!eqId) {
-            const eq = await base44.asServiceRole.entities.Equipment.create({
-                name: eqName,
-                type: eqType,
-                location: 'Bunbury',
-                status: row['2025 Condition Grade'] >= 4 ? 'critical' : row['2025 Condition Grade'] === 3 ? 'degraded' : 'operational'
-            });
-            eqId = eq.id;
-            equipmentMap.set(eqName, eqId);
+        if (!equipmentMap.has(eqName)) {
+            equipmentMap.set(eqName, null); // reserve
+            equipmentPromises.push((async () => {
+                const eq = await base44.asServiceRole.entities.Equipment.create({
+                    name: eqName,
+                    type: eqType,
+                    location: 'Bunbury',
+                    status: row['2025 Condition Grade'] >= 4 ? 'critical' : row['2025 Condition Grade'] === 3 ? 'degraded' : 'operational'
+                });
+                equipmentMap.set(eqName, eq.id);
+            })());
         }
+    }
+    
+    // Execute in batches
+    for (let i = 0; i < equipmentPromises.length; i += 20) {
+        await Promise.all(equipmentPromises.slice(i, i + 20));
+    }
+    
+    for (const row of data.slice(0, 1000)) { // process 1000 rows
+        const eqName = row['Room /\r\nLocation'] || row['Room /\nLocation'] || row['Room / Location'] || row['Location'] || 'Unknown Area';
+        const eqId = equipmentMap.get(eqName);
         
         reports.push({
             digital_twin_model_id: twin.id,
@@ -62,7 +74,7 @@ Deno.serve(async (req) => {
             anomaly_type: "other",
             severity: row['2025 Condition Grade'] >= 4 ? 'critical' : row['2025 Condition Grade'] === 3 ? 'major' : 'minor',
             condition_score: Number(row['2025 Condition Grade']) || 1,
-            ai_description: row['Revised Condition Description'] || String(row['Component Type'] || ''),
+            ai_description: row['Revised Condition Description'] || String(row['Component\r\nType'] || row['Component Type'] || ''),
             review_status: 'approved'
         });
     }
