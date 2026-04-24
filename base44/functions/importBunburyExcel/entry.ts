@@ -34,8 +34,8 @@ Deno.serve(async (req) => {
     const equipmentMap = new Map();
     
     for (const row of data.slice(0, 1000)) { // process 1000 rows
-        const eqName = row['Room /\nLocation'] || row['Room / Location'] || row['Location'] || 'Unknown Area';
-        const type = String(row['Component Type'] || 'other').toLowerCase();
+        const eqName = row['Room /\r\nLocation'] || row['Room /\nLocation'] || row['Room / Location'] || row['Location'] || 'Unknown Area';
+        const type = String(row['Component\r\nType'] || row['Component Type'] || 'other').toLowerCase();
         
         // map type to Equipment type enum if possible
         let eqType = "other";
