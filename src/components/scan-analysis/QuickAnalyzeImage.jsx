@@ -75,7 +75,7 @@ export default function QuickAnalyzeImage({ open, onClose, onCompleted }) {
         image_url: file_url,
         digital_twin_model_id: scan.id,
         digital_twin_model_name: scan.name,
-        equipment_name: assetContext || undefined,
+        equipment_name: assetContext || name,
       });
 
       setResult({ scan, ...res.data });

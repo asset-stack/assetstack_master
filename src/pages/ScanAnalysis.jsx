@@ -15,9 +15,10 @@ import MLTrainingPanel from '@/components/scan-analysis/MLTrainingPanel';
 import DeskConditionDemo from '@/components/scan-analysis/DeskConditionDemo';
 import QuickAnalyzeImage from '@/components/scan-analysis/QuickAnalyzeImage';
 import OBJFrameCapture from '@/components/scan-analysis/OBJFrameCapture';
-import SVGFrameCapture from '@/components/scan-analysis/SVGFrameCapture';
+
 import ScanFramesGallery from '@/components/scan-analysis/ScanFramesGallery';
 import HowItWorks from '@/components/scan-analysis/HowItWorks';
+import RealPhotoWorkflowGuide from '@/components/scan-analysis/RealPhotoWorkflowGuide';
 
 export default function ScanAnalysisPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -68,12 +69,10 @@ export default function ScanAnalysisPage() {
     [frames, selectedFrameId]
   );
 
-  // Auto-trigger frame extraction when a scan has no frames yet
-  // - OBJ/GLTF/GLB with file_url → 3D renderer
-  // - Demo scans (no file_url) → SVG scene renderer (uses built-in library room)
+  // Auto-trigger frame extraction only for uploaded 3D model files.
+  // Real-photo scans use the uploaded image directly for condition reports.
   const hasModelFile = !!(selectedScan?.file_url && ['obj', 'gltf', 'glb'].includes(selectedScan.model_type));
-  const isDemoScene = !!(selectedScan && !selectedScan.file_url);
-  const needsExtraction = !!(selectedScan && frames.length === 0 && (hasModelFile || isDemoScene));
+  const needsExtraction = !!(selectedScan && frames.length === 0 && hasModelFile);
 
   // Kick off extraction state when conditions are met
   useEffect(() => {
@@ -147,10 +146,12 @@ export default function ScanAnalysisPage() {
             <ImagePlus className="w-4 h-4 mr-2" /> Analyze Image
           </Button>
           <Button onClick={() => setUploadOpen(true)} variant="outline">
-            <Upload className="w-4 h-4 mr-2" /> Upload Scan
+            <Upload className="w-4 h-4 mr-2" /> Upload 3D Scan
           </Button>
         </div>
       </div>
+
+      <RealPhotoWorkflowGuide />
 
       {/* How it works */}
       <HowItWorks />
@@ -238,17 +239,7 @@ export default function ScanAnalysisPage() {
                     qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
                   }}
                 />
-              ) : (
-                <SVGFrameCapture
-                  scan={selectedScan}
-                  onComplete={() => {
-                    setExtracting(false);
-                    qc.invalidateQueries({ queryKey: ['scanFrames', selectedScan.id] });
-                    qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
-                    qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
-                  }}
-                />
-              )
+              ) : null
             )}
 
             {/* Frames gallery */}

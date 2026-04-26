@@ -96,7 +96,10 @@ Return an array of findings. If no clear defect is visible, return an empty arra
       },
     });
 
-    const findings = result?.findings || [];
+    const allowedTypes = ['scratch', 'dent', 'crack', 'corrosion', 'stain', 'broken_part', 'missing_part', 'wear', 'water_damage', 'graffiti', 'misalignment', 'other'];
+    const allowedSeverity = ['minor', 'moderate', 'major', 'critical'];
+    const clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, Number(value) || 0));
+    const findings = (result?.findings || []).filter((f) => Number(f.confidence || 0) >= 55);
     const created = [];
 
     for (const f of findings) {
@@ -105,13 +108,18 @@ Return an array of findings. If no clear defect is visible, return an empty arra
         digital_twin_model_name,
         equipment_name,
         image_url,
-        anomaly_type: f.anomaly_type || 'other',
-        severity: f.severity || 'minor',
-        condition_score: f.condition_score || 1,
-        ai_confidence: f.confidence || 0,
+        anomaly_type: allowedTypes.includes(f.anomaly_type) ? f.anomaly_type : 'other',
+        severity: allowedSeverity.includes(f.severity) ? f.severity : 'minor',
+        condition_score: Math.max(1, Math.min(5, Number(f.condition_score) || 1)),
+        ai_confidence: Math.max(0, Math.min(100, Number(f.confidence) || 0)),
         ai_description: f.description || '',
         ai_model_version: modelVersion,
-        bounding_box: f.bounding_box || null,
+        bounding_box: f.bounding_box ? {
+          x: clamp(f.bounding_box.x),
+          y: clamp(f.bounding_box.y),
+          width: clamp(f.bounding_box.width, 0.02, 1),
+          height: clamp(f.bounding_box.height, 0.02, 1),
+        } : null,
         review_status: 'pending',
       });
       created.push(report);
