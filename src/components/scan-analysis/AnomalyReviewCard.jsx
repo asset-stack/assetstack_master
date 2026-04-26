@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Check, X, Edit3, Sparkles, AlertTriangle } from 'lucide-react';
+import { Check, X, Edit3, Sparkles, ShieldCheck, ClipboardCheck, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const severityColors = {
@@ -46,12 +46,17 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
   };
 
   const bbox = report.bounding_box;
+  const isReviewed = report.review_status && report.review_status !== 'pending';
+  const statusLabel = report.review_status === 'approved' ? 'Verified as correct' :
+    report.review_status === 'corrected' ? 'Verified with correction' :
+    report.review_status === 'rejected' ? 'Marked as not an issue' :
+    'Needs verification';
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"
+      className={`bg-white border rounded-xl overflow-hidden shadow-sm ${isReviewed ? 'border-green-200' : 'border-amber-300 ring-1 ring-amber-100'}`}
     >
       {/* Image with bounding box overlay */}
       <div className="relative aspect-video bg-slate-100 overflow-hidden">
@@ -70,8 +75,8 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
               height: `${(bbox.height || 0) * 100}%`,
             }}
           >
-            <div className="absolute -top-6 left-0 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-              {report.anomaly_type}
+            <div className="absolute -top-6 left-0 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap">
+              AI detected: {report.anomaly_type?.replace(/_/g, ' ')}
             </div>
           </div>
         )}
@@ -82,6 +87,21 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
       </div>
 
       <div className="p-4">
+        <div className={`mb-3 rounded-lg border p-3 ${isReviewed ? 'bg-green-50 border-green-200' : 'bg-amber-50 border-amber-200'}`}>
+          <div className="flex items-start gap-2">
+            {isReviewed ? <CheckCircle2 className="w-4 h-4 text-green-700 mt-0.5" /> : <ClipboardCheck className="w-4 h-4 text-amber-700 mt-0.5" />}
+            <div className="flex-1">
+              <p className={`text-sm font-bold ${isReviewed ? 'text-green-900' : 'text-amber-900'}`}>{statusLabel}</p>
+              <p className={`text-xs mt-1 ${isReviewed ? 'text-green-700' : 'text-amber-700'}`}>
+                {isReviewed
+                  ? `Reviewed${report.reviewed_by ? ` by ${report.reviewed_by}` : ''}.`
+                  : 'Inspect the highlighted photo, then choose: verify, correct, or reject.'}
+              </p>
+            </div>
+            {!isReviewed && <Badge className="bg-amber-100 text-amber-800 border-amber-200">Action needed</Badge>}
+          </div>
+        </div>
+
         <div className="flex items-start justify-between gap-2 mb-2">
           <div>
             <div className="flex items-center gap-2 flex-wrap">
@@ -126,12 +146,15 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
         )}
 
         <Textarea
-          placeholder="Reviewer notes (optional)…"
+          placeholder="Optional verification notes, e.g. ‘confirmed crack on chair leg’ or ‘false detection’…"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           className="text-xs mb-3 min-h-[60px]"
         />
 
+        <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+          <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" /> Verification action
+        </div>
         <div className="grid grid-cols-3 gap-2">
           <Button
             size="sm"
@@ -140,7 +163,7 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
             onClick={() => handleReview('rejected')}
             className="text-red-600 border-red-200 hover:bg-red-50"
           >
-            <X className="w-3.5 h-3.5 mr-1" /> Reject
+            <X className="w-3.5 h-3.5 mr-1" /> Not issue
           </Button>
           {mode !== 'correct' ? (
             <Button
@@ -150,7 +173,7 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
               onClick={() => setMode('correct')}
               className="text-amber-700 border-amber-200 hover:bg-amber-50"
             >
-              <Edit3 className="w-3.5 h-3.5 mr-1" /> Correct
+              <Edit3 className="w-3.5 h-3.5 mr-1" /> Fix AI
             </Button>
           ) : (
             <Button
@@ -169,7 +192,7 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
             onClick={() => handleReview('approved')}
             className="bg-green-600 hover:bg-green-700"
           >
-            <Check className="w-3.5 h-3.5 mr-1" /> Approve
+            <Check className="w-3.5 h-3.5 mr-1" /> Verify
           </Button>
         </div>
       </div>

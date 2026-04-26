@@ -50,15 +50,17 @@ ${criteriaText}
 Asset context: ${equipment_name || 'General facility scan'}
 Scan: ${digital_twin_model_name || 'Unknown'}
 
-Analyze the image and identify ALL visible anomalies, defects, or condition issues. For each one, provide:
+Analyze the image like a careful human asset inspector. Only report defects that are clearly visible in the provided real asset photo; do not invent issues, do not flag shadows/reflections, and skip anything with low visual confidence.
+
+For each confirmed visible issue, provide:
 - anomaly_type (from the list above)
 - severity (minor/moderate/major/critical)
 - condition_score (1-5)
 - confidence (0-100)
-- description (what you see, precise location within the image like "upper-left corner", "center floor area")
+- description with the exact visual evidence and location, e.g. "visible crack on lower-right chair leg"
 - bounding_box normalized to 0-1 range {x, y, width, height} where (0,0) is top-left
 
-Return an array of findings. If no issues are visible, return an empty array.`;
+Return an array of findings. If no clear defect is visible, return an empty array.`;
 
     const result = await base44.integrations.Core.InvokeLLM({
       prompt,

@@ -313,10 +313,14 @@ export default function ScanAnalysisPage() {
             <div className="bg-white rounded-xl border border-slate-200 p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-bold text-slate-900 flex items-center gap-2">
-                  <Brain className="w-4 h-4 text-indigo-600" /> Condition Reports
+                  <Brain className="w-4 h-4 text-indigo-600" /> Verify Condition Reports
                 </h3>
                 <Badge variant="outline">{stats.total}</Badge>
               </div>
+              <div className="mb-3 rounded-lg bg-indigo-50 border border-indigo-100 p-3 text-xs text-indigo-800">
+                Review each highlighted asset photo, then click <span className="font-bold">Verify</span>, <span className="font-bold">Fix AI</span>, or <span className="font-bold">Not issue</span>.
+              </div>
+
               <div className="grid grid-cols-4 gap-1 mb-3 text-center text-[10px]">
                 <div className="bg-amber-50 rounded p-1.5">
                   <div className="font-bold text-amber-700">{stats.pending}</div>
