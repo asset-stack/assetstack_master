@@ -19,6 +19,8 @@ import OBJFrameCapture from '@/components/scan-analysis/OBJFrameCapture';
 import ScanFramesGallery from '@/components/scan-analysis/ScanFramesGallery';
 import HowItWorks from '@/components/scan-analysis/HowItWorks';
 import RealPhotoWorkflowGuide from '@/components/scan-analysis/RealPhotoWorkflowGuide';
+import AddPhotoFrames from '@/components/scan-analysis/AddPhotoFrames';
+import ScanProgressStrip from '@/components/scan-analysis/ScanProgressStrip';
 
 export default function ScanAnalysisPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -186,25 +188,37 @@ export default function ScanAnalysisPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Left: 3D viewer */}
           <div className="lg:col-span-2 space-y-4">
+            <ScanProgressStrip scan={selectedScan} frames={frames} reports={reports} />
+
             <div className="bg-white rounded-xl border border-slate-200 p-4">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
                 <div>
                   <h3 className="font-bold text-slate-900">{selectedScan.name}</h3>
                   <p className="text-xs text-slate-500">
                     {selectedScan.model_type?.toUpperCase()} • {overlays.length} assets overlaid • {stats.total} anomalies detected
                   </p>
                 </div>
-                <Button
-                  onClick={runAIAnalysis}
-                  disabled={analyzing || !selectedScan.preview_image_url}
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-                >
-                  {analyzing ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Analyzing…</>
-                  ) : (
-                    <><Sparkles className="w-4 h-4 mr-2" /> Run AI Analysis</>
-                  )}
-                </Button>
+                <div className="flex gap-2">
+                  <AddPhotoFrames
+                    scan={selectedScan}
+                    existingFramesCount={frames.length}
+                    onAdded={() => {
+                      qc.invalidateQueries({ queryKey: ['scanFrames', selectedScan.id] });
+                      qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
+                    }}
+                  />
+                  <Button
+                    onClick={runAIAnalysis}
+                    disabled={analyzing || !selectedScan.preview_image_url}
+                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                  >
+                    {analyzing ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Analyzing…</>
+                    ) : (
+                      <><Sparkles className="w-4 h-4 mr-2" /> Re-run AI</>
+                    )}
+                  </Button>
+                </div>
               </div>
               <div className="h-[500px]">
                 <ScanViewer3D
