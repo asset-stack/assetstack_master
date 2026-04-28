@@ -1,0 +1,97 @@
+{
+  "name": "SavingsLedgerEntry",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "Asset this entry relates to"
+    },
+    "equipment_name": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "description": "Short summary, e.g. 'Bearing replacement on Pump #3'"
+    },
+    "trigger_source": {
+      "type": "string",
+      "enum": [
+        "ai_prediction",
+        "scan_anomaly",
+        "sensor_alert",
+        "manual"
+      ],
+      "default": "ai_prediction",
+      "description": "What triggered the intervention"
+    },
+    "prediction_id": {
+      "type": "string",
+      "description": "Optional link to PredictionAccuracy entry"
+    },
+    "work_order_id": {
+      "type": "string",
+      "description": "Optional link to WorkOrder"
+    },
+    "predicted_failure_cost": {
+      "type": "number",
+      "description": "Estimated cost if the failure had occurred (downtime + repair + collateral)"
+    },
+    "intervention_cost": {
+      "type": "number",
+      "description": "Actual cost of the preventive action taken"
+    },
+    "verified_savings": {
+      "type": "number",
+      "description": "predicted_failure_cost - intervention_cost, after verification"
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "projected",
+        "in_progress",
+        "verified",
+        "disputed",
+        "rejected"
+      ],
+      "default": "projected",
+      "description": "Lifecycle of the savings claim"
+    },
+    "verification_method": {
+      "type": "string",
+      "enum": [
+        "post_action_inspection",
+        "sensor_confirmation",
+        "expert_review",
+        "historical_comparison"
+      ],
+      "description": "How savings were validated"
+    },
+    "verified_by": {
+      "type": "string",
+      "description": "Email of human verifier"
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "verification_notes": {
+      "type": "string"
+    },
+    "evidence_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Photos, reports, or sensor charts proving the saved outcome"
+    }
+  },
+  "required": [
+    "title",
+    "predicted_failure_cost",
+    "intervention_cost"
+  ]
+}

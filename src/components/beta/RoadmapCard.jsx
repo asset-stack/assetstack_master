@@ -10,7 +10,7 @@ const items = [
   { done: false, title: 'Dual-model ensemble in analyzeScanCondition', desc: 'Run a second model on critical findings and persist agreement.' },
   { done: false, title: 'Calibration curves', desc: 'Verify "80% confidence" is right 80% of the time.' },
   { done: false, title: 'Golden dataset benchmarking', desc: 'Fixed expert-labeled set; every model release tested against it.' },
-  { done: false, title: 'Verified Savings Ledger', desc: 'Tie predictions → actions → outcomes → dollars saved.' },
+  { done: true, title: 'Verified Savings Ledger', desc: 'Tie predictions → actions → outcomes → dollars saved.' },
   { done: false, title: 'Physics-based guardrails', desc: 'Reject impossible sensor readings & predictions automatically.' },
 ];
 
