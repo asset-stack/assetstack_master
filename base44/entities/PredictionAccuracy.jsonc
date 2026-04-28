@@ -1,0 +1,69 @@
+{
+  "name": "PredictionAccuracy",
+  "type": "object",
+  "properties": {
+    "prediction_type": {
+      "type": "string",
+      "enum": [
+        "condition_anomaly",
+        "failure_probability",
+        "rul",
+        "image_quality"
+      ],
+      "description": "What kind of prediction this is tracking"
+    },
+    "model_version": {
+      "type": "string",
+      "description": "Version of the model that made the prediction"
+    },
+    "source_entity": {
+      "type": "string",
+      "description": "Entity name the prediction relates to (e.g. ConditionReport, Equipment)"
+    },
+    "source_id": {
+      "type": "string",
+      "description": "ID of the source record"
+    },
+    "equipment_id": {
+      "type": "string"
+    },
+    "predicted_value": {
+      "type": "string",
+      "description": "What the model predicted (stringified for flexibility)"
+    },
+    "predicted_confidence": {
+      "type": "number",
+      "description": "Model confidence 0-100"
+    },
+    "actual_outcome": {
+      "type": "string",
+      "description": "Verified ground truth, once known"
+    },
+    "outcome_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "correct",
+        "incorrect",
+        "partial",
+        "unverifiable"
+      ],
+      "default": "pending"
+    },
+    "verified_by": {
+      "type": "string",
+      "description": "Email of the human reviewer who verified the outcome"
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "prediction_type",
+    "model_version"
+  ]
+}

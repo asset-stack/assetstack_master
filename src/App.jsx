@@ -19,6 +19,7 @@ import CommandCenter from './pages/CommandCenter';
 import AssetTree from './pages/AssetTree';
 import NetworkGlobePage from './pages/NetworkGlobe';
 import ScanAnalysisPage from './pages/ScanAnalysis';
+import BetaFeatures from './pages/BetaFeatures';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -133,6 +134,11 @@ const AuthenticatedApp = () => {
       <Route path="/ScanAnalysis" element={
             <LayoutWrapper currentPageName="ScanAnalysis">
               <ScanAnalysisPage />
+            </LayoutWrapper>
+          } />
+      <Route path="/BetaFeatures" element={
+            <LayoutWrapper currentPageName="BetaFeatures">
+              <BetaFeatures />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />

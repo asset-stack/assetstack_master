@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
   Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock,
   UserCircle, Users, Shield, MessageSquare, MapPin, KeyRound, Briefcase, Hammer, Upload,
-  ChevronDown, GitBranch, Globe2
+  ChevronDown, GitBranch, Globe2, FlaskConical
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
@@ -67,6 +67,12 @@ const navSections = [
     items: [
       { name: 'Job Board', icon: Briefcase, page: 'JobBoard' },
       { name: 'Contractor Portal', icon: Hammer, page: 'ContractorPortal' },
+    ]
+  },
+  {
+    label: 'Labs',
+    items: [
+      { name: 'Beta Features', icon: FlaskConical, page: 'BetaFeatures' },
     ]
   },
   {
