@@ -5,7 +5,21 @@ Deno.serve(async (req) => {
   
   try {
     const base44 = createClientFromRequest(req);
-    
+
+    // Auth: require either an authenticated user OR a valid shared secret
+    // (for IoT/webhook callers). Set INGEST_SECRET in env to enable shared-secret mode.
+    const url = new URL(req.url);
+    const providedSecret = url.searchParams.get('secret') || req.headers.get('x-ingest-secret');
+    const expectedSecret = Deno.env.get('INGEST_SECRET');
+    const hasValidSecret = expectedSecret && providedSecret === expectedSecret;
+
+    if (!hasValidSecret) {
+      const user = await base44.auth.me().catch(() => null);
+      if (!user) {
+        return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+    }
+
     const body = await req.json();
     const { readings, equipment_external_id, sensor_external_id, batch_id } = body;
     

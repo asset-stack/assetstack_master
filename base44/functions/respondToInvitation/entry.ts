@@ -33,6 +33,15 @@ Deno.serve(async (req) => {
     }
 
     if (action === 'accept') {
+      // Verify the technician record actually belongs to the invitee (prevent IDOR
+      // where a tampered invitation could approve someone else's technician record).
+      const technician = await base44.asServiceRole.entities.Technician.filter({
+        id: invitation.contractor_technician_id,
+      });
+      if (technician.length === 0 || technician[0].email !== user.email) {
+        return Response.json({ error: 'Invitation does not match your technician record' }, { status: 403 });
+      }
+
       // Update technician to approved
       await base44.asServiceRole.entities.Technician.update(invitation.contractor_technician_id, {
         approval_status: 'approved',

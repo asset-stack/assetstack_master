@@ -4,13 +4,16 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
-    
+
     if (!user) {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    if (user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    }
 
     // Fetch all active maintenance plans
-    const plans = await base44.asServiceRole.entities.MaintenancePlan.filter({ is_active: true });
+    const plans = await base44.asServiceRole.entities.MaintenancePlan.filter({ is_active: true }, '-created_date', 500);
     const equipment = await base44.asServiceRole.entities.Equipment.list();
     const technicians = await base44.asServiceRole.entities.Technician.filter({ 
       availability_status: 'available' 

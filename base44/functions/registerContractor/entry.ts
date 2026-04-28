@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
       phone: phone || '',
       employee_id: employeeId,
       worker_type: 'contractor',
-      approval_status: 'approved',
+      approval_status: 'pending',
       company_name: company_name || '',
       tax_id: tax_id || '',
       bio: bio || '',
@@ -44,10 +44,11 @@ Deno.serve(async (req) => {
       start_date: new Date().toISOString().split('T')[0],
     });
 
-    return Response.json({ 
-      success: true, 
+    return Response.json({
+      success: true,
       message: 'Registration submitted successfully. An admin will review your application.',
-      technician_id: technician.id 
+      technician_id: technician.id,
+      approval_status: 'pending'
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

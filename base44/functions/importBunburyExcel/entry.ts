@@ -4,6 +4,16 @@ import * as XLSX from 'npm:xlsx';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+
+    // Admin-only: this performs bulk service-role writes across the workspace.
+    const user = await base44.auth.me();
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    if (user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    }
+
     const payload = await req.json();
     const url = payload.file_url || "https://media.base44.com/files/public/6970c68cc08dbe7897c72f22/39d0b3dbc_Bunbury2025ConditionData-JHBRAG.xlsx";
     
