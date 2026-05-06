@@ -3,12 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   MessageSquare, GitBranch, Globe2, Sparkles, Box, ShieldCheck,
-  LayoutDashboard, ArrowRight,
+  LayoutDashboard, Database, TrendingDown, ArrowRight,
 } from 'lucide-react';
 
 import AssetMindPreview from './previews/AssetMindPreview';
 import AssetTreePreview from './previews/AssetTreePreview';
 import DashboardPreview from './previews/DashboardPreview';
+import AssetRegisterPreview from './previews/AssetRegisterPreview';
+import DepreciationPreview from './previews/DepreciationPreview';
 
 /**
  * Platform Showcase — interactive tabbed module that lets visitors
@@ -54,6 +56,30 @@ const MODULES = [
     cta: 'Browse the tree',
     accent: 'from-emerald-500 to-teal-600',
     highlights: ['Drill-down hierarchy', 'Per-asset KPIs', 'Live sensor traces'],
+  },
+  {
+    id: 'register',
+    name: 'Asset Register',
+    sub: 'Searchable equipment table',
+    icon: Database,
+    headline: 'Your asset record of truth.',
+    blurb: 'Every piece of equipment — ID, location, value, age, and live health — in one filterable, exportable register.',
+    href: '/Equipment',
+    cta: 'Open the register',
+    accent: 'from-cyan-500 to-teal-600',
+    highlights: ['Filter by type', 'Replacement value totals', 'CSV export'],
+  },
+  {
+    id: 'depreciation',
+    name: 'Depreciation',
+    sub: 'Lifecycle & book value',
+    icon: TrendingDown,
+    headline: 'Finance-grade lifecycle planning.',
+    blurb: 'Straight-line, declining, or units-of-use — book values tracked per asset, with replacement reserve indicators.',
+    href: '/Depreciation',
+    cta: 'View schedule',
+    accent: 'from-fuchsia-500 to-rose-600',
+    highlights: ['Multiple methods', 'Per-asset book value', 'Reserve indicators'],
   },
   {
     id: 'globe',
@@ -109,6 +135,8 @@ function ModulePreview({ id }) {
   if (id === 'dashboard') return <DashboardPreview />;
   if (id === 'assetmind') return <AssetMindPreview />;
   if (id === 'tree') return <AssetTreePreview />;
+  if (id === 'register') return <AssetRegisterPreview />;
+  if (id === 'depreciation') return <DepreciationPreview />;
   if (id === 'globe') return <NetworkGlobePreview />;
   if (id === 'scan') return <ScanPreview />;
   if (id === 'twin') return <TwinPreview />;
@@ -307,7 +335,7 @@ export default function PlatformShowcase() {
         <div className="max-w-2xl mb-10 md:mb-12">
           <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">The Platform</span>
           <h2 className="mt-3 text-4xl md:text-6xl font-semibold tracking-[-0.03em] leading-[1.02] text-slate-900 text-balance">
-            Seven surfaces.{' '}
+            Nine surfaces.{' '}
             <span className="font-serif italic font-medium text-primary">One unified intelligence layer.</span>
           </h2>
           <p className="mt-4 text-[16px] md:text-[17px] text-slate-600 leading-[1.55] text-pretty">
