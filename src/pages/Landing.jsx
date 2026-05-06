@@ -1,19 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import LandingNav from '@/components/landing/LandingNav';
 import LandingHero from '@/components/landing/LandingHero';
-import LogoCloud from '@/components/landing/LogoCloud';
-import AnimatedStats from '@/components/landing/AnimatedStats';
-import FeatureGrid from '@/components/landing/FeatureGrid';
-import BenefitsSection from '@/components/landing/BenefitsSection';
-import FlagshipCapabilities from '@/components/landing/FlagshipCapabilities';
-import LiveIntelligenceStream from '@/components/landing/LiveIntelligenceStream';
-import IndustryUseCases from '@/components/landing/IndustryUseCases';
-import LiveDemoSection from '@/components/landing/LiveDemoSection';
-import Testimonials from '@/components/landing/Testimonials';
-import SecuritySection from '@/components/landing/SecuritySection';
-import FAQ from '@/components/landing/FAQ';
-import FinalCTA from '@/components/landing/FinalCTA';
-import LandingFooter from '@/components/landing/LandingFooter';
+import ScrollProgressBar from '@/components/landing/ScrollProgressBar';
+import SectionFallback from '@/components/landing/SectionFallback';
+
+// Eager: above-the-fold only
+// Lazy: everything below the fold (deferred to keep TTI fast)
+const LogoCloud = lazy(() => import('@/components/landing/LogoCloud'));
+const LiveIntelligenceStream = lazy(() => import('@/components/landing/LiveIntelligenceStream'));
+const AnimatedStats = lazy(() => import('@/components/landing/AnimatedStats'));
+const BenefitsSection = lazy(() => import('@/components/landing/BenefitsSection'));
+const FlagshipCapabilities = lazy(() => import('@/components/landing/FlagshipCapabilities'));
+const FeatureGrid = lazy(() => import('@/components/landing/FeatureGrid'));
+const IndustryUseCases = lazy(() => import('@/components/landing/IndustryUseCases'));
+const LiveDemoSection = lazy(() => import('@/components/landing/LiveDemoSection'));
+const Testimonials = lazy(() => import('@/components/landing/Testimonials'));
+const SecuritySection = lazy(() => import('@/components/landing/SecuritySection'));
+const FAQ = lazy(() => import('@/components/landing/FAQ'));
+const FinalCTA = lazy(() => import('@/components/landing/FinalCTA'));
+const LandingFooter = lazy(() => import('@/components/landing/LandingFooter'));
 
 export default function Landing() {
   useEffect(() => {
@@ -21,26 +26,66 @@ export default function Landing() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden selection:bg-primary/20">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-primary/20 antialiased">
+      <ScrollProgressBar />
       <LandingNav />
       <main>
         <LandingHero />
-        <LogoCloud />
-        <LiveIntelligenceStream />
-        <AnimatedStats />
-        <BenefitsSection />
-        <FlagshipCapabilities />
-        <FeatureGrid />
-        <IndustryUseCases />
-        <LiveDemoSection />
+
+        <Suspense fallback={<SectionFallback minHeight={120} />}>
+          <LogoCloud />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback minHeight={420} />}>
+          <LiveIntelligenceStream />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback minHeight={280} />}>
+          <AnimatedStats />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback minHeight={520} />}>
+          <BenefitsSection />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback minHeight={520} />}>
+          <FlagshipCapabilities />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback minHeight={620} />}>
+          <FeatureGrid />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback minHeight={480} />}>
+          <IndustryUseCases />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback minHeight={620} />}>
+          <LiveDemoSection />
+        </Suspense>
+
         <section id="savings" className="scroll-mt-20">
-          <Testimonials />
+          <Suspense fallback={<SectionFallback minHeight={420} />}>
+            <Testimonials />
+          </Suspense>
         </section>
-        <SecuritySection />
-        <FAQ />
-        <FinalCTA />
+
+        <Suspense fallback={<SectionFallback minHeight={420} />}>
+          <SecuritySection />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback minHeight={420} />}>
+          <FAQ />
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback minHeight={320} />}>
+          <FinalCTA />
+        </Suspense>
       </main>
-      <LandingFooter />
+
+      <Suspense fallback={<SectionFallback minHeight={240} />}>
+        <LandingFooter />
+      </Suspense>
     </div>
   );
 }
