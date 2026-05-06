@@ -138,6 +138,32 @@ Return an array of findings. If no clear defect is visible, return an empty arra
       console.warn('Could not update scan counts:', e.message);
     }
 
+    // Audit log — record every AI scan run
+    try {
+      const ipHint = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+      await base44.asServiceRole.entities.AuditLogEntry.create({
+        actor_email: user.email,
+        actor_role: user.role || 'user',
+        action: 'scan.analyze',
+        category: 'ai',
+        severity: created.length > 0 ? 'notice' : 'info',
+        target_entity: 'DigitalTwinModel',
+        target_id: digital_twin_model_id,
+        target_name: digital_twin_model_name,
+        summary: `AI scan analysis produced ${created.length} finding(s)`,
+        metadata: {
+          findings_count: created.length,
+          model_version: modelVersion,
+          equipment_name: equipment_name || null,
+        },
+        ip_hint: ipHint,
+        user_agent: req.headers.get('user-agent') || 'unknown',
+        outcome: 'success',
+      });
+    } catch (e) {
+      console.warn('Audit log write failed:', e.message);
+    }
+
     return Response.json({
       success: true,
       findings_count: created.length,

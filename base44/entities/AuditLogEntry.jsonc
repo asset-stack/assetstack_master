@@ -1,0 +1,81 @@
+{
+  "name": "AuditLogEntry",
+  "type": "object",
+  "properties": {
+    "actor_email": {
+      "type": "string",
+      "description": "Email of the user who performed the action"
+    },
+    "actor_role": {
+      "type": "string",
+      "description": "Role of the actor at time of action"
+    },
+    "action": {
+      "type": "string",
+      "description": "Short verb-style key, e.g. 'scan.analyze', 'ml.retrain', 'savings.verify', 'data.import', 'user.role_change'"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "security",
+        "data",
+        "ai",
+        "admin",
+        "financial",
+        "system"
+      ],
+      "default": "system",
+      "description": "High-level grouping for filtering"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "notice",
+        "warning",
+        "critical"
+      ],
+      "default": "info"
+    },
+    "target_entity": {
+      "type": "string",
+      "description": "Entity type the action affected (e.g. ConditionReport, Equipment)"
+    },
+    "target_id": {
+      "type": "string",
+      "description": "ID of the affected record"
+    },
+    "target_name": {
+      "type": "string",
+      "description": "Human-readable label of the target"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Plain-language description of what happened"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Structured contextual data (counts, before/after, model versions)"
+    },
+    "ip_hint": {
+      "type": "string",
+      "description": "Best-effort IP/region hint from request headers"
+    },
+    "user_agent": {
+      "type": "string"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failure",
+        "denied"
+      ],
+      "default": "success"
+    }
+  },
+  "required": [
+    "action",
+    "actor_email"
+  ]
+}

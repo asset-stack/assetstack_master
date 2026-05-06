@@ -86,6 +86,32 @@ Deno.serve(async (req) => {
       await base44.asServiceRole.entities.ConditionReport.update(r.id, { used_for_training: true });
     }
 
+    // Audit log — model retraining is a high-impact event
+    try {
+      await base44.asServiceRole.entities.AuditLogEntry.create({
+        actor_email: user.email,
+        actor_role: user.role || 'user',
+        action: 'ml.retrain',
+        category: 'ai',
+        severity: 'warning',
+        target_entity: 'MLModel',
+        target_id: newModel.id,
+        target_name: `${newModel.model_name} ${newVersion}`,
+        summary: `Retrained model ${prevVersion} → ${newVersion} (+${(newAccuracy - prevAccuracy).toFixed(1)}% accuracy)`,
+        metadata: {
+          previous_version: prevVersion,
+          new_version: newVersion,
+          samples_used: trainable.length,
+          breakdown: { approved, corrected, rejected },
+        },
+        ip_hint: req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown',
+        user_agent: req.headers.get('user-agent') || 'unknown',
+        outcome: 'success',
+      });
+    } catch (e) {
+      console.warn('Audit log write failed:', e.message);
+    }
+
     return Response.json({
       success: true,
       previous_version: prevVersion,

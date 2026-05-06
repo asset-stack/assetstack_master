@@ -11,6 +11,21 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
     if (user.role !== 'admin') {
+      // Log the denial — non-admins attempting privileged actions is security-relevant
+      try {
+        await base44.asServiceRole.entities.AuditLogEntry.create({
+          actor_email: user.email,
+          actor_role: user.role || 'user',
+          action: 'data.import',
+          category: 'security',
+          severity: 'warning',
+          target_entity: 'Equipment',
+          summary: 'Non-admin attempted to run Bunbury Excel import',
+          ip_hint: req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown',
+          user_agent: req.headers.get('user-agent') || 'unknown',
+          outcome: 'denied',
+        });
+      } catch (_) {}
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
@@ -97,6 +112,25 @@ Deno.serve(async (req) => {
         await base44.asServiceRole.entities.ConditionReport.bulkCreate(chunk);
     }
     
+    // Audit log — bulk data import is a high-impact admin event
+    try {
+      await base44.asServiceRole.entities.AuditLogEntry.create({
+        actor_email: user.email,
+        actor_role: user.role,
+        action: 'data.import',
+        category: 'admin',
+        severity: 'critical',
+        target_entity: 'DigitalTwinModel',
+        target_id: twin.id,
+        target_name: twin.name,
+        summary: `Bunbury Excel import: ${equipmentMap.size} equipment, ${reports.length} condition reports created`,
+        metadata: { equipment_count: equipmentMap.size, reports_count: reports.length },
+        ip_hint: req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown',
+        user_agent: req.headers.get('user-agent') || 'unknown',
+        outcome: 'success',
+      });
+    } catch (_) {}
+
     return Response.json({ success: true, twin_id: twin.id, reports_count: reports.length, equipment_count: equipmentMap.size });
   } catch(e) {
     return Response.json({ error: String(e.message || e) }, { status: 500 });

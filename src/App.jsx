@@ -21,6 +21,7 @@ import NetworkGlobePage from './pages/NetworkGlobe';
 import ScanAnalysisPage from './pages/ScanAnalysis';
 import BetaFeatures from './pages/BetaFeatures';
 import SavingsLedger from './pages/SavingsLedger';
+import SecurityCenter from './pages/SecurityCenter';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -145,6 +146,11 @@ const AuthenticatedApp = () => {
       <Route path="/SavingsLedger" element={
             <LayoutWrapper currentPageName="SavingsLedger">
               <SavingsLedger />
+            </LayoutWrapper>
+          } />
+      <Route path="/SecurityCenter" element={
+            <LayoutWrapper currentPageName="SecurityCenter">
+              <SecurityCenter />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />

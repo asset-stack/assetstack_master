@@ -79,6 +79,7 @@ const navSections = [
   {
     label: 'Admin',
     items: [
+      { name: 'Security Center', icon: ShieldCheck, page: 'SecurityCenter' },
       { name: 'Setup Guide', icon: Sparkles, page: 'SetupGuide' },
       { name: 'Setup', icon: Settings, page: 'Onboarding' },
       { name: 'Import Data', icon: Upload, page: 'DataImport' },
