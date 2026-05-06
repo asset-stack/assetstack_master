@@ -1,68 +1,48 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Check, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+// Pricing is custom per engagement (asset count, deployment, integrations).
+// We show what each tier includes and route to a conversation, not a self-serve checkout.
 const TIERS = [
   {
     id: 'team', name: 'Team',
-    monthly: 9, annual: 7,
-    tagline: 'For single sites or small fleets',
-    cta: 'Start free trial',
-    features: ['Up to 250 assets', 'AI condition scanning', 'Failure prediction', 'Email + Slack alerts', 'Standard audit log', '1 admin seat included'],
+    tagline: 'Single site or small fleet',
+    cta: 'Talk to us',
+    features: ['Asset register & locations', 'AI condition scanning', 'Failure prediction', 'Maintenance & work orders', 'Email alerts', 'Standard audit log'],
     highlight: false,
   },
   {
     id: 'business', name: 'Business',
-    monthly: 19, annual: 15,
-    tagline: 'For multi-site operations',
-    cta: 'Start free trial',
-    features: ['Up to 5,000 assets', 'Everything in Team', 'Verified Savings Ledger', 'Custom roles + SSO', 'API + webhooks', 'Priority support'],
-    highlight: true, badge: 'Most popular',
+    tagline: 'Multi-site operations',
+    cta: 'Talk to us',
+    features: ['Everything in Team', 'Network globe & digital twin', 'Verified Savings Ledger', 'Custom roles & permissions', 'API access', 'Priority support'],
+    highlight: true, badge: 'Most teams start here',
   },
   {
     id: 'enterprise', name: 'Enterprise',
-    monthly: null, annual: null,
-    tagline: 'For regulated and global operators',
+    tagline: 'Regulated & national operators',
     cta: 'Talk to sales',
-    features: ['Unlimited assets', 'Everything in Business', 'Dedicated ML training', 'On-prem / private cloud', 'SOC 2 + ISO 27001 evidence', 'Named CSM + SLA'],
+    features: ['Everything in Business', 'Dedicated ML training', 'Private-cloud / self-hosted option', 'Compliance evidence pack', 'Named customer success', 'Onboarding & data migration'],
     highlight: false,
   },
 ];
 
 export default function PricingSection() {
-  const [annual, setAnnual] = useState(true);
-
   return (
     <section id="pricing" className="py-20 md:py-32 bg-white">
       <div className="max-w-[1280px] mx-auto px-5 md:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">Pricing</span>
           <h2 className="mt-3 text-4xl md:text-6xl font-semibold tracking-[-0.03em] leading-[1.02] text-slate-900 text-balance">
-            Priced like SaaS.{' '}
-            <span className="font-serif italic font-medium text-primary">Pays for itself in days.</span>
+            Built around{' '}
+            <span className="font-serif italic font-medium text-primary">your portfolio.</span>
           </h2>
           <p className="mt-4 text-[17px] text-slate-600 leading-[1.55] text-pretty">
-            Per asset, per month. Most customers verify ROI in their first ledger entry.
+            Pricing is shaped to your asset count, deployment and integrations. Pick the tier that fits, and we'll quote precisely.
           </p>
-
-          {/* Toggle */}
-          <div className="mt-7 inline-flex items-center gap-1 p-1 rounded-full border border-slate-200 bg-slate-50">
-            <button
-              onClick={() => setAnnual(false)}
-              className={`px-4 py-1.5 rounded-full text-[12px] font-semibold transition-all ${!annual ? 'bg-white text-slate-900 elevation-1' : 'text-slate-500'}`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setAnnual(true)}
-              className={`px-4 py-1.5 rounded-full text-[12px] font-semibold transition-all flex items-center gap-1.5 ${annual ? 'bg-white text-slate-900 elevation-1' : 'text-slate-500'}`}
-            >
-              Annual
-              <span className="text-[10px] text-emerald-600 font-bold">−20%</span>
-            </button>
-          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-4 max-w-5xl mx-auto">
@@ -95,22 +75,10 @@ export default function PricingSection() {
               </div>
 
               <div className="mb-6 min-h-[60px]">
-                {tier.monthly ? (
-                  <>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-5xl font-semibold tracking-tight tabular-nums">${annual ? tier.annual : tier.monthly}</span>
-                      <span className={`text-[13px] ${tier.highlight ? 'text-slate-400' : 'text-slate-500'}`}>/asset/mo</span>
-                    </div>
-                    <div className={`text-[11px] mt-1 ${tier.highlight ? 'text-slate-400' : 'text-slate-500'}`}>
-                      {annual ? 'Billed annually' : 'Billed monthly'}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="text-3xl font-semibold tracking-tight">Custom</div>
-                    <div className={`text-[11px] mt-1 ${tier.highlight ? 'text-slate-400' : 'text-slate-500'}`}>Volume + on-prem pricing</div>
-                  </>
-                )}
+                <div className="text-3xl font-semibold tracking-tight">Custom</div>
+                <div className={`text-[11px] mt-1 ${tier.highlight ? 'text-slate-400' : 'text-slate-500'}`}>
+                  Quoted on asset count & deployment
+                </div>
               </div>
 
               <Link to="/CommandCenter">
@@ -138,7 +106,7 @@ export default function PricingSection() {
         </div>
 
         <p className="text-center mt-8 text-[12px] text-slate-500">
-          All plans include unlimited users · 14-day free trial · No credit card required
+          All tiers include unlimited users · Pilot engagements available · Onboarding & migration support
         </p>
       </div>
     </section>

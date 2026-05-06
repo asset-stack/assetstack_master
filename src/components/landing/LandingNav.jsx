@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Menu, X } from 'lucide-react';
+import BrandLogo from './BrandLogo';
 
 export default function LandingNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -32,11 +33,8 @@ export default function LandingNav() {
       }`}
     >
       <div className="max-w-[1280px] mx-auto px-5 md:px-8 flex items-center justify-between h-16">
-        <Link to="/Landing" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center elevation-2">
-            <span className="text-white font-bold text-sm tracking-tight">A</span>
-          </div>
-          <span className="font-semibold text-slate-900 text-[15px] tracking-tight">AssetStack</span>
+        <Link to="/Landing" className="group">
+          <BrandLogo size={32} />
         </Link>
 
         <div className="hidden lg:flex items-center gap-1">

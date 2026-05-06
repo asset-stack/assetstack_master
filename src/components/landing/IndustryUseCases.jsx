@@ -2,60 +2,51 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, Pickaxe, Car, Factory, Train, Zap, ArrowRight } from 'lucide-react';
 
+// Each industry shows what the platform actually does for that use case —
+// not fabricated outcome metrics. Capabilities below all map to features
+// shipped in the app (Equipment, Scan Analysis, Predictions, WorkOrders, etc.).
 const INDUSTRIES = [
   {
-    id: 'construction', icon: Building2, name: 'Construction',
-    img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=900&auto=format&fit=crop&q=70',
-    headline: 'Cranes, hoists, scaffolds. One safety brain.',
-    sub: 'AI inspection turns daily site walks into evidence packs. Defects, near-misses, and overdue checks surface before they become incidents.',
-    metrics: [
-      ['Avoided incidents', '38'], ['Inspection time', '−72%'], ['Insurance saved', '$1.4M']
-    ],
+    id: 'councils', icon: Building2, name: 'Councils & LGAs',
+    img: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=900&auto=format&fit=crop&q=70',
+    headline: 'Civic infrastructure, on one map.',
+    sub: 'Stadiums, libraries, bridges and community buildings — digitised, condition-tracked and planned from a single platform.',
+    capabilities: ['Asset register', 'Condition scans', 'Maintenance planning'],
   },
   {
-    id: 'mining', icon: Pickaxe, name: 'Mining',
-    img: 'https://images.unsplash.com/photo-1515630278258-407f66498911?w=900&auto=format&fit=crop&q=70',
-    headline: 'Haul trucks, crushers, conveyors. Zero surprises.',
-    sub: 'Predict bearing, hydraulic, and gearbox failures across remote fleets. Plan around shutdown windows, not against them.',
-    metrics: [
-      ['Production preserved', '11k t'], ['Unplanned events', '−81%'], ['MTBF', '+44%']
-    ],
-  },
-  {
-    id: 'fleet', icon: Car, name: 'Fleet',
-    img: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=900&auto=format&fit=crop&q=70',
-    headline: 'EV batteries, brakes, tyres. Vehicles that don\'t break.',
-    sub: 'Photo-based wear detection plus telemetry models keep every van, truck, and EV in service when it matters most.',
-    metrics: [
-      ['Vehicle uptime', '99.2%'], ['Warranty wins', '+62%'], ['Tyre lifecycle', '+18%']
-    ],
-  },
-  {
-    id: 'manufacturing', icon: Factory, name: 'Manufacturing',
-    img: 'https://images.unsplash.com/photo-1565043666747-69f6646db940?w=900&auto=format&fit=crop&q=70',
-    headline: 'Robots, motors, lines. Throughput, protected.',
-    sub: 'Anomalous vibration, current draw, and condition photos unify into one risk score per line — with parts pre-staged.',
-    metrics: [
-      ['Line downtime', '−67%'], ['First-time fix', '94%'], ['OEE', '+9.4 pts']
-    ],
-  },
-  {
-    id: 'rail', icon: Train, name: 'Rail & transit',
+    id: 'rail', icon: Train, name: 'Rail & transport',
     img: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=900&auto=format&fit=crop&q=70',
-    headline: 'Tracks, signals, escalators. Passengers always move.',
-    sub: 'Network-wide condition monitoring with passenger-impact prioritisation. The right repair, on the right shift.',
-    metrics: [
-      ['SLA recovery', '99.7%'], ['Track defects caught', '+58%'], ['Signal MTTR', '−41%']
-    ],
+    headline: 'Networks, intersections, signals.',
+    sub: 'High-resolution scans of rail crossings and switches feed a digital twin layer your engineers can inspect remotely.',
+    capabilities: ['Network globe', 'Digital twin', 'Remote inspection'],
   },
   {
-    id: 'energy', icon: Zap, name: 'Energy & utilities',
+    id: 'utilities', icon: Zap, name: 'Utilities & energy',
     img: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=900&auto=format&fit=crop&q=70',
-    headline: 'Transformers, turbines, grids. Outages prevented.',
-    sub: 'Thermal anomalies, partial discharge, and wear feed a single grid risk model regulators can audit.',
-    metrics: [
-      ['Outage minutes', '−73%'], ['Asset life', '+11 yrs'], ['Audit pass rate', '100%']
-    ],
+    headline: 'Distributed assets, real-time visibility.',
+    sub: 'Substations, pipelines and grid infrastructure unified with sensor telemetry and predictive analytics.',
+    capabilities: ['Sensor integration', 'Predictive analytics', 'Alerts'],
+  },
+  {
+    id: 'mining', icon: Pickaxe, name: 'Mining & resources',
+    img: 'https://images.unsplash.com/photo-1515630278258-407f66498911?w=900&auto=format&fit=crop&q=70',
+    headline: 'Remote fleets and processing facilities.',
+    sub: 'Track equipment health, trigger predictive work orders, and plan around shutdown windows.',
+    capabilities: ['Equipment health', 'Work orders', 'ML predictions'],
+  },
+  {
+    id: 'property', icon: Factory, name: 'Property & portfolios',
+    img: 'https://images.unsplash.com/photo-1565043666747-69f6646db940?w=900&auto=format&fit=crop&q=70',
+    headline: 'Portfolio-wide visibility.',
+    sub: 'Multi-site building systems, lifecycle tracking and depreciation in one place.',
+    capabilities: ['Multi-site', 'Depreciation', 'Lifecycle tracking'],
+  },
+  {
+    id: 'fleet', icon: Car, name: 'Fleet & logistics',
+    img: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=900&auto=format&fit=crop&q=70',
+    headline: 'Vehicles in service, when it matters.',
+    sub: 'Photo-based condition checks plus telemetry-driven failure prediction across vans, trucks and EVs.',
+    capabilities: ['Photo inspection', 'Telemetry', 'Failure prediction'],
   },
 ];
 
@@ -147,13 +138,16 @@ export default function IndustryUseCases() {
                   </h3>
                   <p className="mt-3 text-[14px] text-slate-600 leading-[1.55]">{active.sub}</p>
 
-                  <div className="mt-auto pt-6 grid grid-cols-3 gap-3">
-                    {active.metrics.map(([label, value]) => (
-                      <div key={label} className="rounded-lg border border-slate-100 p-3 bg-slate-50/40">
-                        <div className="text-xl font-semibold tabular-nums text-slate-900 tracking-tight">{value}</div>
-                        <div className="text-[10px] uppercase tracking-wider text-slate-500 mt-0.5">{label}</div>
-                      </div>
-                    ))}
+                  <div className="mt-auto pt-6">
+                    <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 mb-2.5">Platform capabilities</div>
+                    <div className="flex flex-wrap gap-2">
+                      {active.capabilities.map((c) => (
+                        <span key={c} className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-slate-200 bg-slate-50/40 text-[12px] font-medium text-slate-700">
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                          {c}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </motion.div>

@@ -42,10 +42,10 @@ const BUNBURY = {
     'Reduced reliance on reactive maintenance',
   ],
   metrics: [
-    { value: '90%', label: 'Prediction accuracy' },
-    { value: '32%', label: 'Maintenance cost reduction' },
-    { value: '450+', label: 'Assets monitored' },
-    { value: '24/7', label: 'Real-time monitoring' },
+    { value: '15+', label: 'Critical assets digitised' },
+    { value: '90%+', label: 'Asset visibility' },
+    { value: 'Centralised', label: 'Infrastructure data' },
+    { value: '24/7', label: 'Condition monitoring' },
   ],
   quote: {
     text: 'AssetStack has significantly improved our ability to monitor infrastructure assets and plan maintenance activities more effectively.',
@@ -91,8 +91,8 @@ const LYCOPODIUM = {
   metrics: [
     { value: '100+', label: 'Rail assets digitised' },
     { value: 'National', label: 'Network coverage' },
-    { value: '↓ 60%', label: 'Manual inspections' },
-    { value: 'Faster', label: 'Maintenance triage' },
+    { value: 'Remote', label: 'Inspection workflow' },
+    { value: 'Unified', label: 'Digital twin layer' },
   ],
   quote: {
     text: 'AssetStack has enabled us to better understand and manage our rail infrastructure at scale.',

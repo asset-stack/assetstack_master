@@ -30,13 +30,13 @@ export default function FinalCTA() {
               <span className="font-serif italic font-medium text-blue-200">already on its way.</span>
             </h2>
             <p className="mt-5 text-[17px] text-slate-300 leading-[1.55] max-w-xl text-pretty">
-              Find it before it finds you. Connect your assets, run a scan, and watch AssetStack draw the first ledger entry — all in your trial week.
+              Find it before it finds you. Book a working session with our team — we'll scope your portfolio, run a sample scan, and show you the first ledger entry on your own data.
             </p>
 
             <div className="mt-9 flex flex-col sm:flex-row gap-2.5">
               <Link to="/CommandCenter">
                 <Button size="lg" className="bg-white hover:bg-slate-100 text-slate-900 elevation-2 h-12 px-7 text-[14px] font-semibold rounded-lg">
-                  Start free 14-day trial <ArrowRight className="w-4 h-4 ml-1.5" />
+                  Book a demo <ArrowRight className="w-4 h-4 ml-1.5" />
                 </Button>
               </Link>
               <a href="#tour">
@@ -47,11 +47,11 @@ export default function FinalCTA() {
             </div>
 
             <div className="mt-7 flex flex-wrap gap-x-5 gap-y-1.5 text-[12px] text-slate-400">
-              <span>14-day trial · No credit card</span>
+              <span>Pilot engagements available</span>
               <span className="opacity-50">·</span>
-              <span>Cancel anytime</span>
+              <span>Onboarding & data migration support</span>
               <span className="opacity-50">·</span>
-              <span>SOC 2 Type II</span>
+              <span>Australian-built</span>
             </div>
           </div>
         </motion.div>

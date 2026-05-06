@@ -5,27 +5,27 @@ import { Plus } from 'lucide-react';
 const FAQS = [
   {
     q: 'How fast can we go live?',
-    a: 'Most teams run their first AI scan in under an hour and have the first verified ledger entry within two weeks. We offer a guided 14-day onboarding for free.',
+    a: 'A pilot typically runs in two to four weeks: we ingest your asset register, scan a representative sample, and configure roles and workflows alongside your team. We provide hands-on onboarding throughout.',
   },
   {
     q: 'Do we need to install anything on-site?',
-    a: 'No. AssetStack runs in the cloud and ingests your existing CMMS, sensor feeds, and inspection photos. An on-prem deployment is available for regulated estates.',
+    a: 'No. AssetStack runs in the cloud. It ingests your existing inspection data, sensor feeds and asset records via file imports or APIs. A private-cloud or self-hosted option is available on the Enterprise tier.',
   },
   {
-    q: 'How accurate is the AI condition scanning?',
-    a: 'Our vision models hit 94% precision on verified condition reports across construction, mining, and utilities. Every prediction is auditable, with confidence scores and bounding boxes.',
+    q: 'How does AI condition scanning work?',
+    a: 'You upload photos or 3D scans of an asset. Our vision models highlight anomalies — cracks, corrosion, wear, missing parts — with a confidence score and a bounding box. Every detection is reviewable, and reviewer corrections feed back into model training.',
   },
   {
-    q: 'Will it work with our existing CMMS?',
-    a: 'Yes. We integrate with SAP PM, Maximo, Fiix, UpKeep, and any system with a REST API. We also support flat-file imports (Excel, CSV, BIM, point clouds).',
+    q: 'How does it fit alongside our existing systems?',
+    a: 'AssetStack supports flat-file imports (Excel, CSV) and a REST API for asset records, sensor data and work orders. Integrations to specific CMMS or ERP systems are scoped per engagement on the Business and Enterprise tiers.',
   },
   {
-    q: 'How does the Verified Savings Ledger work?',
-    a: 'Each prediction is tied to an intervention, an evidence pack (photos, sensor traces, inspection report), and a financial outcome. The ledger row is cryptographically signed for audit.',
+    q: 'What is the Verified Savings Ledger?',
+    a: 'A built-in record where each AI-driven intervention is logged with the prediction, the work order, the evidence (photos, sensor traces, inspection notes) and the financial outcome — verified by a human reviewer before the entry is finalised.',
   },
   {
     q: 'What does it cost?',
-    a: 'Pricing is per asset, per month, starting at $7. Most customers reach ROI within their first ledger entry. See our pricing section above.',
+    a: 'Pricing is shaped to your asset count, deployment and integration needs. Get in touch and we will quote precisely after a short scoping call.',
   },
 ];
 

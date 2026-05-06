@@ -1,5 +1,6 @@
 import React from 'react';
 import { Twitter, Linkedin, Github } from 'lucide-react';
+import BrandLogo from './BrandLogo';
 
 const COLS = [
   { title: 'Product', links: ['Features', 'Live demo', 'Pricing', 'Security', 'Roadmap', 'Changelog'] },
@@ -14,11 +15,8 @@ export default function LandingFooter() {
       <div className="max-w-[1280px] mx-auto px-5 md:px-8">
         <div className="grid md:grid-cols-[1.4fr_repeat(4,1fr)] gap-8 lg:gap-10">
           <div className="md:max-w-xs">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center elevation-1">
-                <span className="text-white font-bold text-sm">A</span>
-              </div>
-              <span className="font-semibold text-slate-900 text-[15px] tracking-tight">AssetStack</span>
+            <div className="mb-4">
+              <BrandLogo size={32} />
             </div>
             <p className="text-[13px] text-slate-500 leading-relaxed">
               The AI operating system for physical assets. Built for the teams who maintain the world.

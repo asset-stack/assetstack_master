@@ -2,29 +2,28 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { HardHat, Briefcase, TrendingUp } from 'lucide-react';
 
+// Persona cards describe what the platform does for each role — written
+// as platform statements, not attributed testimonials.
 const PERSONAS = [
   {
     icon: HardHat,
     role: 'Field Technician',
-    quote: 'I open one app. My next job, my checklist, the part I need — all there.',
-    name: 'Marcus T.',
-    detail: 'Senior Mechanical · 12 yrs',
+    statement: 'One app. The next work order, the checklist, the photo upload, the part list — all on the device.',
+    detail: 'Mobile work orders · Photo inspection · Offline-friendly',
     bg: 'bg-gradient-to-br from-blue-50 to-blue-100/40',
   },
   {
     icon: Briefcase,
     role: 'Maintenance Manager',
-    quote: 'I see risk before my Monday meeting. The work routes itself.',
-    name: 'Priya S.',
-    detail: 'Reliability Engineering · Mining',
+    statement: 'See risk before Monday. Auto-generated work orders, schedule optimisation, and a single dashboard for the team.',
+    detail: 'Predictive scheduling · Team allocation · Risk dashboard',
     bg: 'bg-gradient-to-br from-slate-50 to-slate-100/40',
   },
   {
     icon: TrendingUp,
-    role: 'CFO / Asset Owner',
-    quote: 'Every line in the savings ledger ties to evidence. The board reviews it monthly.',
-    name: 'David K.',
-    detail: 'CFO · Public infrastructure',
+    role: 'Asset Owner / CFO',
+    statement: 'Every line in the Verified Savings Ledger ties to a prediction, an intervention, and reviewed evidence — ready for audit.',
+    detail: 'Verified savings · Depreciation · Audit-grade trail',
     bg: 'bg-gradient-to-br from-primary/[0.06] to-primary/[0.02]',
   },
 ];
@@ -57,9 +56,8 @@ export default function PersonaCards() {
                   <Icon className="w-5 h-5 text-primary" />
                 </div>
                 <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">{p.role}</div>
-                <p className="mt-3 text-[18px] font-serif italic text-slate-800 leading-snug">"{p.quote}"</p>
+                <p className="mt-3 text-[17px] text-slate-800 leading-snug">{p.statement}</p>
                 <div className="mt-5 pt-5 border-t border-slate-200/60">
-                  <div className="text-[13px] font-semibold text-slate-900">{p.name}</div>
                   <div className="text-[12px] text-slate-500">{p.detail}</div>
                 </div>
               </motion.div>

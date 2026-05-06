@@ -37,7 +37,7 @@ export default function LandingHero() {
             <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary/10">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-subtle" />
             </span>
-            <span className="text-[11px] font-medium text-slate-700">New · Verified Savings Ledger 2.0</span>
+            <span className="text-[11px] font-medium text-slate-700">New · Verified Savings Ledger</span>
             <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 group-hover:text-primary transition-all" />
           </a>
         </motion.div>
@@ -91,10 +91,10 @@ export default function LandingHero() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mt-7 flex flex-wrap gap-x-5 gap-y-1.5 justify-center text-[11px] text-slate-500"
         >
-          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> SOC 2 Type II</div>
-          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> Immutable audit trail</div>
-          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> Verified ROI ledger</div>
-          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> 14-day rollout</div>
+          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> Detailed audit trail</div>
+          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> Verified Savings Ledger</div>
+          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> Per-tenant data isolation</div>
+          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> Australian-built</div>
         </motion.div>
 
         <HeroProductCanvas />

@@ -1,26 +1,39 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Hash, ShieldCheck, ArrowUpRight, Lock } from 'lucide-react';
+import { ShieldCheck, ArrowUpRight, FileCheck2 } from 'lucide-react';
 
+// Customer stories — based on real engagements documented on the Case Studies page.
+// Outcome figures shown here are illustrative ranges drawn from those engagements; precise
+// per-asset numbers are kept on the Case Studies page where they belong.
 const STORIES = [
   {
-    org: 'Western Power',
-    asset: 'Substation transformer T-19',
-    avoided: 2_148_000,
-    cost: 38_400,
-    days: 41,
-    quote: 'AssetStack flagged degrading insulation 41 days before failure. The ledger entry passed regulator audit on first review.',
-    role: 'Asset Strategy Lead',
+    org: 'Bunbury Council',
+    asset: 'Critical infrastructure portfolio · LGA, WA',
+    headline: '90%',
+    headlineLabel: 'Asset visibility',
+    sub: '15+ critical assets digitised across stadiums, civic buildings and community infrastructure.',
+    quote: 'AssetStack has significantly improved our ability to monitor infrastructure assets and plan maintenance activities more effectively.',
+    role: 'Bunbury Council Infrastructure Team',
   },
   {
-    org: 'Northshore Mining',
-    asset: 'Haul truck fleet (n=14)',
-    avoided: 1_204_000,
-    cost: 91_200,
-    days: 28,
-    quote: 'Three avoided breakdowns in one shutdown window. The CFO reads the ledger every Monday now.',
-    role: 'VP Operations',
+    org: 'Lycopodium',
+    asset: 'National rail network · Australia',
+    headline: '100+',
+    headlineLabel: 'Rail assets digitised',
+    sub: 'High-resolution scans of rail intersections and crossings unified into one digital twin layer.',
+    quote: 'AssetStack has enabled us to better understand and manage our rail infrastructure at scale.',
+    role: 'Stuart Sutherland — Managing Director, Lycopodium',
   },
+];
+
+// Sample ledger rows — the Verified Savings Ledger is a real product feature (see /SavingsLedger).
+// These rows are an illustrative preview of the format, not live customer data.
+const LEDGER_ROWS = [
+  ['LDG-0142', 'Bunbury Council · Bridge-12',           312000, 8900],
+  ['LDG-0141', 'Lycopodium · Switch-S04',                487300, 12100],
+  ['LDG-0140', 'Sample · Substation transformer T-19',  2148000, 38400],
+  ['LDG-0139', 'Sample · Haul truck fleet (n=14)',      1204000, 91200],
+  ['LDG-0138', 'Sample · Logistics van #284',             96500, 4400],
 ];
 
 export default function SavingsProof() {
@@ -30,11 +43,11 @@ export default function SavingsProof() {
         <div className="max-w-2xl mb-12 md:mb-14">
           <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">The proof</span>
           <h2 className="mt-3 text-4xl md:text-6xl font-semibold tracking-[-0.03em] leading-[1.02] text-slate-900 text-balance">
-            Every dollar saved is{' '}
-            <span className="font-serif italic font-medium text-primary">cryptographically signed.</span>
+            Every avoided breakdown,{' '}
+            <span className="font-serif italic font-medium text-primary">on the record.</span>
           </h2>
           <p className="mt-4 text-[17px] text-slate-600 leading-[1.55] text-pretty">
-            The Verified Savings Ledger ties each AI prediction to a real intervention, real evidence, and a real outcome — auditable by your CFO, your insurer, and your regulator.
+            The Verified Savings Ledger ties each AI prediction to an intervention, attached evidence, and a verified outcome — with a full audit trail your CFO and your auditor can read end-to-end.
           </p>
         </div>
 
@@ -47,58 +60,46 @@ export default function SavingsProof() {
         >
           <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <Lock className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-[12px] font-mono text-slate-300">verified_savings_ledger.audit</span>
+              <FileCheck2 className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="text-[12px] font-mono text-slate-300">verified_savings_ledger</span>
             </div>
             <div className="flex items-center gap-3 text-[10px] font-mono text-slate-400">
-              <span>SHA-256</span>
+              <span>Sample preview</span>
               <span className="opacity-50">·</span>
-              <span>v2.1</span>
-              <span className="opacity-50">·</span>
-              <span className="text-emerald-400">2,847 entries</span>
+              <span className="text-emerald-400">5 entries</span>
             </div>
           </div>
 
           <div className="font-mono text-[12px]">
-            <div className="grid grid-cols-[80px_1fr_120px_120px_120px_100px] gap-4 px-6 py-2.5 border-b border-white/10 text-[10px] uppercase tracking-wider text-slate-500">
+            <div className="grid grid-cols-[80px_1fr_120px_120px_120px] gap-4 px-6 py-2.5 border-b border-white/10 text-[10px] uppercase tracking-wider text-slate-500">
               <span>Entry</span>
-              <span>Organization · Asset</span>
+              <span>Organisation · Asset</span>
               <span className="text-right">Avoided</span>
               <span className="text-right">Cost</span>
               <span className="text-right">Net</span>
-              <span className="text-right">Signed</span>
             </div>
-            {[
-              ['LDG-2841', 'Western Power · T-19', 2148000, 38400, '0x9f4a…b2c1'],
-              ['LDG-2839', 'Northshore Mining · HT-19', 1204000, 91200, '0x4c8d…f019'],
-              ['LDG-2837', 'Coastal Rail · Switch-S04', 487300, 12100, '0x71ee…a44b'],
-              ['LDG-2835', 'Apex Logistics · Van-284', 96500, 4400, '0xbb22…1f7e'],
-              ['LDG-2833', 'Bunbury Council · Bridge-12', 312000, 8900, '0xa011…77fc'],
-            ].map(([id, asset, avoided, cost, hash], i) => (
+            {LEDGER_ROWS.map(([id, asset, avoided, cost], i) => (
               <motion.div
                 key={id}
                 initial={{ opacity: 0, x: -8 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
-                className="grid grid-cols-[80px_1fr_120px_120px_120px_100px] gap-4 px-6 py-3 border-b border-white/5 hover:bg-white/[0.02] transition-colors"
+                className="grid grid-cols-[80px_1fr_120px_120px_120px] gap-4 px-6 py-3 border-b border-white/5 hover:bg-white/[0.02] transition-colors"
               >
                 <span className="text-slate-500">{id}</span>
                 <span className="text-slate-200">{asset}</span>
                 <span className="text-right text-emerald-400 tabular-nums">${avoided.toLocaleString()}</span>
                 <span className="text-right text-slate-400 tabular-nums">${cost.toLocaleString()}</span>
                 <span className="text-right text-white font-semibold tabular-nums">${(avoided - cost).toLocaleString()}</span>
-                <span className="text-right text-slate-500 inline-flex items-center gap-1 justify-end">
-                  <Hash className="w-3 h-3" /> {hash}
-                </span>
               </motion.div>
             ))}
           </div>
 
           <div className="px-6 py-4 border-t border-white/10 flex items-center justify-between text-[11px]">
-            <span className="text-slate-400 font-mono">Showing 5 of 2,847 verified entries</span>
+            <span className="text-slate-400 font-mono">Sample preview · live ledger lives in /SavingsLedger</span>
             <span className="text-emerald-400 font-mono inline-flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3" /> Σ $4,247,800 signed this quarter
+              <ShieldCheck className="w-3 h-3" /> Audit-grade evidence trail
             </span>
           </div>
         </motion.div>
@@ -118,19 +119,10 @@ export default function SavingsProof() {
                 <div className="text-[15px] font-semibold text-slate-900">{s.org}</div>
                 <ArrowUpRight className="w-4 h-4 text-slate-300" />
               </div>
-              <div className="grid grid-cols-3 gap-3 mb-5 pb-5 border-b border-slate-100">
-                <div>
-                  <div className="text-2xl font-semibold text-emerald-600 tabular-nums tracking-tight">${(s.avoided / 1_000_000).toFixed(2)}M</div>
-                  <div className="text-[10px] uppercase tracking-wider text-slate-500 mt-1">Avoided</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-semibold text-slate-900 tabular-nums tracking-tight">{s.days}d</div>
-                  <div className="text-[10px] uppercase tracking-wider text-slate-500 mt-1">Lead time</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-semibold text-primary tabular-nums tracking-tight">{Math.round((s.avoided / s.cost))}×</div>
-                  <div className="text-[10px] uppercase tracking-wider text-slate-500 mt-1">ROI</div>
-                </div>
+              <div className="mb-5 pb-5 border-b border-slate-100">
+                <div className="text-4xl font-semibold text-primary tabular-nums tracking-tight">{s.headline}</div>
+                <div className="text-[10px] uppercase tracking-wider text-slate-500 mt-1">{s.headlineLabel}</div>
+                <p className="mt-3 text-[13px] text-slate-600 leading-relaxed">{s.sub}</p>
               </div>
               <p className="text-[14px] text-slate-700 leading-relaxed font-serif italic">"{s.quote}"</p>
               <div className="mt-3 text-[12px] text-slate-500">{s.role} · {s.asset}</div>
