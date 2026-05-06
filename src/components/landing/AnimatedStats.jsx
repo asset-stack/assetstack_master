@@ -50,7 +50,7 @@ export default function AnimatedStats() {
               transition={{ delay: i * 0.1 }}
               className="text-center"
             >
-              <div className="text-4xl md:text-6xl font-black bg-gradient-to-br from-slate-900 to-slate-600 bg-clip-text text-transparent">
+              <div className="text-4xl md:text-6xl font-black bg-gradient-to-br from-primary to-blue-400 bg-clip-text text-transparent">
                 <Counter value={s.value} prefix={s.prefix} suffix={s.suffix} />
               </div>
               <div className="mt-2 text-sm font-bold text-slate-900">{s.label}</div>

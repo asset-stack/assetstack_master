@@ -7,17 +7,17 @@ import HeroCommandVisual from './HeroCommandVisual';
 
 export default function LandingHero() {
   return (
-    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
+    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-slate-950 text-white">
       {/* Background gradient blobs */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-1/4 w-[500px] h-[500px] bg-indigo-400/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute top-40 right-1/4 w-[500px] h-[500px] bg-purple-400/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute bottom-0 left-1/3 w-[400px] h-[400px] bg-pink-400/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '4s' }} />
+        <div className="absolute top-20 left-1/4 w-[560px] h-[560px] bg-primary/35 rounded-full blur-[140px] animate-pulse" />
+        <div className="absolute top-36 right-1/5 w-[520px] h-[520px] bg-blue-400/20 rounded-full blur-[140px] animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute bottom-0 left-1/3 w-[420px] h-[420px] bg-primary/15 rounded-full blur-[110px] animate-pulse" style={{ animationDelay: '4s' }} />
       </div>
 
       {/* Grid pattern */}
       <div className="absolute inset-0 -z-10 opacity-[0.03]" style={{
-        backgroundImage: `linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)`,
+        backgroundImage: `linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)`,
         backgroundSize: '48px 48px',
       }} />
 
@@ -28,12 +28,12 @@ export default function LandingHero() {
           transition={{ duration: 0.6 }}
           className="flex justify-center mb-6"
         >
-          <a href="#demo" className="group inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all">
+          <a href="#demo" className="group inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/15 border border-primary/30 shadow-sm shadow-primary/20 hover:bg-primary/20 transition-all">
             <span className="flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
-            <span className="text-xs font-semibold text-slate-700">New: construction, mining, fleet, manufacturing, rail & utilities demos</span>
+            <span className="text-xs font-semibold text-blue-100">New: construction, mining, fleet, manufacturing, rail & utilities demos</span>
             <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
           </a>
         </motion.div>
@@ -42,11 +42,11 @@ export default function LandingHero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-center text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-slate-900 leading-[1.05]"
+          className="text-center text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-white leading-[1.05]"
         >
           The AI operating system
           <br />
-          <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-blue-200 via-primary to-blue-400 bg-clip-text text-transparent">
             for physical assets.
           </span>
         </motion.h1>
@@ -55,7 +55,7 @@ export default function LandingHero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-7 text-center text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed"
+          className="mt-7 text-center text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed"
         >
           Detect defects from photos, predict failures from live asset data, dispatch the right work, and prove every avoided breakdown with audit-ready evidence — across construction, mining, fleet, manufacturing, rail, utilities, and infrastructure.
         </motion.p>
@@ -67,12 +67,12 @@ export default function LandingHero() {
           className="mt-10 flex flex-col sm:flex-row gap-3 justify-center items-center"
         >
           <Link to="/CommandCenter">
-            <Button size="lg" className="bg-slate-900 hover:bg-slate-800 text-white shadow-xl shadow-slate-900/20 h-12 px-7 text-base font-semibold">
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/30 h-12 px-7 text-base font-semibold">
               <Sparkles className="w-4 h-4 mr-2" /> Open the platform
             </Button>
           </Link>
           <a href="#demo">
-            <Button size="lg" variant="outline" className="h-12 px-7 text-base font-semibold border-slate-300 bg-white/60 backdrop-blur">
+            <Button size="lg" variant="outline" className="h-12 px-7 text-base font-semibold border-primary/30 bg-white/10 text-white hover:bg-white/15 backdrop-blur">
               <Play className="w-4 h-4 mr-2" /> See the live demo
             </Button>
           </a>
@@ -82,12 +82,12 @@ export default function LandingHero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="mt-8 flex flex-wrap gap-x-6 gap-y-2 justify-center text-xs text-slate-500"
+          className="mt-8 flex flex-wrap gap-x-6 gap-y-2 justify-center text-xs text-blue-100/80"
         >
-          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> SOC 2 ready</div>
-          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Immutable audit trail</div>
-          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Verified ROI ledger</div>
-          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> No infrastructure setup</div>
+          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary" /> SOC 2 ready</div>
+          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary" /> Immutable audit trail</div>
+          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary" /> Verified ROI ledger</div>
+          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary" /> No infrastructure setup</div>
         </motion.div>
 
         <HeroCommandVisual />

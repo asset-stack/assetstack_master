@@ -9,7 +9,7 @@ const INDUSTRIES = [
     id: 'construction',
     label: 'Construction',
     icon: Building2,
-    color: 'from-orange-500 to-amber-400',
+    color: 'from-primary to-blue-400',
     image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200&q=80',
     headline: 'Prevent crane, concrete, scaffold, and site-equipment failures before they stop the job.',
     assets: ['Tower crane TC-04', 'Concrete pump CP-12', 'Temporary power board', 'Hoist elevator H-2'],
@@ -22,7 +22,7 @@ const INDUSTRIES = [
     id: 'mining',
     label: 'Mining',
     icon: Pickaxe,
-    color: 'from-yellow-500 to-stone-500',
+    color: 'from-primary to-blue-500',
     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&q=80',
     headline: 'Keep haul trucks, conveyors, crushers, pumps, and remote assets moving in harsh conditions.',
     assets: ['Haul truck HT-19', 'Crusher jaw CJ-2', 'Conveyor belt CV-7', 'Dewatering pump DP-4'],
@@ -35,7 +35,7 @@ const INDUSTRIES = [
     id: 'fleet',
     label: 'Fleet of cars',
     icon: Car,
-    color: 'from-blue-500 to-cyan-400',
+    color: 'from-primary to-blue-400',
     image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&q=80',
     headline: 'Predict battery, tyre, brake, engine, and downtime risks across thousands of vehicles.',
     assets: ['EV Van #284', 'Utility #102', 'Pool car #41', 'Roadside truck #8'],
@@ -48,7 +48,7 @@ const INDUSTRIES = [
     id: 'manufacturing',
     label: 'Manufacturing',
     icon: Factory,
-    color: 'from-purple-500 to-pink-500',
+    color: 'from-primary to-blue-600',
     image: 'https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?w=1200&q=80',
     headline: 'Stop line downtime by predicting motor, pump, compressor, robot, and conveyor failures.',
     assets: ['Line 3 robot arm', 'Air compressor AC-2', 'Packaging motor M-8', 'Cooling pump P-6'],
@@ -61,7 +61,7 @@ const INDUSTRIES = [
     id: 'rail',
     label: 'Rail & transit',
     icon: Train,
-    color: 'from-emerald-500 to-teal-400',
+    color: 'from-primary to-blue-500',
     image: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=1200&q=80',
     headline: 'Monitor switches, signals, track geometry, bridges, rolling stock, and stations in one network view.',
     assets: ['Signal Box 12', 'Switch SW-31', 'Track segment W-8', 'Station escalator E-4'],
@@ -94,7 +94,7 @@ export default function IndustryDemo() {
   return (
     <div className="rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/10 overflow-hidden">
       <div className="grid lg:grid-cols-[290px_1fr] min-h-[620px]">
-        <div className="bg-slate-950 p-4 md:p-5 space-y-2">
+        <div className="bg-primary p-4 md:p-5 space-y-2">
           <div className="px-2 pb-3">
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500">Industry command switcher</p>
           </div>
@@ -105,7 +105,7 @@ export default function IndustryDemo() {
               <button
                 key={industry.id}
                 onClick={() => setActive(industry)}
-                className={`w-full flex items-center gap-3 rounded-xl px-3 py-3 text-left transition-all ${selected ? 'bg-white text-slate-950 shadow-lg' : 'text-slate-300 hover:bg-white/10 hover:text-white'}`}
+                className={`w-full flex items-center gap-3 rounded-xl px-3 py-3 text-left transition-all ${selected ? 'bg-white text-primary shadow-lg' : 'text-blue-100 hover:bg-white/10 hover:text-white'}`}
               >
                 <span className={`w-10 h-10 rounded-xl bg-gradient-to-br ${industry.color} flex items-center justify-center shrink-0`}>
                   <TabIcon className="w-5 h-5 text-white" />
@@ -152,7 +152,7 @@ export default function IndustryDemo() {
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-bold text-slate-900">Live asset risk</h4>
-                  <Badge className="bg-indigo-100 text-indigo-700 border-0">AI ranked</Badge>
+                  <Badge className="bg-primary/10 text-primary border-0">AI ranked</Badge>
                 </div>
                 <div className="space-y-3">
                   {active.assets.map((asset, i) => (
@@ -192,14 +192,14 @@ export default function IndustryDemo() {
                     <AreaChart data={active.chart}>
                       <defs>
                         <linearGradient id={`risk-${active.id}`} x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#6366f1" stopOpacity={0.45} />
-                          <stop offset="100%" stopColor="#6366f1" stopOpacity={0} />
+                          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.45} />
+                          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
                         </linearGradient>
                       </defs>
                       <XAxis dataKey="m" hide />
                       <YAxis hide domain={[0, 100]} />
                       <Tooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-                      <Area type="monotone" dataKey="r" stroke="#6366f1" strokeWidth={3} fill={`url(#risk-${active.id})`} />
+                      <Area type="monotone" dataKey="r" stroke="hsl(var(--primary))" strokeWidth={3} fill={`url(#risk-${active.id})`} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>

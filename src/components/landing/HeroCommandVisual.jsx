@@ -22,7 +22,7 @@ export default function HeroCommandVisual() {
       transition={{ duration: 0.9, delay: 0.8 }}
       className="mt-14 relative max-w-6xl mx-auto"
     >
-      <div className="absolute -inset-6 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-emerald-500/20 blur-3xl rounded-full" />
+      <div className="absolute -inset-6 bg-primary/30 blur-3xl rounded-full" />
       <div className="relative rounded-[2rem] border border-white/60 bg-white/80 backdrop-blur-2xl shadow-2xl shadow-slate-900/15 overflow-hidden">
         <div className="h-11 border-b border-slate-200/70 bg-slate-50/80 flex items-center px-5 gap-2">
           <span className="w-3 h-3 rounded-full bg-red-400" />
@@ -32,15 +32,15 @@ export default function HeroCommandVisual() {
         </div>
 
         <div className="grid lg:grid-cols-[1fr_340px] gap-0">
-          <div className="p-5 md:p-7 bg-gradient-to-br from-slate-950 to-slate-900 text-white min-h-[390px] relative overflow-hidden">
+          <div className="p-5 md:p-7 bg-gradient-to-br from-primary via-blue-800 to-slate-950 text-white min-h-[390px] relative overflow-hidden">
             <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)', backgroundSize: '42px 42px' }} />
             <div className="relative flex items-start justify-between gap-4 mb-7">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">Live risk layer</p>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-100">Live risk layer</p>
                 <h3 className="mt-2 text-2xl md:text-3xl font-black">Assets that need attention now</h3>
               </div>
-              <div className="rounded-2xl bg-emerald-400/10 border border-emerald-300/20 px-4 py-3 text-right">
-                <div className="text-2xl font-black text-emerald-300">$4.8M</div>
+              <div className="rounded-2xl bg-white/10 border border-white/15 px-4 py-3 text-right">
+                <div className="text-2xl font-black text-blue-100">$4.8M</div>
                 <div className="text-[10px] text-emerald-100/80 uppercase tracking-wider">preventable exposure</div>
               </div>
             </div>
@@ -74,13 +74,13 @@ export default function HeroCommandVisual() {
                   <AreaChart data={riskData}>
                     <defs>
                       <linearGradient id="heroRisk" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#818cf8" stopOpacity={0.7} />
-                        <stop offset="100%" stopColor="#818cf8" stopOpacity={0} />
+                        <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.7} />
+                        <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <XAxis dataKey="d" hide />
                     <YAxis hide domain={[0, 100]} />
-                    <Area type="monotone" dataKey="v" stroke="#a5b4fc" strokeWidth={3} fill="url(#heroRisk)" />
+                    <Area type="monotone" dataKey="v" stroke="#bfdbfe" strokeWidth={3} fill="url(#heroRisk)" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -91,7 +91,7 @@ export default function HeroCommandVisual() {
                   ['Savings evidence ready', ShieldCheck],
                 ].map(([label, Icon], i) => (
                   <div key={label} className="flex items-center gap-2 py-2 text-sm text-white/90">
-                    <Icon className="w-4 h-4 text-emerald-300" /> {label}
+                    <Icon className="w-4 h-4 text-blue-100" /> {label}
                   </div>
                 ))}
               </div>

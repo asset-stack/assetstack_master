@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Clock, DollarSign, ShieldCheck, Users, Zap, BarChart3 } from 'lucide-react';
+import { ArrowRight, Clock, DollarSign, ShieldCheck, Users } from 'lucide-react';
 
 const BENEFITS = [
   {
@@ -31,9 +31,9 @@ const BENEFITS = [
 
 export default function BenefitsSection() {
   return (
-    <section id="benefits" className="py-20 md:py-28 bg-slate-950 text-white relative overflow-hidden">
+    <section id="benefits" className="py-20 md:py-28 bg-primary text-white relative overflow-hidden">
       <div className="absolute inset-0 opacity-40" style={{
-        backgroundImage: 'radial-gradient(circle at 15% 20%, rgba(99,102,241,0.45), transparent 35%), radial-gradient(circle at 85% 70%, rgba(16,185,129,0.25), transparent 35%)'
+        backgroundImage: 'radial-gradient(circle at 15% 20%, rgba(255,255,255,0.26), transparent 35%), radial-gradient(circle at 85% 70%, rgba(147,197,253,0.28), transparent 35%)'
       }} />
       <div className="max-w-7xl mx-auto px-4 md:px-6 relative">
         <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 items-center">
@@ -42,10 +42,10 @@ export default function BenefitsSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <span className="text-xs font-bold uppercase tracking-[0.24em] text-emerald-400">Why teams switch</span>
+            <span className="text-xs font-bold uppercase tracking-[0.24em] text-blue-100">Why teams switch</span>
             <h2 className="mt-4 text-4xl md:text-6xl font-black tracking-tight leading-[1.03]">
               The benefits are operational,
-              <span className="block text-emerald-400">financial, and defensible.</span>
+              <span className="block text-blue-100">financial, and defensible.</span>
             </h2>
             <p className="mt-6 text-lg text-slate-300 leading-relaxed">
               AssetStack is not another dashboard. It is a decision engine that turns condition data into the next best action, then proves the outcome.
@@ -70,7 +70,7 @@ export default function BenefitsSection() {
                 >
                   <div className="flex items-center justify-between mb-6">
                     <div className="w-11 h-11 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center">
-                      <Icon className="w-5 h-5 text-emerald-300" />
+                      <Icon className="w-5 h-5 text-blue-100" />
                     </div>
                     <span className="text-2xl font-black text-white">{benefit.metric}</span>
                   </div>

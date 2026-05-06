@@ -3,11 +3,11 @@ import { motion } from 'framer-motion';
 import { Building2, Pickaxe, Car, Factory, Train, Zap, ArrowRight } from 'lucide-react';
 
 const CASES = [
-  { icon: Building2, title: 'Construction', text: 'Cranes, hoists, pumps, power boards, scaffolds, safety inspections, and defect evidence packs.', color: 'from-orange-500 to-amber-400' },
-  { icon: Pickaxe, title: 'Mining', text: 'Haul trucks, crushers, conveyors, pumps, remote sites, shutdown windows, and production-loss prevention.', color: 'from-yellow-500 to-stone-500' },
-  { icon: Car, title: 'Fleet of cars', text: 'EV batteries, tyres, brakes, engines, service routing, warranty evidence, and vehicle downtime risk.', color: 'from-blue-500 to-cyan-400' },
-  { icon: Factory, title: 'Manufacturing', text: 'Robots, motors, compressors, conveyor lines, cooling pumps, spare parts, and line-level downtime risk.', color: 'from-purple-500 to-pink-500' },
-  { icon: Train, title: 'Rail & transit', text: 'Signals, switches, tracks, stations, escalators, bridges, and passenger-impact prioritisation.', color: 'from-emerald-500 to-teal-400' },
+  { icon: Building2, title: 'Construction', text: 'Cranes, hoists, pumps, power boards, scaffolds, safety inspections, and defect evidence packs.', color: 'from-primary to-blue-400' },
+  { icon: Pickaxe, title: 'Mining', text: 'Haul trucks, crushers, conveyors, pumps, remote sites, shutdown windows, and production-loss prevention.', color: 'from-primary to-blue-500' },
+  { icon: Car, title: 'Fleet of cars', text: 'EV batteries, tyres, brakes, engines, service routing, warranty evidence, and vehicle downtime risk.', color: 'from-primary to-blue-400' },
+  { icon: Factory, title: 'Manufacturing', text: 'Robots, motors, compressors, conveyor lines, cooling pumps, spare parts, and line-level downtime risk.', color: 'from-primary to-blue-600' },
+  { icon: Train, title: 'Rail & transit', text: 'Signals, switches, tracks, stations, escalators, bridges, and passenger-impact prioritisation.', color: 'from-primary to-blue-500' },
   { icon: Zap, title: 'Energy & utilities', text: 'Transformers, turbines, substations, solar farms, pipelines, valves, and outage-prevention workflows.', color: 'from-indigo-500 to-blue-500' },
 ];
 
@@ -47,7 +47,7 @@ export default function IndustryUseCases() {
                 </div>
                 <div className="flex items-center justify-between gap-3">
                   <h3 className="font-black text-xl text-slate-900">{item.title}</h3>
-                  <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
+                  <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-primary group-hover:translate-x-1 transition-all" />
                 </div>
                 <p className="mt-3 text-sm leading-relaxed text-slate-600">{item.text}</p>
               </motion.a>

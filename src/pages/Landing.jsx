@@ -5,6 +5,8 @@ import LogoCloud from '@/components/landing/LogoCloud';
 import AnimatedStats from '@/components/landing/AnimatedStats';
 import FeatureGrid from '@/components/landing/FeatureGrid';
 import BenefitsSection from '@/components/landing/BenefitsSection';
+import FlagshipCapabilities from '@/components/landing/FlagshipCapabilities';
+import LiveIntelligenceStream from '@/components/landing/LiveIntelligenceStream';
 import IndustryUseCases from '@/components/landing/IndustryUseCases';
 import LiveDemoSection from '@/components/landing/LiveDemoSection';
 import Testimonials from '@/components/landing/Testimonials';
@@ -19,13 +21,15 @@ export default function Landing() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden">
+    <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden selection:bg-primary/20">
       <LandingNav />
       <main>
         <LandingHero />
         <LogoCloud />
+        <LiveIntelligenceStream />
         <AnimatedStats />
         <BenefitsSection />
+        <FlagshipCapabilities />
         <FeatureGrid />
         <IndustryUseCases />
         <LiveDemoSection />
