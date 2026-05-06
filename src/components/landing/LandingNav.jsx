@@ -15,11 +15,12 @@ export default function LandingNav() {
   }, []);
 
   const links = [
-    { href: '#tour', label: 'Product' },
-    { href: '#proof', label: 'Proof' },
-    { href: '#industries', label: 'Industries' },
-    { href: '#pricing', label: 'Pricing' },
-    { href: '#security', label: 'Security' },
+    { href: '/Landing#tour', label: 'Product' },
+    { href: '/Landing#proof', label: 'Proof' },
+    { href: '/Landing#industries', label: 'Industries' },
+    { href: '/CaseStudies', label: 'Case studies', isRoute: true },
+    { href: '/Landing#pricing', label: 'Pricing' },
+    { href: '/Landing#security', label: 'Security' },
   ];
 
   return (
@@ -39,15 +40,25 @@ export default function LandingNav() {
         </Link>
 
         <div className="hidden lg:flex items-center gap-1">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="px-3 py-2 text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors"
-            >
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) =>
+            l.isRoute ? (
+              <Link
+                key={l.href}
+                to={l.href}
+                className="px-3 py-2 text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors"
+              >
+                {l.label}
+              </Link>
+            ) : (
+              <a
+                key={l.href}
+                href={l.href}
+                className="px-3 py-2 text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors"
+              >
+                {l.label}
+              </a>
+            )
+          )}
         </div>
 
         <div className="hidden lg:flex items-center gap-1">
@@ -68,11 +79,17 @@ export default function LandingNav() {
 
       {mobileOpen && (
         <div className="lg:hidden bg-white border-t border-slate-200 px-4 py-3 space-y-1">
-          {links.map((l) => (
-            <a key={l.href} href={l.href} onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) =>
+            l.isRoute ? (
+              <Link key={l.href} to={l.href} onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                {l.label}
+              </Link>
+            ) : (
+              <a key={l.href} href={l.href} onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50">
+                {l.label}
+              </a>
+            )
+          )}
           <Link to="/CommandCenter" className="block">
             <Button className="w-full mt-2 bg-primary hover:bg-primary/90 text-white">Book a demo</Button>
           </Link>

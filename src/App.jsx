@@ -23,6 +23,7 @@ import BetaFeatures from './pages/BetaFeatures';
 import SavingsLedger from './pages/SavingsLedger';
 import SecurityCenter from './pages/SecurityCenter';
 import Landing from './pages/Landing';
+import CaseStudies from './pages/CaseStudies';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -61,6 +62,7 @@ const AuthenticatedApp = () => {
       {/* Public landing page — no sidebar/layout wrapper */}
       <Route path="/" element={<Landing />} />
       <Route path="/Landing" element={<Landing />} />
+      <Route path="/CaseStudies" element={<CaseStudies />} />
       <Route path="/CommandCenter" element={
         <LayoutWrapper currentPageName="CommandCenter">
           <CommandCenter />
