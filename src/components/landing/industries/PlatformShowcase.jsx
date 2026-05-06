@@ -2,28 +2,46 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
-  MessageSquare, GitBranch, Globe2, Sparkles, Box, ShieldCheck, ArrowRight,
+  MessageSquare, GitBranch, Globe2, Sparkles, Box, ShieldCheck,
+  LayoutDashboard, ArrowRight,
 } from 'lucide-react';
+
+import AssetMindPreview from './previews/AssetMindPreview';
+import AssetTreePreview from './previews/AssetTreePreview';
+import DashboardPreview from './previews/DashboardPreview';
 
 /**
  * Platform Showcase — interactive tabbed module that lets visitors
- * preview each major surface of the AssetStack product (AssetMind chat,
- * Asset Tree, Network Globe, Scan Analysis, Digital Twin, Savings Ledger).
+ * preview each major surface of the AssetStack product.
  *
- * Every tab links to the live page inside the app — proving the product is real.
+ * Each rich preview lives in its own file under ./previews — keep this
+ * file focused on layout & module metadata.
  */
 
 const MODULES = [
+  {
+    id: 'dashboard',
+    name: 'Dashboard',
+    sub: 'Live operations view',
+    icon: LayoutDashboard,
+    headline: 'Your fleet, at a glance.',
+    blurb: 'KPIs, fleet health trend, risk heatmap and live alerts — the morning briefing every operator wants.',
+    href: '/Dashboard',
+    cta: 'Open the dashboard',
+    accent: 'from-indigo-500 to-blue-600',
+    highlights: ['Real-time KPIs', 'Risk heatmap', 'Live alert feed'],
+  },
   {
     id: 'assetmind',
     name: 'AssetMind',
     sub: 'Conversational AI',
     icon: MessageSquare,
     headline: 'Ask anything about your assets.',
-    blurb: 'Your fleet, in plain English. AssetMind reads your live data, surfaces risk, and drafts work orders on demand.',
+    blurb: 'AssetMind reads your live data, surfaces risk, plots sensor trends, and drafts work orders on demand.',
     href: '/AIAssistant',
-    cta: 'Open AssetMind',
+    cta: 'Chat with AssetMind',
     accent: 'from-blue-500 to-indigo-600',
+    highlights: ['Plain-English queries', 'Inline charts', 'One-click actions'],
   },
   {
     id: 'tree',
@@ -31,10 +49,11 @@ const MODULES = [
     sub: 'Hierarchy & coverage',
     icon: GitBranch,
     headline: 'Every asset, mapped.',
-    blurb: 'Drill from sites to systems to the smallest replaceable part. Click any node — see its full history.',
+    blurb: 'Drill from sites to systems to the smallest replaceable part. Click any node — see live sensor history.',
     href: '/AssetTree',
     cta: 'Browse the tree',
     accent: 'from-emerald-500 to-teal-600',
+    highlights: ['Drill-down hierarchy', 'Per-asset KPIs', 'Live sensor traces'],
   },
   {
     id: 'globe',
@@ -46,6 +65,7 @@ const MODULES = [
     href: '/NetworkGlobe',
     cta: 'Spin the globe',
     accent: 'from-violet-500 to-purple-600',
+    highlights: ['Geo-located nodes', 'Condition coding', 'Network drilldown'],
   },
   {
     id: 'scan',
@@ -57,6 +77,7 @@ const MODULES = [
     href: '/ScanAnalysis',
     cta: 'See it in action',
     accent: 'from-amber-500 to-orange-600',
+    highlights: ['Auto-detection', 'Bounding boxes', 'Confidence scoring'],
   },
   {
     id: 'twin',
@@ -68,6 +89,7 @@ const MODULES = [
     href: '/DigitalTwin',
     cta: 'Open the twin',
     accent: 'from-rose-500 to-pink-600',
+    highlights: ['3D & 2D views', 'Asset hotspots', 'Linked findings'],
   },
   {
     id: 'savings',
@@ -79,11 +101,12 @@ const MODULES = [
     href: '/SavingsLedger',
     cta: 'Inspect the ledger',
     accent: 'from-sky-500 to-cyan-600',
+    highlights: ['Verified savings', 'Audit trail', 'Finance export'],
   },
 ];
 
-// Visual previews — pure CSS/SVG-driven mockups for each module.
 function ModulePreview({ id }) {
+  if (id === 'dashboard') return <DashboardPreview />;
   if (id === 'assetmind') return <AssetMindPreview />;
   if (id === 'tree') return <AssetTreePreview />;
   if (id === 'globe') return <NetworkGlobePreview />;
@@ -93,91 +116,12 @@ function ModulePreview({ id }) {
   return null;
 }
 
-function AssetMindPreview() {
-  return (
-    <div className="h-full w-full p-5 md:p-7 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 flex flex-col gap-3 text-white">
-      <div className="flex items-center gap-2 pb-2 border-b border-white/10">
-        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
-          <MessageSquare className="w-3.5 h-3.5" />
-        </div>
-        <span className="text-[12px] font-semibold">AssetMind</span>
-        <span className="ml-auto text-[10px] text-white/40">Live</span>
-      </div>
-      <div className="flex-1 space-y-3 overflow-hidden">
-        <div className="flex justify-end">
-          <div className="bg-blue-500 rounded-xl rounded-tr-sm px-3 py-2 max-w-[70%] text-[12px]">
-            Which Bunbury assets need attention this week?
-          </div>
-        </div>
-        <div className="bg-white/5 border border-white/10 rounded-xl rounded-tl-sm px-3 py-2.5 text-[12px] text-white/90 leading-relaxed max-w-[85%]">
-          <div className="text-[10px] uppercase tracking-wider text-blue-300 font-semibold mb-1.5">3 priority items</div>
-          <div className="space-y-1">
-            <div>• <span className="text-amber-300">Library HVAC #2</span> — vibration anomaly, schedule inspection</div>
-            <div>• <span className="text-amber-300">Town Hall lift</span> — service due in 4 days</div>
-            <div>• <span className="text-rose-300">Park irrigation pump</span> — pressure drop, replace seal</div>
-          </div>
-          <div className="mt-2 pt-2 border-t border-white/10 text-[10px] text-white/60">
-            Want me to draft work orders?
-          </div>
-        </div>
-      </div>
-      <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10">
-        <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-        <span className="text-[11px] text-white/50">Ask anything…</span>
-      </div>
-    </div>
-  );
-}
-
-function AssetTreePreview() {
-  const tree = [
-    { label: 'Bunbury LGA', count: '156 assets', depth: 0, type: 'site' },
-    { label: 'Library Building', count: '24', depth: 1, type: 'building' },
-    { label: 'HVAC Systems', count: '8', depth: 2, type: 'system' },
-    { label: 'Rooftop Unit #1', count: 'Healthy', depth: 3, type: 'asset', status: 'ok' },
-    { label: 'Rooftop Unit #2', count: 'Anomaly', depth: 3, type: 'asset', status: 'warn' },
-    { label: 'Town Hall', count: '42', depth: 1, type: 'building' },
-  ];
-  return (
-    <div className="h-full w-full p-5 md:p-7 bg-white flex flex-col gap-1">
-      <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
-        <GitBranch className="w-4 h-4 text-emerald-600" />
-        <span className="text-[12px] font-semibold text-slate-900">Asset Hierarchy</span>
-        <span className="ml-auto text-[10px] text-slate-400">156 nodes</span>
-      </div>
-      <div className="flex-1 space-y-0.5 mt-2">
-        {tree.map((n, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -8 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.05 }}
-            className={`flex items-center gap-2 py-1.5 px-2 rounded-md ${i === 4 ? 'bg-amber-50' : 'hover:bg-slate-50'}`}
-            style={{ paddingLeft: `${n.depth * 16 + 8}px` }}
-          >
-            <span className={`w-1.5 h-1.5 rounded-full ${
-              n.status === 'ok' ? 'bg-emerald-500' : n.status === 'warn' ? 'bg-amber-500' : 'bg-slate-300'
-            }`} />
-            <span className={`text-[12px] ${n.depth === 0 ? 'font-semibold text-slate-900' : 'font-medium text-slate-700'}`}>
-              {n.label}
-            </span>
-            <span className={`ml-auto text-[10px] ${
-              n.status === 'warn' ? 'text-amber-700 font-semibold' : 'text-slate-400'
-            }`}>
-              {n.count}
-            </span>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-}
+// --- Lightweight inline previews for remaining modules (kept compact) ---
 
 function NetworkGlobePreview() {
   return (
     <div className="h-full w-full bg-gradient-to-br from-slate-950 via-slate-900 to-violet-950 relative overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center">
-        {/* Grid globe */}
         <svg viewBox="0 0 200 200" className="w-[80%] h-[80%] opacity-70">
           <defs>
             <radialGradient id="globe-glow" cx="50%" cy="50%" r="50%">
@@ -193,7 +137,6 @@ function NetworkGlobePreview() {
           {[20, 40, 60, 80].map((r) => (
             <ellipse key={`h${r}`} cx="100" cy="100" rx="80" ry={r} fill="none" stroke="#a78bfa" strokeWidth="0.3" opacity="0.4" />
           ))}
-          {/* Asset nodes */}
           {[
             { x: 70, y: 80, color: '#10b981' },
             { x: 110, y: 70, color: '#10b981' },
@@ -240,7 +183,6 @@ function ScanPreview() {
         className="absolute inset-0 w-full h-full object-cover"
       />
       <div className="absolute inset-0 bg-slate-900/30" />
-      {/* Bounding boxes */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -276,12 +218,10 @@ function TwinPreview() {
   return (
     <div className="h-full w-full bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden p-5">
       <svg viewBox="0 0 300 220" className="absolute inset-0 w-full h-full">
-        {/* Floor plan */}
         <rect x="20" y="20" width="260" height="180" fill="white" stroke="#cbd5e1" strokeWidth="2" />
         <line x1="120" y1="20" x2="120" y2="120" stroke="#cbd5e1" strokeWidth="1.5" />
         <line x1="20" y1="120" x2="200" y2="120" stroke="#cbd5e1" strokeWidth="1.5" />
         <line x1="200" y1="80" x2="280" y2="80" stroke="#cbd5e1" strokeWidth="1.5" />
-        {/* Hotspots */}
         {[
           { x: 70, y: 70, c: '#10b981' },
           { x: 160, y: 70, c: '#f59e0b' },
@@ -367,15 +307,15 @@ export default function PlatformShowcase() {
         <div className="max-w-2xl mb-10 md:mb-12">
           <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">The Platform</span>
           <h2 className="mt-3 text-4xl md:text-6xl font-semibold tracking-[-0.03em] leading-[1.02] text-slate-900 text-balance">
-            Six surfaces.{' '}
+            Seven surfaces.{' '}
             <span className="font-serif italic font-medium text-primary">One unified intelligence layer.</span>
           </h2>
           <p className="mt-4 text-[16px] md:text-[17px] text-slate-600 leading-[1.55] text-pretty">
-            Every module below is live in the product right now. Click any tile — open it on your account.
+            Every module below is live in the product right now. Hover any tile to preview — click to open it on your account.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-[280px_1fr] gap-6">
+        <div className="grid lg:grid-cols-[260px_1fr] gap-6">
           {/* Module rail */}
           <div className="space-y-1.5">
             {MODULES.map((m) => {
@@ -411,7 +351,7 @@ export default function PlatformShowcase() {
           </div>
 
           {/* Showcase canvas */}
-          <div className="relative rounded-2xl border border-slate-200 bg-white elevation-2 overflow-hidden min-h-[480px] flex flex-col">
+          <div className="relative rounded-2xl border border-slate-200 bg-white elevation-2 overflow-hidden min-h-[560px] flex flex-col">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active.id}
@@ -419,10 +359,10 @@ export default function PlatformShowcase() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="grid md:grid-cols-2 flex-1"
+                className="grid md:grid-cols-[1.35fr_1fr] flex-1"
               >
                 {/* Live preview */}
-                <div className="relative h-72 md:h-full overflow-hidden border-b md:border-b-0 md:border-r border-slate-100">
+                <div className="relative h-80 md:h-full overflow-hidden border-b md:border-b-0 md:border-r border-slate-100">
                   <ModulePreview id={active.id} />
                 </div>
 
@@ -441,6 +381,17 @@ export default function PlatformShowcase() {
                     {active.headline}
                   </h3>
                   <p className="mt-3 text-[14px] text-slate-600 leading-[1.6]">{active.blurb}</p>
+
+                  {active.highlights && (
+                    <ul className="mt-4 space-y-1.5">
+                      {active.highlights.map((h) => (
+                        <li key={h} className="flex items-center gap-2 text-[12px] text-slate-700">
+                          <span className={`w-1 h-1 rounded-full bg-gradient-to-br ${active.accent}`} />
+                          {h}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
 
                   <div className="mt-auto pt-6">
                     <Link
