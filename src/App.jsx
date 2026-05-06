@@ -24,6 +24,7 @@ import SavingsLedger from './pages/SavingsLedger';
 import SecurityCenter from './pages/SecurityCenter';
 import Landing from './pages/Landing';
 import CaseStudies from './pages/CaseStudies';
+import Industries from './pages/Industries';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -63,6 +64,7 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Landing />} />
       <Route path="/Landing" element={<Landing />} />
       <Route path="/CaseStudies" element={<CaseStudies />} />
+      <Route path="/Industries" element={<Industries />} />
       <Route path="/CommandCenter" element={
         <LayoutWrapper currentPageName="CommandCenter">
           <CommandCenter />
