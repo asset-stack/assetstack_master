@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles, ShieldCheck, Play } from 'lucide-react';
+import HeroCommandVisual from './HeroCommandVisual';
 
 export default function LandingHero() {
   return (
@@ -32,7 +33,7 @@ export default function LandingHero() {
               <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
-            <span className="text-xs font-semibold text-slate-700">Live demo below — no signup needed</span>
+            <span className="text-xs font-semibold text-slate-700">New: construction, mining, fleet, manufacturing, rail & utilities demos</span>
             <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
           </a>
         </motion.div>
@@ -43,10 +44,10 @@ export default function LandingHero() {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="text-center text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-slate-900 leading-[1.05]"
         >
-          Predict failures.
+          The AI operating system
           <br />
           <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-            Prove the savings.
+            for physical assets.
           </span>
         </motion.h1>
 
@@ -56,8 +57,7 @@ export default function LandingHero() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="mt-7 text-center text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed"
         >
-          The AI-powered asset intelligence platform for councils, rail, and infrastructure teams.
-          Detect defects from photos, predict equipment failures, and verify every dollar saved — with a defensible audit trail buyers actually trust.
+          Detect defects from photos, predict failures from live asset data, dispatch the right work, and prove every avoided breakdown with audit-ready evidence — across construction, mining, fleet, manufacturing, rail, utilities, and infrastructure.
         </motion.p>
 
         <motion.div
@@ -89,6 +89,8 @@ export default function LandingHero() {
           <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Verified ROI ledger</div>
           <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> No infrastructure setup</div>
         </motion.div>
+
+        <HeroCommandVisual />
       </div>
     </section>
   );

@@ -15,11 +15,11 @@ export default function LandingNav() {
   }, []);
 
   const links = [
+    { href: '#benefits', label: 'Benefits' },
     { href: '#features', label: 'Features' },
+    { href: '#industries', label: 'Industries' },
     { href: '#demo', label: 'Live Demo' },
-    { href: '#savings', label: 'ROI' },
     { href: '#security', label: 'Security' },
-    { href: '#pricing', label: 'Pricing' },
   ];
 
   return (

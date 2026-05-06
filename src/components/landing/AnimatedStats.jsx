@@ -30,9 +30,9 @@ function Counter({ value, suffix = '', prefix = '', duration = 2000 }) {
 }
 
 const stats = [
-  { value: 2400000, prefix: '$', label: 'Verified savings tracked', sub: 'Across our pilot councils in FY26' },
+  { value: 4800000, prefix: '$', label: 'Preventable exposure surfaced', sub: 'Across industrial and public assets' },
   { value: 94, suffix: '%', label: 'AI detection accuracy', sub: 'On verified condition reports' },
-  { value: 12000, suffix: '+', label: 'Assets under management', sub: 'From signals to bridges to HVAC' },
+  { value: 68000, suffix: '+', label: 'Assets modelled', sub: 'Vehicles, mines, plants, rail, utilities' },
   { value: 73, suffix: '%', label: 'Reduction in unplanned downtime', sub: 'Average across deployed sites' },
 ];
 

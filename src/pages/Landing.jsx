@@ -4,10 +4,11 @@ import LandingHero from '@/components/landing/LandingHero';
 import LogoCloud from '@/components/landing/LogoCloud';
 import AnimatedStats from '@/components/landing/AnimatedStats';
 import FeatureGrid from '@/components/landing/FeatureGrid';
+import BenefitsSection from '@/components/landing/BenefitsSection';
+import IndustryUseCases from '@/components/landing/IndustryUseCases';
 import LiveDemoSection from '@/components/landing/LiveDemoSection';
 import Testimonials from '@/components/landing/Testimonials';
 import SecuritySection from '@/components/landing/SecuritySection';
-import Pricing from '@/components/landing/Pricing';
 import FAQ from '@/components/landing/FAQ';
 import FinalCTA from '@/components/landing/FinalCTA';
 import LandingFooter from '@/components/landing/LandingFooter';
@@ -24,13 +25,14 @@ export default function Landing() {
         <LandingHero />
         <LogoCloud />
         <AnimatedStats />
+        <BenefitsSection />
         <FeatureGrid />
+        <IndustryUseCases />
         <LiveDemoSection />
         <section id="savings" className="scroll-mt-20">
           <Testimonials />
         </section>
         <SecuritySection />
-        <Pricing />
         <FAQ />
         <FinalCTA />
       </main>

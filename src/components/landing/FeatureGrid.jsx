@@ -65,9 +65,9 @@ export default function FeatureGrid() {
         >
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-600">Capabilities</span>
           <h2 className="mt-3 text-4xl md:text-5xl font-black tracking-tight text-slate-900">
-            Everything your asset team needs.
+            Features that move from insight
             <br />
-            <span className="text-slate-400">Nothing they don't.</span>
+            <span className="text-slate-400">to action to proof.</span>
           </h2>
         </motion.div>
 
