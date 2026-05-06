@@ -2,95 +2,102 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, ShieldCheck, Play } from 'lucide-react';
-import HeroCommandVisual from './HeroCommandVisual';
+import { ArrowRight, Play, ShieldCheck } from 'lucide-react';
+import HeroProductCanvas from './HeroProductCanvas';
 
 export default function LandingHero() {
   return (
-    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-slate-950 text-white">
-      {/* Background gradient blobs */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-1/4 w-[560px] h-[560px] bg-primary/35 rounded-full blur-[140px] animate-pulse" />
-        <div className="absolute top-36 right-1/5 w-[520px] h-[520px] bg-blue-400/20 rounded-full blur-[140px] animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute bottom-0 left-1/3 w-[420px] h-[420px] bg-primary/15 rounded-full blur-[110px] animate-pulse" style={{ animationDelay: '4s' }} />
-      </div>
+    <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden bg-white">
+      {/* Subtle dotted backdrop */}
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 opacity-[0.4]"
+        style={{
+          backgroundImage:
+            'radial-gradient(hsl(220 14% 80%) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
+          maskImage:
+            'radial-gradient(ellipse at 50% 30%, black 30%, transparent 70%)',
+          WebkitMaskImage:
+            'radial-gradient(ellipse at 50% 30%, black 30%, transparent 70%)',
+        }}
+      />
+      {/* Soft blue ambient */}
+      <div aria-hidden className="absolute -top-32 left-1/2 -translate-x-1/2 -z-10 w-[1100px] h-[600px] bg-gradient-to-b from-primary/10 via-blue-200/20 to-transparent blur-3xl rounded-full" />
 
-      {/* Grid pattern */}
-      <div className="absolute inset-0 -z-10 opacity-[0.03]" style={{
-        backgroundImage: `linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px)`,
-        backgroundSize: '48px 48px',
-      }} />
-
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+      <div className="max-w-[1280px] mx-auto px-5 md:px-8">
+        {/* Eyebrow */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex justify-center mb-6"
+          transition={{ duration: 0.5 }}
+          className="flex justify-center mb-7"
         >
-          <a href="#demo" className="group inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/15 border border-primary/30 shadow-sm shadow-primary/20 hover:bg-primary/20 transition-all">
-            <span className="flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+          <a href="#tour" className="group inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 bg-white/70 backdrop-blur-sm hover:border-primary/30 hover:bg-primary/[0.03] transition-all">
+            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-primary/10">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-subtle" />
             </span>
-            <span className="text-xs font-semibold text-blue-100">New: construction, mining, fleet, manufacturing, rail & utilities demos</span>
-            <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+            <span className="text-[11px] font-medium text-slate-700">New · Verified Savings Ledger 2.0</span>
+            <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 group-hover:text-primary transition-all" />
           </a>
         </motion.div>
 
+        {/* Editorial headline */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-center text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-white leading-[1.05]"
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center text-[44px] sm:text-6xl md:text-7xl lg:text-[88px] font-semibold tracking-[-0.04em] leading-[0.98] text-slate-900 text-balance"
         >
           The AI operating system
-          <br />
-          <span className="bg-gradient-to-r from-blue-200 via-primary to-blue-400 bg-clip-text text-transparent">
-            for physical assets.
-          </span>
+          <br className="hidden sm:block" />
+          {' '}for{' '}
+          <span className="font-serif italic font-medium text-primary">physical assets.</span>
         </motion.h1>
 
+        {/* Subhead */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-7 text-center text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed"
+          transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-7 text-center text-[17px] md:text-xl text-slate-600 max-w-2xl mx-auto leading-[1.5] text-pretty"
         >
-          Detect defects from photos, predict failures from live asset data, dispatch the right work, and prove every avoided breakdown with audit-ready evidence — across construction, mining, fleet, manufacturing, rail, utilities, and infrastructure.
+          Detect defects from photos. Predict failures from live data. Dispatch the right work — and prove every avoided breakdown with audit-ready evidence.
         </motion.p>
 
+        {/* CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="mt-10 flex flex-col sm:flex-row gap-3 justify-center items-center"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-9 flex flex-col sm:flex-row gap-2.5 justify-center items-center"
         >
           <Link to="/CommandCenter">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/30 h-12 px-7 text-base font-semibold">
-              <Sparkles className="w-4 h-4 mr-2" /> Open the platform
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white elevation-2 h-11 px-6 text-[14px] font-semibold rounded-lg">
+              Open the platform <ArrowRight className="w-4 h-4 ml-1.5" />
             </Button>
           </Link>
-          <a href="#demo">
-            <Button size="lg" variant="outline" className="h-12 px-7 text-base font-semibold border-primary/30 bg-white/10 text-white hover:bg-white/15 backdrop-blur">
-              <Play className="w-4 h-4 mr-2" /> See the live demo
+          <a href="#tour">
+            <Button size="lg" variant="outline" className="h-11 px-6 text-[14px] font-semibold border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 rounded-lg">
+              <Play className="w-3.5 h-3.5 mr-1.5 fill-slate-700" /> Watch 60-second tour
             </Button>
           </a>
         </motion.div>
 
+        {/* Trust strip */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="mt-8 flex flex-wrap gap-x-6 gap-y-2 justify-center text-xs text-blue-100/80"
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="mt-7 flex flex-wrap gap-x-5 gap-y-1.5 justify-center text-[11px] text-slate-500"
         >
-          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary" /> SOC 2 ready</div>
-          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary" /> Immutable audit trail</div>
-          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary" /> Verified ROI ledger</div>
-          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary" /> No infrastructure setup</div>
+          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> SOC 2 Type II</div>
+          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> Immutable audit trail</div>
+          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> Verified ROI ledger</div>
+          <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> 14-day rollout</div>
         </motion.div>
 
-        <HeroCommandVisual />
+        <HeroProductCanvas />
       </div>
     </section>
   );

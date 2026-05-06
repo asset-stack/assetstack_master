@@ -2,46 +2,56 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
 
 export default function FinalCTA() {
   return (
-    <section className="py-20 md:py-28">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+    <section className="py-24 md:py-36 bg-white">
+      <div className="max-w-[1280px] mx-auto px-5 md:px-8">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative rounded-3xl bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-10 md:p-16 text-white text-center overflow-hidden"
+          className="relative rounded-3xl bg-slate-900 text-white px-8 py-16 md:px-16 md:py-24 overflow-hidden"
         >
-          <div className="absolute inset-0 opacity-30" style={{
-            backgroundImage: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), transparent 50%), radial-gradient(circle at 70% 80%, rgba(255,255,255,0.2), transparent 50%)',
+          {/* Ambient glow */}
+          <div aria-hidden className="absolute inset-0 opacity-50" style={{
+            backgroundImage: 'radial-gradient(circle at 20% 20%, hsl(var(--primary) / 0.4), transparent 50%), radial-gradient(circle at 80% 80%, hsl(214 100% 70% / 0.3), transparent 50%)',
+          }} />
+          <div aria-hidden className="absolute inset-0 opacity-[0.04]" style={{
+            backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
           }} />
 
-          <div className="relative">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur border border-white/20 mb-5">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span className="text-xs font-semibold">30-day free trial · No card required</span>
-            </div>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-[1.05]">
-              Stop guessing.
-              <br />
-              Start proving.
+          <div className="relative max-w-3xl">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-blue-200">Ready when you are</span>
+            <h2 className="mt-3 text-4xl md:text-6xl lg:text-7xl font-semibold tracking-[-0.035em] leading-[1.02] text-balance">
+              The next breakdown is{' '}
+              <span className="font-serif italic font-medium text-blue-200">already on its way.</span>
             </h2>
-            <p className="mt-5 text-white/85 text-lg max-w-xl mx-auto">
-              Join the asset teams turning predictions into verified, audited dollar savings.
+            <p className="mt-5 text-[17px] text-slate-300 leading-[1.55] max-w-xl text-pretty">
+              Find it before it finds you. Connect your assets, run a scan, and watch AssetStack draw the first ledger entry — all in your trial week.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+
+            <div className="mt-9 flex flex-col sm:flex-row gap-2.5">
               <Link to="/CommandCenter">
-                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 h-12 px-7 text-base font-semibold shadow-2xl">
-                  Start your free trial <ArrowRight className="w-4 h-4 ml-2" />
+                <Button size="lg" className="bg-white hover:bg-slate-100 text-slate-900 elevation-2 h-12 px-7 text-[14px] font-semibold rounded-lg">
+                  Start free 14-day trial <ArrowRight className="w-4 h-4 ml-1.5" />
                 </Button>
               </Link>
-              <a href="#demo">
-                <Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10 h-12 px-7 text-base font-semibold">
-                  Replay the demo
+              <a href="#tour">
+                <Button size="lg" variant="outline" className="h-12 px-7 text-[14px] font-semibold border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/30 rounded-lg backdrop-blur">
+                  <Play className="w-3.5 h-3.5 mr-1.5 fill-white" /> Watch the 60-second tour
                 </Button>
               </a>
+            </div>
+
+            <div className="mt-7 flex flex-wrap gap-x-5 gap-y-1.5 text-[12px] text-slate-400">
+              <span>14-day trial · No credit card</span>
+              <span className="opacity-50">·</span>
+              <span>Cancel anytime</span>
+              <span className="opacity-50">·</span>
+              <span>SOC 2 Type II</span>
             </div>
           </div>
         </motion.div>

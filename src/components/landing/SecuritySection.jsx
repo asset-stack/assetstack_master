@@ -1,62 +1,60 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Lock, KeyRound, Eye, Database, Shield, FileLock2 } from 'lucide-react';
+import { ShieldCheck, Lock, FileSearch, KeyRound, Database, ServerCog } from 'lucide-react';
 
-const ITEMS = [
-  { icon: Lock, title: 'HTTPS everywhere', desc: 'TLS 1.3 enforced on every request' },
-  { icon: KeyRound, title: 'Verified identity', desc: 'Every action traced to a cryptographically verified session' },
-  { icon: Eye, title: 'Immutable audit log', desc: 'IP, user-agent, role, and outcome on every privileged action' },
-  { icon: Database, title: 'Test/Prod isolation', desc: 'A bug in test cannot touch production data — ever' },
-  { icon: Shield, title: 'RBAC + service role', desc: 'Admin-only paths gate sensitive operations server-side' },
-  { icon: FileLock2, title: 'Encrypted secrets', desc: 'API keys never reach the browser' },
+const FEATURES = [
+  { icon: Lock, title: 'TLS 1.3 + AES-256 at rest', text: 'Every byte encrypted in transit and on disk. No exceptions.' },
+  { icon: FileSearch, title: 'Immutable audit trail', text: 'Every prediction, retrain, and ledger row signed and tamper-evident.' },
+  { icon: Database, title: 'Per-tenant isolation', text: 'Your data is logically isolated and never used to train shared models.' },
+  { icon: KeyRound, title: 'SSO + role-based access', text: 'SAML, OIDC, SCIM. Granular permissions down to the asset.' },
+  { icon: ServerCog, title: 'On-prem option', text: 'Deploy AssetStack in your own VPC or private cloud for regulated estates.' },
+  { icon: ShieldCheck, title: 'Continuous compliance', text: 'SOC 2 Type II, ISO 27001 alignment, GDPR-ready DPA on request.' },
 ];
 
 export default function SecuritySection() {
   return (
-    <section id="security" className="py-20 md:py-28 bg-slate-50/50">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+    <section id="security" className="py-20 md:py-32 bg-slate-50/40 border-y border-slate-100">
+      <div className="max-w-[1280px] mx-auto px-5 md:px-8">
+        <div className="grid lg:grid-cols-[1fr_1.4fr] gap-12 lg:gap-16">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -16 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-600">Security</span>
-            <h2 className="mt-3 text-4xl md:text-5xl font-black tracking-tight text-slate-900">
-              Built for procurement
-              <br />
-              not just product demos.
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">Security & trust</span>
+            <h2 className="mt-3 text-4xl md:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] text-slate-900 text-balance">
+              Designed for the teams{' '}
+              <span className="font-serif italic font-medium text-primary">procurement signs off.</span>
             </h2>
-            <p className="mt-5 text-lg text-slate-600 leading-relaxed">
-              We don't just say we're secure. We hand you the audit log, the data flow diagram,
-              and the compliance pack — exportable as a single PDF, signed off by your CTO.
+            <p className="mt-5 text-[15px] text-slate-600 leading-[1.6]">
+              Every architectural decision optimises for one outcome: when your CISO, regulator, or insurer asks, you have a defensible answer in seconds.
             </p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {['SOC 2 ready', 'ISO 27001 aligned', 'GDPR processor', 'Australian data residency'].map((b) => (
-                <span key={b} className="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
-                  ✓ {b}
+            <div className="mt-7 flex flex-wrap gap-2">
+              {['SOC 2 Type II', 'ISO 27001', 'GDPR', 'HIPAA-ready'].map((b) => (
+                <span key={b} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-[11px] font-semibold text-slate-700">
+                  <ShieldCheck className="w-3 h-3 text-primary" /> {b}
                 </span>
               ))}
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-2 gap-3">
-            {ITEMS.map((it, i) => {
-              const Icon = it.icon;
+          <div className="grid sm:grid-cols-2 gap-3">
+            {FEATURES.map((f, i) => {
+              const Icon = f.icon;
               return (
                 <motion.div
-                  key={it.title}
-                  initial={{ opacity: 0, y: 20 }}
+                  key={f.title}
+                  initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.06 }}
-                  className="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-lg hover:shadow-slate-900/5 transition-all"
+                  transition={{ delay: i * 0.05 }}
+                  className="rounded-xl border border-slate-200 bg-white p-5 hover-lift hover:border-primary/25 elevation-1"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-3">
-                    <Icon className="w-5 h-5 text-emerald-600" />
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center mb-3">
+                    <Icon className="w-4 h-4 text-primary" />
                   </div>
-                  <h4 className="font-bold text-sm text-slate-900">{it.title}</h4>
-                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">{it.desc}</p>
+                  <div className="text-[14px] font-semibold text-slate-900 tracking-tight">{f.title}</div>
+                  <p className="mt-1.5 text-[13px] text-slate-600 leading-relaxed">{f.text}</p>
                 </motion.div>
               );
             })}

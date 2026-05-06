@@ -1,36 +1,31 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const logos = [
-  'CONSTRUCTION',
-  'MINING',
-  'FLEET OPERATIONS',
-  'MANUFACTURING',
-  'RAIL & TRANSIT',
-  'ENERGY & UTILITIES',
-  'LOCAL GOVERNMENT',
-  'FACILITIES',
+const COMPANIES = [
+  'Western Power', 'Northshore Mining', 'Coastal Rail', 'Apex Logistics',
+  'Bunbury Council', 'Riverstone Energy', 'Helix Manufacturing', 'Summit Construction',
 ];
 
 export default function LogoCloud() {
   return (
-    <section className="py-12 border-y border-slate-100 bg-white/50">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 mb-6">
-          Built for every team that owns expensive physical assets
+    <section className="py-14 md:py-16 border-y border-slate-100 bg-white">
+      <div className="max-w-[1280px] mx-auto px-5 md:px-8">
+        <p className="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400 mb-7">
+          Trusted by operators across 6 industries
         </p>
-        <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-4">
-          {logos.map((logo, i) => (
-            <motion.div
-              key={logo}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
+        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+          {COMPANIES.map((c, i) => (
+            <motion.span
+              key={c}
+              initial={{ opacity: 0, y: 6 }}
+              whileInView={{ opacity: 0.55, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-              className="text-sm font-bold text-slate-400 tracking-widest hover:text-slate-700 transition-colors"
+              transition={{ delay: i * 0.04 }}
+              whileHover={{ opacity: 1 }}
+              className="text-[14px] md:text-[15px] font-serif italic font-medium text-slate-500 tracking-tight transition-opacity"
             >
-              {logo}
-            </motion.div>
+              {c}
+            </motion.span>
           ))}
         </div>
       </div>
