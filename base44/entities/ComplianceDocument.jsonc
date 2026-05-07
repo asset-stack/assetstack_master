@@ -1,0 +1,82 @@
+{
+  "name": "ComplianceDocument",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Document title"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "certificate",
+        "inspection_report",
+        "warranty",
+        "insurance",
+        "license",
+        "manual",
+        "permit",
+        "audit_report",
+        "other"
+      ],
+      "default": "certificate"
+    },
+    "compliance_requirement_id": {
+      "type": "string"
+    },
+    "equipment_id": {
+      "type": "string"
+    },
+    "location_id": {
+      "type": "string"
+    },
+    "issuing_body": {
+      "type": "string",
+      "description": "Authority or organisation that issued the document"
+    },
+    "reference_number": {
+      "type": "string"
+    },
+    "issue_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "valid",
+        "expiring_soon",
+        "expired",
+        "superseded",
+        "revoked"
+      ],
+      "default": "valid"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "file_size_kb": {
+      "type": "number"
+    },
+    "signed_by": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "document_type"
+  ]
+}

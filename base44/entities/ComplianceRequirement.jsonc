@@ -1,0 +1,130 @@
+{
+  "name": "ComplianceRequirement",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "e.g. 'Annual lift inspection'"
+    },
+    "code": {
+      "type": "string",
+      "description": "Internal reference code"
+    },
+    "regulation": {
+      "type": "string",
+      "description": "e.g. AS 1735.1, ISO 55000, NFPA 25"
+    },
+    "regulation_url": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "safety",
+        "fire",
+        "electrical",
+        "lift",
+        "pressure_vessel",
+        "hvac",
+        "environmental",
+        "structural",
+        "data",
+        "financial",
+        "other"
+      ],
+      "default": "safety"
+    },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "quarterly",
+        "biannual",
+        "annual",
+        "biennial",
+        "as_needed"
+      ],
+      "default": "annual"
+    },
+    "applies_to_asset_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Asset types this rule applies to"
+    },
+    "applies_to_equipment_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "scope_description": {
+      "type": "string",
+      "description": "What is checked / required"
+    },
+    "responsible_party": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "external_certified",
+        "manufacturer",
+        "regulator"
+      ],
+      "default": "internal"
+    },
+    "consequence_of_non_compliance": {
+      "type": "string",
+      "enum": [
+        "fine",
+        "shutdown",
+        "criminal_liability",
+        "warranty_void",
+        "operational_risk"
+      ]
+    },
+    "next_due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "last_completed_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "compliance_status": {
+      "type": "string",
+      "enum": [
+        "compliant",
+        "due_soon",
+        "overdue",
+        "in_progress",
+        "exempt"
+      ],
+      "default": "compliant"
+    },
+    "evidence_document_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "auto_generate_work_orders": {
+      "type": "boolean",
+      "default": true
+    },
+    "lead_time_days": {
+      "type": "number",
+      "description": "Days before due date to trigger reminder"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "frequency"
+  ]
+}

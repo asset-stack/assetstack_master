@@ -6,7 +6,8 @@ import {
   LayoutDashboard, Cpu, Wrench, Brain, BarChart3, 
   Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock,
   UserCircle, Users, Shield, MessageSquare, MapPin, KeyRound, Briefcase, Hammer, Upload,
-  ChevronDown, GitBranch, Globe2, FlaskConical, ShieldCheck
+  ChevronDown, GitBranch, Globe2, FlaskConical, ShieldCheck,
+  Package, Wallet, Building2, CalendarDays
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
@@ -51,8 +52,18 @@ const navSections = [
       { name: 'Maintenance', icon: Wrench, page: 'Maintenance' },
       { name: 'Planning', icon: CalendarClock, page: 'MaintenancePlanning' },
       { name: 'Predictions', icon: Brain, page: 'Predictions' },
+      { name: 'Spare Parts', icon: Package, page: 'SpareParts' },
+      { name: 'Suppliers', icon: Building2, page: 'Suppliers' },
+      { name: 'Compliance', icon: ShieldCheck, page: 'Compliance' },
       { name: 'Depreciation', icon: TrendingDown, page: 'Depreciation' },
       { name: 'Savings Ledger', icon: ShieldCheck, page: 'SavingsLedger' },
+    ]
+  },
+  {
+    label: 'Finance',
+    items: [
+      { name: 'Cost Center', icon: Wallet, page: 'CostCenter' },
+      { name: 'Capital Plan', icon: CalendarDays, page: 'CapitalPlan' },
     ]
   },
   {

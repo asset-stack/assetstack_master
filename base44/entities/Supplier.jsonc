@@ -1,0 +1,119 @@
+{
+  "name": "Supplier",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Supplier company name"
+    },
+    "code": {
+      "type": "string",
+      "description": "Internal supplier code"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "parts",
+        "oem",
+        "service",
+        "consumables",
+        "calibration",
+        "consultancy",
+        "other"
+      ],
+      "default": "parts"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "tax_id": {
+      "type": "string",
+      "description": "ABN, EIN or equivalent"
+    },
+    "payment_terms": {
+      "type": "string",
+      "enum": [
+        "net_7",
+        "net_14",
+        "net_30",
+        "net_60",
+        "prepaid",
+        "on_delivery"
+      ],
+      "default": "net_30"
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "lead_time_days": {
+      "type": "number",
+      "description": "Typical lead time"
+    },
+    "rating": {
+      "type": "number",
+      "description": "Performance rating 0-5"
+    },
+    "on_time_delivery_rate": {
+      "type": "number",
+      "description": "Percentage 0-100"
+    },
+    "quality_score": {
+      "type": "number",
+      "description": "Quality score 0-100"
+    },
+    "total_spend_ytd": {
+      "type": "number",
+      "description": "Year-to-date spend"
+    },
+    "active_orders_count": {
+      "type": "number",
+      "default": 0
+    },
+    "sla_response_hours": {
+      "type": "number",
+      "description": "Response time SLA"
+    },
+    "preferred": {
+      "type": "boolean",
+      "default": false
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "blacklisted",
+        "pending_review"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

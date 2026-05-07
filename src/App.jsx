@@ -25,6 +25,11 @@ import SecurityCenter from './pages/SecurityCenter';
 import Landing from './pages/Landing';
 import CaseStudies from './pages/CaseStudies';
 import Industries from './pages/Industries';
+import SpareParts from './pages/SpareParts';
+import Compliance from './pages/Compliance';
+import CostCenter from './pages/CostCenter';
+import Suppliers from './pages/Suppliers';
+import CapitalPlan from './pages/CapitalPlan';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -154,6 +159,31 @@ const AuthenticatedApp = () => {
       <Route path="/SecurityCenter" element={
             <LayoutWrapper currentPageName="SecurityCenter">
               <SecurityCenter />
+            </LayoutWrapper>
+          } />
+      <Route path="/SpareParts" element={
+            <LayoutWrapper currentPageName="SpareParts">
+              <SpareParts />
+            </LayoutWrapper>
+          } />
+      <Route path="/Compliance" element={
+            <LayoutWrapper currentPageName="Compliance">
+              <Compliance />
+            </LayoutWrapper>
+          } />
+      <Route path="/CostCenter" element={
+            <LayoutWrapper currentPageName="CostCenter">
+              <CostCenter />
+            </LayoutWrapper>
+          } />
+      <Route path="/Suppliers" element={
+            <LayoutWrapper currentPageName="Suppliers">
+              <Suppliers />
+            </LayoutWrapper>
+          } />
+      <Route path="/CapitalPlan" element={
+            <LayoutWrapper currentPageName="CapitalPlan">
+              <CapitalPlan />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />

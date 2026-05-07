@@ -1,0 +1,96 @@
+{
+  "name": "Budget",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Budget name"
+    },
+    "fiscal_year": {
+      "type": "string",
+      "description": "e.g. FY2026"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date"
+    },
+    "scope_type": {
+      "type": "string",
+      "enum": [
+        "organisation",
+        "location",
+        "asset_class",
+        "department",
+        "work_type"
+      ],
+      "default": "organisation"
+    },
+    "scope_id": {
+      "type": "string",
+      "description": "ID of the scope target (location id, etc.)"
+    },
+    "scope_name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "preventive_maintenance",
+        "corrective_maintenance",
+        "capital_replacement",
+        "labor",
+        "parts",
+        "contractors",
+        "energy",
+        "operational",
+        "other"
+      ],
+      "default": "operational"
+    },
+    "allocated_amount": {
+      "type": "number"
+    },
+    "spent_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "committed_amount": {
+      "type": "number",
+      "default": 0,
+      "description": "Amount tied up in approved POs not yet spent"
+    },
+    "forecasted_amount": {
+      "type": "number",
+      "description": "AI-forecasted spend through period end"
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "frozen",
+        "closed"
+      ],
+      "default": "active"
+    },
+    "owner_email": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "fiscal_year",
+    "allocated_amount"
+  ]
+}
