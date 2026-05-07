@@ -28,8 +28,8 @@ export default function ROICalculator() {
   }, [assetCount, avgValue]);
 
   return (
-    <section id="roi" className="py-20 md:py-28 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 border-y border-slate-100">
-      <div className="max-w-[1100px] mx-auto px-5 md:px-8">
+    <section id="roi" className="py-20 md:py-28 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 border-y border-slate-100 hidden">
+      <div className="max-w-[1100px] mx-auto px-5 md:px-8 hidden">
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-4">
             <Calculator className="w-3 h-3 text-primary" />
@@ -82,8 +82,8 @@ export default function ROICalculator() {
             initial={{ opacity: 0.7, scale: 0.99 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
-            className="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 md:p-8 elevation-3"
-          >
+            className="rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 md:p-8 elevation-3">
+            
             <div className="flex items-center gap-2 mb-5">
               <TrendingUp className="w-4 h-4 text-emerald-400" />
               <span className="text-[10px] font-semibold uppercase tracking-wider text-emerald-300">Projected year-one impact</span>
@@ -119,6 +119,6 @@ export default function ROICalculator() {
           </motion.div>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
