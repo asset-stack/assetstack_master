@@ -36,9 +36,9 @@ export default function SecuritySection() {
                 </span>
               )}
             </div>
-            <p className="mt-4 text-[11px] text-slate-500 leading-relaxed hidden">
-              Certifications listed reflect current status. Detailed security documentation available under NDA on request.
-            </p>
+            
+
+            
           </motion.div>
 
           <div className="grid sm:grid-cols-2 gap-3">
