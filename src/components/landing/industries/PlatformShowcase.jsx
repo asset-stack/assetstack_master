@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
   MessageSquare, GitBranch, Globe2, Sparkles, Box, ShieldCheck,
-  LayoutDashboard, Database, TrendingDown, ArrowRight,
+  LayoutDashboard, Database, TrendingDown, Wrench, Brain, Radio, CalendarClock, ArrowRight,
 } from 'lucide-react';
 
 import AssetMindPreview from './previews/AssetMindPreview';
@@ -11,6 +11,10 @@ import AssetTreePreview from './previews/AssetTreePreview';
 import DashboardPreview from './previews/DashboardPreview';
 import AssetRegisterPreview from './previews/AssetRegisterPreview';
 import DepreciationPreview from './previews/DepreciationPreview';
+import WorkOrdersPreview from './previews/WorkOrdersPreview';
+import PredictionsPreview from './previews/PredictionsPreview';
+import SensorsPreview from './previews/SensorsPreview';
+import SchedulerPreview from './previews/SchedulerPreview';
 
 /**
  * Platform Showcase — interactive tabbed module that lets visitors
@@ -44,6 +48,54 @@ const MODULES = [
     cta: 'Chat with AssetMind',
     accent: 'from-blue-500 to-indigo-600',
     highlights: ['Plain-English queries', 'Inline charts', 'One-click actions'],
+  },
+  {
+    id: 'workorders',
+    name: 'Work Orders',
+    sub: 'CMMS · day-to-day execution',
+    icon: Wrench,
+    headline: 'Where the work actually happens.',
+    blurb: 'Checklists, labor entries, parts, costs and team chat — every job tracked end-to-end on web and mobile.',
+    href: '/Maintenance',
+    cta: 'Open work orders',
+    accent: 'from-orange-500 to-amber-600',
+    highlights: ['Mobile checklists & photo capture', 'Live labor & parts costs', 'Team chat & full audit trail'],
+  },
+  {
+    id: 'predictions',
+    name: 'Predictions',
+    sub: 'ML failure forecasting',
+    icon: Brain,
+    headline: 'See breakdowns before they happen.',
+    blurb: 'Ensemble ML models forecast failure probability and remaining useful life — with the contributing signals shown.',
+    href: '/Predictions',
+    cta: 'Open predictions',
+    accent: 'from-purple-500 to-indigo-600',
+    highlights: ['Failure probability & RUL', 'Top contributing signals', 'Model accuracy & drift monitoring'],
+  },
+  {
+    id: 'sensors',
+    name: 'Sensor IoT',
+    sub: 'Live telemetry',
+    icon: Radio,
+    headline: 'Every signal, in real time.',
+    blurb: 'MQTT, REST or CSV — ingest sensor data from any source, with threshold rules and instant alerts.',
+    href: '/SensorIntegration',
+    cta: 'Connect a sensor',
+    accent: 'from-teal-500 to-emerald-600',
+    highlights: ['MQTT, API & CSV ingestion', 'Configurable thresholds', 'Real-time alerting'],
+  },
+  {
+    id: 'scheduler',
+    name: 'Scheduler',
+    sub: 'AI maintenance planning',
+    icon: CalendarClock,
+    headline: 'Plan the week. Balance the load.',
+    blurb: 'Calendar view across technicians, with AI suggestions to balance workload and slash overtime.',
+    href: '/MaintenancePlanning',
+    cta: 'Open scheduler',
+    accent: 'from-violet-500 to-purple-600',
+    highlights: ['Multi-tech calendar', 'Load balancing', 'AI optimisation'],
   },
   {
     id: 'tree',
@@ -134,6 +186,10 @@ const MODULES = [
 function ModulePreview({ id }) {
   if (id === 'dashboard') return <DashboardPreview />;
   if (id === 'assetmind') return <AssetMindPreview />;
+  if (id === 'workorders') return <WorkOrdersPreview />;
+  if (id === 'predictions') return <PredictionsPreview />;
+  if (id === 'sensors') return <SensorsPreview />;
+  if (id === 'scheduler') return <SchedulerPreview />;
   if (id === 'tree') return <AssetTreePreview />;
   if (id === 'register') return <AssetRegisterPreview />;
   if (id === 'depreciation') return <DepreciationPreview />;
@@ -335,7 +391,7 @@ export default function PlatformShowcase() {
         <div className="max-w-2xl mb-10 md:mb-12">
           <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">The Platform</span>
           <h2 className="mt-3 text-4xl md:text-6xl font-semibold tracking-[-0.03em] leading-[1.02] text-slate-900 text-balance">
-            Nine surfaces.{' '}
+            Thirteen surfaces.{' '}
             <span className="font-serif italic font-medium text-primary">One unified intelligence layer.</span>
           </h2>
           <p className="mt-4 text-[16px] md:text-[17px] text-slate-600 leading-[1.55] text-pretty">
