@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import HealthGauge from './HealthGauge';
+import AssetMetricsBadges from '@/components/equipment/AssetMetricsBadges';
+import { deriveHealthScore, deriveRULDays, deriveRiskLevel, deriveStatus, deriveCRC, fmtMoney } from '@/lib/assetMetrics';
 
 export default function EquipmentCard({ equipment, onClick, delay = 0 }) {
   const getStatusConfig = (status) => {
@@ -25,7 +27,12 @@ export default function EquipmentCard({ equipment, onClick, delay = 0 }) {
     return configs[risk] || configs.low;
   };
 
-  const status = getStatusConfig(equipment.status);
+  const derivedHealth = deriveHealthScore(equipment);
+  const derivedRUL = deriveRULDays(equipment);
+  const derivedRisk = deriveRiskLevel(equipment);
+  const derivedStatus = deriveStatus(equipment);
+  const crc = deriveCRC(equipment);
+  const status = getStatusConfig(derivedStatus);
 
   return (
     <motion.div
@@ -46,24 +53,31 @@ export default function EquipmentCard({ equipment, onClick, delay = 0 }) {
             {equipment.name}
           </h3>
         </div>
-        <HealthGauge score={equipment.health_score || 0} size={44} label="" />
+        <HealthGauge score={derivedHealth ?? 0} size={44} label="" />
+      </div>
+
+      {/* Register-grade badges */}
+      <div className="mb-2">
+        <AssetMetricsBadges equipment={equipment} compact />
       </div>
 
       {/* Stats */}
       <div className="space-y-2 mb-3">
         <div className="flex items-center justify-between">
           <span className="text-xs text-slate-500">RUL</span>
-          <span className="text-xs text-slate-800 font-semibold tabular-nums">{equipment.remaining_useful_life_days || '—'} days</span>
+          <span className="text-xs text-slate-800 font-semibold tabular-nums">
+            {derivedRUL != null ? (derivedRUL > 730 ? `${Math.round(derivedRUL / 365)} yrs` : `${derivedRUL} days`) : '—'}
+          </span>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-xs text-slate-500">Risk</span>
-          <Badge variant="outline" className={`text-[10px] font-semibold px-1.5 py-0 h-[18px] ${getRiskBadge(equipment.risk_level)}`}>
-            {equipment.risk_level || 'low'}
+          <Badge variant="outline" className={`text-[10px] font-semibold px-1.5 py-0 h-[18px] ${getRiskBadge(derivedRisk)}`}>
+            {derivedRisk}
           </Badge>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-xs text-slate-500">Hours</span>
-          <span className="text-xs text-slate-600 font-medium tabular-nums">{equipment.operating_hours?.toLocaleString() || 0}</span>
+          <span className="text-xs text-slate-500">Value</span>
+          <span className="text-xs text-slate-600 font-medium tabular-nums">{crc > 0 ? fmtMoney(crc) : '—'}</span>
         </div>
       </div>
 

@@ -1,16 +1,24 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Cpu, Activity, AlertTriangle, Clock, Wrench, TrendingUp } from 'lucide-react';
+import { deriveHealthScore, deriveRULDays, deriveRiskLevel, deriveStatus } from '@/lib/assetMetrics';
 
 export default function EquipmentStats({ equipment }) {
   const totalEquipment = equipment.length;
-  const operational = equipment.filter(e => e.status === 'operational').length;
-  const degraded = equipment.filter(e => e.status === 'degraded').length;
-  const critical = equipment.filter(e => e.risk_level === 'critical' || e.status === 'critical').length;
-  const avgHealth = totalEquipment > 0 
-    ? Math.round(equipment.reduce((sum, e) => sum + (e.health_score || 0), 0) / totalEquipment)
+  const computed = equipment.map((e) => ({
+    health: deriveHealthScore(e),
+    rul: deriveRULDays(e),
+    risk: deriveRiskLevel(e),
+    status: deriveStatus(e),
+  }));
+  const operational = computed.filter((c) => c.status === 'operational').length;
+  const degraded = computed.filter((c) => c.status === 'degraded').length;
+  const critical = computed.filter((c) => c.risk === 'critical' || c.status === 'critical').length;
+  const healthValues = computed.map((c) => c.health).filter((h) => h != null);
+  const avgHealth = healthValues.length > 0
+    ? Math.round(healthValues.reduce((s, h) => s + h, 0) / healthValues.length)
     : 0;
-  const lowRUL = equipment.filter(e => e.remaining_useful_life_days && e.remaining_useful_life_days < 90).length;
+  const lowRUL = computed.filter((c) => c.rul != null && c.rul < 365).length;
 
   const stats = [
     { 
@@ -50,7 +58,7 @@ export default function EquipmentStats({ equipment }) {
       bgColor: avgHealth >= 70 ? 'bg-emerald-50' : avgHealth >= 50 ? 'bg-amber-50' : 'bg-rose-50'
     },
     { 
-      label: 'Low RUL (<90d)', 
+      label: 'Low RUL (<1yr)', 
       value: lowRUL, 
       icon: Clock, 
       color: 'bg-purple-100 text-purple-600',

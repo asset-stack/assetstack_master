@@ -7,7 +7,7 @@ import {
   Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock,
   UserCircle, Users, Shield, MessageSquare, MapPin, KeyRound, Briefcase, Hammer, Upload,
   ChevronDown, GitBranch, Globe2, FlaskConical, ShieldCheck,
-  Package, Wallet, Building2, CalendarDays
+  Package, Wallet, Building2, CalendarDays, AlertOctagon, Banknote
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
@@ -62,6 +62,8 @@ const navSections = [
   {
     label: 'Finance',
     items: [
+      { name: 'Valuation', icon: Banknote, page: 'Valuation' },
+      { name: 'Defect Backlog', icon: AlertOctagon, page: 'DefectBacklog' },
       { name: 'Cost Center', icon: Wallet, page: 'CostCenter' },
       { name: 'Capital Plan', icon: CalendarDays, page: 'CapitalPlan' },
     ]

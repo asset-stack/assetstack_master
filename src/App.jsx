@@ -30,6 +30,8 @@ import Compliance from './pages/Compliance';
 import CostCenter from './pages/CostCenter';
 import Suppliers from './pages/Suppliers';
 import CapitalPlan from './pages/CapitalPlan';
+import Valuation from './pages/Valuation';
+import DefectBacklog from './pages/DefectBacklog';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -184,6 +186,16 @@ const AuthenticatedApp = () => {
       <Route path="/CapitalPlan" element={
             <LayoutWrapper currentPageName="CapitalPlan">
               <CapitalPlan />
+            </LayoutWrapper>
+          } />
+      <Route path="/Valuation" element={
+            <LayoutWrapper currentPageName="Valuation">
+              <Valuation />
+            </LayoutWrapper>
+          } />
+      <Route path="/DefectBacklog" element={
+            <LayoutWrapper currentPageName="DefectBacklog">
+              <DefectBacklog />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />

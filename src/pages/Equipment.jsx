@@ -20,6 +20,9 @@ import EquipmentStats from '@/components/equipment/EquipmentStats';
 import AssetHierarchy from '@/components/equipment/AssetHierarchy';
 import HealthGauge from '@/components/dashboard/HealthGauge';
 import PullToRefresh from '@/components/mobile/PullToRefresh';
+import PortfolioValueStats from '@/components/equipment/PortfolioValueStats';
+import AssetMetricsBadges from '@/components/equipment/AssetMetricsBadges';
+import { deriveHealthScore, deriveRULDays, deriveRiskLevel, deriveStatus, deriveCRC, fmtMoney, deriveDefectUrgency } from '@/lib/assetMetrics';
 
 const EQUIPMENT_TYPES = [
   'motor', 'pump', 'compressor', 'turbine', 'conveyor', 
@@ -244,9 +247,12 @@ export default function Equipment() {
         </div>
 
         {/* Stats */}
-        <div className="mb-6">
+        <div className="mb-4">
           <EquipmentStats equipment={equipment} />
         </div>
+
+        {/* Portfolio valuation */}
+        <PortfolioValueStats equipment={equipment} />
 
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-6 p-3 sm:p-4 bg-white rounded-xl border border-slate-200">
@@ -473,12 +479,13 @@ export default function Equipment() {
               <TableHeader>
                 <TableRow className="border-slate-100 hover:bg-transparent bg-slate-50">
                   <TableHead className="text-slate-600 font-medium">Name</TableHead>
-                  <TableHead className="text-slate-600 font-medium">Type</TableHead>
                   <TableHead className="text-slate-600 font-medium">Location</TableHead>
+                  <TableHead className="text-slate-600 font-medium">Condition</TableHead>
                   <TableHead className="text-slate-600 font-medium">Health</TableHead>
                   <TableHead className="text-slate-600 font-medium">Status</TableHead>
                   <TableHead className="text-slate-600 font-medium">Risk</TableHead>
                   <TableHead className="text-slate-600 font-medium">RUL</TableHead>
+                  <TableHead className="text-slate-600 font-medium text-right">CRC</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -502,29 +509,36 @@ export default function Equipment() {
                           {eq.name}
                         </div>
                       </TableCell>
-                    <TableCell className="text-slate-500 capitalize">{eq.type?.replace(/_/g, ' ')}</TableCell>
-                    <TableCell className="text-slate-500">{eq.location}</TableCell>
+                    <TableCell className="text-slate-500 text-xs">{eq.location}</TableCell>
+                    <TableCell><AssetMetricsBadges equipment={eq} compact /></TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <div className="w-8">
-                          <HealthGauge score={eq.health_score || 0} size={32} label="" />
+                          <HealthGauge score={deriveHealthScore(eq) ?? 0} size={32} label="" />
                         </div>
-                        <span className="text-slate-900">{eq.health_score || 0}%</span>
+                        <span className="text-slate-900 tabular-nums">{deriveHealthScore(eq) ?? 0}%</span>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <span className={`w-2 h-2 rounded-full ${getStatusColor(eq.status)}`} />
-                        <span className="text-slate-600 capitalize">{eq.status}</span>
+                        <span className={`w-2 h-2 rounded-full ${getStatusColor(deriveStatus(eq))}`} />
+                        <span className="text-slate-600 capitalize">{deriveStatus(eq)}</span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge className={getRiskBadge(eq.risk_level)}>
-                        {eq.risk_level || 'low'}
+                      <Badge className={getRiskBadge(deriveRiskLevel(eq))}>
+                        {deriveRiskLevel(eq)}
                       </Badge>
                     </TableCell>
-                      <TableCell className="text-slate-600">
-                        {eq.remaining_useful_life_days || 'N/A'} days
+                      <TableCell className="text-slate-600 tabular-nums text-xs">
+                        {(() => {
+                          const r = deriveRULDays(eq);
+                          if (r == null) return '—';
+                          return r > 730 ? `${Math.round(r / 365)} yrs` : `${r} days`;
+                        })()}
+                      </TableCell>
+                      <TableCell className="text-right tabular-nums text-slate-900 font-medium">
+                        {deriveCRC(eq) > 0 ? fmtMoney(deriveCRC(eq)) : '—'}
                       </TableCell>
                     </TableRow>
                   );
