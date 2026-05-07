@@ -101,14 +101,14 @@ export default function WhatsNewShowcase() {
         >
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold mb-4">
             <Sparkles className="w-3.5 h-3.5" />
-            New this release
+            The decision-grade asset platform
           </div>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-4 text-balance">
             From asset register to <span className="text-gradient">decision system</span>
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto text-balance">
-            Nine new modules turn AssetStack into the AI operating system for capital planning,
-            field operations and portfolio intelligence.
+            Nine integrated modules covering capital planning, field operations and portfolio intelligence —
+            built on a single AI-native asset register.
           </p>
         </motion.div>
 
