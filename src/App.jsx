@@ -45,18 +45,6 @@ import PhotoDiff from './pages/PhotoDiff';
 import SavedViews from './pages/SavedViews';
 import BulkUpdate from './pages/BulkUpdate';
 import PortfolioInsights from './pages/PortfolioInsights';
-import FundingOptimiser from './pages/FundingOptimiser';
-import ScenarioModeller from './pages/ScenarioModeller';
-import InspectionCycles from './pages/InspectionCycles';
-import CohortPerformance from './pages/CohortPerformance';
-import FieldSurvey from './pages/FieldSurvey';
-import DataQuality from './pages/DataQuality';
-import DefectCascade from './pages/DefectCascade';
-import ClimateRisk from './pages/ClimateRisk';
-import PhotoLibrary from './pages/PhotoLibrary';
-import PhotoDiff from './pages/PhotoDiff';
-import SavedViews from './pages/SavedViews';
-import BulkUpdate from './pages/BulkUpdate';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -281,6 +269,11 @@ const AuthenticatedApp = () => {
       <Route path="/BulkUpdate" element={
             <LayoutWrapper currentPageName="BulkUpdate">
               <BulkUpdate />
+            </LayoutWrapper>
+          } />
+      <Route path="/PortfolioInsights" element={
+            <LayoutWrapper currentPageName="PortfolioInsights">
+              <PortfolioInsights />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />
