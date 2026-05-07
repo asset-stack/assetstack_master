@@ -3,16 +3,22 @@ import LandingNav from '@/components/landing/LandingNav';
 import LandingHero from '@/components/landing/LandingHero';
 import ScrollProgressBar from '@/components/landing/ScrollProgressBar';
 import SectionFallback from '@/components/landing/SectionFallback';
+import LiveCounters from '@/components/landing/LiveCounters';
+import StickyCTA from '@/components/landing/StickyCTA';
 
 // Below-the-fold — code-split for fast TTI
 const LogoCloud = lazy(() => import('@/components/landing/LogoCloud'));
+const PersonaSwitcher = lazy(() => import('@/components/landing/PersonaSwitcher'));
 const WhatsNewShowcase = lazy(() => import('@/components/landing/WhatsNewShowcase'));
+const MechanismSection = lazy(() => import('@/components/landing/MechanismSection'));
 const ProductTour = lazy(() => import('@/components/landing/ProductTour'));
 const SavingsProof = lazy(() => import('@/components/landing/SavingsProof'));
+const ROICalculator = lazy(() => import('@/components/landing/ROICalculator'));
 const PersonaCards = lazy(() => import('@/components/landing/PersonaCards'));
 const IndustryUseCases = lazy(() => import('@/components/landing/IndustryUseCases'));
 const SecuritySection = lazy(() => import('@/components/landing/SecuritySection'));
 const PricingSection = lazy(() => import('@/components/landing/PricingSection'));
+const FirstWeekDeliverables = lazy(() => import('@/components/landing/FirstWeekDeliverables'));
 const FAQ = lazy(() => import('@/components/landing/FAQ'));
 const FinalCTA = lazy(() => import('@/components/landing/FinalCTA'));
 const LandingFooter = lazy(() => import('@/components/landing/LandingFooter'));
@@ -26,57 +32,81 @@ export default function Landing() {
     <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden selection:bg-primary/15 antialiased">
       <ScrollProgressBar />
       <LandingNav />
+      <StickyCTA />
 
       <main>
-        {/* 1 — Hero (the promise) */}
+        {/* 1 — Hero with live AssetMind widget (the "magic trick") */}
         <LandingHero />
 
-        {/* 2 — Social proof strip */}
+        {/* 2 — Live counters: instant proof density */}
+        <LiveCounters />
+
+        {/* 3 — Logo wall */}
         <Suspense fallback={<SectionFallback minHeight={120} />}>
           <LogoCloud />
         </Suspense>
 
-        {/* 2.5 — What's new this release */}
+        {/* 4 — Persona switcher: tailors the rest of the site */}
+        <Suspense fallback={<SectionFallback minHeight={520} />}>
+          <PersonaSwitcher />
+        </Suspense>
+
+        {/* 5 — Mechanism: how it actually works */}
+        <Suspense fallback={<SectionFallback minHeight={640} />}>
+          <MechanismSection />
+        </Suspense>
+
+        {/* 6 — What's new */}
         <Suspense fallback={<SectionFallback minHeight={720} />}>
           <WhatsNewShowcase />
         </Suspense>
 
-        {/* 3 — The 60-second product tour (the show) */}
+        {/* 7 — 60-second product tour */}
         <Suspense fallback={<SectionFallback minHeight={620} />}>
           <ProductTour />
         </Suspense>
 
-        {/* 4 — Proof: Verified Savings Ledger + customer outcomes */}
+        {/* 8 — Verified savings proof */}
         <Suspense fallback={<SectionFallback minHeight={680} />}>
           <SavingsProof />
         </Suspense>
 
-        {/* 5 — Personas: built for everyone who runs assets */}
+        {/* 9 — ROI calculator: project your impact */}
+        <Suspense fallback={<SectionFallback minHeight={520} />}>
+          <ROICalculator />
+        </Suspense>
+
+        {/* 10 — Persona cards (deeper) */}
         <Suspense fallback={<SectionFallback minHeight={420} />}>
           <PersonaCards />
         </Suspense>
 
-        {/* 6 — Industries: one product, every shape */}
+        {/* 11 — Industries */}
         <Suspense fallback={<SectionFallback minHeight={520} />}>
           <IndustryUseCases />
         </Suspense>
 
-        {/* 7 — Security & trust */}
+        {/* 12 — Security & trust */}
         <Suspense fallback={<SectionFallback minHeight={460} />}>
           <SecuritySection />
         </Suspense>
 
-        {/* 8 — Pricing */}
+        {/* 13 — Pricing */}
         <Suspense fallback={<SectionFallback minHeight={620} />}>
           <PricingSection />
         </Suspense>
 
-        {/* 9 — FAQ */}
+        {/* 14 — First 7 days deliverables */}
+        <Suspense fallback={<SectionFallback minHeight={620} />}>
+          <FirstWeekDeliverables />
+        </Suspense>
+
+        {/* 15 — FAQ */}
         <Suspense fallback={<SectionFallback minHeight={420} />}>
           <FAQ />
         </Suspense>
 
-        {/* 10 — Final CTA */}
+        {/* 16 — Final CTA */}
         <Suspense fallback={<SectionFallback minHeight={420} />}>
           <FinalCTA />
         </Suspense>

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play, ShieldCheck } from 'lucide-react';
 import HeroProductCanvas from './HeroProductCanvas';
+import HeroLiveAssetMind from './HeroLiveAssetMind';
 
 export default function LandingHero() {
   return (
@@ -96,6 +97,9 @@ export default function LandingHero() {
           <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> Per-tenant data isolation</div>
           <div className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-primary/70" /> Australian-built</div>
         </motion.div>
+
+        {/* Live AssetMind — the "magic trick" — visitors can query real data before signup */}
+        <HeroLiveAssetMind />
 
         <HeroProductCanvas />
       </div>
