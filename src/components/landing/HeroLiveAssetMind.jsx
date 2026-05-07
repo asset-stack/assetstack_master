@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { base44 } from '@/api/base44Client';
 import { Sparkles, ArrowUp, Loader2, MessageSquare } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -9,6 +8,44 @@ const SUGGESTIONS = [
   'How much is my backlog worth?',
   'Show me defects by location',
 ];
+
+// Pre-scripted demo answers — no live data, no real customer references
+const DEMO_ANSWERS = {
+  'Which assets are highest risk?': `**Top 5 high-risk assets in the demo portfolio:**
+
+1. **Chiller CH-04** — 92% failure probability · Condition C5 · $184k CRC
+2. **Roof membrane (Block A)** — 86% · C4 · $420k CRC
+3. **Lift sheave L-3** — 81% · C4 · $110k CRC
+4. **Boiler B-2** — 77% · C4 · $410k CRC
+5. **Cooling tower CT-2** — 74% · C4 · $320k CRC
+
+Recommended next step: open the Funding Optimiser to rank these against your budget.`,
+
+  'How much is my backlog worth?': `**Demo portfolio backlog snapshot**
+
+- Total deferred maintenance: **$2.4M**
+- High-urgency (next 12 months): **$840k**
+- Medium-urgency (12–36 months): **$1.1M**
+- Low-urgency (>36 months): **$460k**
+
+A risk-ranked $2M renewal program would clear ~78% of the high-urgency backlog.`,
+
+  'Show me defects by location': `**Defect heatmap (demo data)**
+
+| Location | Defects | High-severity |
+|---|---|---|
+| Tower A — Plant Room | 14 | 4 |
+| South Wing — Roof | 9 | 3 |
+| Civic Block — Lifts | 7 | 2 |
+| Tech Park — HVAC | 6 | 1 |
+| Sports Centre — Pumps | 5 | 2 |
+
+Tower A's plant room is the priority cluster — recommend a single coordinated work package.`,
+};
+
+const DEFAULT_ANSWER = `This is a demo response. In your live AssetStack, AssetMind reasons over your full asset register, condition data, and predictions to answer questions like this in seconds.
+
+**Try a sample question** above, or open the platform to ask your own.`;
 
 /**
  * Live AssetMind widget embedded in the hero.
@@ -21,21 +58,18 @@ export default function HeroLiveAssetMind() {
   const [touched, setTouched] = useState(false);
   const inputRef = useRef(null);
 
-  const ask = async (q) => {
+  const ask = (q) => {
     const query = (q || question).trim();
     if (!query || loading) return;
     setQuestion(query);
     setLoading(true);
     setTouched(true);
     setAnswer('');
-    try {
-      const res = await base44.functions.invoke('assetMindAggregate', { question: query });
-      setAnswer(res?.data?.answer || 'No data available right now.');
-    } catch {
-      setAnswer('Connect to your live data to get an instant answer.');
-    } finally {
+    // Simulated thinking delay for realism — no live API call
+    setTimeout(() => {
+      setAnswer(DEMO_ANSWERS[query] || DEFAULT_ANSWER);
       setLoading(false);
-    }
+    }, 900);
   };
 
   return (
@@ -56,7 +90,7 @@ export default function HeroLiveAssetMind() {
             </div>
             <div>
               <div className="text-[12px] font-bold text-slate-900 leading-tight">AssetMind</div>
-              <div className="text-[10px] text-slate-500 leading-tight">Live · 1,432 assets · Bunbury</div>
+              <div className="text-[10px] text-slate-500 leading-tight">Demo · Sample portfolio</div>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
@@ -149,7 +183,7 @@ export default function HeroLiveAssetMind() {
       </div>
 
       <p className="mt-3 text-center text-[10px] text-slate-400 font-medium">
-        Real data · No signup · Powered by AssetMind
+        Demo preview · No signup · Powered by AssetMind
       </p>
     </motion.div>
   );

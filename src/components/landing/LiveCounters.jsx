@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { useRef, useEffect } from 'react';
 import { Activity, ShieldCheck, Brain, TrendingDown } from 'lucide-react';
 
 function CountUp({ value, prefix = '', suffix = '', duration = 1.6 }) {
@@ -30,42 +29,12 @@ function CountUp({ value, prefix = '', suffix = '', duration = 1.6 }) {
 }
 
 export default function LiveCounters() {
-  const [stats, setStats] = useState({
-    assets: 1432,
-    predictions: 2840,
-    savings: 184,
-    backlog: 421,
-  });
-
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      try {
-        const [eq, ledger] = await Promise.all([
-          base44.entities.Equipment.list('-created_date', 1).catch(() => []),
-          base44.entities.SavingsLedgerEntry.list('-created_date', 200).catch(() => []),
-        ]);
-        if (!mounted) return;
-        const verifiedSavings = (ledger || [])
-          .filter((e) => e.status === 'verified')
-          .reduce((s, e) => s + (e.verified_savings || 0), 0);
-        setStats((prev) => ({
-          ...prev,
-          // Don't expose raw counts — show portfolio-relevant numbers
-          savings: Math.max(prev.savings, Math.round(verifiedSavings / 1000)),
-        }));
-      } catch {
-        /* keep defaults */
-      }
-    })();
-    return () => { mounted = false; };
-  }, []);
-
+  // Demo numbers — illustrative capability stats, not from live data
   const items = [
-    { icon: Activity, label: 'Live assets monitored', value: stats.assets, suffix: '+' },
-    { icon: Brain, label: 'AI predictions run', value: stats.predictions, suffix: '+' },
-    { icon: ShieldCheck, label: 'Verified savings (k)', value: stats.savings, prefix: '$', suffix: 'k' },
-    { icon: TrendingDown, label: 'Backlog tracked (k)', value: stats.backlog, prefix: '$', suffix: 'k' },
+    { icon: Activity, label: 'Demo assets monitored', value: 1432, suffix: '+' },
+    { icon: Brain, label: 'AI predictions run', value: 2840, suffix: '+' },
+    { icon: ShieldCheck, label: 'Verified savings (k)', value: 184, prefix: '$', suffix: 'k' },
+    { icon: TrendingDown, label: 'Backlog tracked (k)', value: 421, prefix: '$', suffix: 'k' },
   ];
 
   return (
@@ -88,8 +57,8 @@ export default function LiveCounters() {
                     <Icon className="w-3.5 h-3.5 text-primary" />
                   </div>
                   <div className="flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">Live</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                    <span className="text-[9px] uppercase tracking-wider text-slate-400 font-semibold">Demo</span>
                   </div>
                 </div>
                 <div className="text-2xl md:text-3xl font-bold text-slate-900 leading-none">
