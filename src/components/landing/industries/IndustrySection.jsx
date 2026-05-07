@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Sparkles } from 'lucide-react';
+import IndustryLiveDemo from './IndustryLiveDemo';
 
 /**
  * Editorial industry section — alternates image left/right.
@@ -133,6 +134,11 @@ export default function IndustrySection({
             </div>
           </motion.div>
         </div>
+      </div>
+
+      {/* Per-industry live demo */}
+      <div className="mt-16">
+        <IndustryLiveDemo slug={slug} />
       </div>
     </section>
   );
