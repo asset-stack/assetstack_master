@@ -32,6 +32,31 @@ import Suppliers from './pages/Suppliers';
 import CapitalPlan from './pages/CapitalPlan';
 import Valuation from './pages/Valuation';
 import DefectBacklog from './pages/DefectBacklog';
+import FundingOptimiser from './pages/FundingOptimiser';
+import ScenarioModeller from './pages/ScenarioModeller';
+import InspectionCycles from './pages/InspectionCycles';
+import CohortPerformance from './pages/CohortPerformance';
+import FieldSurvey from './pages/FieldSurvey';
+import DataQuality from './pages/DataQuality';
+import DefectCascade from './pages/DefectCascade';
+import ClimateRisk from './pages/ClimateRisk';
+import PhotoLibrary from './pages/PhotoLibrary';
+import PhotoDiff from './pages/PhotoDiff';
+import SavedViews from './pages/SavedViews';
+import BulkUpdate from './pages/BulkUpdate';
+import PortfolioInsights from './pages/PortfolioInsights';
+import FundingOptimiser from './pages/FundingOptimiser';
+import ScenarioModeller from './pages/ScenarioModeller';
+import InspectionCycles from './pages/InspectionCycles';
+import CohortPerformance from './pages/CohortPerformance';
+import FieldSurvey from './pages/FieldSurvey';
+import DataQuality from './pages/DataQuality';
+import DefectCascade from './pages/DefectCascade';
+import ClimateRisk from './pages/ClimateRisk';
+import PhotoLibrary from './pages/PhotoLibrary';
+import PhotoDiff from './pages/PhotoDiff';
+import SavedViews from './pages/SavedViews';
+import BulkUpdate from './pages/BulkUpdate';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -196,6 +221,66 @@ const AuthenticatedApp = () => {
       <Route path="/DefectBacklog" element={
             <LayoutWrapper currentPageName="DefectBacklog">
               <DefectBacklog />
+            </LayoutWrapper>
+          } />
+      <Route path="/FundingOptimiser" element={
+            <LayoutWrapper currentPageName="FundingOptimiser">
+              <FundingOptimiser />
+            </LayoutWrapper>
+          } />
+      <Route path="/ScenarioModeller" element={
+            <LayoutWrapper currentPageName="ScenarioModeller">
+              <ScenarioModeller />
+            </LayoutWrapper>
+          } />
+      <Route path="/InspectionCycles" element={
+            <LayoutWrapper currentPageName="InspectionCycles">
+              <InspectionCycles />
+            </LayoutWrapper>
+          } />
+      <Route path="/CohortPerformance" element={
+            <LayoutWrapper currentPageName="CohortPerformance">
+              <CohortPerformance />
+            </LayoutWrapper>
+          } />
+      <Route path="/FieldSurvey" element={
+            <LayoutWrapper currentPageName="FieldSurvey">
+              <FieldSurvey />
+            </LayoutWrapper>
+          } />
+      <Route path="/DataQuality" element={
+            <LayoutWrapper currentPageName="DataQuality">
+              <DataQuality />
+            </LayoutWrapper>
+          } />
+      <Route path="/DefectCascade" element={
+            <LayoutWrapper currentPageName="DefectCascade">
+              <DefectCascade />
+            </LayoutWrapper>
+          } />
+      <Route path="/ClimateRisk" element={
+            <LayoutWrapper currentPageName="ClimateRisk">
+              <ClimateRisk />
+            </LayoutWrapper>
+          } />
+      <Route path="/PhotoLibrary" element={
+            <LayoutWrapper currentPageName="PhotoLibrary">
+              <PhotoLibrary />
+            </LayoutWrapper>
+          } />
+      <Route path="/PhotoDiff" element={
+            <LayoutWrapper currentPageName="PhotoDiff">
+              <PhotoDiff />
+            </LayoutWrapper>
+          } />
+      <Route path="/SavedViews" element={
+            <LayoutWrapper currentPageName="SavedViews">
+              <SavedViews />
+            </LayoutWrapper>
+          } />
+      <Route path="/BulkUpdate" element={
+            <LayoutWrapper currentPageName="BulkUpdate">
+              <BulkUpdate />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />

@@ -7,7 +7,9 @@ import {
   Settings, Menu, X, ChevronRight, Radio, Sparkles, Box, FileText, TrendingDown, CalendarClock,
   UserCircle, Users, Shield, MessageSquare, MapPin, KeyRound, Briefcase, Hammer, Upload,
   ChevronDown, GitBranch, Globe2, FlaskConical, ShieldCheck,
-  Package, Wallet, Building2, CalendarDays, AlertOctagon, Banknote
+  Package, Wallet, Building2, CalendarDays, AlertOctagon, Banknote,
+  Target, FlaskConical as FlaskIcon, ClipboardCheck, TrendingUp, Smartphone,
+  ShieldAlert, Waves, Camera, Filter, Edit3
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
@@ -64,13 +66,36 @@ const navSections = [
     items: [
       { name: 'Valuation', icon: Banknote, page: 'Valuation' },
       { name: 'Defect Backlog', icon: AlertOctagon, page: 'DefectBacklog' },
+      { name: 'Funding Optimiser', icon: Target, page: 'FundingOptimiser' },
+      { name: 'Scenario Modeller', icon: FlaskIcon, page: 'ScenarioModeller' },
       { name: 'Cost Center', icon: Wallet, page: 'CostCenter' },
       { name: 'Capital Plan', icon: CalendarDays, page: 'CapitalPlan' },
     ]
   },
   {
+    label: 'Field Ops',
+    items: [
+      { name: 'Field Survey', icon: Smartphone, page: 'FieldSurvey' },
+      { name: 'Inspection Cycles', icon: ClipboardCheck, page: 'InspectionCycles' },
+      { name: 'Bulk Update', icon: Edit3, page: 'BulkUpdate' },
+      { name: 'Photo Library', icon: Camera, page: 'PhotoLibrary' },
+      { name: 'Photo Diff', icon: Camera, page: 'PhotoDiff' },
+    ]
+  },
+  {
+    label: 'Field Ops Add-ons',
+    items: [
+      { name: 'Smart Filters', icon: Filter, page: 'SavedViews' },
+    ]
+  },
+  {
     label: 'Intelligence',
     items: [
+      { name: 'Portfolio Insights', icon: Brain, page: 'PortfolioInsights' },
+      { name: 'Cohort Performance', icon: TrendingUp, page: 'CohortPerformance' },
+      { name: 'Defect Cascade', icon: GitBranch, page: 'DefectCascade' },
+      { name: 'Climate Risk', icon: Waves, page: 'ClimateRisk' },
+      { name: 'Data Quality', icon: ShieldAlert, page: 'DataQuality' },
       { name: 'Analytics', icon: BarChart3, page: 'Analytics' },
       { name: 'Reports', icon: FileText, page: 'Reports' },
       { name: 'ML Models', icon: Brain, page: 'MLModels' },

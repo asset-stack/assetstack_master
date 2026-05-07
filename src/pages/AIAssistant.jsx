@@ -167,7 +167,15 @@ ${conversationHistory}
 ${text}`;
 
     if (isOnline) {
-      const response = await base44.integrations.Core.InvokeLLM({ prompt, model: 'claude_sonnet_4_6' });
+      // Route portfolio-level aggregation questions through the dedicated aggregator
+      const aggregationKeywords = /portfolio|total|across|aggregate|how many.*(critical|over.life|defect)|by location|cohort|cheapest|optimal|backlog|cumulative/i;
+      let response;
+      if (aggregationKeywords.test(text)) {
+        const res = await base44.functions.invoke('assetMindAggregate', { question: text });
+        response = res?.data?.answer || res?.data || 'Unable to aggregate.';
+      } else {
+        response = await base44.integrations.Core.InvokeLLM({ prompt, model: 'claude_sonnet_4_6' });
+      }
       const assistantMsg = { role: 'assistant', content: response, timestamp: new Date().toISOString() };
       const allMsgs = [...newMessages, assistantMsg];
       setMessages(allMsgs);

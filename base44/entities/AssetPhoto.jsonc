@@ -1,0 +1,52 @@
+{
+  "name": "AssetPhoto",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string"
+    },
+    "equipment_name": {
+      "type": "string"
+    },
+    "photo_url": {
+      "type": "string"
+    },
+    "thumbnail_url": {
+      "type": "string"
+    },
+    "captured_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "captured_by_email": {
+      "type": "string"
+    },
+    "condition_grade_at_capture": {
+      "type": "number"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "photo_type": {
+      "type": "string",
+      "enum": [
+        "inspection",
+        "defect",
+        "post_repair",
+        "reference",
+        "baseline"
+      ],
+      "default": "inspection"
+    },
+    "lat": {
+      "type": "number"
+    },
+    "lng": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "photo_url"
+  ]
+}

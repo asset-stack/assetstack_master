@@ -1,0 +1,36 @@
+{
+  "name": "SavedView",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "filters": {
+      "type": "object",
+      "description": "Serialized filter state"
+    },
+    "view_id": {
+      "type": "string",
+      "description": "Built-in preset id, if any"
+    },
+    "owner_email": {
+      "type": "string"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": false
+    },
+    "icon": {
+      "type": "string"
+    },
+    "color": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
