@@ -1,0 +1,89 @@
+{
+  "name": "PerformanceBenchmark",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "Reference to equipment"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date",
+      "description": "Benchmark period start"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date",
+      "description": "Benchmark period end"
+    },
+    "mtbf_hours": {
+      "type": "number",
+      "description": "Mean Time Between Failures in hours"
+    },
+    "mttr_hours": {
+      "type": "number",
+      "description": "Mean Time To Repair in hours"
+    },
+    "availability_percent": {
+      "type": "number",
+      "description": "Equipment availability percentage"
+    },
+    "oee_percent": {
+      "type": "number",
+      "description": "Overall Equipment Effectiveness"
+    },
+    "unplanned_downtime_hours": {
+      "type": "number",
+      "description": "Total unplanned downtime"
+    },
+    "planned_downtime_hours": {
+      "type": "number",
+      "description": "Total planned maintenance downtime"
+    },
+    "total_maintenance_cost": {
+      "type": "number",
+      "description": "Total maintenance costs"
+    },
+    "parts_cost": {
+      "type": "number",
+      "description": "Cost of parts used"
+    },
+    "labor_cost": {
+      "type": "number",
+      "description": "Labor costs"
+    },
+    "failure_count": {
+      "type": "number",
+      "description": "Number of failures"
+    },
+    "preventive_tasks_completed": {
+      "type": "number",
+      "description": "Preventive maintenance tasks completed"
+    },
+    "predictive_accuracy": {
+      "type": "number",
+      "description": "Accuracy of predictions for this equipment"
+    },
+    "cost_savings_from_pdm": {
+      "type": "number",
+      "description": "Estimated savings from predictive maintenance"
+    },
+    "health_score_avg": {
+      "type": "number",
+      "description": "Average health score during period"
+    },
+    "health_score_min": {
+      "type": "number",
+      "description": "Minimum health score"
+    },
+    "health_score_max": {
+      "type": "number",
+      "description": "Maximum health score"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "period_start",
+    "period_end"
+  ]
+}

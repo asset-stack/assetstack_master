@@ -1,0 +1,192 @@
+{
+  "name": "Role",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Role name (e.g. Admin, Manager, Technician)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of this role"
+    },
+    "is_system_role": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a built-in system role"
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "equipment": {
+          "type": "object",
+          "properties": {
+            "view": {
+              "type": "boolean",
+              "default": false
+            },
+            "create": {
+              "type": "boolean",
+              "default": false
+            },
+            "edit": {
+              "type": "boolean",
+              "default": false
+            },
+            "delete": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "locations": {
+          "type": "object",
+          "properties": {
+            "view": {
+              "type": "boolean",
+              "default": false
+            },
+            "create": {
+              "type": "boolean",
+              "default": false
+            },
+            "edit": {
+              "type": "boolean",
+              "default": false
+            },
+            "delete": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "work_orders": {
+          "type": "object",
+          "properties": {
+            "view_all": {
+              "type": "boolean",
+              "default": false
+            },
+            "view_assigned": {
+              "type": "boolean",
+              "default": false
+            },
+            "create": {
+              "type": "boolean",
+              "default": false
+            },
+            "edit_all": {
+              "type": "boolean",
+              "default": false
+            },
+            "edit_assigned": {
+              "type": "boolean",
+              "default": false
+            },
+            "delete": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "maintenance": {
+          "type": "object",
+          "properties": {
+            "view_all": {
+              "type": "boolean",
+              "default": false
+            },
+            "view_assigned": {
+              "type": "boolean",
+              "default": false
+            },
+            "create": {
+              "type": "boolean",
+              "default": false
+            },
+            "edit_all": {
+              "type": "boolean",
+              "default": false
+            },
+            "edit_assigned": {
+              "type": "boolean",
+              "default": false
+            },
+            "delete": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "financial": {
+          "type": "object",
+          "properties": {
+            "view_costs": {
+              "type": "boolean",
+              "default": false
+            },
+            "edit_costs": {
+              "type": "boolean",
+              "default": false
+            },
+            "view_depreciation": {
+              "type": "boolean",
+              "default": false
+            },
+            "edit_depreciation": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "team": {
+          "type": "object",
+          "properties": {
+            "view": {
+              "type": "boolean",
+              "default": false
+            },
+            "manage": {
+              "type": "boolean",
+              "default": false
+            },
+            "invite": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "admin": {
+          "type": "object",
+          "properties": {
+            "manage_roles": {
+              "type": "boolean",
+              "default": false
+            },
+            "manage_users": {
+              "type": "boolean",
+              "default": false
+            },
+            "system_settings": {
+              "type": "boolean",
+              "default": false
+            },
+            "view_analytics": {
+              "type": "boolean",
+              "default": false
+            },
+            "manage_ml_models": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        }
+      },
+      "description": "Granular permission settings"
+    }
+  },
+  "required": [
+    "name",
+    "permissions"
+  ]
+}

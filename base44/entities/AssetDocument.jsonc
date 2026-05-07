@@ -1,0 +1,57 @@
+{
+  "name": "AssetDocument",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Document name/title"
+    },
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "user_manual",
+        "maintenance_guide",
+        "safety_procedure",
+        "specification",
+        "warranty",
+        "training_material",
+        "sop",
+        "other"
+      ],
+      "default": "user_manual",
+      "description": "Type of document"
+    },
+    "equipment_id": {
+      "type": "string",
+      "description": "Related equipment (optional)"
+    },
+    "equipment_type": {
+      "type": "string",
+      "description": "Related equipment type (optional)"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of the uploaded document"
+    },
+    "extracted_content": {
+      "type": "string",
+      "description": "Extracted text content from the document for AI training"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for categorization"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the document"
+    }
+  },
+  "required": [
+    "name",
+    "document_type",
+    "file_url"
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "name": "SparePart",
+  "type": "object",
+  "properties": {
+    "part_number": {
+      "type": "string",
+      "description": "Unique part identifier"
+    },
+    "name": {
+      "type": "string",
+      "description": "Part name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Part description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "bearing",
+        "seal",
+        "filter",
+        "belt",
+        "motor",
+        "sensor",
+        "valve",
+        "electrical",
+        "hydraulic",
+        "pneumatic",
+        "structural",
+        "consumable",
+        "other"
+      ],
+      "description": "Part category"
+    },
+    "compatible_equipment_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Equipment types this part is compatible with"
+    },
+    "quantity_in_stock": {
+      "type": "number",
+      "description": "Current stock quantity"
+    },
+    "minimum_stock_level": {
+      "type": "number",
+      "description": "Reorder threshold"
+    },
+    "reorder_quantity": {
+      "type": "number",
+      "description": "Standard reorder quantity"
+    },
+    "unit_cost": {
+      "type": "number",
+      "description": "Cost per unit"
+    },
+    "lead_time_days": {
+      "type": "number",
+      "description": "Supplier lead time in days"
+    },
+    "supplier": {
+      "type": "string",
+      "description": "Primary supplier name"
+    },
+    "location": {
+      "type": "string",
+      "description": "Storage location"
+    },
+    "last_restock_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Last restocking date"
+    },
+    "average_monthly_usage": {
+      "type": "number",
+      "description": "Average monthly consumption"
+    },
+    "predicted_demand_next_month": {
+      "type": "number",
+      "description": "AI-predicted demand for next month"
+    },
+    "criticality": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "in_stock",
+        "low_stock",
+        "out_of_stock",
+        "on_order",
+        "discontinued"
+      ],
+      "default": "in_stock"
+    }
+  },
+  "required": [
+    "part_number",
+    "name",
+    "category"
+  ]
+}

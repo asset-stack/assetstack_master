@@ -1,0 +1,45 @@
+{
+  "name": "TeamInvitation",
+  "type": "object",
+  "properties": {
+    "contractor_email": {
+      "type": "string",
+      "description": "Email of the contractor being invited"
+    },
+    "contractor_name": {
+      "type": "string",
+      "description": "Name of the contractor"
+    },
+    "contractor_technician_id": {
+      "type": "string",
+      "description": "Technician record ID of the contractor"
+    },
+    "invited_by_email": {
+      "type": "string",
+      "description": "Email of the person who sent the invite"
+    },
+    "invited_by_name": {
+      "type": "string",
+      "description": "Name of the person who sent the invite"
+    },
+    "message": {
+      "type": "string",
+      "description": "Optional message to the contractor"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "declined"
+      ],
+      "default": "pending",
+      "description": "Current status of the invitation"
+    }
+  },
+  "required": [
+    "contractor_email",
+    "contractor_technician_id",
+    "invited_by_email"
+  ]
+}

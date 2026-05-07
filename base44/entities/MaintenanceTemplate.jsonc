@@ -1,0 +1,167 @@
+{
+  "name": "MaintenanceTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Template name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Template description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "inspection",
+        "lubrication",
+        "calibration",
+        "replacement",
+        "overhaul",
+        "cleaning",
+        "testing",
+        "safety_check",
+        "custom"
+      ],
+      "default": "inspection",
+      "description": "Template category"
+    },
+    "equipment_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Compatible equipment types"
+    },
+    "task_type": {
+      "type": "string",
+      "enum": [
+        "preventive",
+        "predictive",
+        "corrective",
+        "inspection"
+      ],
+      "default": "preventive"
+    },
+    "default_priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "estimated_hours": {
+      "type": "number",
+      "description": "Default estimated hours"
+    },
+    "required_skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Skills needed to perform this task"
+    },
+    "required_certifications": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Certifications needed"
+    },
+    "min_technician_level": {
+      "type": "string",
+      "enum": [
+        "junior",
+        "intermediate",
+        "senior",
+        "expert",
+        "master"
+      ],
+      "default": "intermediate"
+    },
+    "standard_parts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "part_name": {
+            "type": "string"
+          },
+          "part_number": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Standard parts needed"
+    },
+    "checklist_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "number",
+              "boolean",
+              "dropdown",
+              "photo"
+            ]
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      },
+      "description": "Checklist items for this template"
+    },
+    "safety_requirements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Safety requirements and PPE"
+    },
+    "instructions": {
+      "type": "string",
+      "description": "Detailed work instructions"
+    },
+    "estimated_cost": {
+      "type": "number",
+      "description": "Estimated cost for this maintenance"
+    },
+    "usage_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Times this template has been used"
+    },
+    "is_system_template": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a built-in system template"
+    }
+  },
+  "required": [
+    "name",
+    "category"
+  ]
+}

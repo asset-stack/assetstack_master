@@ -1,0 +1,112 @@
+{
+  "name": "MLModel",
+  "type": "object",
+  "properties": {
+    "model_name": {
+      "type": "string",
+      "description": "Name of the ML model"
+    },
+    "model_type": {
+      "type": "string",
+      "enum": [
+        "anomaly_detection",
+        "rul_prediction",
+        "failure_classification",
+        "degradation_trend",
+        "ensemble"
+      ],
+      "description": "Type of predictive model"
+    },
+    "algorithm": {
+      "type": "string",
+      "enum": [
+        "isolation_forest",
+        "lstm_autoencoder",
+        "random_forest",
+        "gradient_boosting",
+        "weibull_analysis",
+        "cox_proportional_hazards",
+        "svm",
+        "neural_network",
+        "ensemble_voting"
+      ],
+      "description": "Algorithm used"
+    },
+    "version": {
+      "type": "string",
+      "description": "Model version"
+    },
+    "equipment_type": {
+      "type": "string",
+      "description": "Equipment type this model is trained for"
+    },
+    "training_data_size": {
+      "type": "number",
+      "description": "Number of training samples"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Feature names used by the model"
+    },
+    "hyperparameters": {
+      "type": "object",
+      "description": "Model hyperparameters"
+    },
+    "performance_metrics": {
+      "type": "object",
+      "description": "Model performance metrics (accuracy, precision, recall, F1, RMSE, MAE)"
+    },
+    "training_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When the model was trained"
+    },
+    "last_validation_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "testing",
+        "deprecated",
+        "training"
+      ],
+      "default": "training"
+    },
+    "accuracy_score": {
+      "type": "number",
+      "description": "Overall accuracy score 0-100"
+    },
+    "false_positive_rate": {
+      "type": "number",
+      "description": "False positive rate"
+    },
+    "false_negative_rate": {
+      "type": "number",
+      "description": "False negative rate"
+    },
+    "mean_absolute_error": {
+      "type": "number",
+      "description": "MAE for regression models"
+    },
+    "model_artifacts_url": {
+      "type": "string",
+      "description": "URL to stored model artifacts"
+    },
+    "feature_importance": {
+      "type": "object",
+      "description": "Feature importance scores"
+    }
+  },
+  "required": [
+    "model_name",
+    "model_type",
+    "algorithm",
+    "version"
+  ]
+}

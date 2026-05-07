@@ -1,0 +1,149 @@
+{
+  "name": "Equipment",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Equipment name/identifier"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "motor",
+        "pump",
+        "compressor",
+        "turbine",
+        "conveyor",
+        "hvac",
+        "generator",
+        "transformer",
+        "valve",
+        "heat_exchanger",
+        "railway_track",
+        "railway_switch",
+        "railway_signal",
+        "bridge",
+        "building",
+        "tunnel",
+        "dam",
+        "power_line",
+        "wind_turbine",
+        "elevator",
+        "escalator",
+        "hvac_system",
+        "fire_suppression",
+        "water_treatment",
+        "road_surface",
+        "retaining_wall",
+        "parking_structure"
+      ],
+      "description": "Type of equipment or asset"
+    },
+    "manufacturer": {
+      "type": "string",
+      "description": "Equipment manufacturer"
+    },
+    "model": {
+      "type": "string",
+      "description": "Model number"
+    },
+    "serial_number": {
+      "type": "string",
+      "description": "Serial number"
+    },
+    "location": {
+      "type": "string",
+      "description": "Physical location/zone"
+    },
+    "installation_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When the equipment was installed"
+    },
+    "last_maintenance_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of last maintenance"
+    },
+    "operating_hours": {
+      "type": "number",
+      "description": "Total operating hours"
+    },
+    "rated_capacity": {
+      "type": "number",
+      "description": "Rated capacity/power"
+    },
+    "capacity_unit": {
+      "type": "string",
+      "description": "Unit for capacity (kW, HP, tons, occupants, etc.)"
+    },
+    "health_score": {
+      "type": "number",
+      "description": "Current health score 0-100"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "operational",
+        "degraded",
+        "critical",
+        "offline",
+        "maintenance"
+      ],
+      "default": "operational"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "low"
+    },
+    "predicted_failure_date": {
+      "type": "string",
+      "format": "date",
+      "description": "AI-predicted failure date"
+    },
+    "remaining_useful_life_days": {
+      "type": "number",
+      "description": "Predicted remaining useful life in days"
+    },
+    "failure_probability": {
+      "type": "number",
+      "description": "Probability of failure in next 30 days (0-100)"
+    },
+    "criticality": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "mission_critical"
+      ],
+      "description": "Business criticality level"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Equipment image"
+    },
+    "specifications": {
+      "type": "object",
+      "description": "Additional technical specifications"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for categorization"
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "location"
+  ]
+}

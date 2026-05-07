@@ -1,0 +1,56 @@
+{
+  "name": "FeatureVector",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "Reference to equipment"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When features were extracted"
+    },
+    "time_window_hours": {
+      "type": "number",
+      "description": "Time window used for feature extraction"
+    },
+    "statistical_features": {
+      "type": "object",
+      "description": "Mean, std, min, max, median, skewness, kurtosis for each sensor"
+    },
+    "frequency_features": {
+      "type": "object",
+      "description": "FFT features, spectral entropy, dominant frequencies"
+    },
+    "trend_features": {
+      "type": "object",
+      "description": "Linear trend slopes, change rates, monotonicity"
+    },
+    "anomaly_scores": {
+      "type": "object",
+      "description": "Anomaly scores from different detectors"
+    },
+    "operational_features": {
+      "type": "object",
+      "description": "Operational context features (load, cycles, environment)"
+    },
+    "degradation_indicators": {
+      "type": "object",
+      "description": "Calculated degradation metrics"
+    },
+    "health_index": {
+      "type": "number",
+      "description": "Composite health index 0-100"
+    },
+    "prediction_ready": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this feature vector has sufficient data quality for prediction"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "timestamp"
+  ]
+}

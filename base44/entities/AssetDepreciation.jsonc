@@ -1,0 +1,117 @@
+{
+  "name": "AssetDepreciation",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "Reference to equipment"
+    },
+    "equipment_name": {
+      "type": "string",
+      "description": "Equipment name for display"
+    },
+    "acquisition_cost": {
+      "type": "number",
+      "description": "Original purchase price"
+    },
+    "acquisition_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of acquisition"
+    },
+    "useful_life_years": {
+      "type": "number",
+      "description": "Expected useful life in years"
+    },
+    "salvage_value": {
+      "type": "number",
+      "description": "Estimated value at end of useful life"
+    },
+    "depreciation_method": {
+      "type": "string",
+      "enum": [
+        "straight_line",
+        "declining_balance",
+        "double_declining",
+        "sum_of_years",
+        "units_of_production"
+      ],
+      "default": "straight_line",
+      "description": "Method used for depreciation calculation"
+    },
+    "declining_balance_rate": {
+      "type": "number",
+      "description": "Rate for declining balance method (e.g., 1.5, 2.0)"
+    },
+    "total_units_expected": {
+      "type": "number",
+      "description": "Total expected units for units of production method"
+    },
+    "units_produced_to_date": {
+      "type": "number",
+      "description": "Units produced so far"
+    },
+    "current_book_value": {
+      "type": "number",
+      "description": "Current book value after depreciation"
+    },
+    "accumulated_depreciation": {
+      "type": "number",
+      "description": "Total depreciation taken to date"
+    },
+    "annual_depreciation": {
+      "type": "number",
+      "description": "Annual depreciation amount"
+    },
+    "monthly_depreciation": {
+      "type": "number",
+      "description": "Monthly depreciation amount"
+    },
+    "depreciation_schedule": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "number"
+          },
+          "period_depreciation": {
+            "type": "number"
+          },
+          "accumulated_depreciation": {
+            "type": "number"
+          },
+          "book_value": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Year-by-year depreciation schedule"
+    },
+    "last_calculated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time depreciation was calculated"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "fully_depreciated",
+        "disposed",
+        "impaired"
+      ],
+      "default": "active"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "acquisition_cost",
+    "useful_life_years",
+    "depreciation_method"
+  ]
+}

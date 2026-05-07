@@ -1,0 +1,59 @@
+{
+  "name": "WorkOrderMedia",
+  "type": "object",
+  "properties": {
+    "work_order_id": {
+      "type": "string",
+      "description": "Reference to work order"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of the uploaded file"
+    },
+    "file_type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "video",
+        "document"
+      ],
+      "default": "image",
+      "description": "Type of media"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original file name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description or notes about the media"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "evidence",
+        "before",
+        "after",
+        "issue",
+        "repair",
+        "inspection",
+        "other"
+      ],
+      "default": "evidence",
+      "description": "Category of the media attachment"
+    },
+    "uploaded_by_name": {
+      "type": "string",
+      "description": "Name of the person who uploaded"
+    },
+    "uploaded_by_email": {
+      "type": "string",
+      "description": "Email of the person who uploaded"
+    }
+  },
+  "required": [
+    "work_order_id",
+    "file_url",
+    "file_type"
+  ]
+}

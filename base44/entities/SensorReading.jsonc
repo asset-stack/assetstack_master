@@ -1,0 +1,79 @@
+{
+  "name": "SensorReading",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "Reference to equipment"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Reading timestamp"
+    },
+    "sensor_type": {
+      "type": "string",
+      "enum": [
+        "vibration",
+        "temperature",
+        "pressure",
+        "current",
+        "voltage",
+        "flow_rate",
+        "rpm",
+        "humidity",
+        "noise_level",
+        "oil_quality",
+        "strain",
+        "displacement",
+        "crack_width",
+        "tilt",
+        "acceleration",
+        "corrosion",
+        "moisture",
+        "wind_speed",
+        "seismic_activity",
+        "structural_load",
+        "deflection",
+        "acoustic_emission",
+        "rail_profile",
+        "track_geometry",
+        "concrete_integrity",
+        "settlement",
+        "water_level",
+        "chloride_content"
+      ],
+      "description": "Type of sensor"
+    },
+    "value": {
+      "type": "number",
+      "description": "Sensor reading value"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measurement"
+    },
+    "threshold_min": {
+      "type": "number",
+      "description": "Minimum acceptable threshold"
+    },
+    "threshold_max": {
+      "type": "number",
+      "description": "Maximum acceptable threshold"
+    },
+    "is_anomaly": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this reading is anomalous"
+    },
+    "anomaly_score": {
+      "type": "number",
+      "description": "Anomaly score 0-100"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "sensor_type",
+    "value"
+  ]
+}

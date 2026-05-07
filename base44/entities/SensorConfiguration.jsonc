@@ -1,0 +1,130 @@
+{
+  "name": "SensorConfiguration",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "Reference to equipment this sensor belongs to"
+    },
+    "sensor_name": {
+      "type": "string",
+      "description": "Human-readable sensor name"
+    },
+    "sensor_type": {
+      "type": "string",
+      "enum": [
+        "vibration",
+        "temperature",
+        "pressure",
+        "current",
+        "voltage",
+        "flow_rate",
+        "rpm",
+        "humidity",
+        "noise_level",
+        "oil_quality",
+        "strain",
+        "displacement",
+        "crack_width",
+        "tilt",
+        "acceleration",
+        "corrosion",
+        "moisture",
+        "wind_speed",
+        "seismic_activity",
+        "structural_load",
+        "deflection",
+        "acoustic_emission",
+        "rail_profile",
+        "track_geometry",
+        "concrete_integrity",
+        "settlement",
+        "water_level",
+        "chloride_content"
+      ],
+      "description": "Type of sensor"
+    },
+    "external_sensor_id": {
+      "type": "string",
+      "description": "External ID from IoT platform or device"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measurement"
+    },
+    "threshold_min": {
+      "type": "number",
+      "description": "Minimum acceptable threshold"
+    },
+    "threshold_max": {
+      "type": "number",
+      "description": "Maximum acceptable threshold"
+    },
+    "warning_min": {
+      "type": "number",
+      "description": "Warning level minimum"
+    },
+    "warning_max": {
+      "type": "number",
+      "description": "Warning level maximum"
+    },
+    "sampling_rate_seconds": {
+      "type": "number",
+      "description": "Expected sampling rate in seconds"
+    },
+    "data_source": {
+      "type": "string",
+      "enum": [
+        "api",
+        "mqtt",
+        "csv_import",
+        "manual",
+        "iot_platform"
+      ],
+      "default": "api",
+      "description": "How data is ingested"
+    },
+    "api_endpoint": {
+      "type": "string",
+      "description": "External API endpoint for pulling data"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether sensor is actively collecting data"
+    },
+    "last_reading_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last received reading"
+    },
+    "last_reading_value": {
+      "type": "number",
+      "description": "Value of last received reading"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "online",
+        "offline",
+        "error",
+        "calibrating"
+      ],
+      "default": "offline"
+    },
+    "calibration_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Last calibration date"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "sensor_type",
+    "sensor_name"
+  ]
+}

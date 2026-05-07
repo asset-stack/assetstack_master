@@ -1,0 +1,51 @@
+{
+  "name": "WorkOrderMessage",
+  "type": "object",
+  "properties": {
+    "work_order_id": {
+      "type": "string",
+      "description": "Reference to the work order"
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Name of the message sender"
+    },
+    "sender_email": {
+      "type": "string",
+      "description": "Email of the sender"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "voice_note",
+        "image",
+        "video",
+        "file"
+      ],
+      "default": "text",
+      "description": "Type of message"
+    },
+    "content": {
+      "type": "string",
+      "description": "Text message content"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of attached file (voice note, image, video, document)"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original file name"
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the message is pinned"
+    }
+  },
+  "required": [
+    "work_order_id",
+    "content"
+  ]
+}

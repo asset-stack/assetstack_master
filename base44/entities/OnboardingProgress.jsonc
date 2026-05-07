@@ -1,0 +1,90 @@
+{
+  "name": "OnboardingProgress",
+  "type": "object",
+  "properties": {
+    "company_name": {
+      "type": "string",
+      "description": "Company name"
+    },
+    "industry": {
+      "type": "string",
+      "enum": [
+        "local_government",
+        "utilities",
+        "property_management",
+        "healthcare",
+        "education",
+        "rail_transport",
+        "manufacturing",
+        "logistics",
+        "mining",
+        "other"
+      ],
+      "description": "Industry sector"
+    },
+    "organization_size": {
+      "type": "string",
+      "enum": [
+        "small",
+        "medium",
+        "large",
+        "enterprise"
+      ],
+      "description": "Size of organization"
+    },
+    "initial_assets_added": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of initial asset IDs added during onboarding"
+    },
+    "step_equipment_added": {
+      "type": "boolean",
+      "default": false,
+      "description": "Has added at least one equipment"
+    },
+    "step_sensors_configured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Has configured at least one sensor"
+    },
+    "step_sensor_data_received": {
+      "type": "boolean",
+      "default": false,
+      "description": "Has received sensor data"
+    },
+    "step_technicians_added": {
+      "type": "boolean",
+      "default": false,
+      "description": "Has added technicians"
+    },
+    "step_spare_parts_added": {
+      "type": "boolean",
+      "default": false,
+      "description": "Has added spare parts"
+    },
+    "step_first_prediction_run": {
+      "type": "boolean",
+      "default": false,
+      "description": "Has run first AI prediction"
+    },
+    "onboarding_completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Full onboarding completed"
+    },
+    "onboarding_completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "api_key_generated": {
+      "type": "boolean",
+      "default": false,
+      "description": "Has generated API key for sensor data"
+    }
+  },
+  "required": [
+    "company_name"
+  ]
+}

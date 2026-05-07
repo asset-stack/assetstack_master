@@ -1,0 +1,53 @@
+{
+  "name": "ChatSession",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Auto-generated title from first message"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Chat messages"
+    },
+    "work_order_id": {
+      "type": "string",
+      "description": "Linked work order ID (optional)"
+    },
+    "work_order_title": {
+      "type": "string",
+      "description": "Linked work order title for display"
+    },
+    "is_offline_pending": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this session has unsaved offline messages"
+    },
+    "technician_name": {
+      "type": "string",
+      "description": "Name of the technician"
+    },
+    "technician_email": {
+      "type": "string",
+      "description": "Email of the technician"
+    }
+  },
+  "required": [
+    "title",
+    "messages"
+  ]
+}

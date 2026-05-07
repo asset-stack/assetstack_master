@@ -1,0 +1,53 @@
+{
+  "name": "KudosMessage",
+  "type": "object",
+  "properties": {
+    "from_technician_id": {
+      "type": "string",
+      "description": "Technician giving kudos"
+    },
+    "from_name": {
+      "type": "string",
+      "description": "Name of person giving kudos"
+    },
+    "to_technician_id": {
+      "type": "string",
+      "description": "Technician receiving kudos"
+    },
+    "to_name": {
+      "type": "string",
+      "description": "Name of person receiving kudos"
+    },
+    "message": {
+      "type": "string",
+      "description": "Recognition message"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "great_work",
+        "team_player",
+        "problem_solver",
+        "safety_champion",
+        "efficiency_expert",
+        "mentor"
+      ],
+      "default": "great_work",
+      "description": "Type of recognition"
+    },
+    "work_order_id": {
+      "type": "string",
+      "description": "Related work order (optional)"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this kudos is visible to everyone"
+    }
+  },
+  "required": [
+    "to_technician_id",
+    "message",
+    "category"
+  ]
+}

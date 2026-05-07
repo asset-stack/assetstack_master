@@ -1,0 +1,54 @@
+{
+  "name": "PredictionLog",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "Reference to equipment"
+    },
+    "prediction_type": {
+      "type": "string",
+      "enum": [
+        "failure_probability",
+        "remaining_useful_life",
+        "anomaly_detection",
+        "degradation_rate"
+      ],
+      "description": "Type of prediction"
+    },
+    "model_version": {
+      "type": "string",
+      "description": "Version of prediction model used"
+    },
+    "input_features": {
+      "type": "object",
+      "description": "Input data used for prediction"
+    },
+    "prediction_result": {
+      "type": "object",
+      "description": "Prediction output"
+    },
+    "confidence_score": {
+      "type": "number",
+      "description": "Model confidence 0-100"
+    },
+    "risk_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Identified risk factors"
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "AI recommendations"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "prediction_type"
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "name": "Job",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Job title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed job description"
+    },
+    "location_id": {
+      "type": "string",
+      "description": "Reference to Location"
+    },
+    "location_name": {
+      "type": "string",
+      "description": "Location name for display"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Client/organisation name"
+    },
+    "job_type": {
+      "type": "string",
+      "enum": [
+        "one_time",
+        "recurring",
+        "on_call",
+        "contract"
+      ],
+      "default": "one_time"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "maintenance",
+        "repair",
+        "inspection",
+        "installation",
+        "emergency",
+        "other"
+      ],
+      "default": "maintenance"
+    },
+    "required_skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Skills needed for this job"
+    },
+    "equipment_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Equipment types involved"
+    },
+    "min_certification_level": {
+      "type": "string",
+      "enum": [
+        "junior",
+        "intermediate",
+        "senior",
+        "expert",
+        "master"
+      ],
+      "default": "intermediate"
+    },
+    "hourly_rate": {
+      "type": "number",
+      "description": "Offered hourly rate"
+    },
+    "fixed_price": {
+      "type": "number",
+      "description": "Fixed price for the job (if applicable)"
+    },
+    "estimated_hours": {
+      "type": "number",
+      "description": "Estimated duration in hours"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Job start date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Job end date (if applicable)"
+    },
+    "application_deadline": {
+      "type": "string",
+      "format": "date",
+      "description": "Deadline for applications"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "open",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "default": "draft"
+    },
+    "visibility": {
+      "type": "string",
+      "enum": [
+        "public",
+        "invite_only"
+      ],
+      "default": "public"
+    },
+    "applications_count": {
+      "type": "number",
+      "default": 0
+    },
+    "assigned_contractor_id": {
+      "type": "string",
+      "description": "Assigned contractor Technician ID"
+    },
+    "assigned_contractor_name": {
+      "type": "string"
+    },
+    "posted_by_email": {
+      "type": "string"
+    },
+    "posted_by_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "category"
+  ]
+}

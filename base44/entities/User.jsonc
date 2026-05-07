@@ -1,0 +1,23 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "manager",
+        "technician",
+        "custom"
+      ],
+      "default": "technician"
+    },
+    "custom_role_id": {
+      "type": "string",
+      "description": "Reference to a custom Role entity (used when role is 'custom')"
+    }
+  },
+  "required": [
+    "custom_role_id"
+  ]
+}

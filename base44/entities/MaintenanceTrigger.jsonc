@@ -1,0 +1,114 @@
+{
+  "name": "MaintenanceTrigger",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Trigger name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of what this trigger does"
+    },
+    "trigger_type": {
+      "type": "string",
+      "enum": [
+        "rul_threshold",
+        "failure_probability",
+        "health_score",
+        "alert_severity",
+        "sensor_anomaly"
+      ],
+      "description": "Type of trigger condition"
+    },
+    "condition_operator": {
+      "type": "string",
+      "enum": [
+        "less_than",
+        "greater_than",
+        "equals"
+      ],
+      "description": "Comparison operator"
+    },
+    "threshold_value": {
+      "type": "number",
+      "description": "Threshold value for trigger"
+    },
+    "alert_severity_filter": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "critical",
+        "emergency"
+      ],
+      "description": "Alert severity to trigger on (for alert_severity type)"
+    },
+    "equipment_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Equipment types this trigger applies to (empty = all)"
+    },
+    "task_template": {
+      "type": "object",
+      "properties": {
+        "title_prefix": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "preventive",
+            "predictive",
+            "corrective",
+            "emergency",
+            "inspection"
+          ]
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "urgent"
+          ]
+        },
+        "estimated_hours": {
+          "type": "number"
+        },
+        "auto_assign": {
+          "type": "boolean"
+        },
+        "notify_on_creation": {
+          "type": "boolean"
+        }
+      },
+      "description": "Template for generated tasks"
+    },
+    "cooldown_days": {
+      "type": "number",
+      "default": 7,
+      "description": "Days to wait before triggering again for same equipment"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_triggered_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tasks_generated_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "trigger_type",
+    "threshold_value"
+  ]
+}

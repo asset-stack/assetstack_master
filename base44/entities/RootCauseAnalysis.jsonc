@@ -1,0 +1,137 @@
+{
+  "name": "RootCauseAnalysis",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "Reference to equipment"
+    },
+    "alert_id": {
+      "type": "string",
+      "description": "Related alert if any"
+    },
+    "anomaly_type": {
+      "type": "string",
+      "enum": [
+        "vibration",
+        "temperature",
+        "pressure",
+        "electrical",
+        "mechanical",
+        "performance",
+        "sensor_fault",
+        "other"
+      ],
+      "description": "Type of anomaly detected"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    },
+    "detected_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When anomaly was detected"
+    },
+    "sensor_readings": {
+      "type": "object",
+      "description": "Relevant sensor readings at time of detection"
+    },
+    "probable_causes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "cause": {
+            "type": "string"
+          },
+          "probability": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "AI-identified probable root causes with confidence"
+    },
+    "recommended_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "estimated_time_hours": {
+            "type": "number"
+          },
+          "estimated_cost": {
+            "type": "number"
+          },
+          "parts_required": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "Recommended corrective actions"
+    },
+    "historical_patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string"
+          },
+          "occurrences": {
+            "type": "number"
+          },
+          "correlation": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Related historical patterns"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending_review",
+        "investigating",
+        "action_taken",
+        "resolved",
+        "false_positive"
+      ],
+      "default": "pending_review"
+    },
+    "resolution_notes": {
+      "type": "string",
+      "description": "Notes on resolution"
+    },
+    "actual_cause": {
+      "type": "string",
+      "description": "Confirmed actual root cause"
+    },
+    "time_to_resolution_hours": {
+      "type": "number",
+      "description": "Time from detection to resolution"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "anomaly_type"
+  ]
+}

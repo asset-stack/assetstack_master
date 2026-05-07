@@ -1,0 +1,105 @@
+{
+  "name": "MaintenanceTask",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "Reference to equipment"
+    },
+    "title": {
+      "type": "string",
+      "description": "Task title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "preventive",
+        "predictive",
+        "corrective",
+        "emergency",
+        "inspection"
+      ],
+      "description": "Type of maintenance"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "in_progress",
+        "completed",
+        "cancelled",
+        "overdue"
+      ],
+      "default": "scheduled"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Scheduled maintenance date"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Actual completion date"
+    },
+    "estimated_duration_hours": {
+      "type": "number",
+      "description": "Estimated duration in hours"
+    },
+    "actual_duration_hours": {
+      "type": "number",
+      "description": "Actual duration in hours"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Assigned technician"
+    },
+    "cost_estimate": {
+      "type": "number",
+      "description": "Estimated cost"
+    },
+    "actual_cost": {
+      "type": "number",
+      "description": "Actual cost"
+    },
+    "parts_required": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Required spare parts"
+    },
+    "ai_recommended": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this task was AI-recommended"
+    },
+    "ai_confidence": {
+      "type": "number",
+      "description": "AI confidence score 0-100"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "title",
+    "type"
+  ]
+}

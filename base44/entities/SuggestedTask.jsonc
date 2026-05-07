@@ -1,0 +1,106 @@
+{
+  "name": "SuggestedTask",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "Equipment this task is for"
+    },
+    "equipment_name": {
+      "type": "string",
+      "description": "Equipment name for display"
+    },
+    "trigger_id": {
+      "type": "string",
+      "description": "Trigger that generated this suggestion"
+    },
+    "trigger_name": {
+      "type": "string",
+      "description": "Name of trigger for display"
+    },
+    "title": {
+      "type": "string",
+      "description": "Suggested task title"
+    },
+    "description": {
+      "type": "string",
+      "description": "AI-generated task description"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "preventive",
+        "predictive",
+        "corrective",
+        "emergency",
+        "inspection"
+      ]
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ]
+    },
+    "estimated_hours": {
+      "type": "number"
+    },
+    "recommended_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "trigger_reason": {
+      "type": "string",
+      "description": "Why this task was suggested"
+    },
+    "trigger_value": {
+      "type": "number",
+      "description": "The value that triggered the suggestion"
+    },
+    "ai_confidence": {
+      "type": "number",
+      "description": "AI confidence score 0-100"
+    },
+    "suggested_parts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Suggested spare parts"
+    },
+    "suggested_technician": {
+      "type": "string",
+      "description": "Recommended technician"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "converted"
+      ],
+      "default": "pending"
+    },
+    "converted_task_id": {
+      "type": "string",
+      "description": "ID of created MaintenanceTask if approved"
+    },
+    "reviewed_by": {
+      "type": "string"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "title",
+    "type",
+    "priority"
+  ]
+}

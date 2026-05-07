@@ -1,0 +1,186 @@
+{
+  "name": "LiDARScan",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the LiDAR scan"
+    },
+    "location": {
+      "type": "string",
+      "description": "Physical location/area covered by scan"
+    },
+    "scan_type": {
+      "type": "string",
+      "enum": [
+        "terrestrial",
+        "aerial",
+        "mobile",
+        "handheld"
+      ],
+      "default": "terrestrial",
+      "description": "Type of LiDAR scanning method used"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL to the point cloud file (LAS, LAZ, E57, PLY)"
+    },
+    "file_format": {
+      "type": "string",
+      "enum": [
+        "las",
+        "laz",
+        "e57",
+        "ply",
+        "xyz",
+        "pcd"
+      ],
+      "description": "Point cloud file format"
+    },
+    "file_size_mb": {
+      "type": "number",
+      "description": "File size in megabytes"
+    },
+    "point_count": {
+      "type": "number",
+      "description": "Number of points in the scan"
+    },
+    "scan_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when scan was captured"
+    },
+    "scanner_model": {
+      "type": "string",
+      "description": "LiDAR scanner hardware used"
+    },
+    "resolution_mm": {
+      "type": "number",
+      "description": "Scan resolution in millimeters"
+    },
+    "accuracy_mm": {
+      "type": "number",
+      "description": "Scan accuracy in millimeters"
+    },
+    "coverage_area_sqm": {
+      "type": "number",
+      "description": "Area covered by scan in square meters"
+    },
+    "bounding_box": {
+      "type": "object",
+      "properties": {
+        "min_x": {
+          "type": "number"
+        },
+        "max_x": {
+          "type": "number"
+        },
+        "min_y": {
+          "type": "number"
+        },
+        "max_y": {
+          "type": "number"
+        },
+        "min_z": {
+          "type": "number"
+        },
+        "max_z": {
+          "type": "number"
+        }
+      },
+      "description": "3D bounding box coordinates"
+    },
+    "linked_equipment_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Equipment IDs visible in this scan"
+    },
+    "anomalies_detected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "crack",
+              "deformation",
+              "corrosion",
+              "displacement",
+              "missing_component",
+              "structural_damage",
+              "surface_degradation"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "location_description": {
+            "type": "string"
+          },
+          "coordinates": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "z": {
+                "type": "number"
+              }
+            }
+          },
+          "measurement_value": {
+            "type": "number"
+          },
+          "measurement_unit": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Structural anomalies detected in scan analysis"
+    },
+    "processing_status": {
+      "type": "string",
+      "enum": [
+        "uploaded",
+        "processing",
+        "analyzed",
+        "error"
+      ],
+      "default": "uploaded"
+    },
+    "thumbnail_url": {
+      "type": "string",
+      "description": "Preview image URL"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about the scan"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for categorization"
+    }
+  },
+  "required": [
+    "name",
+    "location"
+  ]
+}

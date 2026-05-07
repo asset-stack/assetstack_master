@@ -1,0 +1,286 @@
+{
+  "name": "WorkOrder",
+  "type": "object",
+  "properties": {
+    "work_order_number": {
+      "type": "string",
+      "description": "Unique work order identifier (auto-generated)"
+    },
+    "maintenance_task_id": {
+      "type": "string",
+      "description": "Reference to associated maintenance task"
+    },
+    "equipment_id": {
+      "type": "string",
+      "description": "Reference to equipment"
+    },
+    "title": {
+      "type": "string",
+      "description": "Work order title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed work description"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "preventive",
+        "predictive",
+        "corrective",
+        "emergency",
+        "inspection"
+      ],
+      "description": "Type of work order"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "open",
+        "assigned",
+        "in_progress",
+        "on_hold",
+        "completed",
+        "closed",
+        "cancelled"
+      ],
+      "default": "draft"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Primary technician assigned"
+    },
+    "assigned_team": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Team members assigned to this work order"
+    },
+    "scheduled_start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Scheduled start date/time"
+    },
+    "scheduled_end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Scheduled end date/time"
+    },
+    "actual_start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Actual start date/time"
+    },
+    "actual_end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Actual completion date/time"
+    },
+    "estimated_hours": {
+      "type": "number",
+      "description": "Estimated labor hours"
+    },
+    "labor_entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "technician": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "hours": {
+            "type": "number"
+          },
+          "hourly_rate": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Labor time entries"
+    },
+    "parts_used": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "part_name": {
+            "type": "string"
+          },
+          "part_number": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "unit_cost": {
+            "type": "number"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Parts consumed during work"
+    },
+    "additional_costs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Other costs (contractors, rentals, etc.)"
+    },
+    "estimated_cost": {
+      "type": "number",
+      "description": "Total estimated cost"
+    },
+    "actual_labor_cost": {
+      "type": "number",
+      "description": "Total actual labor cost"
+    },
+    "actual_parts_cost": {
+      "type": "number",
+      "description": "Total actual parts cost"
+    },
+    "actual_total_cost": {
+      "type": "number",
+      "description": "Total actual cost (labor + parts + additional)"
+    },
+    "completion_notes": {
+      "type": "string",
+      "description": "Notes upon completion"
+    },
+    "findings": {
+      "type": "string",
+      "description": "Findings during inspection/maintenance"
+    },
+    "follow_up_required": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether follow-up work is needed"
+    },
+    "follow_up_notes": {
+      "type": "string",
+      "description": "Notes about required follow-up"
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "action": {
+            "type": "string"
+          },
+          "user": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Work order history/audit trail"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "File URLs for attachments"
+    },
+    "checklist": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "number",
+              "boolean",
+              "dropdown",
+              "photo"
+            ]
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "answer": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "photo_url": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Checklist items for the work order"
+    },
+    "checklist_completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether all required checklist items are completed"
+    },
+    "checklist_completion_percent": {
+      "type": "number",
+      "description": "Percentage of checklist items completed"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "title",
+    "type"
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "name": "DataIngestionLog",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": [
+        "api",
+        "csv_import",
+        "mqtt",
+        "manual",
+        "iot_platform",
+        "webhook"
+      ],
+      "description": "Data source type"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "partial",
+        "failed"
+      ],
+      "description": "Ingestion status"
+    },
+    "records_received": {
+      "type": "number",
+      "description": "Number of records received"
+    },
+    "records_processed": {
+      "type": "number",
+      "description": "Number of records successfully processed"
+    },
+    "records_failed": {
+      "type": "number",
+      "description": "Number of records that failed"
+    },
+    "equipment_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Equipment IDs affected"
+    },
+    "sensor_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Sensor types included"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error details if any"
+    },
+    "processing_time_ms": {
+      "type": "number",
+      "description": "Time taken to process in milliseconds"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original file name if CSV import"
+    }
+  },
+  "required": [
+    "source",
+    "status"
+  ]
+}

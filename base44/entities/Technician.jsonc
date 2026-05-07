@@ -1,0 +1,200 @@
+{
+  "name": "Technician",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Technician full name"
+    },
+    "employee_id": {
+      "type": "string",
+      "description": "Employee identifier"
+    },
+    "email": {
+      "type": "string",
+      "description": "Contact email"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone"
+    },
+    "worker_type": {
+      "type": "string",
+      "enum": [
+        "employee",
+        "contractor"
+      ],
+      "default": "employee",
+      "description": "Type of worker"
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "pending",
+        "rejected"
+      ],
+      "default": "approved",
+      "description": "Approval status for contractor registrations"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Contractor company name (if applicable)"
+    },
+    "tax_id": {
+      "type": "string",
+      "description": "Contractor tax ID (if applicable)"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Short professional bio"
+    },
+    "profile_image_url": {
+      "type": "string",
+      "description": "Profile photo URL"
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Technical skills and certifications"
+    },
+    "equipment_specializations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Equipment types specialized in"
+    },
+    "certification_level": {
+      "type": "string",
+      "enum": [
+        "junior",
+        "intermediate",
+        "senior",
+        "expert",
+        "master"
+      ],
+      "default": "intermediate"
+    },
+    "hourly_rate": {
+      "type": "number",
+      "description": "Hourly labor rate"
+    },
+    "availability_status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "busy",
+        "on_leave",
+        "unavailable"
+      ],
+      "default": "available"
+    },
+    "current_workload_hours": {
+      "type": "number",
+      "description": "Currently assigned work hours"
+    },
+    "max_weekly_hours": {
+      "type": "number",
+      "default": 40,
+      "description": "Maximum weekly work hours"
+    },
+    "performance_rating": {
+      "type": "number",
+      "description": "Performance score 0-100"
+    },
+    "completed_tasks_count": {
+      "type": "number",
+      "description": "Total completed maintenance tasks"
+    },
+    "average_task_completion_time": {
+      "type": "number",
+      "description": "Average hours to complete tasks"
+    },
+    "first_time_fix_rate": {
+      "type": "number",
+      "description": "Percentage of tasks completed without follow-up (0-100)"
+    },
+    "on_time_completion_rate": {
+      "type": "number",
+      "description": "Percentage of tasks completed by scheduled deadline (0-100)"
+    },
+    "total_cost_savings": {
+      "type": "number",
+      "description": "Total cost savings generated through efficient work"
+    },
+    "shift": {
+      "type": "string",
+      "enum": [
+        "day",
+        "evening",
+        "night",
+        "rotating"
+      ],
+      "default": "day"
+    },
+    "badges": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Earned achievement badges"
+    },
+    "kudos_received": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Recognition received from peers/supervisors"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Employment/contract start date"
+    },
+    "preferred_schedule": {
+      "type": "object",
+      "properties": {
+        "monday": {
+          "type": "boolean"
+        },
+        "tuesday": {
+          "type": "boolean"
+        },
+        "wednesday": {
+          "type": "boolean"
+        },
+        "thursday": {
+          "type": "boolean"
+        },
+        "friday": {
+          "type": "boolean"
+        },
+        "saturday": {
+          "type": "boolean"
+        },
+        "sunday": {
+          "type": "boolean"
+        }
+      },
+      "description": "Preferred working days"
+    }
+  },
+  "required": [
+    "name",
+    "employee_id"
+  ]
+}

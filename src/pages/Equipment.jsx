@@ -58,12 +58,23 @@ export default function Equipment() {
 
   const { data: equipment = [], isLoading } = useQuery({
     queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+    queryFn: async () => {
+      // Page through ALL equipment (handles 2,500+ asset registers)
+      const pageSize = 500;
+      const all = [];
+      for (let page = 0; page < 20; page++) {
+        const batch = await base44.entities.Equipment.list('-created_date', pageSize, page * pageSize);
+        if (!batch?.length) break;
+        all.push(...batch);
+        if (batch.length < pageSize) break;
+      }
+      return all;
+    },
   });
 
   const { data: locations = [] } = useQuery({
     queryKey: ['locations'],
-    queryFn: () => base44.entities.Location.list('-created_date', 100),
+    queryFn: () => base44.entities.Location.list('-created_date', 500),
   });
 
   // Auto-select equipment from URL param

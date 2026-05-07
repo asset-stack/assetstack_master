@@ -1,0 +1,49 @@
+{
+  "name": "JobApplication",
+  "type": "object",
+  "properties": {
+    "job_id": {
+      "type": "string",
+      "description": "Reference to the Job"
+    },
+    "job_title": {
+      "type": "string"
+    },
+    "contractor_id": {
+      "type": "string",
+      "description": "Technician ID of the applicant"
+    },
+    "contractor_name": {
+      "type": "string"
+    },
+    "contractor_email": {
+      "type": "string"
+    },
+    "cover_message": {
+      "type": "string",
+      "description": "Application message from contractor"
+    },
+    "proposed_rate": {
+      "type": "number",
+      "description": "Contractor's proposed rate"
+    },
+    "available_start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected",
+        "withdrawn"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "job_id",
+    "contractor_id"
+  ]
+}

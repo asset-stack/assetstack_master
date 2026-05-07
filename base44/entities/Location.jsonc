@@ -1,0 +1,95 @@
+{
+  "name": "Location",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Location name (e.g. Bunbury Town Hall, South West Library)"
+    },
+    "code": {
+      "type": "string",
+      "description": "Short code for the location (e.g. BTH, SWL)"
+    },
+    "address": {
+      "type": "string",
+      "description": "Physical street address"
+    },
+    "city": {
+      "type": "string",
+      "description": "City or suburb"
+    },
+    "region": {
+      "type": "string",
+      "description": "Region or state"
+    },
+    "gps_lat": {
+      "type": "number",
+      "description": "GPS latitude"
+    },
+    "gps_lng": {
+      "type": "number",
+      "description": "GPS longitude"
+    },
+    "location_type": {
+      "type": "string",
+      "enum": [
+        "building",
+        "facility",
+        "park",
+        "road",
+        "bridge",
+        "depot",
+        "station",
+        "other"
+      ],
+      "default": "building",
+      "description": "Type of location"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Client or council name this location belongs to"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Primary contact person"
+    },
+    "contact_phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "contact_email": {
+      "type": "string",
+      "description": "Contact email"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Location photo or map image"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "archived"
+      ],
+      "default": "active"
+    },
+    "total_assets": {
+      "type": "number",
+      "default": 0,
+      "description": "Cached count of assets at this location"
+    },
+    "scan_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of last LiDAR scan or site survey"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

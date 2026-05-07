@@ -1,0 +1,84 @@
+{
+  "name": "Alert",
+  "type": "object",
+  "properties": {
+    "equipment_id": {
+      "type": "string",
+      "description": "Reference to equipment"
+    },
+    "title": {
+      "type": "string",
+      "description": "Alert title"
+    },
+    "message": {
+      "type": "string",
+      "description": "Alert message"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "critical",
+        "emergency"
+      ],
+      "default": "warning"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "anomaly_detected",
+        "threshold_exceeded",
+        "failure_predicted",
+        "maintenance_due",
+        "degradation_trend",
+        "sensor_fault"
+      ],
+      "description": "Type of alert"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "acknowledged",
+        "resolved",
+        "dismissed"
+      ],
+      "default": "active"
+    },
+    "triggered_value": {
+      "type": "number",
+      "description": "Value that triggered the alert"
+    },
+    "threshold_value": {
+      "type": "number",
+      "description": "Threshold that was exceeded"
+    },
+    "sensor_type": {
+      "type": "string",
+      "description": "Related sensor type"
+    },
+    "recommended_action": {
+      "type": "string",
+      "description": "AI-recommended action"
+    },
+    "acknowledged_by": {
+      "type": "string",
+      "description": "User who acknowledged"
+    },
+    "acknowledged_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resolved_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "equipment_id",
+    "title",
+    "severity",
+    "type"
+  ]
+}
