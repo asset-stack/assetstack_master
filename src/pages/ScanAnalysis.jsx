@@ -21,6 +21,9 @@ import HowItWorks from '@/components/scan-analysis/HowItWorks';
 import RealPhotoWorkflowGuide from '@/components/scan-analysis/RealPhotoWorkflowGuide';
 import AddPhotoFrames from '@/components/scan-analysis/AddPhotoFrames';
 import ScanProgressStrip from '@/components/scan-analysis/ScanProgressStrip';
+import PendingReviewSLA from '@/components/scan-analysis/PendingReviewSLA';
+import BulkVerifyBar from '@/components/scan-analysis/BulkVerifyBar';
+import { toast } from 'sonner';
 
 export default function ScanAnalysisPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -105,18 +108,45 @@ export default function ScanAnalysisPage() {
 
   const runAIAnalysis = async () => {
     if (!selectedScan || !selectedScan.preview_image_url) {
-      alert('This scan needs a preview image to analyze. Please upload one.');
+      toast?.error?.('This scan needs a preview image to analyze. Please upload one.');
       return;
     }
     setAnalyzing(true);
-    await base44.functions.invoke('analyzeScanCondition', {
-      image_url: selectedScan.preview_image_url,
-      digital_twin_model_id: selectedScan.id,
-      digital_twin_model_name: selectedScan.name,
-    });
-    setAnalyzing(false);
-    qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
-    qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
+    try {
+      // Analyze the main preview
+      const mainRes = await base44.functions.invoke('analyzeScanCondition', {
+        image_url: selectedScan.preview_image_url,
+        digital_twin_model_id: selectedScan.id,
+        digital_twin_model_name: selectedScan.name,
+        replace_previous: true,
+      });
+
+      let totalFindings = mainRes?.data?.findings_count || 0;
+      let totalDupes = mainRes?.data?.duplicates_skipped || 0;
+
+      // Also analyze every extracted frame that hasn't been analyzed yet
+      const pendingFrames = frames.filter((f) => f.analysis_status !== 'completed' && f.image_url);
+      for (const frame of pendingFrames) {
+        const frameRes = await base44.functions.invoke('analyzeScanCondition', {
+          image_url: frame.image_url,
+          digital_twin_model_id: selectedScan.id,
+          digital_twin_model_name: `${selectedScan.name} — ${frame.angle_label}`,
+          frame_id: frame.id,
+        });
+        totalFindings += frameRes?.data?.findings_count || 0;
+        totalDupes += frameRes?.data?.duplicates_skipped || 0;
+      }
+
+      toast?.success?.(`Analysis complete: ${totalFindings} new finding(s)${totalDupes ? ` (${totalDupes} duplicate(s) skipped)` : ''}`);
+    } catch (err) {
+      toast?.error?.(`Analysis failed: ${err?.message || 'Unknown error'}`);
+      console.error('runAIAnalysis error:', err);
+    } finally {
+      setAnalyzing(false);
+      qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
+      qc.invalidateQueries({ queryKey: ['scanFrames', selectedScan.id] });
+      qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
+    }
   };
 
   const stats = useMemo(() => ({
@@ -152,6 +182,8 @@ export default function ScanAnalysisPage() {
           </Button>
         </div>
       </div>
+
+      <PendingReviewSLA />
 
       <RealPhotoWorkflowGuide />
 
@@ -353,6 +385,18 @@ export default function ScanAnalysisPage() {
                   <TabsTrigger value="all" className="text-[11px]">All</TabsTrigger>
                 </TabsList>
               </Tabs>
+
+              {filter === 'pending' && (
+                <div className="mt-3">
+                  <BulkVerifyBar
+                    reports={reports}
+                    onDone={() => {
+                      qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
+                      qc.invalidateQueries({ queryKey: ['pendingTrainingSamples'] });
+                    }}
+                  />
+                </div>
+              )}
 
               <div className="mt-3 space-y-3 max-h-[800px] overflow-y-auto pr-1 scrollbar-thin">
                 {filteredReports.length === 0 ? (

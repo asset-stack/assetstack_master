@@ -27,22 +27,30 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const allowedSeverity = ['minor', 'moderate', 'major', 'critical'];
+
   const handleReview = async (status) => {
     setLoading(true);
-    const user = await base44.auth.me();
-    const updates = {
-      review_status: status,
-      reviewed_by: user?.full_name || user?.email,
-      reviewed_at: new Date().toISOString(),
-      reviewer_notes: notes,
-    };
-    if (status === 'corrected') {
-      updates.corrected_anomaly_type = correctedType;
-      updates.corrected_severity = correctedSeverity;
+    try {
+      const user = await base44.auth.me();
+      const updates = {
+        review_status: status,
+        reviewed_by: user?.full_name || user?.email,
+        reviewed_at: new Date().toISOString(),
+        reviewer_notes: notes,
+      };
+      if (status === 'corrected') {
+        // Validate against enums before save
+        updates.corrected_anomaly_type = anomalyTypes.includes(correctedType) ? correctedType : 'other';
+        updates.corrected_severity = allowedSeverity.includes(correctedSeverity) ? correctedSeverity : 'minor';
+      }
+      await base44.entities.ConditionReport.update(report.id, updates);
+      onReviewed && onReviewed();
+    } catch (err) {
+      console.error('Review save failed:', err);
+    } finally {
+      setLoading(false);
     }
-    await base44.entities.ConditionReport.update(report.id, updates);
-    setLoading(false);
-    onReviewed && onReviewed();
   };
 
   const bbox = report.bounding_box;

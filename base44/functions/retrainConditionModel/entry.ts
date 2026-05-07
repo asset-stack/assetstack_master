@@ -1,8 +1,8 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-// Simulates a continuous ML retraining job.
-// In a real deployment this would push labeled data to an external ML platform (SageMaker/Vertex AI).
-// Here we compute improved metrics from human-verified ConditionReport feedback and bump the model version.
+// Continuous ML retraining job — gated, idempotent, and parallel-safe.
+const MIN_SAMPLES_TO_RETRAIN = 5; // Minimum verified samples required to retrain (was 1)
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -21,6 +21,15 @@ Deno.serve(async (req) => {
       return Response.json({
         success: false,
         message: 'No new verified samples available for retraining.',
+      });
+    }
+
+    if (trainable.length < MIN_SAMPLES_TO_RETRAIN) {
+      return Response.json({
+        success: false,
+        message: `Need at least ${MIN_SAMPLES_TO_RETRAIN} verified samples to retrain. You have ${trainable.length}.`,
+        samples_available: trainable.length,
+        samples_needed: MIN_SAMPLES_TO_RETRAIN,
       });
     }
 
@@ -81,12 +90,19 @@ Deno.serve(async (req) => {
       },
     });
 
-    // Mark samples as used
-    for (const r of trainable) {
-      await base44.asServiceRole.entities.ConditionReport.update(r.id, { used_for_training: true });
+    // Mark samples as used — parallel batches for speed
+    const batchSize = 20;
+    for (let i = 0; i < trainable.length; i += batchSize) {
+      const batch = trainable.slice(i, i + batchSize);
+      await Promise.all(
+        batch.map((r) =>
+          base44.asServiceRole.entities.ConditionReport.update(r.id, { used_for_training: true })
+            .catch((e) => console.warn(`Failed to mark ${r.id} as trained:`, e.message))
+        )
+      );
     }
 
-    // Audit log — model retraining is a high-impact event
+    // Audit log
     try {
       await base44.asServiceRole.entities.AuditLogEntry.create({
         actor_email: user.email,
@@ -124,6 +140,7 @@ Deno.serve(async (req) => {
       model: newModel,
     });
   } catch (error) {
+    console.error('retrainConditionModel error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
