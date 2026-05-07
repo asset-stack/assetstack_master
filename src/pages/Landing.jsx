@@ -6,6 +6,7 @@ import SectionFallback from '@/components/landing/SectionFallback';
 
 // Below-the-fold — code-split for fast TTI
 const LogoCloud = lazy(() => import('@/components/landing/LogoCloud'));
+const WhatsNewShowcase = lazy(() => import('@/components/landing/WhatsNewShowcase'));
 const ProductTour = lazy(() => import('@/components/landing/ProductTour'));
 const SavingsProof = lazy(() => import('@/components/landing/SavingsProof'));
 const PersonaCards = lazy(() => import('@/components/landing/PersonaCards'));
@@ -33,6 +34,11 @@ export default function Landing() {
         {/* 2 — Social proof strip */}
         <Suspense fallback={<SectionFallback minHeight={120} />}>
           <LogoCloud />
+        </Suspense>
+
+        {/* 2.5 — What's new this release */}
+        <Suspense fallback={<SectionFallback minHeight={720} />}>
+          <WhatsNewShowcase />
         </Suspense>
 
         {/* 3 — The 60-second product tour (the show) */}
