@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Card } from '@/components/ui/card';
 import { TrendingUp, Loader2 } from 'lucide-react';
-import { ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar, CartesianGrid } from 'recharts';
+import { ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar, CartesianGrid, Cell, ReferenceLine } from 'recharts';
 
 export default function CohortPerformance() {
   const [equipment, setEquipment] = useState([]);
@@ -85,10 +85,15 @@ export default function CohortPerformance() {
           <ResponsiveContainer>
             <BarChart data={cohorts.slice(0, 20)} layout="vertical" margin={{ left: 130 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis type="number" />
+              <XAxis type="number" tickFormatter={(v) => `${v}%`} />
               <YAxis dataKey="type" type="category" width={130} tick={{ fontSize: 11 }} />
-              <Tooltip />
-              <Bar dataKey="variance" fill="#8b5cf6" />
+              <Tooltip formatter={(v) => `${v}%`} />
+              <ReferenceLine x={0} stroke="#64748b" />
+              <Bar dataKey="variance" radius={[0, 4, 4, 0]}>
+                {cohorts.slice(0, 20).map((c, i) => (
+                  <Cell key={i} fill={c.variance > 10 ? '#ef4444' : c.variance < -10 ? '#10b981' : '#94a3b8'} />
+                ))}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>

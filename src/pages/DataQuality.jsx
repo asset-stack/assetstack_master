@@ -4,7 +4,14 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ShieldAlert, Loader2, Copy } from 'lucide-react';
-import { detectIssues, detectDuplicates, summariseQuality, ISSUE_SEVERITY } from '@/lib/dataQuality';
+import { detectIssues, detectDuplicates, summariseQuality } from '@/lib/dataQuality';
+
+const SEVERITY_BADGE = {
+  critical: 'bg-red-100 text-red-800',
+  high: 'bg-orange-100 text-orange-800',
+  medium: 'bg-amber-100 text-amber-800',
+  low: 'bg-slate-100 text-slate-800',
+};
 
 export default function DataQuality() {
   const [equipment, setEquipment] = useState([]);
@@ -92,7 +99,7 @@ export default function DataQuality() {
                 <div className="space-y-1">
                   {issues.map((i, idx) => (
                     <div key={idx} className="flex items-start gap-2 text-xs">
-                      <Badge className={`text-[9px] bg-${ISSUE_SEVERITY[i.severity].color}-100 text-${ISSUE_SEVERITY[i.severity].color}-800`}>
+                      <Badge className={`text-[9px] ${SEVERITY_BADGE[i.severity] || SEVERITY_BADGE.low}`}>
                         {i.severity}
                       </Badge>
                       <span className="text-slate-700">{i.message}</span>

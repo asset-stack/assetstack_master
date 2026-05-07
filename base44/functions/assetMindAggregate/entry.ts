@@ -42,7 +42,7 @@ PORTFOLIO DATA:
 - Estimated annual depreciation: $${agg.annualDepreciation.toLocaleString()}
 
 BY LOCATION:
-${agg.byLocation.map((l) => `  ${l.name}: ${l.count} assets, $${l.crc.toLocaleString()} CRC, avg condition ${l.avgCondition.toFixed(2)}`).join('\n')}
+${agg.byLocation.map((l) => `  ${l.name}: ${l.count} assets, $${l.crc.toLocaleString()} CRC, avg condition ${l.avgCondition.toFixed(2)}, ${l.defectCount} defects ($${l.defectCost.toLocaleString()}), ${l.overLife} over-life`).join('\n')}
 
 BY COMPONENT TYPE (top 10):
 ${agg.byComponentType.slice(0, 10).map((c) => `  ${c.type}: ${c.count} units, $${c.crc.toLocaleString()} CRC`).join('\n')}
@@ -70,34 +70,38 @@ function computeAggregations(all) {
   const locMap = {}, ctMap = {};
 
   for (const eq of all) {
-    const s = eq.specifications || {};
-    const crc = Number(s.replacement_value) || (Number(s.price_per_unit) || 0) * (Number(s.quantity) || 0);
-    const lc = Math.max(0, Math.min(1, Number(s.life_consumed) || 0));
-    const grade = Number(s.condition_grade);
-    const baseLife = Number(s.baselife_years);
+  const s = eq.specifications || {};
+  const crc = Number(s.replacement_value) || (Number(s.price_per_unit) || 0) * (Number(s.quantity) || 0);
+  const lc = Math.max(0, Math.min(1, Number(s.life_consumed) || 0));
+  const grade = Number(s.condition_grade);
+  const baseLife = Number(s.baselife_years);
+  const defectCost = Number(s.defect_cost) || 0;
 
-    totalCRC += crc;
-    totalWDV += crc * (1 - lc);
-    if (baseLife > 0) annualDepreciation += crc / baseLife;
-    if (Number.isFinite(grade)) { condSum += grade; condCount++; }
-    if (Number.isFinite(lc)) { lcSum += lc; lcCount++; }
-    if (grade >= 4) criticalCount++;
-    if (lc >= 0.85) overLifeCount++;
-    const u = (s.defect_urgency || '').toLowerCase();
-    if (u.includes('high')) defectsHigh++;
-    else if (u.includes('med')) defectsMedium++;
-    else if (u.includes('low')) defectsLow++;
+  totalCRC += crc;
+  totalWDV += crc * (1 - lc);
+  if (baseLife > 0) annualDepreciation += crc / baseLife;
+  if (Number.isFinite(grade)) { condSum += grade; condCount++; }
+  if (Number.isFinite(lc)) { lcSum += lc; lcCount++; }
+  if (grade >= 4) criticalCount++;
+  if (lc >= 0.85) overLifeCount++;
+  const u = (s.defect_urgency || '').toLowerCase();
+  if (u.includes('high')) defectsHigh++;
+  else if (u.includes('med')) defectsMedium++;
+  else if (u.includes('low')) defectsLow++;
 
-    const loc = eq.location || 'Unassigned';
-    if (!locMap[loc]) locMap[loc] = { name: loc, count: 0, crc: 0, condSum: 0, condN: 0 };
-    locMap[loc].count++;
-    locMap[loc].crc += crc;
-    if (Number.isFinite(grade)) { locMap[loc].condSum += grade; locMap[loc].condN++; }
+  const loc = eq.location || 'Unassigned';
+  if (!locMap[loc]) locMap[loc] = { name: loc, count: 0, crc: 0, condSum: 0, condN: 0, defectCost: 0, defectCount: 0, overLife: 0 };
+  locMap[loc].count++;
+  locMap[loc].crc += crc;
+  locMap[loc].defectCost += defectCost;
+  if (u) locMap[loc].defectCount++;
+  if (lc >= 0.85) locMap[loc].overLife++;
+  if (Number.isFinite(grade)) { locMap[loc].condSum += grade; locMap[loc].condN++; }
 
-    const ct = s.component_type || 'Other';
-    if (!ctMap[ct]) ctMap[ct] = { type: ct, count: 0, crc: 0 };
-    ctMap[ct].count++;
-    ctMap[ct].crc += crc;
+  const ct = s.component_type || 'Other';
+  if (!ctMap[ct]) ctMap[ct] = { type: ct, count: 0, crc: 0 };
+  ctMap[ct].count++;
+  ctMap[ct].crc += crc;
   }
 
   return {

@@ -115,6 +115,26 @@ export default function FundingOptimiser() {
         </Card>
       </div>
 
+      {result.spend > 0 && (
+        <Card className="p-4 mb-5 bg-gradient-to-r from-indigo-50 to-emerald-50 border-indigo-100">
+          <div className="text-xs uppercase tracking-wider text-indigo-700 font-semibold mb-1">Optimiser efficiency</div>
+          <div className="text-sm text-slate-700">
+            Each dollar spent buys{' '}
+            <span className="font-bold text-indigo-700 tabular-nums">
+              {(result.totalRiskReduction / result.spend * 1000).toFixed(2)}
+            </span>{' '}
+            risk-reduction points per $1k — versus{' '}
+            <span className="font-bold text-slate-500 tabular-nums">
+              {result.candidateCount > 0
+                ? (result.deferred.reduce((s, d) => s + d.riskReduction, 0) /
+                    Math.max(1, result.deferred.reduce((s, d) => s + d.cost, 0)) * 1000).toFixed(2)
+                : '0'}
+            </span>{' '}
+            for the deferred pool.
+          </div>
+        </Card>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <Card className="p-4">
           <h3 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
