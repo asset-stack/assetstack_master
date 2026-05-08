@@ -10,7 +10,6 @@ import CapitalPlanFormDialog from '@/components/capital-plan/CapitalPlanFormDial
 import FinanceNav from '@/components/finance/FinanceNav';
 import FinanceHeader from '@/components/finance/FinanceHeader';
 import { exportFinanceCSV } from '@/components/finance/exportFinanceCSV';
-import { calcDoNothingCost } from '@/lib/doNothingCost';
 
 export default function CapitalPlanPage() {
   const [items, setItems] = useState([]);
@@ -57,13 +56,19 @@ export default function CapitalPlanPage() {
             <Button
               variant="outline"
               onClick={() => {
+                const consMult = { minor: 1.2, moderate: 1.6, major: 2.4, catastrophic: 3.5 };
+                const likeMult = { unlikely: 0.3, possible: 0.6, likely: 1.0, almost_certain: 1.3 };
                 const rows = filtered.map((i) => ({
                   Asset: i.equipment_name,
                   Type: i.asset_type,
                   Location: i.location_name,
                   ReplacementYear: i.replacement_year,
                   ReplacementCost: i.replacement_cost,
-                  DoNothingCost: calcDoNothingCost(i),
+                  DoNothingCost: Math.round(
+                    (i.replacement_cost || 0)
+                    * (consMult[i.consequence_of_failure] ?? 1.6)
+                    * (likeMult[i.likelihood_of_failure] ?? 0.6)
+                  ),
                   CurrentBookValue: i.current_book_value,
                   ConditionScore: i.condition_score,
                   RiskScore: i.risk_score,
