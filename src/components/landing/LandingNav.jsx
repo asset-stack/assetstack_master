@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Menu, X } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 import BrandLogo from './BrandLogo';
 
 export default function LandingNav() {
@@ -23,6 +24,10 @@ export default function LandingNav() {
     { href: '/Landing#pricing', label: 'Pricing' },
     { href: '/Landing#security', label: 'Security' },
   ];
+
+  const handleSignIn = () => {
+    base44.auth.redirectToLogin('/CommandCenter');
+  };
 
   return (
     <motion.nav
@@ -60,6 +65,9 @@ export default function LandingNav() {
         </div>
 
         <div className="hidden lg:flex items-center gap-1">
+          <Button onClick={handleSignIn} variant="ghost" size="sm" className="text-slate-700 text-[13px] font-medium">
+            Sign in
+          </Button>
           <a href="#contact">
             <Button size="sm" className="bg-primary hover:bg-primary/90 text-white elevation-2 text-[13px] font-semibold">
               Book a demo <ArrowRight className="w-3.5 h-3.5 ml-1" />
@@ -85,6 +93,9 @@ export default function LandingNav() {
               </a>
             )
           )}
+          <Button onClick={handleSignIn} variant="outline" className="w-full mt-2">
+            Sign in
+          </Button>
           <a href="#contact" className="block" onClick={() => setMobileOpen(false)}>
             <Button className="w-full mt-2 bg-primary hover:bg-primary/90 text-white">Book a demo</Button>
           </a>
