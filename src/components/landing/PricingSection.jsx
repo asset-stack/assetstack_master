@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { Check, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -81,7 +80,7 @@ export default function PricingSection() {
                 </div>
               </div>
 
-              <Link to="/CommandCenter">
+              <a href="#contact">
                 <Button
                   className={`w-full h-10 text-[13px] font-semibold rounded-lg ${
                     tier.highlight
@@ -91,7 +90,7 @@ export default function PricingSection() {
                 >
                   {tier.cta} <ArrowRight className="w-3.5 h-3.5 ml-1" />
                 </Button>
-              </Link>
+              </a>
 
               <ul className="mt-6 space-y-2.5">
                 {tier.features.map((f) => (

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { Briefcase, Wallet, HardHat, Building2, ArrowRight, Check } from 'lucide-react';
 
 const PERSONAS = [
@@ -10,7 +9,6 @@ const PERSONAS = [
     label: 'Asset Manager',
     headline: 'Your backlog, condition and capital plan — at a glance',
     bullets: ['Live backlog reduction', 'Risk-ranked renewals', 'IIMM-aligned reporting'],
-    cta: { label: 'Open Funding Optimiser', href: '/FundingOptimiser' },
     accent: 'from-indigo-500 to-blue-500',
   },
   {
@@ -19,7 +17,6 @@ const PERSONAS = [
     label: 'CFO / Finance',
     headline: 'Defensible depreciation and verified ROI in one ledger',
     bullets: ['Audit-grade WDV vs CRC', 'Verified Savings Ledger', 'Multi-year capital scenarios'],
-    cta: { label: 'Open Valuation', href: '/Valuation' },
     accent: 'from-emerald-500 to-teal-500',
   },
   {
@@ -28,7 +25,6 @@ const PERSONAS = [
     label: 'Field Engineer',
     headline: 'Mobile-first inspection cycles, photos and bulk updates',
     bullets: ['Offline-capable surveys', 'AI photo defect detection', 'Bulk condition updates'],
-    cta: { label: 'Open Field Survey', href: '/FieldSurvey' },
     accent: 'from-amber-500 to-orange-500',
   },
   {
@@ -37,7 +33,6 @@ const PERSONAS = [
     label: 'Executive',
     headline: 'Portfolio health, climate risk and savings in one view',
     bullets: ['Command centre dashboard', 'Climate-adjusted lifespans', 'Exec-ready briefings'],
-    cta: { label: 'Open Command Center', href: '/CommandCenter' },
     accent: 'from-rose-500 to-pink-500',
   },
 ];
@@ -123,9 +118,9 @@ export default function PersonaSwitcher() {
                     </li>
                   ))}
                 </ul>
-                <Link to={active.cta.href} className="mt-6 inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary hover:gap-2.5 transition-all">
-                  {active.cta.label} <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+                <a href="#contact" className="mt-6 inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary hover:gap-2.5 transition-all">
+                  Book a demo for your team <ArrowRight className="w-3.5 h-3.5" />
+                </a>
               </div>
             </div>
           </motion.div>

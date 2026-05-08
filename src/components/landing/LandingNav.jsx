@@ -60,14 +60,11 @@ export default function LandingNav() {
         </div>
 
         <div className="hidden lg:flex items-center gap-1">
-          <Link to="/CommandCenter">
-            <Button variant="ghost" size="sm" className="text-slate-700 text-[13px] font-medium">Sign in</Button>
-          </Link>
-          <Link to="/CommandCenter">
+          <a href="#contact">
             <Button size="sm" className="bg-primary hover:bg-primary/90 text-white elevation-2 text-[13px] font-semibold">
               Book a demo <ArrowRight className="w-3.5 h-3.5 ml-1" />
             </Button>
-          </Link>
+          </a>
         </div>
 
         <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-2 text-slate-700">
@@ -88,9 +85,9 @@ export default function LandingNav() {
               </a>
             )
           )}
-          <Link to="/CommandCenter" className="block">
+          <a href="#contact" className="block" onClick={() => setMobileOpen(false)}>
             <Button className="w-full mt-2 bg-primary hover:bg-primary/90 text-white">Book a demo</Button>
-          </Link>
+          </a>
         </div>
       )}
     </motion.nav>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play, ShieldCheck } from 'lucide-react';
 import HeroProductCanvas from './HeroProductCanvas';
@@ -73,11 +72,11 @@ export default function LandingHero() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-9 flex flex-col sm:flex-row gap-2.5 justify-center items-center"
         >
-          <Link to="/CommandCenter">
+          <a href="#contact">
             <Button size="lg" className="bg-primary hover:bg-primary/90 text-white elevation-2 h-11 px-6 text-[14px] font-semibold rounded-lg">
-              Open the platform <ArrowRight className="w-4 h-4 ml-1.5" />
+              Book a demo <ArrowRight className="w-4 h-4 ml-1.5" />
             </Button>
-          </Link>
+          </a>
           <a href="#tour">
             <Button size="lg" variant="outline" className="h-11 px-6 text-[14px] font-semibold border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 rounded-lg">
               <Play className="w-3.5 h-3.5 mr-1.5 fill-slate-700" /> Watch 60-second tour

@@ -21,6 +21,7 @@ const PricingSection = lazy(() => import('@/components/landing/PricingSection'))
 const FirstWeekDeliverables = lazy(() => import('@/components/landing/FirstWeekDeliverables'));
 const FAQ = lazy(() => import('@/components/landing/FAQ'));
 const FinalCTA = lazy(() => import('@/components/landing/FinalCTA'));
+const ContactSection = lazy(() => import('@/components/landing/ContactSection'));
 const LandingFooter = lazy(() => import('@/components/landing/LandingFooter'));
 
 export default function Landing() {
@@ -109,6 +110,11 @@ export default function Landing() {
         {/* 16 — Final CTA */}
         <Suspense fallback={<SectionFallback minHeight={420} />}>
           <FinalCTA />
+        </Suspense>
+
+        {/* 17 — Contact form */}
+        <Suspense fallback={<SectionFallback minHeight={520} />}>
+          <ContactSection />
         </Suspense>
       </main>
 

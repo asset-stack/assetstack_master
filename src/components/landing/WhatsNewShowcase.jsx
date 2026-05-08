@@ -1,9 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import {
   Target, FlaskConical, ClipboardCheck, TrendingUp, Waves,
-  Camera, MessageSquare, Edit3, ShieldAlert, Sparkles, ArrowRight
+  Camera, MessageSquare, Edit3, ShieldAlert, Sparkles
 } from 'lucide-react';
 
 const features = [
@@ -13,7 +12,6 @@ const features = [
     desc: 'Knapsack-style solver picks the renewal mix that maximises risk reduction per dollar — under any budget cap.',
     badge: 'Capital planning',
     accent: 'from-indigo-500 to-blue-500',
-    href: '/FundingOptimiser',
   },
   {
     icon: FlaskConical,
@@ -21,7 +19,6 @@ const features = [
     desc: 'What-if sliders for budget, inflation, deferral and climate stress — see backlog projections rebuild live.',
     badge: 'Strategy',
     accent: 'from-violet-500 to-purple-500',
-    href: '/ScenarioModeller',
   },
   {
     icon: MessageSquare,
@@ -29,7 +26,6 @@ const features = [
     desc: 'Ask portfolio-level questions in plain English. The LLM aggregates across every asset, location and ledger entry.',
     badge: 'AI assistant',
     accent: 'from-fuchsia-500 to-pink-500',
-    href: '/AIAssistant',
   },
   {
     icon: ClipboardCheck,
@@ -37,7 +33,6 @@ const features = [
     desc: 'Auto-derived inspection cadence per asset class with overdue/at-risk surfacing — never miss a regulatory window.',
     badge: 'Field ops',
     accent: 'from-emerald-500 to-teal-500',
-    href: '/InspectionCycles',
   },
   {
     icon: TrendingUp,
@@ -45,7 +40,6 @@ const features = [
     desc: 'Spot systemic reliability issues — actual vs expected wear across like-for-like asset cohorts.',
     badge: 'Intelligence',
     accent: 'from-cyan-500 to-sky-500',
-    href: '/CohortPerformance',
   },
   {
     icon: Waves,
@@ -53,7 +47,6 @@ const features = [
     desc: 'Coastal salt-spray and exposure zones recalculate useful-life and replacement value at risk for every asset.',
     badge: 'Climate',
     accent: 'from-blue-500 to-cyan-500',
-    href: '/ClimateRisk',
   },
   {
     icon: Camera,
@@ -61,7 +54,6 @@ const features = [
     desc: 'AI compares before/after photos of heritage and critical assets — flagging drift, damage and degradation.',
     badge: 'Heritage',
     accent: 'from-orange-500 to-amber-500',
-    href: '/PhotoDiff',
   },
   {
     icon: Edit3,
@@ -69,7 +61,6 @@ const features = [
     desc: 'Field teams update hundreds of conditions in a single sweep — fully audited and offline-friendly.',
     badge: 'Field ops',
     accent: 'from-rose-500 to-red-500',
-    href: '/BulkUpdate',
   },
   {
     icon: ShieldAlert,
@@ -77,7 +68,6 @@ const features = [
     desc: 'Detects duplicates, anomalies and missing fields — keeps the register audit-ready at all times.',
     badge: 'Hygiene',
     accent: 'from-amber-500 to-yellow-500',
-    href: '/DataQuality',
   },
 ];
 
@@ -124,10 +114,7 @@ export default function WhatsNewShowcase() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
               >
-                <Link
-                  to={f.href}
-                  className="group block h-full rounded-2xl border border-slate-200 bg-white p-6 hover-lift hover:border-slate-300 elevation-1 hover:elevation-2 transition-all"
-                >
+                <div className="group block h-full rounded-2xl border border-slate-200 bg-white p-6 hover-lift hover:border-slate-300 elevation-1 hover:elevation-2 transition-all">
                   <div className={`inline-flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br ${f.accent} text-white shadow-lg mb-4`}>
                     <Icon className="w-5 h-5" />
                   </div>
@@ -137,12 +124,8 @@ export default function WhatsNewShowcase() {
                     </span>
                   </div>
                   <h3 className="text-lg font-semibold text-slate-900 mb-2">{f.title}</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-4">{f.desc}</p>
-                  <div className="flex items-center gap-1.5 text-sm font-medium text-indigo-600 group-hover:gap-2.5 transition-all">
-                    Open module
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </div>
-                </Link>
+                  <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
+                </div>
               </motion.div>
             );
           })}
@@ -163,20 +146,13 @@ export default function WhatsNewShowcase() {
             Upload your assets, set a budget cap, and watch the optimiser rank renewals by risk-reduction-per-dollar in seconds.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              to="/FundingOptimiser"
+            <a
+              href="#contact"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-slate-900 font-semibold hover:bg-slate-100 transition-colors"
             >
               <Target className="w-4 h-4" />
-              Launch Optimiser
-            </Link>
-            <Link
-              to="/AIAssistant"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/20 text-white font-semibold hover:bg-white/10 transition-colors"
-            >
-              <MessageSquare className="w-4 h-4" />
-              Ask AssetMind
-            </Link>
+              Book a demo
+            </a>
           </div>
         </motion.div>
       </div>

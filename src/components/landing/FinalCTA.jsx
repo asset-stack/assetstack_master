@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play } from 'lucide-react';
 
@@ -34,11 +33,11 @@ export default function FinalCTA() {
             </p>
 
             <div className="mt-9 flex flex-col sm:flex-row gap-2.5">
-              <Link to="/CommandCenter">
+              <a href="#contact">
                 <Button size="lg" className="bg-white hover:bg-slate-100 text-slate-900 elevation-2 h-12 px-7 text-[14px] font-semibold rounded-lg">
                   Book a demo <ArrowRight className="w-4 h-4 ml-1.5" />
                 </Button>
-              </Link>
+              </a>
               <a href="#tour">
                 <Button size="lg" variant="outline" className="h-12 px-7 text-[14px] font-semibold border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/30 rounded-lg backdrop-blur">
                   <Play className="w-3.5 h-3.5 mr-1.5 fill-white" /> Watch the 60-second tour

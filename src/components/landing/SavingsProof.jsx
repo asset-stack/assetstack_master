@@ -97,7 +97,7 @@ export default function SavingsProof() {
           </div>
 
           <div className="px-6 py-4 border-t border-white/10 flex items-center justify-between text-[11px]">
-            <span className="text-slate-400 font-mono">Sample preview · live ledger lives in /SavingsLedger</span>
+            <span className="text-slate-400 font-mono">Sample preview · full ledger available during demo</span>
             <span className="text-emerald-400 font-mono inline-flex items-center gap-1">
               <ShieldCheck className="w-3 h-3" /> Audit-grade evidence trail
             </span>

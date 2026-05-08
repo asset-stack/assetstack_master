@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { Calendar, ArrowRight, Check } from 'lucide-react';
 
 const DAYS = [
@@ -57,12 +56,9 @@ export default function FirstWeekDeliverables() {
         </div>
 
         <div className="mt-12 flex flex-col sm:flex-row gap-3 justify-center items-center">
-          <Link to="/CommandCenter" className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-lg text-[13px] font-bold elevation-2 transition-colors">
-            Start your week 1 <ArrowRight className="w-4 h-4" />
-          </Link>
-          <Link to="/CaseStudies" className="text-[13px] font-semibold text-slate-700 hover:text-slate-900 transition-colors">
-            See real customer stories →
-          </Link>
+          <a href="#contact" className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-lg text-[13px] font-bold elevation-2 transition-colors">
+            Book a demo <ArrowRight className="w-4 h-4" />
+          </a>
         </div>
       </div>
     </section>
