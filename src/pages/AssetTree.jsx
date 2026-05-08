@@ -9,7 +9,6 @@ export default function AssetTree() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
       <main className="px-4 sm:px-6 lg:px-8 py-6 max-w-[1480px] mx-auto">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-5">
           <div>
             <div className="flex items-center gap-2.5 mb-1">
@@ -24,7 +23,6 @@ export default function AssetTree() {
             </p>
           </div>
 
-          {/* View switcher */}
           <div className="flex items-center bg-white border border-slate-200 rounded-xl p-1 shadow-sm self-start">
             <button
               onClick={() => setView('register')}
