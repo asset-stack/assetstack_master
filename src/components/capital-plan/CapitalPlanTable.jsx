@@ -19,6 +19,25 @@ const STATUS_COLOR = {
   cancelled: 'bg-rose-100 text-rose-700',
 };
 
+// Do-Nothing Cost = replacement_cost × consequence × likelihood multipliers
+// Models what failure would actually cost (downtime + collateral + emergency replacement premium).
+const CONSEQUENCE_MULT = { minor: 1.2, moderate: 1.6, major: 2.4, catastrophic: 3.5 };
+const LIKELIHOOD_MULT = { unlikely: 0.3, possible: 0.6, likely: 1.0, almost_certain: 1.3 };
+
+function doNothingCost(item) {
+  const base = item.replacement_cost || 0;
+  const c = CONSEQUENCE_MULT[item.consequence_of_failure] ?? 1.6;
+  const l = LIKELIHOOD_MULT[item.likelihood_of_failure] ?? 0.6;
+  return Math.round(base * c * l);
+}
+
+function fmtCompact(n) {
+  if (!n) return '$0';
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `$${Math.round(n / 1_000)}k`;
+  return `$${n}`;
+}
+
 export default function CapitalPlanTable({ items, onEdit }) {
   if (!items.length) {
     return (
@@ -38,6 +57,7 @@ export default function CapitalPlanTable({ items, onEdit }) {
             <th className="text-left px-3 py-2.5">Location</th>
             <th className="text-left px-3 py-2.5">FY</th>
             <th className="text-right px-3 py-2.5">Replacement cost</th>
+            <th className="text-right px-3 py-2.5" title="Estimated cost if we don't fund this and it fails — includes downtime, collateral damage, and emergency replacement premium.">Do-nothing cost</th>
             <th className="text-left px-3 py-2.5">Condition</th>
             <th className="text-left px-3 py-2.5">Priority</th>
             <th className="text-left px-3 py-2.5">Status</th>
@@ -59,6 +79,9 @@ export default function CapitalPlanTable({ items, onEdit }) {
                 <td className="px-3 py-3 text-[12px] tabular-nums text-slate-700 font-semibold">FY{item.replacement_year}</td>
                 <td className="px-3 py-3 text-right text-[12px] tabular-nums font-semibold text-slate-900">
                   ${(item.replacement_cost || 0).toLocaleString()}
+                </td>
+                <td className="px-3 py-3 text-right text-[12px] tabular-nums font-bold text-rose-600" title="If we don't fund this">
+                  {fmtCompact(doNothingCost(item))}
                 </td>
                 <td className="px-3 py-3">
                   <span className={`text-[12px] font-semibold tabular-nums ${condColor}`}>

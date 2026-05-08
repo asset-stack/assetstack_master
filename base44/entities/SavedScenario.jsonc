@@ -1,0 +1,54 @@
+{
+  "name": "SavedScenario",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Scenario label, e.g. 'Status Quo FY27'"
+    },
+    "description": {
+      "type": "string",
+      "description": "What this scenario represents and why it matters"
+    },
+    "annual_budget": {
+      "type": "number"
+    },
+    "inflation_pct": {
+      "type": "number",
+      "description": "Inflation as a percentage, e.g. 3 for 3%"
+    },
+    "deferral_pct": {
+      "type": "number",
+      "description": "Renewal deferral rate as a percentage"
+    },
+    "climate_stress_pct": {
+      "type": "number",
+      "description": "Climate stress multiplier as percentage, 100 = baseline"
+    },
+    "final_backlog": {
+      "type": "number",
+      "description": "Cached projected backlog in year 10"
+    },
+    "delta_vs_baseline": {
+      "type": "number",
+      "description": "Cached delta vs baseline scenario"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false
+    },
+    "owner_email": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "annual_budget"
+  ]
+}

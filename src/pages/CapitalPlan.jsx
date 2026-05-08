@@ -10,6 +10,7 @@ import CapitalPlanFormDialog from '@/components/capital-plan/CapitalPlanFormDial
 import FinanceNav from '@/components/finance/FinanceNav';
 import FinanceHeader from '@/components/finance/FinanceHeader';
 import { exportFinanceCSV } from '@/components/finance/exportFinanceCSV';
+import { calcDoNothingCost } from '@/lib/doNothingCost';
 
 export default function CapitalPlanPage() {
   const [items, setItems] = useState([]);
@@ -62,6 +63,7 @@ export default function CapitalPlanPage() {
                   Location: i.location_name,
                   ReplacementYear: i.replacement_year,
                   ReplacementCost: i.replacement_cost,
+                  DoNothingCost: calcDoNothingCost(i),
                   CurrentBookValue: i.current_book_value,
                   ConditionScore: i.condition_score,
                   RiskScore: i.risk_score,

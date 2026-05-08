@@ -8,7 +8,11 @@ import {
 import { base44 } from '@/api/base44Client';
 import FinanceNav from '@/components/finance/FinanceNav';
 import FinanceHeader from '@/components/finance/FinanceHeader';
+import CFORatiosBar from '@/components/finance/CFORatiosBar';
+import BoardPackButton from '@/components/finance/BoardPackButton';
+import VarianceAlerts from '@/components/finance/VarianceAlerts';
 import { deriveCRC, deriveWDV, deriveDefectUrgency, fmtMoney } from '@/lib/assetMetrics';
+import { computeCFORatios } from '@/lib/cfoRatios';
 
 export default function Finance() {
   const { data: equipment = [], isLoading: loadingEq } = useQuery({
@@ -53,6 +57,11 @@ export default function Finance() {
     const capitalSpend = capitalItems.reduce((s, i) => s + (i.replacement_cost || 0), 0);
     return { crc, wdv, defects, defectCost, urgentDefects, allocated, spent, capitalSpend };
   }, [equipment, budgets, capitalItems]);
+
+  const ratios = useMemo(
+    () => computeCFORatios({ equipment, budgets, capitalItems }),
+    [equipment, budgets, capitalItems]
+  );
 
   const cards = [
     {
@@ -134,6 +143,16 @@ export default function Finance() {
           title="Finance"
           subtitle="Asset valuation, backlog, capital planning and budgets — all in one place."
           accent="indigo"
+          actions={
+            !loadingEq && (
+              <BoardPackButton
+                ratios={ratios}
+                capitalItems={capitalItems}
+                budgets={budgets}
+                totals={totals}
+              />
+            )
+          }
         />
 
         <FinanceNav />
@@ -145,11 +164,17 @@ export default function Finance() {
           </div>
         ) : (
           <>
+            <VarianceAlerts budgets={budgets} />
+
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
               <KpiCard label="Replacement value" value={fmtMoney(totals.crc)} sub="Total CRC" tone="indigo" />
               <KpiCard label="Written-down value" value={fmtMoney(totals.wdv)} sub={`${totals.crc > 0 ? Math.round((totals.wdv / totals.crc) * 100) : 0}% of CRC`} tone="emerald" />
               <KpiCard label="Defect exposure" value={fmtMoney(totals.defectCost)} sub={`${totals.defects} defects`} tone="rose" />
               <KpiCard label="Budget allocated" value={fmtMoney(totals.allocated)} sub={`Spent ${fmtMoney(totals.spent)}`} tone="amber" />
+            </div>
+
+            <div className="mb-5">
+              <CFORatiosBar ratios={ratios} />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">

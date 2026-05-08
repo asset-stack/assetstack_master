@@ -7,6 +7,7 @@ import { projectBacklog } from '@/lib/optimiser';
 import { fmtMoney } from '@/lib/assetMetrics';
 import FinanceNav from '@/components/finance/FinanceNav';
 import FinanceHeader from '@/components/finance/FinanceHeader';
+import SavedScenariosPanel from '@/components/scenarios/SavedScenariosPanel';
 import { ResponsiveContainer, ComposedChart, XAxis, YAxis, Tooltip, Bar, Line, Legend, CartesianGrid } from 'recharts';
 
 export default function ScenarioModeller() {
@@ -120,6 +121,18 @@ export default function ScenarioModeller() {
             {scenario.reduce((s, p) => s + p.renewed, 0)}
           </div>
         </Card>
+      </div>
+
+      <div className="mb-5">
+        <SavedScenariosPanel
+          current={{ annualBudget, inflation, deferralRate, climateStress, finalBacklog, delta }}
+          onLoad={(s) => {
+            setAnnualBudget(s.annual_budget);
+            setInflation(s.inflation_pct);
+            setDeferralRate(s.deferral_pct);
+            setClimateStress(s.climate_stress_pct);
+          }}
+        />
       </div>
 
       <Card className="p-5">

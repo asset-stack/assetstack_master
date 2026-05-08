@@ -6,6 +6,7 @@ import BudgetStats from '@/components/cost-center/BudgetStats';
 import BudgetTable from '@/components/cost-center/BudgetTable';
 import CostBreakdownChart from '@/components/cost-center/CostBreakdownChart';
 import BudgetFormDialog from '@/components/cost-center/BudgetFormDialog';
+import VarianceAlerts from '@/components/cost-center/VarianceAlerts';
 import FinanceNav from '@/components/finance/FinanceNav';
 import FinanceHeader from '@/components/finance/FinanceHeader';
 import { exportFinanceCSV } from '@/components/finance/exportFinanceCSV';
@@ -70,6 +71,8 @@ export default function CostCenterPage() {
       <FinanceNav />
 
       <BudgetStats budgets={budgets} workOrders={workOrders} />
+
+      {!loading && <VarianceAlerts budgets={budgets} />}
 
       <div className="grid lg:grid-cols-[1fr_360px] gap-6">
         {loading ? (
