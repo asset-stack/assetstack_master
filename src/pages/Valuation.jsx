@@ -8,6 +8,8 @@ import PortfolioValueStats from '@/components/equipment/PortfolioValueStats';
 import RenewalForecastChart from '@/components/valuation/RenewalForecastChart';
 import ValuationByLocation from '@/components/valuation/ValuationByLocation';
 import ConditionDistribution from '@/components/valuation/ConditionDistribution';
+import FinanceNav from '@/components/finance/FinanceNav';
+import FinanceHeader from '@/components/finance/FinanceHeader';
 
 export default function Valuation() {
   const { data: equipment = [], isLoading, refetch } = useQuery({
@@ -36,26 +38,25 @@ export default function Valuation() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-[1480px] mx-auto px-4 sm:px-6 py-6">
-        <div className="flex items-center justify-between mb-6 gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
-              <Wallet className="w-5 h-5 text-indigo-700" />
-            </div>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-semibold text-slate-900">Asset Valuation</h1>
-              <p className="text-sm text-slate-500">Replacement cost, written-down value, and 10-year renewal forecast</p>
-            </div>
-          </div>
-          <Button
-            variant="outline"
-            onClick={() => recompute.mutate()}
-            disabled={recompute.isPending}
-            className="h-10"
-          >
-            {recompute.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
-            Recompute Metrics
-          </Button>
-        </div>
+        <FinanceHeader
+          icon={Wallet}
+          title="Asset Valuation"
+          subtitle="Replacement cost, written-down value, and 10-year renewal forecast"
+          accent="indigo"
+          actions={
+            <Button
+              variant="outline"
+              onClick={() => recompute.mutate()}
+              disabled={recompute.isPending}
+              className="h-10"
+            >
+              {recompute.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+              Recompute Metrics
+            </Button>
+          }
+        />
+
+        <FinanceNav />
 
         {isLoading ? (
           <div className="bg-white rounded-xl border border-slate-200 p-12 text-center text-slate-500">

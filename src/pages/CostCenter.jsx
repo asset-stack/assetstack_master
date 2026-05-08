@@ -6,6 +6,9 @@ import BudgetStats from '@/components/cost-center/BudgetStats';
 import BudgetTable from '@/components/cost-center/BudgetTable';
 import CostBreakdownChart from '@/components/cost-center/CostBreakdownChart';
 import BudgetFormDialog from '@/components/cost-center/BudgetFormDialog';
+import FinanceNav from '@/components/finance/FinanceNav';
+import FinanceHeader from '@/components/finance/FinanceHeader';
+import { exportFinanceCSV } from '@/components/finance/exportFinanceCSV';
 
 export default function CostCenterPage() {
   const [budgets, setBudgets] = useState([]);
@@ -29,22 +32,42 @@ export default function CostCenterPage() {
 
   return (
     <div className="p-6 max-w-[1480px] mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 flex items-center gap-2">
-            <Wallet className="w-7 h-7 text-slate-700" /> Cost & Budget Center
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">Budget vs actual, P&L roll-ups, and forecasted spend across your portfolio.</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <Download className="w-4 h-4 mr-1" /> Export
-          </Button>
-          <Button onClick={() => { setEditing(null); setFormOpen(true); }}>
-            <Plus className="w-4 h-4 mr-1" /> New budget
-          </Button>
-        </div>
-      </div>
+      <FinanceHeader
+        icon={Wallet}
+        title="Cost & Budget Center"
+        subtitle="Budget vs actual, P&L roll-ups, and forecasted spend across your portfolio."
+        accent="amber"
+        actions={
+          <>
+            <Button
+              variant="outline"
+              onClick={() => {
+                const rows = budgets.map((b) => ({
+                  Name: b.name,
+                  FiscalYear: b.fiscal_year,
+                  Scope: b.scope_type,
+                  ScopeName: b.scope_name || '',
+                  Category: b.category,
+                  Allocated: b.allocated_amount || 0,
+                  Spent: b.spent_amount || 0,
+                  Committed: b.committed_amount || 0,
+                  Remaining: (b.allocated_amount || 0) - (b.spent_amount || 0) - (b.committed_amount || 0),
+                  Currency: b.currency || 'USD',
+                  Status: b.status,
+                }));
+                exportFinanceCSV(`budgets-${Date.now()}.csv`, rows);
+              }}
+            >
+              <Download className="w-4 h-4 mr-1" /> Export
+            </Button>
+            <Button onClick={() => { setEditing(null); setFormOpen(true); }}>
+              <Plus className="w-4 h-4 mr-1" /> New budget
+            </Button>
+          </>
+        }
+      />
+
+      <FinanceNav />
 
       <BudgetStats budgets={budgets} workOrders={workOrders} />
 

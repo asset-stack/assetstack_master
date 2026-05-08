@@ -7,6 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { deriveDefectUrgency, deriveCRC, deriveCondition, fmtMoney } from '@/lib/assetMetrics';
+import FinanceNav from '@/components/finance/FinanceNav';
+import FinanceHeader from '@/components/finance/FinanceHeader';
+import { exportFinanceCSV } from '@/components/finance/exportFinanceCSV';
+import { Download } from 'lucide-react';
 
 const URGENCY_RANK = { High: 0, Medium: 1, Low: 2 };
 
@@ -72,15 +76,34 @@ export default function DefectBacklog() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-[1480px] mx-auto px-4 sm:px-6 py-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center">
-            <AlertOctagon className="w-5 h-5 text-rose-700" />
-          </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-semibold text-slate-900">Defect Backlog</h1>
-            <p className="text-sm text-slate-500">Outstanding defects across the portfolio, ranked by urgency</p>
-          </div>
-        </div>
+        <FinanceHeader
+          icon={AlertOctagon}
+          title="Defect Backlog"
+          subtitle="Outstanding defects across the portfolio, ranked by urgency"
+          accent="rose"
+          actions={
+            <Button
+              variant="outline"
+              onClick={() => {
+                const rows = filtered.map((d) => ({
+                  Asset: d.eq.name,
+                  Location: d.eq.location,
+                  Condition: deriveCondition(d.eq) ? `C${deriveCondition(d.eq)}` : '',
+                  Urgency: d.urgency || '',
+                  Action: d.action || '',
+                  Description: d.description || '',
+                  EstimatedCost: d.cost || deriveCRC(d.eq) * 0.2,
+                }));
+                exportFinanceCSV(`defect-backlog-${Date.now()}.csv`, rows);
+              }}
+              className="h-10"
+            >
+              <Download className="w-4 h-4 mr-2" /> Export CSV
+            </Button>
+          }
+        />
+
+        <FinanceNav />
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
           {[

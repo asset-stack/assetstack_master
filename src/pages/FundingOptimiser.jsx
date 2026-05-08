@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Wallet, TrendingDown, Target, Sparkles, Loader2, Download } from 'lucide-react';
 import { optimiseRenewals } from '@/lib/optimiser';
 import { fmtMoney } from '@/lib/assetMetrics';
+import FinanceNav from '@/components/finance/FinanceNav';
+import FinanceHeader from '@/components/finance/FinanceHeader';
 
 export default function FundingOptimiser() {
   const [equipment, setEquipment] = useState([]);
@@ -59,14 +61,13 @@ export default function FundingOptimiser() {
 
   return (
     <div className="p-4 md:p-6 max-w-[1480px] mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
-          <Target className="w-7 h-7 text-indigo-600" /> Funding Optimiser
-        </h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Given a budget, the optimiser picks the highest risk-reduction-per-dollar renewals.
-        </p>
-      </div>
+      <FinanceHeader
+        icon={Target}
+        title="Funding Optimiser"
+        subtitle="Given a budget, the optimiser picks the highest risk-reduction-per-dollar renewals."
+        accent="emerald"
+      />
+      <FinanceNav />
 
       <Card className="p-5 mb-5">
         <div className="flex flex-col md:flex-row md:items-end gap-4">

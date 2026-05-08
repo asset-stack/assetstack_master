@@ -7,6 +7,9 @@ import SpendByYearChart from '@/components/capital-plan/SpendByYearChart';
 import RiskMatrix from '@/components/capital-plan/RiskMatrix';
 import CapitalPlanTable from '@/components/capital-plan/CapitalPlanTable';
 import CapitalPlanFormDialog from '@/components/capital-plan/CapitalPlanFormDialog';
+import FinanceNav from '@/components/finance/FinanceNav';
+import FinanceHeader from '@/components/finance/FinanceHeader';
+import { exportFinanceCSV } from '@/components/finance/exportFinanceCSV';
 
 export default function CapitalPlanPage() {
   const [items, setItems] = useState([]);
@@ -43,22 +46,42 @@ export default function CapitalPlanPage() {
 
   return (
     <div className="p-6 max-w-[1480px] mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 flex items-center gap-2">
-            <Calendar className="w-7 h-7 text-slate-700" /> Capital Plan
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">Forward-looking asset replacement planning, risk-prioritised and FY-budgeted.</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <Download className="w-4 h-4 mr-1" /> Export plan
-          </Button>
-          <Button onClick={() => { setEditing(null); setFormOpen(true); }}>
-            <Plus className="w-4 h-4 mr-1" /> Add to plan
-          </Button>
-        </div>
-      </div>
+      <FinanceHeader
+        icon={Calendar}
+        title="Capital Plan"
+        subtitle="Forward-looking asset replacement planning, risk-prioritised and FY-budgeted."
+        accent="slate"
+        actions={
+          <>
+            <Button
+              variant="outline"
+              onClick={() => {
+                const rows = filtered.map((i) => ({
+                  Asset: i.equipment_name,
+                  Type: i.asset_type,
+                  Location: i.location_name,
+                  ReplacementYear: i.replacement_year,
+                  ReplacementCost: i.replacement_cost,
+                  CurrentBookValue: i.current_book_value,
+                  ConditionScore: i.condition_score,
+                  RiskScore: i.risk_score,
+                  Priority: i.priority,
+                  Status: i.status,
+                  FundingSource: i.funding_source,
+                }));
+                exportFinanceCSV(`capital-plan-${Date.now()}.csv`, rows);
+              }}
+            >
+              <Download className="w-4 h-4 mr-1" /> Export plan
+            </Button>
+            <Button onClick={() => { setEditing(null); setFormOpen(true); }}>
+              <Plus className="w-4 h-4 mr-1" /> Add to plan
+            </Button>
+          </>
+        }
+      />
+
+      <FinanceNav />
 
       <CapitalPlanStats items={items} />
 

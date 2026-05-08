@@ -45,6 +45,7 @@ import PhotoDiff from './pages/PhotoDiff';
 import SavedViews from './pages/SavedViews';
 import BulkUpdate from './pages/BulkUpdate';
 import PortfolioInsights from './pages/PortfolioInsights';
+import Finance from './pages/Finance';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -274,6 +275,11 @@ const AuthenticatedApp = () => {
       <Route path="/PortfolioInsights" element={
             <LayoutWrapper currentPageName="PortfolioInsights">
               <PortfolioInsights />
+            </LayoutWrapper>
+          } />
+      <Route path="/Finance" element={
+            <LayoutWrapper currentPageName="Finance">
+              <Finance />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />

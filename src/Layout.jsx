@@ -64,6 +64,7 @@ const navSections = [
   {
     label: 'Finance',
     items: [
+      { name: 'Finance Hub', icon: Banknote, page: 'Finance' },
       { name: 'Valuation', icon: Banknote, page: 'Valuation' },
       { name: 'Defect Backlog', icon: AlertOctagon, page: 'DefectBacklog' },
       { name: 'Funding Optimiser', icon: Target, page: 'FundingOptimiser' },

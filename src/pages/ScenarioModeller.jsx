@@ -5,6 +5,8 @@ import { Slider } from '@/components/ui/slider';
 import { Loader2, FlaskConical } from 'lucide-react';
 import { projectBacklog } from '@/lib/optimiser';
 import { fmtMoney } from '@/lib/assetMetrics';
+import FinanceNav from '@/components/finance/FinanceNav';
+import FinanceHeader from '@/components/finance/FinanceHeader';
 import { ResponsiveContainer, ComposedChart, XAxis, YAxis, Tooltip, Bar, Line, Legend, CartesianGrid } from 'recharts';
 
 export default function ScenarioModeller() {
@@ -58,14 +60,13 @@ export default function ScenarioModeller() {
 
   return (
     <div className="p-4 md:p-6 max-w-[1480px] mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
-          <FlaskConical className="w-7 h-7 text-purple-600" /> What-If Scenario Modeller
-        </h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Adjust budget, inflation, deferrals, and climate stress to see the 10-year backlog curve shift.
-        </p>
-      </div>
+      <FinanceHeader
+        icon={FlaskConical}
+        title="What-If Scenario Modeller"
+        subtitle="Adjust budget, inflation, deferrals, and climate stress to see the 10-year backlog curve shift."
+        accent="purple"
+      />
+      <FinanceNav />
 
       <Card className="p-5 mb-5">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
