@@ -23,6 +23,8 @@ import AddPhotoFrames from '@/components/scan-analysis/AddPhotoFrames';
 import ScanProgressStrip from '@/components/scan-analysis/ScanProgressStrip';
 import PendingReviewSLA from '@/components/scan-analysis/PendingReviewSLA';
 import BulkVerifyBar from '@/components/scan-analysis/BulkVerifyBar';
+import SmartTriageQueue from '@/components/scan-analysis/SmartTriageQueue';
+import KeyboardReviewMode from '@/components/scan-analysis/KeyboardReviewMode';
 import { toast } from 'sonner';
 
 export default function ScanAnalysisPage() {
@@ -33,6 +35,7 @@ export default function ScanAnalysisPage() {
   const [filter, setFilter] = useState('pending');
   const [selectedFrameId, setSelectedFrameId] = useState(null);
   const [extracting, setExtracting] = useState(false);
+  const [keyboardMode, setKeyboardMode] = useState(false);
   const qc = useQueryClient();
 
   const { data: scans = [], isLoading } = useQuery({
@@ -388,6 +391,15 @@ export default function ScanAnalysisPage() {
 
               {filter === 'pending' && (
                 <div className="mt-3">
+                  <SmartTriageQueue
+                    reports={reports}
+                    onOpenKeyboardMode={() => setKeyboardMode(true)}
+                    onDone={() => {
+                      qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
+                      qc.invalidateQueries({ queryKey: ['pendingTrainingSamples'] });
+                      qc.invalidateQueries({ queryKey: ['workOrders'] });
+                    }}
+                  />
                   <BulkVerifyBar
                     reports={reports}
                     onDone={() => {
@@ -445,6 +457,16 @@ export default function ScanAnalysisPage() {
           qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
           qc.invalidateQueries({ queryKey: ['conditionReports', newScanId] });
           setSelectedScanId(newScanId);
+        }}
+      />
+
+      <KeyboardReviewMode
+        open={keyboardMode}
+        onClose={() => setKeyboardMode(false)}
+        reports={reports}
+        onChanged={() => {
+          qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan?.id] });
+          qc.invalidateQueries({ queryKey: ['workOrders'] });
         }}
       />
     </div>
