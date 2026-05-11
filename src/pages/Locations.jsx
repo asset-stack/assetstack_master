@@ -100,7 +100,7 @@ export default function Locations() {
                 transition={{ delay: idx * 0.03 }}
               >
                 <Link
-                  to={`/Equipment?location=${encodeURIComponent(loc.name)}`}
+                  to={`/LocationDetail?id=${loc.id}`}
                   className="block bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md hover:border-indigo-200 transition-all group"
                 >
                   <div className="flex items-start justify-between mb-3">

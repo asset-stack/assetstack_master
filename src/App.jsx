@@ -46,6 +46,7 @@ import SavedViews from './pages/SavedViews';
 import BulkUpdate from './pages/BulkUpdate';
 import PortfolioInsights from './pages/PortfolioInsights';
 import Finance from './pages/Finance';
+import LocationDetail from './pages/LocationDetail';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -280,6 +281,11 @@ const AuthenticatedApp = () => {
       <Route path="/Finance" element={
             <LayoutWrapper currentPageName="Finance">
               <Finance />
+            </LayoutWrapper>
+          } />
+      <Route path="/LocationDetail" element={
+            <LayoutWrapper currentPageName="Locations">
+              <LocationDetail />
             </LayoutWrapper>
           } />
       <Route path="*" element={<PageNotFound />} />
