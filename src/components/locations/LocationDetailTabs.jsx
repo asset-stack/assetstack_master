@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Cpu, Box, AlertTriangle, Wallet, CalendarDays, ShieldCheck, ExternalLink } from 'lucide-react';
+import { Cpu, Box, AlertTriangle, Wallet, CalendarDays, ShieldCheck, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const sevColor = {
@@ -53,6 +53,13 @@ export default function LocationDetailTabs({ location }) {
 
   const fmt = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n || 0);
 
+  // Fixed/unfixed breakdown
+  const UNFIXED = new Set(['pending', 'approved']);
+  const unfixedAssetIds = new Set(conditionReports.filter(r => UNFIXED.has(r.review_status)).map(r => r.equipment_id).filter(Boolean));
+  const assetsWithStatus = equipment.map(e => ({ ...e, _fixed: !unfixedAssetIds.has(e.id) }));
+  const unfixedCount = assetsWithStatus.filter(a => !a._fixed).length;
+  const fixedCount = assetsWithStatus.length - unfixedCount;
+
   return (
     <Tabs defaultValue="assets" className="w-full">
       <TabsList className="grid w-full grid-cols-5 mb-4">
@@ -64,6 +71,24 @@ export default function LocationDetailTabs({ location }) {
       </TabsList>
 
       <TabsContent value="assets">
+        {/* Fixed/Unfixed summary */}
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          <div className="bg-emerald-50/60 border border-emerald-200 rounded-xl p-3 flex items-center gap-3">
+            <div className="p-2 bg-emerald-100 rounded-lg"><CheckCircle2 className="w-4 h-4 text-emerald-700" /></div>
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Fixed</div>
+              <div className="text-2xl font-semibold text-emerald-700 tabular-nums leading-none mt-0.5">{fixedCount}</div>
+            </div>
+          </div>
+          <div className="bg-rose-50/60 border border-rose-200 rounded-xl p-3 flex items-center gap-3">
+            <div className="p-2 bg-rose-100 rounded-lg"><AlertTriangle className="w-4 h-4 text-rose-700" /></div>
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-rose-700">Unfixed</div>
+              <div className="text-2xl font-semibold text-rose-700 tabular-nums leading-none mt-0.5">{unfixedCount}</div>
+            </div>
+          </div>
+        </div>
+
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
           {equipment.length === 0 ? (
             <p className="text-sm text-slate-500 p-8 text-center">No assets at this location.</p>
@@ -71,6 +96,7 @@ export default function LocationDetailTabs({ location }) {
             <table className="w-full text-sm">
               <thead className="bg-slate-50 text-slate-500 text-xs uppercase">
                 <tr>
+                  <th className="text-left px-4 py-2.5 font-semibold">Condition</th>
                   <th className="text-left px-4 py-2.5 font-semibold">Asset</th>
                   <th className="text-left px-4 py-2.5 font-semibold">Type</th>
                   <th className="text-left px-4 py-2.5 font-semibold">Status</th>
@@ -79,8 +105,15 @@ export default function LocationDetailTabs({ location }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {equipment.map(e => (
+                {assetsWithStatus.map(e => (
                   <tr key={e.id} className="hover:bg-slate-50">
+                    <td className="px-4 py-2.5">
+                      {e._fixed ? (
+                        <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 text-xs gap-1"><CheckCircle2 className="w-3 h-3" />Fixed</Badge>
+                      ) : (
+                        <Badge className="bg-rose-100 text-rose-700 border-rose-200 text-xs gap-1"><AlertTriangle className="w-3 h-3" />Unfixed</Badge>
+                      )}
+                    </td>
                     <td className="px-4 py-2.5 font-medium text-slate-900">{e.name}</td>
                     <td className="px-4 py-2.5 text-slate-600">{e.type}</td>
                     <td className={`px-4 py-2.5 font-medium ${statusColor[e.status] || 'text-slate-500'}`}>{e.status}</td>
