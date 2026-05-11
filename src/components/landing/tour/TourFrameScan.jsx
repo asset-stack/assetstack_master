@@ -27,8 +27,8 @@ export default function TourFrameScan() {
         {/* Image with bboxes */}
         <div className="relative bg-slate-100 overflow-hidden min-h-[300px]">
           <img
-            src="https://images.unsplash.com/photo-1581094288338-2314dddb7ece?w=900&auto=format&fit=crop&q=70"
-            alt="industrial asset"
+            src="https://media.base44.com/images/public/6970c68cc08dbe7897c72f22/05fadbcb2_generated_image.png"
+            alt="Corroded industrial water pump under AI inspection"
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-slate-900/10" />
