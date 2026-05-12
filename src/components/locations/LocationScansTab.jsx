@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { ExternalLink, Box, Maximize2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Box, Maximize2 } from 'lucide-react';
+import ScanSitePlanOverlay from './ScanSitePlanOverlay';
 
 // Build a Matterport embed URL from any my.matterport.com link
 function toEmbedUrl(url) {
@@ -15,10 +15,11 @@ function toEmbedUrl(url) {
   }
 }
 
-export default function LocationScansTab({ scans }) {
+export default function LocationScansTab({ scans, equipment = [], conditionReports = [], workOrders = [] }) {
   const [activeId, setActiveId] = useState(scans[0]?.id);
   const active = scans.find(s => s.id === activeId) || scans[0];
   const embedUrl = toEmbedUrl(active?.file_url);
+  const overlays = active?.asset_overlays || [];
 
   if (scans.length === 0) {
     return <p className="text-sm text-slate-500 p-8 text-center bg-white rounded-xl border border-slate-200">No scans for this location.</p>;
@@ -26,6 +27,16 @@ export default function LocationScansTab({ scans }) {
 
   return (
     <div className="space-y-4">
+      {/* Interactive site plan with asset overlay */}
+      {overlays.length > 0 && (
+        <ScanSitePlanOverlay
+          overlays={overlays}
+          equipment={equipment}
+          conditionReports={conditionReports}
+          workOrders={workOrders}
+        />
+      )}
+
       {/* Embedded Matterport viewer */}
       {embedUrl ? (
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">

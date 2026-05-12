@@ -157,7 +157,7 @@ export default function LocationDetailTabs({ location }) {
       </TabsContent>
 
       <TabsContent value="scans">
-        <LocationScansTab scans={scans} />
+        <LocationScansTab scans={scans} equipment={equipment} conditionReports={conditionReports} workOrders={workOrders} />
       </TabsContent>
 
       <TabsContent value="workorders">
