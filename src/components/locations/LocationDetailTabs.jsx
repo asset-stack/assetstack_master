@@ -3,8 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Cpu, Box, AlertTriangle, Wallet, CalendarDays, ShieldCheck, ExternalLink, CheckCircle2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Cpu, Box, AlertTriangle, Wallet, CalendarDays, ShieldCheck, CheckCircle2, Wrench } from 'lucide-react';
+import LocationScansTab from './LocationScansTab';
+import LocationWorkOrdersTab from './LocationWorkOrdersTab';
+import LocationComplianceTab from './LocationComplianceTab';
 
 const sevColor = {
   critical: 'bg-rose-100 text-rose-700 border-rose-200',
@@ -50,6 +52,31 @@ export default function LocationDetailTabs({ location }) {
     queryKey: ['capital', locName],
     queryFn: () => base44.entities.CapitalPlanItem.filter({ location_name: locName }, '-replacement_year', 100),
   });
+  const equipmentIds = equipment.map(e => e.id);
+  const { data: workOrders = [] } = useQuery({
+    queryKey: ['wo', location.id, equipmentIds.join(',')],
+    queryFn: async () => {
+      if (!equipmentIds.length) return [];
+      const all = await Promise.all(equipmentIds.map(id => base44.entities.WorkOrder.filter({ equipment_id: id }, '-scheduled_start', 30)));
+      return all.flat();
+    },
+    enabled: equipmentIds.length > 0,
+  });
+  const { data: complianceDocs = [] } = useQuery({
+    queryKey: ['compliance-docs', location.id],
+    queryFn: () => base44.entities.ComplianceDocument.filter({ location_id: location.id }, '-issue_date', 50),
+  });
+  const { data: complianceReqs = [] } = useQuery({
+    queryKey: ['compliance-reqs', locName],
+    queryFn: async () => {
+      // Filter requirements by name containing location identifier (best-effort match)
+      const all = await base44.entities.ComplianceRequirement.list('-next_due_date', 100);
+      const code = location.code || '';
+      const shortName = locName.split(',')[0].split(' - ')[0];
+      return all.filter(r => (r.name && (r.name.includes(shortName) || (code && r.name.includes(code)))));
+    },
+  });
+  const equipmentById = Object.fromEntries(equipment.map(e => [e.id, e]));
 
   const fmt = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n || 0);
 
@@ -62,12 +89,14 @@ export default function LocationDetailTabs({ location }) {
 
   return (
     <Tabs defaultValue="assets" className="w-full">
-      <TabsList className="grid w-full grid-cols-5 mb-4">
-        <TabsTrigger value="assets"><Cpu className="w-4 h-4 mr-1.5" />Assets ({equipment.length})</TabsTrigger>
-        <TabsTrigger value="scans"><Box className="w-4 h-4 mr-1.5" />Scans ({scans.length})</TabsTrigger>
-        <TabsTrigger value="condition"><AlertTriangle className="w-4 h-4 mr-1.5" />Condition ({conditionReports.length})</TabsTrigger>
-        <TabsTrigger value="budget"><Wallet className="w-4 h-4 mr-1.5" />Budget ({budgets.length})</TabsTrigger>
-        <TabsTrigger value="capital"><CalendarDays className="w-4 h-4 mr-1.5" />Capital ({capitalItems.length})</TabsTrigger>
+      <TabsList className="flex w-full overflow-x-auto mb-4 h-auto p-1 justify-start">
+        <TabsTrigger value="assets" className="text-xs"><Cpu className="w-3.5 h-3.5 mr-1" />Assets ({equipment.length})</TabsTrigger>
+        <TabsTrigger value="scans" className="text-xs"><Box className="w-3.5 h-3.5 mr-1" />Scans ({scans.length})</TabsTrigger>
+        <TabsTrigger value="condition" className="text-xs"><AlertTriangle className="w-3.5 h-3.5 mr-1" />Condition ({conditionReports.length})</TabsTrigger>
+        <TabsTrigger value="workorders" className="text-xs"><Wrench className="w-3.5 h-3.5 mr-1" />Work Orders ({workOrders.length})</TabsTrigger>
+        <TabsTrigger value="compliance" className="text-xs"><ShieldCheck className="w-3.5 h-3.5 mr-1" />Compliance ({complianceDocs.length + complianceReqs.length})</TabsTrigger>
+        <TabsTrigger value="budget" className="text-xs"><Wallet className="w-3.5 h-3.5 mr-1" />Budget ({budgets.length})</TabsTrigger>
+        <TabsTrigger value="capital" className="text-xs"><CalendarDays className="w-3.5 h-3.5 mr-1" />Capital ({capitalItems.length})</TabsTrigger>
       </TabsList>
 
       <TabsContent value="assets">
@@ -128,31 +157,15 @@ export default function LocationDetailTabs({ location }) {
       </TabsContent>
 
       <TabsContent value="scans">
-        {scans.length === 0 ? (
-          <p className="text-sm text-slate-500 p-8 text-center bg-white rounded-xl border border-slate-200">No scans for this location.</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {scans.map(s => (
-              <div key={s.id} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-                {s.preview_image_url && <img src={s.preview_image_url} alt={s.name} className="w-full h-44 object-cover" />}
-                <div className="p-4">
-                  <h4 className="font-semibold text-slate-900">{s.name}</h4>
-                  <p className="text-xs text-slate-500 mt-1">{s.description}</p>
-                  <div className="flex items-center gap-2 mt-3 flex-wrap">
-                    <Badge variant="secondary" className="text-xs">{s.model_type}</Badge>
-                    {s.scan_date && <Badge variant="outline" className="text-xs">{s.scan_date}</Badge>}
-                    {s.total_anomalies > 0 && <Badge className="bg-amber-100 text-amber-700 border-amber-200 text-xs">{s.total_anomalies} anomalies</Badge>}
-                  </div>
-                  {s.file_url && (
-                    <a href={s.file_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 mt-3 text-xs font-semibold text-indigo-600 hover:text-indigo-800">
-                      Open Matterport <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <LocationScansTab scans={scans} />
+      </TabsContent>
+
+      <TabsContent value="workorders">
+        <LocationWorkOrdersTab workOrders={workOrders} equipmentById={equipmentById} />
+      </TabsContent>
+
+      <TabsContent value="compliance">
+        <LocationComplianceTab documents={complianceDocs} requirements={complianceReqs} />
       </TabsContent>
 
       <TabsContent value="condition">
@@ -168,7 +181,7 @@ export default function LocationDetailTabs({ location }) {
                     <h4 className="font-semibold text-sm text-slate-900">{r.equipment_name || 'Unlinked'}</h4>
                     <Badge className={`text-xs border ${sevColor[r.severity] || sevColor.minor}`}>{r.severity}</Badge>
                     <Badge variant="outline" className="text-xs">{r.anomaly_type}</Badge>
-                    {r.ai_confidence && <span className="text-xs text-slate-500">{r.ai_confidence}% confidence</span>}
+                    <Badge variant="outline" className="text-[10px] text-slate-400">demo data</Badge>
                   </div>
                   <p className="text-xs text-slate-600 leading-relaxed">{r.ai_description}</p>
                 </div>
