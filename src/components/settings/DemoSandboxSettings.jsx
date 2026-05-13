@@ -5,23 +5,6 @@ import { Link } from 'react-router-dom';
 
 const DEMOS = [
   {
-    id: 'bunbury',
-    name: 'Bunbury Council',
-    tagline: 'Flagship local-government demo',
-    description: 'Live in Production. 250+ council assets across town hall, libraries, parks, depots, roads & bridges. Verified savings ledger, climate risk, capital plan, scan analysis with site-plan overlays.',
-    env: 'Production',
-    envColor: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    icon: Building2,
-    iconBg: 'bg-emerald-100 text-emerald-600',
-    stats: [
-      { label: 'Assets', value: '250+' },
-      { label: 'Verified Savings', value: '$2.4M' },
-      { label: 'Scans', value: '12' },
-    ],
-    primaryAction: { label: 'Open Dashboard', to: '/Dashboard' },
-    isActive: true,
-  },
-  {
     id: 'snowy',
     name: 'Snowy Hydro',
     tagline: 'Energy & utilities sandbox',
@@ -58,15 +41,15 @@ export default function DemoSandboxSettings() {
       <div className="bg-indigo-50/60 border border-indigo-100 rounded-xl p-4 flex gap-3">
         <Database className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
         <div className="text-sm">
-          <p className="font-medium text-slate-900">Two databases, one app</p>
+          <p className="font-medium text-slate-900">Snowy Hydro sandbox lives in the Test database</p>
           <p className="text-slate-600 mt-1 text-xs leading-relaxed">
-            <span className="font-semibold">Production</span> hosts the Bunbury Council flagship. <span className="font-semibold">Test</span> hosts the Snowy Hydro sandbox. Switch between them using the <span className="font-semibold">Production / Test</span> toggle at the top of your Base44 builder dashboard — the app preview will reload with that database's data.
+            Switch to <span className="font-semibold">Test</span> mode using the Production / Test toggle at the top of your Base44 builder dashboard — the app preview will reload with the Snowy Hydro dataset.
           </p>
         </div>
       </div>
 
-      {/* Demo cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* Demo card */}
+      <div className="grid grid-cols-1 gap-4">
         {DEMOS.map((demo) => {
           const Icon = demo.icon;
           return (
