@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { AlertTriangle, Trash2 } from 'lucide-react';
+import { AlertTriangle, Trash2, Database, FlaskConical, Building2, ExternalLink, Info } from 'lucide-react';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from '@/components/ui/dialog';
@@ -28,6 +28,59 @@ export default function AccountSettings() {
           Account
         </h3>
         <p className="text-xs text-slate-500 mt-1">Manage your account and data</p>
+      </div>
+
+      {/* Database Environment */}
+      <div className="border border-indigo-200 bg-indigo-50/40 rounded-xl p-5">
+        <h4 className="text-sm font-semibold text-slate-900 mb-1 flex items-center gap-2">
+          <Database className="w-4 h-4 text-indigo-600" />
+          Database Environment
+        </h4>
+        <p className="text-xs text-slate-600 mb-4 leading-relaxed">
+          AssetStack has two separate databases for this app. Switch between them to view different demo datasets.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div className="bg-white border border-emerald-200 rounded-lg p-3">
+            <div className="flex items-center gap-2 mb-1.5">
+              <Building2 className="w-4 h-4 text-emerald-600" />
+              <span className="text-xs font-semibold text-slate-900">Production</span>
+              <span className="ml-auto text-[10px] font-medium uppercase tracking-wider text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">Bunbury</span>
+            </div>
+            <p className="text-[11px] text-slate-600 leading-relaxed">
+              Flagship local-government demo. 250+ council assets, verified savings ledger.
+            </p>
+          </div>
+          <div className="bg-white border border-amber-200 rounded-lg p-3">
+            <div className="flex items-center gap-2 mb-1.5">
+              <FlaskConical className="w-4 h-4 text-amber-600" />
+              <span className="text-xs font-semibold text-slate-900">Test</span>
+              <span className="ml-auto text-[10px] font-medium uppercase tracking-wider text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded">Snowy Hydro</span>
+            </div>
+            <p className="text-[11px] text-slate-600 leading-relaxed">
+              Energy & utilities sandbox. 32 assets across NSW/VIC/SA, $9.8M savings.
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white border border-indigo-100 rounded-lg p-3 flex gap-2.5">
+          <Info className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+          <div className="text-[11px] text-slate-700 leading-relaxed">
+            <p className="font-semibold text-slate-900 mb-1">How to switch environments</p>
+            <p>
+              The <span className="font-semibold">Production / Test</span> toggle lives in your <span className="font-semibold">Base44 builder dashboard</span> (outside this app preview), in the top toolbar near your app name. Click it to switch — the preview will reload with that database's data.
+            </p>
+            <a
+              href="https://base44.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 mt-2 text-indigo-600 hover:text-indigo-700 font-medium"
+            >
+              Open Base44 dashboard
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+        </div>
       </div>
 
       <div className="border border-rose-200 bg-rose-50/50 rounded-xl p-5">
