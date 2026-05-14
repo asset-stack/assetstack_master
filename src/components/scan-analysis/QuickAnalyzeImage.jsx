@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ImagePlus, Loader2, Sparkles, X, CheckCircle2, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+const MAX_IMAGE_MB = 25;
+const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
 /**
  * QuickAnalyzeImage — drag-and-drop or pick any JPEG/PNG,
@@ -22,8 +25,16 @@ export default function QuickAnalyzeImage({ open, onClose, onCompleted }) {
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef(null);
 
+  // Revoke object URL when previewUrl changes or component unmounts
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
   const reset = () => {
     setFile(null);
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setName('');
     setAssetContext('');
@@ -34,12 +45,18 @@ export default function QuickAnalyzeImage({ open, onClose, onCompleted }) {
 
   const handleFile = (f) => {
     if (!f) return;
-    if (!f.type.startsWith('image/')) {
-      setErrorMsg('Please select an image file (JPEG, PNG, WebP).');
+    if (!ALLOWED_TYPES.includes(f.type)) {
+      setErrorMsg('Please select a JPEG, PNG, or WebP image.');
+      return;
+    }
+    const mb = f.size / (1024 * 1024);
+    if (mb > MAX_IMAGE_MB) {
+      setErrorMsg(`Image is ${mb.toFixed(1)}MB — max ${MAX_IMAGE_MB}MB. Try a smaller photo.`);
       return;
     }
     setErrorMsg('');
     setFile(f);
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(URL.createObjectURL(f));
     if (!name) setName(f.name.replace(/\.[^.]+$/, ''));
   };

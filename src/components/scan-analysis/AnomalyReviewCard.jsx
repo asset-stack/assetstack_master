@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Check, X, Edit3, Sparkles, ShieldCheck, ClipboardCheck, CheckCircle2 } from 'lucide-react';
+import { Check, X, Edit3, Sparkles, ShieldCheck, ClipboardCheck, CheckCircle2, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 const severityColors = {
   minor: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -41,13 +42,24 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
       };
       if (status === 'corrected') {
         // Validate against enums before save
-        updates.corrected_anomaly_type = anomalyTypes.includes(correctedType) ? correctedType : 'other';
-        updates.corrected_severity = allowedSeverity.includes(correctedSeverity) ? correctedSeverity : 'minor';
+        const safeType = anomalyTypes.includes(correctedType) ? correctedType : 'other';
+        const safeSeverity = allowedSeverity.includes(correctedSeverity) ? correctedSeverity : 'minor';
+        updates.corrected_anomaly_type = safeType;
+        updates.corrected_severity = safeSeverity;
+        // Also update the primary fields so downstream displays/filters reflect the correction
+        updates.anomaly_type = safeType;
+        updates.severity = safeSeverity;
       }
       await base44.entities.ConditionReport.update(report.id, updates);
+      toast?.success?.(
+        status === 'approved' ? 'Verified as correct' :
+        status === 'corrected' ? 'Saved correction — feeds back into model training' :
+        'Marked as not an issue'
+      );
       onReviewed && onReviewed();
     } catch (err) {
       console.error('Review save failed:', err);
+      toast?.error?.(`Could not save: ${err?.message || 'Unknown error'}`);
     } finally {
       setLoading(false);
     }

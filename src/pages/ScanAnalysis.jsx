@@ -32,6 +32,7 @@ export default function ScanAnalysisPage() {
   const [quickAnalyzeOpen, setQuickAnalyzeOpen] = useState(false);
   const [selectedScanId, setSelectedScanId] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
+  const [analysisProgress, setAnalysisProgress] = useState(null); // { current, total } | null
   const [filter, setFilter] = useState('pending');
   const [selectedFrameId, setSelectedFrameId] = useState(null);
   const [extracting, setExtracting] = useState(false);
@@ -115,37 +116,71 @@ export default function ScanAnalysisPage() {
       return;
     }
     setAnalyzing(true);
+
+    // Build list of images to analyze: main preview + pending frames
+    const pendingFrames = frames.filter((f) => f.analysis_status !== 'completed' && f.image_url);
+    const totalImages = 1 + pendingFrames.length;
+    setAnalysisProgress({ current: 0, total: totalImages });
+
+    let totalFindings = 0;
+    let totalDupes = 0;
+    let firstError = null;
+    let completed = 0;
+
     try {
-      // Analyze the main preview
+      // Main preview first (sequential to keep the lock contention low)
       const mainRes = await base44.functions.invoke('analyzeScanCondition', {
         image_url: selectedScan.preview_image_url,
         digital_twin_model_id: selectedScan.id,
         digital_twin_model_name: selectedScan.name,
         replace_previous: true,
       });
+      totalFindings += mainRes?.data?.findings_count || 0;
+      totalDupes += mainRes?.data?.duplicates_skipped || 0;
+      completed++;
+      setAnalysisProgress({ current: completed, total: totalImages });
 
-      let totalFindings = mainRes?.data?.findings_count || 0;
-      let totalDupes = mainRes?.data?.duplicates_skipped || 0;
-
-      // Also analyze every extracted frame that hasn't been analyzed yet
-      const pendingFrames = frames.filter((f) => f.analysis_status !== 'completed' && f.image_url);
-      for (const frame of pendingFrames) {
-        const frameRes = await base44.functions.invoke('analyzeScanCondition', {
-          image_url: frame.image_url,
-          digital_twin_model_id: selectedScan.id,
-          digital_twin_model_name: `${selectedScan.name} — ${frame.angle_label}`,
-          frame_id: frame.id,
-        });
-        totalFindings += frameRes?.data?.findings_count || 0;
-        totalDupes += frameRes?.data?.duplicates_skipped || 0;
+      // Frames: throttle in batches of 3 to avoid rate limits but stay fast
+      const batchSize = 3;
+      for (let i = 0; i < pendingFrames.length; i += batchSize) {
+        const batch = pendingFrames.slice(i, i + batchSize);
+        const results = await Promise.allSettled(
+          batch.map((frame) =>
+            base44.functions.invoke('analyzeScanCondition', {
+              image_url: frame.image_url,
+              digital_twin_model_id: selectedScan.id,
+              digital_twin_model_name: `${selectedScan.name} — ${frame.angle_label}`,
+              frame_id: frame.id,
+            })
+          )
+        );
+        for (const r of results) {
+          completed++;
+          if (r.status === 'fulfilled') {
+            totalFindings += r.value?.data?.findings_count || 0;
+            totalDupes += r.value?.data?.duplicates_skipped || 0;
+          } else if (!firstError) {
+            firstError = r.reason?.message || 'A frame failed to analyze';
+          }
+        }
+        setAnalysisProgress({ current: completed, total: totalImages });
       }
 
-      toast?.success?.(`Analysis complete: ${totalFindings} new finding(s)${totalDupes ? ` (${totalDupes} duplicate(s) skipped)` : ''}`);
+      if (firstError && totalFindings === 0) {
+        toast?.error?.(`Analysis incomplete: ${firstError}`);
+      } else {
+        toast?.success?.(
+          `Analysis complete: ${totalFindings} new finding(s)` +
+          (totalDupes ? ` (${totalDupes} duplicate(s) skipped)` : '') +
+          (firstError ? ' — some frames failed' : '')
+        );
+      }
     } catch (err) {
       toast?.error?.(`Analysis failed: ${err?.message || 'Unknown error'}`);
       console.error('runAIAnalysis error:', err);
     } finally {
       setAnalyzing(false);
+      setAnalysisProgress(null);
       qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
       qc.invalidateQueries({ queryKey: ['scanFrames', selectedScan.id] });
       qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
@@ -248,7 +283,12 @@ export default function ScanAnalysisPage() {
                     className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
                   >
                     {analyzing ? (
-                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Analyzing…</>
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        {analysisProgress
+                          ? `Analyzing ${analysisProgress.current}/${analysisProgress.total}…`
+                          : 'Analyzing…'}
+                      </>
                     ) : (
                       <><Sparkles className="w-4 h-4 mr-2" /> Re-run AI</>
                     )}
