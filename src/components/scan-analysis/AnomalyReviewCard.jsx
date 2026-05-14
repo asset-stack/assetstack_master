@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,8 +25,16 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
   const [mode, setMode] = useState(null); // 'correct' | null
   const [correctedType, setCorrectedType] = useState(report.anomaly_type);
   const [correctedSeverity, setCorrectedSeverity] = useState(report.severity);
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useState(report.reviewer_notes || '');
   const [loading, setLoading] = useState(false);
+
+  // Re-sync local state when the parent report record changes (e.g. after a save invalidates cache)
+  useEffect(() => {
+    setCorrectedType(report.anomaly_type);
+    setCorrectedSeverity(report.severity);
+    setNotes(report.reviewer_notes || '');
+    setMode(null);
+  }, [report.id, report.anomaly_type, report.severity, report.reviewer_notes, report.review_status]);
 
   const allowedSeverity = ['minor', 'moderate', 'major', 'critical'];
 
@@ -36,8 +44,8 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
       const user = await base44.auth.me();
       const updates = {
         review_status: status,
-        reviewed_by: user?.full_name || user?.email,
-        reviewed_at: new Date().toISOString(),
+        reviewed_by: status === 'pending' ? null : (user?.full_name || user?.email),
+        reviewed_at: status === 'pending' ? null : new Date().toISOString(),
         reviewer_notes: notes,
       };
       if (status === 'corrected') {
@@ -54,8 +62,10 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
       toast?.success?.(
         status === 'approved' ? 'Verified as correct' :
         status === 'corrected' ? 'Saved correction — feeds back into model training' :
+        status === 'pending' ? 'Reopened for review' :
         'Marked as not an issue'
       );
+      setMode(null);
       onReviewed && onReviewed();
     } catch (err) {
       console.error('Review save failed:', err);
@@ -172,26 +182,39 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
           className="text-xs mb-3 min-h-[60px]"
         />
 
-        <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-slate-700">
-          <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" /> Verification action
+        <div className="mb-2 flex items-center justify-between gap-2 text-xs font-semibold text-slate-700">
+          <span className="flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
+            {isReviewed ? 'Change verification' : 'Verification action'}
+          </span>
+          {isReviewed && (
+            <button
+              type="button"
+              onClick={() => handleReview('pending')}
+              disabled={loading}
+              className="text-[10px] text-slate-500 hover:text-slate-800 underline underline-offset-2"
+            >
+              Reopen
+            </button>
+          )}
         </div>
         <div className="grid grid-cols-3 gap-2">
           <Button
             size="sm"
             variant="outline"
-            disabled={loading}
+            disabled={loading || isReviewed}
             onClick={() => handleReview('rejected')}
-            className="text-red-600 border-red-200 hover:bg-red-50"
+            className="text-red-600 border-red-200 hover:bg-red-50 disabled:opacity-40"
           >
-            <X className="w-3.5 h-3.5 mr-1" /> Not issue
+            {loading ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <X className="w-3.5 h-3.5 mr-1" />} Not issue
           </Button>
           {mode !== 'correct' ? (
             <Button
               size="sm"
               variant="outline"
-              disabled={loading}
+              disabled={loading || isReviewed}
               onClick={() => setMode('correct')}
-              className="text-amber-700 border-amber-200 hover:bg-amber-50"
+              className="text-amber-700 border-amber-200 hover:bg-amber-50 disabled:opacity-40"
             >
               <Edit3 className="w-3.5 h-3.5 mr-1" /> Fix AI
             </Button>
@@ -199,20 +222,20 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
             <Button
               size="sm"
               variant="outline"
-              disabled={loading}
+              disabled={loading || isReviewed}
               onClick={() => handleReview('corrected')}
-              className="text-amber-700 border-amber-200 hover:bg-amber-50"
+              className="text-amber-700 border-amber-200 hover:bg-amber-50 disabled:opacity-40"
             >
-              Save
+              {loading ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : null} Save
             </Button>
           )}
           <Button
             size="sm"
-            disabled={loading}
+            disabled={loading || isReviewed}
             onClick={() => handleReview('approved')}
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-green-600 hover:bg-green-700 disabled:opacity-40"
           >
-            <Check className="w-3.5 h-3.5 mr-1" /> Verify
+            {loading ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <Check className="w-3.5 h-3.5 mr-1" />} Verify
           </Button>
         </div>
       </div>
