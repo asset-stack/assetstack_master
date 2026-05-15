@@ -69,7 +69,7 @@ export default function AIAssistant() {
     };
   }, []);
 
-  const handleSend = async (text) => {
+  const handleSend = async (text, fileUrls = []) => {
     setIsLoading(true);
 
     let convId = conversationId;
@@ -93,10 +93,9 @@ export default function AIAssistant() {
     }
 
     // Add user message — the agent will respond automatically via subscription
-    await base44.agents.addMessage(conv, {
-      role: 'user',
-      content: text,
-    });
+    const payload = { role: 'user', content: text };
+    if (fileUrls && fileUrls.length > 0) payload.file_urls = fileUrls;
+    await base44.agents.addMessage(conv, payload);
   };
 
   const handleNewChat = () => {
