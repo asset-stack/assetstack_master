@@ -65,7 +65,7 @@ export default function LandingNav() {
         </div>
 
         <div className="hidden lg:flex items-center gap-1">
-          <Button onClick={handleSignIn} variant="ghost" size="sm" className="text-slate-700 text-[13px] font-medium">
+          <Button onClick={handleSignIn} variant="outline" size="sm" className="text-slate-800 border-slate-300 hover:bg-slate-50 text-[13px] font-semibold">
             Sign in
           </Button>
           <a href="#contact">
