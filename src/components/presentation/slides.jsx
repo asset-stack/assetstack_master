@@ -131,8 +131,7 @@ export const SlideTOC = ({ chapters, onJump }) => (
           The four pillars<br />of AssetStack.
         </h1>
         <p className="text-slate-400 max-w-sm">
-          Asset register · Maintenance tasks · AI command centre · Condition reports.
-          Plus how fast you can upload everything you own.
+          The four pillars — asset register, maintenance, AI command centre, condition reports — plus everything they plug into: sensors, finance, scans, savings, compliance, security.
         </p>
       </div>
       <div className="relative">
