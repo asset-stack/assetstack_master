@@ -7,12 +7,12 @@ import { CheckCircle2, Circle, AlertTriangle, MapPin, Wrench, Camera, Wifi, Wifi
    ============================================================ */
 export function AssetRegisterMock() {
   const rows = [
-    ['EQ-00472', 'Pump-03', 'Pump', 'Lift Station 4', 92, 'Critical', 'text-rose-600 bg-rose-50'],
-    ['EQ-00191', 'HVAC-12', 'HVAC', 'Town Hall L2', 81, 'High', 'text-rose-600 bg-rose-50'],
-    ['EQ-00833', 'Generator-A', 'Generator', 'Depot', 67, 'Medium', 'text-amber-600 bg-amber-50'],
-    ['EQ-00207', 'Lift-07', 'Elevator', 'Library', 54, 'Medium', 'text-amber-600 bg-amber-50'],
-    ['EQ-00611', 'Motor-21', 'Motor', 'Treatment', 38, 'Low', 'text-emerald-600 bg-emerald-50'],
-    ['EQ-00355', 'Valve-44', 'Valve', 'Reservoir 2', 22, 'Low', 'text-emerald-600 bg-emerald-50'],
+    ['EQ-00472', 'Pump-03', 'Pump', 'Skid 4 · Site B', 92, 'Critical', 'text-rose-600 bg-rose-50'],
+    ['EQ-00191', 'HVAC-12', 'HVAC', 'Tower L2', 81, 'High', 'text-rose-600 bg-rose-50'],
+    ['EQ-00833', 'Generator-A', 'Generator', 'Hub C', 67, 'Medium', 'text-amber-600 bg-amber-50'],
+    ['EQ-00207', 'Lift-07', 'Elevator', 'Tower lobby', 54, 'Medium', 'text-amber-600 bg-amber-50'],
+    ['EQ-00611', 'Motor-21', 'Motor', 'Process line 2', 38, 'Low', 'text-emerald-600 bg-emerald-50'],
+    ['EQ-00355', 'Valve-44', 'Valve', 'Tank farm', 22, 'Low', 'text-emerald-600 bg-emerald-50'],
   ];
   return (
     <div className="w-full h-full bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col shadow-sm">

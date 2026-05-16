@@ -111,11 +111,11 @@ export function DashboardMock() {
 // Risk list
 export function RiskList() {
   const rows = [
-    ['Pump-03 · Lift Station 4', 92, 'bg-rose-500', 'text-rose-600', '3d'],
-    ['HVAC-12 · Town Hall L2', 81, 'bg-rose-500', 'text-rose-600', '6d'],
-    ['Generator-A · Depot', 67, 'bg-amber-500', 'text-amber-600', '14d'],
-    ['Lift-07 · Library', 54, 'bg-amber-500', 'text-amber-600', '21d'],
-    ['Motor-21 · Treatment', 38, 'bg-emerald-500', 'text-emerald-600', '45d'],
+    ['Pump-03 · Skid 4 · Site B', 92, 'bg-rose-500', 'text-rose-600', '3d'],
+    ['HVAC-12 · Tower · Level 2', 81, 'bg-rose-500', 'text-rose-600', '6d'],
+    ['Generator-A · Hub C', 67, 'bg-amber-500', 'text-amber-600', '14d'],
+    ['Lift-07 · Tower lobby', 54, 'bg-amber-500', 'text-amber-600', '21d'],
+    ['Motor-21 · Process line', 38, 'bg-emerald-500', 'text-emerald-600', '45d'],
   ];
   return (
     <div className="w-full h-full bg-slate-50 border border-slate-200 rounded-2xl p-5 shadow-sm">
@@ -168,7 +168,7 @@ export function MobileWO() {
           </div>
           <div className="p-4">
             <div className="text-xs font-bold text-slate-900">WO-20260516-1247</div>
-            <div className="text-[10px] text-slate-500 mb-2">Pump-03 · Lift Station 4</div>
+            <div className="text-[10px] text-slate-500 mb-2">Pump-03 · Skid 4 · Site B</div>
             <div className="flex gap-1 mb-3">
               <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-500 text-white">URGENT</span>
               <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-indigo-500 text-white">PRED-AI</span>
@@ -245,14 +245,14 @@ export function GlobeMock() {
 // Asset tree
 export function AssetTree() {
   const nodes = [
-    [0, 'Bunbury Council', '1,247', 'bg-emerald-500'],
-    [1, 'Town Hall', '184', 'bg-emerald-500'],
-    [2, 'HVAC Floor 2', '12', 'bg-amber-500'],
-    [2, 'Lifts (3)', '3', 'bg-emerald-500'],
-    [1, 'Water Treatment', '412', 'bg-rose-500'],
-    [2, 'Pump Station 4', '38', 'bg-rose-500'],
-    [2, 'Filter Bank A', '24', 'bg-emerald-500'],
-    [1, 'Depot', '89', 'bg-emerald-500'],
+    [0, 'Portfolio · North region', '1,247', 'bg-emerald-500'],
+    [1, 'Site A · HQ tower', '184', 'bg-emerald-500'],
+    [2, 'HVAC plant · Level 2', '12', 'bg-amber-500'],
+    [2, 'Passenger lifts (3)', '3', 'bg-emerald-500'],
+    [1, 'Site B · Process plant', '412', 'bg-rose-500'],
+    [2, 'Pump skid 04', '38', 'bg-rose-500'],
+    [2, 'Filter bank A', '24', 'bg-emerald-500'],
+    [1, 'Site C · Distribution hub', '89', 'bg-emerald-500'],
   ];
   return (
     <div className="w-full h-full bg-white border border-slate-200 rounded-2xl p-5 shadow-sm overflow-hidden">
@@ -334,11 +334,11 @@ export function ScenarioMock() {
 // Savings ledger
 export function SavingsLedger() {
   const entries = [
-    ['Bearing replacement · Pump-03', '$48,200', true],
-    ['Deferred renewal · HVAC-12', '$112,000', true],
-    ['Cascade prevented · Filter Bank A', '$67,500', true],
-    ['Predictive WO · Lift-07', '$24,800', false],
-    ['Sensor anomaly · Motor-21', '$18,400', true],
+    ['Bearing caught 11 days early · Pump-03', '$48,200', true],
+    ['Renewal deferred on condition · HVAC-12', '$112,000', true],
+    ['Downstream failure averted · Filter bank A', '$67,500', true],
+    ['Predictive WO before brake wear · Lift-07', '$24,800', false],
+    ['Anomaly halted line stoppage · Motor-21', '$18,400', true],
   ];
   return (
     <div className="w-full h-full bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex flex-col">

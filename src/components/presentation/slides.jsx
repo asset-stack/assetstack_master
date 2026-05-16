@@ -173,7 +173,7 @@ export const SlideProblem = () => (
       <p className="text-xl md:text-2xl text-slate-800 leading-snug text-balance">
         "We had eight systems, four spreadsheets and a clipboard. We were paying $3M a year just to find out what was broken."
       </p>
-      <p className="text-xs text-slate-500 mt-3">— Asset Director, regional council (pre-AssetStack)</p>
+      <p className="text-xs text-slate-500 mt-3">— Asset Director, 2,400-asset operator (pre-AssetStack)</p>
     </div>
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
       {[
@@ -671,25 +671,25 @@ export const SlideVoices = () => {
     {
       q: 'We replaced four systems and a year of spreadsheet wrangling. Our first prediction caught a transformer failure two weeks out.',
       who: 'Director of Engineering',
-      org: 'Regional water authority',
+      org: 'Multi-site operator · 3,100 assets',
       stat: '$640k saved · year 1',
     },
     {
       q: 'AssetMind drafted our entire monthly board pack. Numbers tied out perfectly. My CFO asked who built it.',
       who: 'Asset Manager',
-      org: 'Council, 1,200+ assets',
+      org: 'Portfolio operator · 1,200 assets',
       stat: '12 hrs / month back',
     },
     {
-      q: 'I ran a 10-year scenario in front of councillors live. Three sliders. They funded the program in the next meeting.',
+      q: 'I ran a 10-year scenario in front of the board live. Three sliders. They funded the program in the next meeting.',
       who: 'Chief Operating Officer',
-      org: 'Transport infrastructure',
+      org: 'Infrastructure operator · 5 regions',
       stat: '+$3.2M funded',
     },
     {
       q: 'My team finally trusts the data. The mobile app works in tunnels. Auto follow-up WOs are a game changer.',
       who: 'Field Operations Lead',
-      org: 'Utilities · 6 depots',
+      org: 'Distributed operator · 6 hubs',
       stat: '3.2× faster cycle',
     },
   ];
