@@ -11,21 +11,28 @@ import {
 import {
   SlideAssetRegister, SlideMaintenance, SlideFinanceHub, SlideSensors, SlideFieldOps,
 } from '../components/presentation/featureSlides';
+import {
+  SlideBigStat, SlideBeforeAfter, SlideManifesto, SlideProductMap, SlideThankYou,
+} from '../components/presentation/wowSlides';
 
 const CHAPTERS = [
   'Cover',
   'Inside this edition',
+  '82%',
   'The reality today',
+  'The promise',
   'The AssetStack way',
-  'AssetMind in action',
-  'Onboarding speed',
+  'The shift · before & after',
+  'The whole product',
+  'AssetMind',
+  'Onboarding',
   'Asset register & hierarchy',
   'Live portfolio',
   'Sensors & IoT',
   'Predictive maintenance',
   'Digital twin & scans',
   'Maintenance hub',
-  'Work orders & field ops',
+  'Work orders',
   'Field ops · mobile',
   'Finance hub',
   'Finance & capital plan',
@@ -37,6 +44,7 @@ const CHAPTERS = [
   'Outcomes & ROI',
   'Get started',
   "Let's talk",
+  'Thank you',
 ];
 
 export default function Presentation() {
@@ -50,8 +58,12 @@ export default function Presentation() {
   const slides = useMemo(() => [
     <SlideCover />,
     <SlideTOC chapters={CHAPTERS.slice(2)} onJump={(i) => setIndex(i + 2)} />,
+    <SlideBigStat />,
     <SlideProblem />,
+    <SlideManifesto />,
     <SlideSolution />,
+    <SlideBeforeAfter />,
+    <SlideProductMap />,
     <SlideAssetMind />,
     <SlideSpeed />,
     <SlideAssetRegister />,
@@ -72,6 +84,7 @@ export default function Presentation() {
     <SlideImpact />,
     <SlideRoadmap />,
     <SlideCTA />,
+    <SlideThankYou />,
   ], []);
 
   const go = useCallback((next) => {

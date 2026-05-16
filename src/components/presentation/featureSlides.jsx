@@ -19,9 +19,9 @@ import {
    ============================================================ */
 export const SlideAssetRegister = () => (
   <SlideShell
-    kicker="· Asset register & hierarchy"
-    title="Every asset, instantly searchable."
-    subtitle="A single source of truth — register, hierarchy, network globe, locations. Every record links to its sensors, scans, work orders, photos and budget line."
+    kicker="· Asset register"
+    title="Two thousand assets. One screen. Three filters."
+    subtitle="A defensible single source of truth — register, hierarchy, globe, locations. Every record links to its sensors, scans, work orders, photos and budget line."
   >
     <div className="grid grid-cols-5 gap-6 h-full">
       <div className="col-span-3 h-full max-h-[460px]">
@@ -55,8 +55,8 @@ export const SlideAssetRegister = () => (
 export const SlideMaintenance = () => (
   <SlideShell
     kicker="· Maintenance hub"
-    title="From scheduled to predictive — one workflow."
-    subtitle="Plan, schedule, dispatch and close out every job. Templates for recurring work, AI for predictive scheduling, dynamic checklists and live chat per WO."
+    title="Scheduled, predictive, corrective — one workflow."
+    subtitle="Plan, schedule, dispatch, close. Templates for recurring work. AI for predictive scheduling. Dynamic checklists and live chat on every job."
   >
     <div className="grid grid-cols-5 gap-6 h-full">
       <div className="col-span-3 h-full max-h-[440px]">
@@ -90,8 +90,8 @@ export const SlideMaintenance = () => (
 export const SlideFinanceHub = () => (
   <SlideShell
     kicker="· Finance hub"
-    title="One workspace for asset accountants & CFOs."
-    subtitle="Valuation, depreciation, capital plan, defect backlog, cost variance, funding optimisation — all driven by condition, not age."
+    title="The CFO's screen, finally tied to the asset register."
+    subtitle="Valuation, depreciation, capital plan, defect backlog, cost variance, funding optimisation — all driven by live condition data, not age."
   >
     <div className="grid grid-cols-5 gap-6 h-full">
       <div className="col-span-2 h-full max-h-[460px]">
@@ -126,9 +126,9 @@ export const SlideFinanceHub = () => (
    ============================================================ */
 export const SlideSensors = () => (
   <SlideShell
-    kicker="· Sensors & IoT integration"
-    title="Plug in any signal. Watch it learn."
-    subtitle="Vibration, temperature, current, flow, pressure, strain, settlement, chloride — push via API/MQTT or upload CSV. AssetMind detects anomalies and ties them to assets."
+    kicker="· Sensors & IoT"
+    title="Plug in any signal. The anomaly finds you."
+    subtitle="Vibration, temperature, current, flow, pressure, strain, settlement, chloride — push via API or MQTT, upload CSV, or stream MQTT. AssetMind learns the baseline and alerts on deviation."
   >
     <div className="grid grid-cols-2 gap-8 h-full">
       <div className="h-full max-h-[460px]">
@@ -168,9 +168,9 @@ export const SlideSensors = () => (
    ============================================================ */
 export const SlideFieldOps = () => (
   <SlideShell
-    kicker="· Field ops · mobile-first"
-    title="The job site is the system."
-    subtitle="Inspectors, technicians and contractors work from their phone — offline-first. Photo defects, dynamic checklists, sign-offs, AI-suggested findings, instant sync."
+    kicker="· Field ops"
+    title="The phone is the system. Even in the tunnel."
+    subtitle="Inspectors, technicians, contractors work from their device — fully offline-first. Photo defects with on-device AI, dynamic checklists, sign-offs, instant sync."
   >
     <div className="grid grid-cols-2 gap-6 h-full">
       <div className="h-full max-h-[460px]">

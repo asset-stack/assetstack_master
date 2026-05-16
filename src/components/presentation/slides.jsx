@@ -16,81 +16,100 @@ const dot = (cls) => <div className={`w-2 h-2 rounded-full ${cls}`} />;
 // 01 — Cover
 export const SlideCover = () => (
   <div className="w-full h-full bg-slate-950 text-white relative overflow-hidden">
-    <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-slate-950 to-slate-950" />
-    <div className="absolute top-0 left-0 w-1.5 h-full bg-indigo-500" />
-    {/* dot grid */}
-    <div className="absolute right-0 top-0 w-1/2 h-full opacity-20" style={{
-      backgroundImage: 'radial-gradient(circle, #6366f1 1px, transparent 1px)',
-      backgroundSize: '20px 20px',
-    }} />
-    <div className="relative h-full grid grid-cols-12 gap-8 px-12 md:px-20 py-16">
-      <div className="col-span-12 lg:col-span-7 flex flex-col justify-center">
+    {/* Layered atmospheric backgrounds */}
+    <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-slate-950 to-black" />
+    <div
+      className="absolute inset-0 opacity-[0.08]"
+      style={{
+        backgroundImage: 'radial-gradient(circle at 1px 1px, #818cf8 1px, transparent 0)',
+        backgroundSize: '32px 32px',
+      }}
+    />
+    {/* Glow */}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.6 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 1.8 }}
+      className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/3 w-[60vw] h-[60vw] rounded-full bg-indigo-600/20 blur-[120px]"
+    />
+
+    <div className="relative h-full flex flex-col px-12 md:px-20 py-12">
+      {/* Top bar */}
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-between"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-sm font-bold tracking-[0.2em]">ASSETSTACK</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] font-bold tracking-[0.3em] text-slate-500 uppercase">2026 · Vol 03</span>
+        </div>
+      </motion.div>
+
+      {/* Centerpiece */}
+      <div className="flex-1 flex flex-col justify-center max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3 mb-8"
+          transition={{ delay: 0.15 }}
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur w-fit mb-8"
         >
-          <span className="text-[11px] font-bold tracking-[0.3em] text-indigo-300 uppercase">
-            2026 Platform Edition
-          </span>
-          <div className="h-px w-12 bg-indigo-500" />
-          <span className="text-[11px] font-bold tracking-[0.2em] text-slate-500 uppercase">
-            VOL. 03
-          </span>
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-[11px] font-bold tracking-wider text-slate-300">The 2026 platform edition</span>
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="text-sm font-bold text-white mb-6 tracking-widest"
-        >
-          ASSETSTACK
-        </motion.div>
+
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.95] tracking-tight mb-8 text-balance"
+          transition={{ delay: 0.25, duration: 0.6 }}
+          className="text-[clamp(3rem,8.5vw,7.5rem)] font-bold leading-[0.95] tracking-tighter text-balance"
         >
-          The AI<br />
-          command<br />
-          <span className="text-indigo-300">center for</span><br />
-          every asset.
+          The AI that<br />
+          <span className="bg-gradient-to-r from-white via-indigo-200 to-indigo-400 bg-clip-text text-transparent">
+            actually runs
+          </span><br />
+          your assets.
         </motion.h1>
+
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="text-lg text-slate-400 max-w-xl mb-12"
+          transition={{ delay: 0.6 }}
+          className="text-lg md:text-xl text-slate-400 max-w-2xl mt-10 leading-relaxed"
         >
-          Predict failures. Automate work orders. Plan capital with confidence. One platform, every asset, run by AI that actually works.
+          Predict failures. Draft the work order. Schedule the tech. Order the part. Prove the savings.
+          <span className="text-white"> One platform, every asset.</span>
         </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="grid grid-cols-4 gap-6 pt-6 border-t border-slate-800"
-        >
-          {[
-            ['$1.4M', 'Verified savings / yr'],
-            ['68%', 'Fewer surprises'],
-            ['3.2×', 'Faster WO cycle'],
-            ['<5 min', 'To onboard 1k assets'],
-          ].map(([v, l]) => (
-            <div key={l}>
-              <div className="text-2xl md:text-3xl font-bold text-indigo-300 tabular-nums">{v}</div>
-              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-1">{l}</div>
-            </div>
-          ))}
-        </motion.div>
       </div>
+
+      {/* Footer KPIs */}
       <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.3 }}
-        className="hidden lg:flex col-span-5 items-center"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8 }}
+        className="grid grid-cols-4 gap-8 pt-8 border-t border-white/10"
       >
-        <AssetMindChat />
+        {[
+          ['$1.4M', 'Verified savings · yr'],
+          ['68%', 'Fewer surprise failures'],
+          ['3.2×', 'Faster WO cycle'],
+          ['< 5 min', 'Onboard 1,000 assets'],
+        ].map(([v, l], i) => (
+          <motion.div
+            key={l}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 + i * 0.08 }}
+          >
+            <div className="text-3xl md:text-4xl font-bold text-white tabular-nums">{v}</div>
+            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2">{l}</div>
+          </motion.div>
+        ))}
       </motion.div>
     </div>
   </div>
@@ -112,7 +131,7 @@ export const SlideTOC = ({ chapters, onJump }) => (
           The complete<br />platform tour.
         </h1>
         <p className="text-slate-400 max-w-sm">
-          Nineteen slides on how AssetStack turns chaotic asset operations into a single intelligent command center.
+          Twenty-nine slides on how AssetStack turns chaotic asset operations into a single intelligent command center.
         </p>
       </div>
       <div className="relative">
@@ -145,9 +164,9 @@ export const SlideTOC = ({ chapters, onJump }) => (
 // 03 — Problem
 export const SlideProblem = () => (
   <SlideShell
-    kicker="01 · The reality today"
-    title="Asset teams are flying blind."
-    subtitle="Most organisations still manage millions in infrastructure with spreadsheets, paper inspections and reactive callouts. The cost shows up in every budget cycle."
+    kicker="· The reality today"
+    title="$3M / yr is spent finding out what's already broken."
+    subtitle="Most asset organisations still run on spreadsheets, paper inspections and reactive callouts. The cost compounds every budget cycle."
   >
     <div className="bg-slate-50 border-l-4 border-indigo-500 rounded-r-xl p-6 md:p-8 mb-8">
       <Quote className="w-6 h-6 text-indigo-300 mb-2" />
@@ -190,8 +209,8 @@ export const SlideSolution = () => {
   };
   return (
     <SlideShell
-      kicker="02 · The AssetStack way"
-      title="One intelligent command center."
+      kicker="· The AssetStack way"
+      title="See it. Predict it. Act on it. Prove it."
       subtitle="Every asset, every sensor, every scan, every dollar — unified. AssetMind sits on top and acts on your behalf."
     >
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -222,9 +241,9 @@ export const SlideSolution = () => {
 // 05 — AssetMind
 export const SlideAssetMind = () => (
   <SlideShell
-    kicker="03 · AssetMind in action"
-    title={<>Not a chatbot. <span className="text-indigo-400">A command center.</span></>}
-    subtitle="AssetMind has full read/write access to every record and can invoke specialised AI pipelines. Ask in plain English — it plans, looks up, executes, and reports back."
+    kicker="· AssetMind"
+    title={<>Plain English in. <span className="text-indigo-400">Real work out.</span></>}
+    subtitle="Not a chatbot. AssetMind has full read/write access to every record and 38 specialised AI pipelines. It plans, queries, executes and reports back — autonomously."
     variant="gradient"
   >
     <div className="grid grid-cols-2 gap-10 h-full">
@@ -267,9 +286,9 @@ export const SlideSpeed = () => {
   ];
   return (
     <SlideShell
-      kicker="04 · Onboarding speed"
-      title="Spreadsheet to live portfolio in minutes."
-      subtitle="Drop your asset register. AssetMind parses it, infers asset types, links locations, computes health and risk, and generates your first predictions — automatically."
+      kicker="· Onboarding"
+      title="From CSV to live predictions in 4 minutes 47 seconds."
+      subtitle="Drop your register. AssetMind parses it, infers types, links locations, scores health, computes risk and generates the first predictions — automatically."
     >
       <div className="bg-slate-50 rounded-2xl border border-slate-200 p-8 mb-6">
         <div className="relative">
@@ -319,9 +338,9 @@ export const SlideSpeed = () => {
 // 07 — Predict
 export const SlidePredict = () => (
   <SlideShell
-    kicker="05 · Predictive maintenance"
-    title="See failures coming weeks ahead."
-    subtitle="Sensor data + condition reports + age + duty cycle fused into per-asset failure probability and remaining useful life. Updated continuously."
+    kicker="· Predictive maintenance"
+    title="Catch the failure 30 days before it shuts you down."
+    subtitle="Sensor data + condition reports + age + duty cycle → per-asset failure probability and Remaining Useful Life. Updated continuously, ranked by risk."
   >
     <div className="grid grid-cols-2 gap-8 h-full">
       <div>
@@ -361,9 +380,9 @@ export const SlideScans = () => {
   ];
   return (
     <SlideShell
-      kicker="06 · Digital twin & scans"
-      title="Every defect, automatically."
-      subtitle="Upload a LiDAR or photogrammetry scan. AssetMind extracts frames, runs AI vision, locates anomalies in 3D, and queues them for human verification."
+      kicker="· Digital twin & scans"
+      title="Upload the scan. The defects find themselves."
+      subtitle="LiDAR or photogrammetry in. AssetMind extracts frames, runs vision AI, locates anomalies in 3D and queues them for one-click human verification."
     >
       <div className="flex items-center gap-3 mb-8 overflow-x-auto">
         {flow.map(([t, s, c], i) => (
@@ -405,9 +424,9 @@ export const SlideScans = () => {
 // 09 — Work orders
 export const SlideWorkOrders = () => (
   <SlideShell
-    kicker="07 · Work orders & field ops"
-    title="Prediction → completed job, hands-free."
-    subtitle="Auto-generated WOs, smart assignment, mobile checklists, photo capture, offline sync."
+    kicker="· Work orders"
+    title="Prediction → drafted → assigned → done. No one typing."
+    subtitle="Auto-generated WOs, skill-based assignment, dynamic checklists, photo capture, threaded chat, follow-up automation, offline-first mobile."
   >
     <div className="grid grid-cols-3 gap-8 h-full">
       <div className="h-full max-h-[480px]">
@@ -435,9 +454,9 @@ export const SlideWorkOrders = () => (
 // 10 — Live portfolio
 export const SlideLivePortfolio = () => (
   <SlideShell
-    kicker="08 · Live portfolio"
-    title="Every asset. One screen."
-    subtitle="Globe to site to asset in two clicks. The same record visible to ops, finance and the board — always."
+    kicker="· Live portfolio"
+    title="Globe to asset in two clicks. One truth for everyone."
+    subtitle="Ops, finance, and the board look at the same record — always. No reconciliation, no version conflicts, no exports."
   >
     <div className="grid grid-cols-3 gap-4 h-full">
       <div className="col-span-2 h-full max-h-[480px]">
@@ -454,9 +473,9 @@ export const SlideLivePortfolio = () => (
 // 11 — Finance
 export const SlideFinance = () => (
   <SlideShell
-    kicker="09 · Finance & capital plan"
-    title="Renewals planned on condition, not age."
-    subtitle="Risk-scored renewal forecasts, scenario modelling, budget variance alerts and a verified savings ledger that pays for the platform many times over."
+    kicker="· Finance & capital plan"
+    title="Defer a renewal? You'll see the 10-year cost in 10 seconds."
+    subtitle="Risk-scored forecasts, drag-to-defer planning, scenario modelling, variance alerts and a verified savings ledger — built for CFOs and auditors."
   >
     <div className="grid grid-cols-2 gap-6 mb-6 h-[400px]">
       <BacklogChart />
@@ -481,9 +500,9 @@ export const SlideFinance = () => (
 // 12 — Savings
 export const SlideSavings = () => (
   <SlideShell
-    kicker="10 · Proof of value"
-    title="Every dollar saved, logged and verified."
-    subtitle="Most platforms promise savings. AssetStack proves them — by recording the predicted-failure cost, the intervention cost, and the verified delta on every action."
+    kicker="· Proof of value"
+    title="The only platform that proves its own ROI — line by line."
+    subtitle="Predicted failure cost. Intervention cost. Verified delta. Every saving claim audited and disputable. No more 'trust us.'"
   >
     <div className="grid grid-cols-2 gap-8 h-full">
       <div className="h-full max-h-[500px]">
@@ -525,9 +544,9 @@ export const SlideSavings = () => (
 // 13 — Compliance
 export const SlideCompliance = () => (
   <SlideShell
-    kicker="11 · Compliance & audit"
-    title="Zero-panic certifications."
-    subtitle="Every requirement, every document, every due date — tracked, reminded, auto-WO'd. Audit week becomes audit hour."
+    kicker="· Compliance & audit"
+    title="Audit week becomes audit hour."
+    subtitle="Every requirement, every certificate, every due date — pre-loaded, reminded, auto-WO'd. Pre-loaded with AS 1735, ISO 55000, NFPA 25 and friends."
   >
     <div className="grid grid-cols-4 gap-3 mb-6">
       {[
@@ -563,9 +582,9 @@ export const SlideCompliance = () => (
 // 14 — Security
 export const SlideSecurity = () => (
   <SlideShell
-    kicker="12 · Security & trust"
-    title="Enterprise-grade. Transparently."
-    subtitle="Your data, your control. Every action audited. Every change reversible."
+    kicker="· Security & trust"
+    title="Your data. Your region. Your audit trail."
+    subtitle="Enterprise-grade controls, transparently surfaced. Every sensitive action recorded. Every change reversible."
   >
     <div className="grid grid-cols-3 gap-3">
       {[
@@ -613,9 +632,9 @@ export const SlideComparison = () => {
   };
   return (
     <SlideShell
-      kicker="13 · Why teams choose us"
-      title="How AssetStack compares."
-      subtitle="Against legacy CMMS and modern point tools."
+      kicker="· Why teams choose us"
+      title="The features that don't exist anywhere else."
+      subtitle="Compared against legacy CMMS suites and modern point tools."
     >
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
         <div className="grid grid-cols-[2fr_1fr_1fr_1fr] bg-slate-900 text-white">
@@ -675,7 +694,7 @@ export const SlideVoices = () => {
     },
   ];
   return (
-    <SlideShell kicker="14 · Customer voices" title="In their own words." className="bg-slate-50">
+    <SlideShell kicker="· Customer voices" title="What they tell their boards." className="bg-slate-50">
       <div className="grid grid-cols-2 gap-5">
         {quotes.map((qd) => (
           <motion.div
@@ -704,9 +723,9 @@ export const SlideVoices = () => {
 // 17 — Impact
 export const SlideImpact = () => (
   <SlideShell
-    kicker="15 · Outcomes & ROI"
-    title="What customers actually see."
-    subtitle="Typical outcomes within 90 days of go-live."
+    kicker="· Outcomes & ROI"
+    title="Payback in under 4 months. Typical."
+    subtitle="The numbers customers actually report — within 90 days of go-live."
   >
     <div className="grid grid-cols-4 gap-3 mb-6">
       {[
@@ -757,9 +776,9 @@ export const SlideRoadmap = () => {
   ];
   return (
     <SlideShell
-      kicker="16 · Get started"
-      title="Your first 30 days."
-      subtitle="A predictable, low-risk path from kickoff to value."
+      kicker="· Get started"
+      title="Day 1 to first savings — in four moves."
+      subtitle="A predictable, low-risk path from kickoff to verified ROI."
     >
       <div className="grid grid-cols-4 gap-4 mb-6">
         {phases.map(([w, t, b, c]) => (
