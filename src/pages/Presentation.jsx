@@ -2,54 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, Maximize2, Minimize2, Grid3x3 } from 'lucide-react';
-import {
-  SlideTOC, SlideProblem, SlideAssetMind, SlideWorkOrders, SlideVoices,
-  SlideImpact, SlideRoadmap, SlideCTA, SlidePredict, SlideScans,
-  SlideLivePortfolio, SlideFinance, SlideSavings, SlideCompliance,
-  SlideSecurity, SlideComparison,
-} from '../components/presentation/slides';
-import {
-  SlideAssetRegister, SlideMaintenance, SlideFinanceHub, SlideSensors, SlideFieldOps,
-} from '../components/presentation/featureSlides';
-import {
-  SlideBigStat, SlideBeforeAfter, SlideManifesto, SlideProductMap, SlideThankYou,
-} from '../components/presentation/wowSlides';
-import {
-  SlideCoverV2, SlideFourPillars, SlideFastUpload, SlideConditionReports,
-} from '../components/presentation/coreSlides';
-
-const CHAPTERS = [
-  'Cover',
-  'Inside this edition',
-  '82%',
-  'The reality today',
-  'The shift · before & after',
-  'The promise',
-  'The four pillars',
-  'Fast upload',
-  '01 · Asset register',
-  'Live portfolio',
-  '02 · Maintenance tasks',
-  'Work orders in action',
-  'Predictive maintenance',
-  'Sensors & IoT',
-  '03 · AI command centre',
-  '04 · Condition reports',
-  'Digital twin & scans',
-  'Field ops · mobile',
-  'Finance hub',
-  'Capital plan & scenarios',
-  'Verified savings ledger',
-  'Compliance & audit',
-  'Security & trust',
-  'The whole product',
-  'Why teams choose us',
-  'Customer voices',
-  'Outcomes & ROI',
-  'Get started',
-  "Let's talk",
-  'Thank you',
-];
+import { DECK } from '../components/presentation/deck';
 
 export default function Presentation() {
   const [index, setIndex] = useState(0);
@@ -57,40 +10,8 @@ export default function Presentation() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showOverview, setShowOverview] = useState(false);
 
-  const total = CHAPTERS.length;
-
-  const slides = useMemo(() => [
-    <SlideCoverV2 />,
-    <SlideTOC chapters={CHAPTERS.slice(2)} onJump={(i) => setIndex(i + 2)} />,
-    <SlideBigStat />,
-    <SlideProblem />,
-    <SlideBeforeAfter />,
-    <SlideManifesto />,
-    <SlideFourPillars />,
-    <SlideFastUpload />,
-    <SlideAssetRegister />,
-    <SlideLivePortfolio />,
-    <SlideMaintenance />,
-    <SlideWorkOrders />,
-    <SlidePredict />,
-    <SlideSensors />,
-    <SlideAssetMind />,
-    <SlideConditionReports />,
-    <SlideScans />,
-    <SlideFieldOps />,
-    <SlideFinanceHub />,
-    <SlideFinance />,
-    <SlideSavings />,
-    <SlideCompliance />,
-    <SlideSecurity />,
-    <SlideProductMap />,
-    <SlideComparison />,
-    <SlideVoices />,
-    <SlideImpact />,
-    <SlideRoadmap />,
-    <SlideCTA />,
-    <SlideThankYou />,
-  ], []);
+  const total = DECK.length;
+  const chapters = useMemo(() => DECK.map((s) => s.title), []);
 
   const go = useCallback((next) => {
     setIndex((curr) => {
@@ -99,6 +20,27 @@ export default function Presentation() {
       return target;
     });
   }, [total]);
+
+  // Render a slide by index. The TOC slide needs chapters + onJump injected.
+  const renderSlide = useCallback((i) => {
+    const slide = DECK[i];
+    const SlideComp = slide.Component;
+    if (slide.dynamic) {
+      // TOC — slice off cover + TOC itself so numbering matches what's shown
+      return (
+        <SlideComp
+          chapters={chapters.slice(2)}
+          onJump={(ci) => go(ci + 2)}
+        />
+      );
+    }
+    return <SlideComp />;
+  }, [chapters, go]);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+    else document.exitFullscreen?.();
+  };
 
   useEffect(() => {
     const onKey = (e) => {
@@ -134,11 +76,6 @@ export default function Presentation() {
     return () => document.removeEventListener('fullscreenchange', onFsChange);
   }, []);
 
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
-    else document.exitFullscreen?.();
-  };
-
   const variants = {
     enter: (dir) => ({ opacity: 0, x: dir > 0 ? 40 : -40 }),
     center: { opacity: 1, x: 0 },
@@ -147,7 +84,6 @@ export default function Presentation() {
 
   return (
     <div className="fixed inset-0 bg-black flex flex-col z-50">
-      {/* Slide stage */}
       <div className="flex-1 relative overflow-hidden">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
@@ -160,11 +96,10 @@ export default function Presentation() {
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0"
           >
-            {slides[index]}
+            {renderSlide(index)}
           </motion.div>
         </AnimatePresence>
 
-        {/* Edge click zones */}
         <button
           aria-label="Previous slide"
           onClick={() => go(index - 1)}
@@ -176,7 +111,6 @@ export default function Presentation() {
           className="absolute right-0 top-0 bottom-16 w-[10%] cursor-e-resize"
         />
 
-        {/* Side nav arrows */}
         <button
           onClick={() => go(index - 1)}
           disabled={index === 0}
@@ -193,7 +127,6 @@ export default function Presentation() {
         </button>
       </div>
 
-      {/* Bottom bar */}
       <div className="h-16 bg-slate-950 border-t border-slate-800 flex items-center justify-between px-4 md:px-6 gap-4">
         <div className="flex items-center gap-3">
           <Link
@@ -204,21 +137,25 @@ export default function Presentation() {
             <X className="w-4 h-4" />
           </Link>
           <div className="hidden md:block">
-            <div className="text-xs font-bold text-white">{CHAPTERS[index]}</div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold tracking-widest text-indigo-400 uppercase">
+                {DECK[index].act}
+              </span>
+              <span className="text-xs font-bold text-white">{DECK[index].title}</span>
+            </div>
             <div className="text-[10px] text-slate-500 tabular-nums">
               {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
             </div>
           </div>
         </div>
 
-        {/* Dot navigation */}
         <div className="flex-1 flex items-center justify-center gap-1.5 max-w-2xl overflow-x-auto">
-          {CHAPTERS.map((c, i) => (
+          {DECK.map((s, i) => (
             <button
               key={i}
               onClick={() => go(i)}
-              title={c}
-              className={`group relative h-1.5 rounded-full transition-all ${
+              title={`${s.act} · ${s.title}`}
+              className={`h-1.5 rounded-full transition-all ${
                 i === index ? 'bg-indigo-500 w-8' : 'bg-slate-700 hover:bg-slate-500 w-4'
               }`}
             />
@@ -245,7 +182,6 @@ export default function Presentation() {
         </div>
       </div>
 
-      {/* Overview grid */}
       <AnimatePresence>
         {showOverview && (
           <motion.div
@@ -258,7 +194,7 @@ export default function Presentation() {
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <div className="text-[11px] font-bold tracking-[0.3em] text-indigo-300 uppercase mb-1">
-                    Overview
+                    Overview · {total} slides
                   </div>
                   <h2 className="text-2xl font-bold text-white">All slides</h2>
                 </div>
@@ -270,7 +206,7 @@ export default function Presentation() {
                 </button>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {CHAPTERS.map((c, i) => (
+                {DECK.map((s, i) => (
                   <button
                     key={i}
                     onClick={() => {
@@ -283,14 +219,19 @@ export default function Presentation() {
                   >
                     <div className="aspect-video bg-slate-900 relative overflow-hidden">
                       <div className="absolute inset-0 origin-top-left scale-[0.2] w-[500%] h-[500%] pointer-events-none">
-                        {slides[i]}
+                        {renderSlide(i)}
                       </div>
                     </div>
                     <div className="p-3 border-t border-slate-800">
-                      <div className="text-[10px] font-bold text-slate-500 tabular-nums mb-0.5">
-                        {String(i + 1).padStart(2, '0')}
+                      <div className="flex items-center justify-between mb-0.5">
+                        <div className="text-[10px] font-bold text-slate-500 tabular-nums">
+                          {String(i + 1).padStart(2, '0')}
+                        </div>
+                        <div className="text-[9px] font-bold text-indigo-400 uppercase tracking-widest">
+                          {s.act}
+                        </div>
                       </div>
-                      <div className="text-sm font-bold text-white truncate">{c}</div>
+                      <div className="text-sm font-bold text-white truncate">{s.title}</div>
                     </div>
                   </button>
                 ))}
