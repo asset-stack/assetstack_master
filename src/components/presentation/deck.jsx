@@ -12,18 +12,24 @@ import {
 import {
   SlideCoverV2, SlideFourPillars, SlideFastUpload, SlideConditionReports,
 } from './coreSlides';
+import {
+  SlideModulesOverview, SlideModuleAssetMind, SlideModulePeople, SlideModuleAssets,
+  SlideModuleDelivery, SlideModuleOperations, SlideModuleFinance, SlideModuleFieldOps,
+  SlideModuleIntelligence, SlideModuleContractor,
+} from './moduleSlides';
 
 /**
- * AssetStack deck — 22 slides, boardroom length (~15 min).
+ * AssetStack deck — 32 slides, full platform tour (~20 min).
  * All figures inside slides are illustrative demo data.
  *
- * Six acts:
+ * Seven acts:
  *  I.   Open          — cover, TOC, the 82% stat
  *  II.  Problem       — the reality, before/after, the promise
  *  III. Four pillars  — register, maintenance, AI, condition reports
- *  IV.  In motion     — fast upload, portfolio, predict, scans, WOs
- *  V.   Proof         — finance, savings ledger, compliance
- *  VI.  Close         — comparison, voices, ROI, roadmap, CTA, thanks
+ *  IV.  Modules       — full tour across all 9 modules (NEW)
+ *  V.   In motion     — fast upload, portfolio, predict, scans
+ *  VI.  Proof         — finance, savings ledger, compliance
+ *  VII. Close         — comparison, voices, ROI, CTA
  */
 export const DECK = [
   // I. Open (3)
@@ -43,18 +49,30 @@ export const DECK = [
   { act: 'Pillars',  title: '03 · AI command centre', Component: SlideAssetMind },
   { act: 'Pillars',  title: '04 · Condition reports', Component: SlideConditionReports },
 
-  // IV. In motion (4)
+  // IV. Modules tour (10) — full platform walkthrough
+  { act: 'Modules',  title: 'Nine modules, one model',Component: SlideModulesOverview },
+  { act: 'Modules',  title: 'M1 · AssetMind',         Component: SlideModuleAssetMind },
+  { act: 'Modules',  title: 'M2 · People',            Component: SlideModulePeople },
+  { act: 'Modules',  title: 'M3 · Assets',            Component: SlideModuleAssets },
+  { act: 'Modules',  title: 'M4 · Delivery',          Component: SlideModuleDelivery },
+  { act: 'Modules',  title: 'M5 · Operations',        Component: SlideModuleOperations },
+  { act: 'Modules',  title: 'M6 · Finance',           Component: SlideModuleFinance },
+  { act: 'Modules',  title: 'M7 · Field Ops',         Component: SlideModuleFieldOps },
+  { act: 'Modules',  title: 'M8 · Intelligence',      Component: SlideModuleIntelligence },
+  { act: 'Modules',  title: 'M9 · Contractor Hub',    Component: SlideModuleContractor },
+
+  // V. In motion (4)
   { act: 'Platform', title: 'Fast upload · 4:47',     Component: SlideFastUpload },
   { act: 'Platform', title: 'Live portfolio',         Component: SlideLivePortfolio },
   { act: 'Platform', title: 'Predictive maintenance', Component: SlidePredict },
   { act: 'Platform', title: 'Scans → defects → WOs',  Component: SlideScans },
 
-  // V. Proof (3)
+  // VI. Proof (3)
   { act: 'Proof',    title: 'Finance & capital plan', Component: SlideFinance },
   { act: 'Proof',    title: 'Verified savings ledger',Component: SlideSavings },
   { act: 'Proof',    title: 'Compliance & trust',     Component: SlideCompliance },
 
-  // VI. Close (4)
+  // VII. Close (4)
   { act: 'Close',    title: 'Why teams choose us',    Component: SlideComparison },
   { act: 'Close',    title: 'Customer voices',        Component: SlideVoices },
   { act: 'Close',    title: 'Outcomes & ROI',         Component: SlideImpact },
