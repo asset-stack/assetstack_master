@@ -19,9 +19,9 @@ import {
    ============================================================ */
 export const SlideAssetRegister = () => (
   <SlideShell
-    kicker="· Asset register"
-    title="Two thousand assets. One screen. Three filters."
-    subtitle="A defensible single source of truth — register, hierarchy, globe, locations. Every record links to its sensors, scans, work orders, photos and budget line."
+    kicker="· Pillar 01 · Asset register"
+    title="Every asset you own. One defensible record."
+    subtitle="Register · hierarchy · network globe · locations. Every asset linked to its sensors, scans, work orders, photos, docs and budget line. Filter, sort, bulk-edit thousands in one screen."
   >
     <div className="grid grid-cols-5 gap-6 h-full">
       <div className="col-span-3 h-full max-h-[460px]">
@@ -54,9 +54,9 @@ export const SlideAssetRegister = () => (
    ============================================================ */
 export const SlideMaintenance = () => (
   <SlideShell
-    kicker="· Maintenance hub"
-    title="Scheduled, predictive, corrective — one workflow."
-    subtitle="Plan, schedule, dispatch, close. Templates for recurring work. AI for predictive scheduling. Dynamic checklists and live chat on every job."
+    kicker="· Pillar 02 · Maintenance task management"
+    title="Plan it. Dispatch it. Close it. Prove it."
+    subtitle="Scheduled, predictive and corrective — one workflow. Templates for recurring work, AI for predictive scheduling, skill-based assignment, dynamic checklists, live chat per job, full audit trail."
   >
     <div className="grid grid-cols-5 gap-6 h-full">
       <div className="col-span-3 h-full max-h-[440px]">

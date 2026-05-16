@@ -128,10 +128,11 @@ export const SlideTOC = ({ chapters, onJump }) => (
           Inside this edition
         </div>
         <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-          The complete<br />platform tour.
+          The four pillars<br />of AssetStack.
         </h1>
         <p className="text-slate-400 max-w-sm">
-          Twenty-nine slides on how AssetStack turns chaotic asset operations into a single intelligent command center.
+          Asset register · Maintenance tasks · AI command centre · Condition reports.
+          Plus how fast you can upload everything you own.
         </p>
       </div>
       <div className="relative">
@@ -241,9 +242,9 @@ export const SlideSolution = () => {
 // 05 — AssetMind
 export const SlideAssetMind = () => (
   <SlideShell
-    kicker="· AssetMind"
+    kicker="· Pillar 03 · AI command centre"
     title={<>Plain English in. <span className="text-indigo-400">Real work out.</span></>}
-    subtitle="Not a chatbot. AssetMind has full read/write access to every record and 38 specialised AI pipelines. It plans, queries, executes and reports back — autonomously."
+    subtitle="Not a chatbot. AssetMind has full read/write access to every record across all four pillars, plus 38 specialised AI pipelines. It plans, queries, executes and reports back — autonomously."
     variant="gradient"
   >
     <div className="grid grid-cols-2 gap-10 h-full">
@@ -424,9 +425,9 @@ export const SlideScans = () => {
 // 09 — Work orders
 export const SlideWorkOrders = () => (
   <SlideShell
-    kicker="· Work orders"
-    title="Prediction → drafted → assigned → done. No one typing."
-    subtitle="Auto-generated WOs, skill-based assignment, dynamic checklists, photo capture, threaded chat, follow-up automation, offline-first mobile."
+    kicker="· Work orders in action"
+    title="Condition report → drafted → assigned → done. No one typing."
+    subtitle="An AI defect, a sensor spike or a predicted failure becomes a work order automatically — assigned to the right tech, on the right day, with the right checklist."
   >
     <div className="grid grid-cols-3 gap-8 h-full">
       <div className="h-full max-h-[480px]">

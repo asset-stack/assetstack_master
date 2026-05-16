@@ -3,17 +3,18 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, Maximize2, Minimize2, Grid3x3 } from 'lucide-react';
 import {
-  SlideCover, SlideTOC, SlideProblem, SlideSolution, SlideAssetMind, SlideSpeed,
-  SlidePredict, SlideScans, SlideWorkOrders, SlideLivePortfolio, SlideFinance,
-  SlideSavings, SlideCompliance, SlideSecurity, SlideComparison, SlideVoices,
+  SlideTOC, SlideProblem, SlideAssetMind, SlideWorkOrders, SlideVoices,
   SlideImpact, SlideRoadmap, SlideCTA,
 } from '../components/presentation/slides';
 import {
-  SlideAssetRegister, SlideMaintenance, SlideFinanceHub, SlideSensors, SlideFieldOps,
+  SlideAssetRegister, SlideMaintenance,
 } from '../components/presentation/featureSlides';
 import {
-  SlideBigStat, SlideBeforeAfter, SlideManifesto, SlideProductMap, SlideThankYou,
+  SlideBigStat, SlideManifesto, SlideThankYou,
 } from '../components/presentation/wowSlides';
+import {
+  SlideCoverV2, SlideFourPillars, SlideFastUpload, SlideConditionReports,
+} from '../components/presentation/coreSlides';
 
 const CHAPTERS = [
   'Cover',
@@ -21,25 +22,13 @@ const CHAPTERS = [
   '82%',
   'The reality today',
   'The promise',
-  'The AssetStack way',
-  'The shift · before & after',
-  'The whole product',
-  'AssetMind',
-  'Onboarding',
-  'Asset register & hierarchy',
-  'Live portfolio',
-  'Sensors & IoT',
-  'Predictive maintenance',
-  'Digital twin & scans',
-  'Maintenance hub',
-  'Work orders',
-  'Field ops · mobile',
-  'Finance hub',
-  'Finance & capital plan',
-  'Proof of value',
-  'Compliance & audit',
-  'Security & trust',
-  'Why teams choose us',
+  'The four pillars',
+  'Fast upload',
+  '01 · Asset register',
+  '02 · Maintenance tasks',
+  '03 · AI command centre',
+  '04 · Condition reports',
+  'Work orders in action',
   'Customer voices',
   'Outcomes & ROI',
   'Get started',
@@ -56,30 +45,18 @@ export default function Presentation() {
   const total = CHAPTERS.length;
 
   const slides = useMemo(() => [
-    <SlideCover />,
+    <SlideCoverV2 />,
     <SlideTOC chapters={CHAPTERS.slice(2)} onJump={(i) => setIndex(i + 2)} />,
     <SlideBigStat />,
     <SlideProblem />,
     <SlideManifesto />,
-    <SlideSolution />,
-    <SlideBeforeAfter />,
-    <SlideProductMap />,
-    <SlideAssetMind />,
-    <SlideSpeed />,
+    <SlideFourPillars />,
+    <SlideFastUpload />,
     <SlideAssetRegister />,
-    <SlideLivePortfolio />,
-    <SlideSensors />,
-    <SlidePredict />,
-    <SlideScans />,
     <SlideMaintenance />,
+    <SlideAssetMind />,
+    <SlideConditionReports />,
     <SlideWorkOrders />,
-    <SlideFieldOps />,
-    <SlideFinanceHub />,
-    <SlideFinance />,
-    <SlideSavings />,
-    <SlideCompliance />,
-    <SlideSecurity />,
-    <SlideComparison />,
     <SlideVoices />,
     <SlideImpact />,
     <SlideRoadmap />,
