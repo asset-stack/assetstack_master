@@ -8,6 +8,9 @@ import {
   SlideSavings, SlideCompliance, SlideSecurity, SlideComparison, SlideVoices,
   SlideImpact, SlideRoadmap, SlideCTA,
 } from '../components/presentation/slides';
+import {
+  SlideAssetRegister, SlideMaintenance, SlideFinanceHub, SlideSensors, SlideFieldOps,
+} from '../components/presentation/featureSlides';
 
 const CHAPTERS = [
   'Cover',
@@ -16,10 +19,15 @@ const CHAPTERS = [
   'The AssetStack way',
   'AssetMind in action',
   'Onboarding speed',
+  'Asset register & hierarchy',
+  'Live portfolio',
+  'Sensors & IoT',
   'Predictive maintenance',
   'Digital twin & scans',
+  'Maintenance hub',
   'Work orders & field ops',
-  'Live portfolio',
+  'Field ops · mobile',
+  'Finance hub',
   'Finance & capital plan',
   'Proof of value',
   'Compliance & audit',
@@ -46,10 +54,15 @@ export default function Presentation() {
     <SlideSolution />,
     <SlideAssetMind />,
     <SlideSpeed />,
+    <SlideAssetRegister />,
+    <SlideLivePortfolio />,
+    <SlideSensors />,
     <SlidePredict />,
     <SlideScans />,
+    <SlideMaintenance />,
     <SlideWorkOrders />,
-    <SlideLivePortfolio />,
+    <SlideFieldOps />,
+    <SlideFinanceHub />,
     <SlideFinance />,
     <SlideSavings />,
     <SlideCompliance />,
