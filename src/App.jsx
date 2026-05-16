@@ -47,6 +47,7 @@ import BulkUpdate from './pages/BulkUpdate';
 import PortfolioInsights from './pages/PortfolioInsights';
 import Finance from './pages/Finance';
 import LocationDetail from './pages/LocationDetail';
+import Presentation from './pages/Presentation';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -288,6 +289,7 @@ const AuthenticatedApp = () => {
               <LocationDetail />
             </LayoutWrapper>
           } />
+      <Route path="/Presentation" element={<Presentation />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
