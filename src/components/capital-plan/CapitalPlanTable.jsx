@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Edit, Calendar } from 'lucide-react';
+import { Edit, Calendar, Briefcase, Loader2 } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
+import { useNavigate } from 'react-router-dom';
 
 const PRIORITY_COLOR = {
   urgent: 'bg-rose-100 text-rose-700',
@@ -39,6 +41,23 @@ function fmtCompact(n) {
 }
 
 export default function CapitalPlanTable({ items, onEdit }) {
+  const navigate = useNavigate();
+  const [convertingId, setConvertingId] = useState(null);
+
+  const handleConvert = async (item) => {
+    setConvertingId(item.id);
+    try {
+      const res = await base44.functions.invoke('convertCapitalItemToProject', {
+        capital_plan_item_ids: [item.id]
+      });
+      const project = res.data?.project;
+      if (project?.id) navigate(`/ProjectDetail?id=${project.id}`);
+    } catch (e) {
+      console.error(e);
+    }
+    setConvertingId(null);
+  };
+
   if (!items.length) {
     return (
       <div className="bg-white border border-slate-200 rounded-xl p-10 text-center">
@@ -99,9 +118,25 @@ export default function CapitalPlanTable({ items, onEdit }) {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <Button size="icon" variant="ghost" onClick={() => onEdit?.(item)} className="h-7 w-7">
-                    <Edit className="w-3 h-3" />
-                  </Button>
+                  <div className="flex items-center justify-end gap-1">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => handleConvert(item)}
+                      disabled={convertingId === item.id}
+                      className="h-7 w-7 text-indigo-600 hover:bg-indigo-50"
+                      title="Convert to Project"
+                    >
+                      {convertingId === item.id ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Briefcase className="w-3 h-3" />
+                      )}
+                    </Button>
+                    <Button size="icon" variant="ghost" onClick={() => onEdit?.(item)} className="h-7 w-7">
+                      <Edit className="w-3 h-3" />
+                    </Button>
+                  </div>
                 </td>
               </tr>
             );

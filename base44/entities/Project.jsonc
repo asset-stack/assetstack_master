@@ -1,0 +1,312 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Project name"
+    },
+    "code": {
+      "type": "string",
+      "description": "Short project code, e.g. PRJ-2026-001"
+    },
+    "description": {
+      "type": "string"
+    },
+    "project_type": {
+      "type": "string",
+      "enum": [
+        "renewal",
+        "upgrade",
+        "new_build",
+        "compliance_program",
+        "disposal",
+        "grant_funded",
+        "maintenance_program",
+        "other"
+      ],
+      "default": "renewal"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "approved",
+        "in_delivery",
+        "on_hold",
+        "complete",
+        "cancelled"
+      ],
+      "default": "planning"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    },
+    "health": {
+      "type": "string",
+      "enum": [
+        "on_track",
+        "at_risk",
+        "off_track"
+      ],
+      "default": "on_track",
+      "description": "Delivery health indicator"
+    },
+    "project_manager": {
+      "type": "string",
+      "description": "Email or name of the project manager"
+    },
+    "sponsor": {
+      "type": "string",
+      "description": "Executive sponsor"
+    },
+    "location_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Linked Location IDs"
+    },
+    "location_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "equipment_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Linked Equipment IDs in scope"
+    },
+    "capital_plan_item_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Source capital plan items this project delivers"
+    },
+    "compliance_requirement_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "target_end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "actual_end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "budget": {
+      "type": "number",
+      "description": "Total approved budget"
+    },
+    "committed_cost": {
+      "type": "number",
+      "default": 0,
+      "description": "Committed (POs raised)"
+    },
+    "actual_cost": {
+      "type": "number",
+      "default": 0,
+      "description": "Spend to date (rolled up from linked work orders)"
+    },
+    "forecast_cost": {
+      "type": "number",
+      "description": "AI / PM forecast at completion"
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "funding_source": {
+      "type": "string",
+      "enum": [
+        "operational",
+        "capital",
+        "grant",
+        "external",
+        "mixed",
+        "tbd"
+      ],
+      "default": "capital"
+    },
+    "grant_reference": {
+      "type": "string",
+      "description": "Grant ID / scheme reference"
+    },
+    "baseline_condition_score": {
+      "type": "number",
+      "description": "Average condition of in-scope assets at project kickoff"
+    },
+    "post_condition_score": {
+      "type": "number",
+      "description": "Average condition after delivery"
+    },
+    "verified_savings": {
+      "type": "number",
+      "description": "Savings booked into the SavingsLedger from this project"
+    },
+    "progress_percent": {
+      "type": "number",
+      "default": 0,
+      "description": "0-100 overall completion"
+    },
+    "phases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "not_started",
+              "in_progress",
+              "complete",
+              "blocked"
+            ],
+            "default": "not_started"
+          },
+          "progress_percent": {
+            "type": "number",
+            "default": 0
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Phase IDs this phase depends on"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "likelihood": {
+            "type": "string",
+            "enum": [
+              "unlikely",
+              "possible",
+              "likely",
+              "almost_certain"
+            ]
+          },
+          "impact": {
+            "type": "string",
+            "enum": [
+              "minor",
+              "moderate",
+              "major",
+              "severe"
+            ]
+          },
+          "mitigation": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "mitigated",
+              "closed"
+            ],
+            "default": "open"
+          }
+        }
+      }
+    },
+    "stakeholders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "raci": {
+            "type": "string",
+            "enum": [
+              "responsible",
+              "accountable",
+              "consulted",
+              "informed"
+            ]
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ai_generated": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether scope/plan was drafted by AssetMind"
+    },
+    "ai_prompt": {
+      "type": "string",
+      "description": "Original prompt used to generate this project"
+    }
+  },
+  "required": [
+    "name",
+    "project_type"
+  ]
+}

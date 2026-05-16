@@ -9,7 +9,7 @@ import {
   ChevronDown, GitBranch, Globe2, FlaskConical, ShieldCheck,
   Package, Wallet, Building2, CalendarDays, AlertOctagon, Banknote,
   Target, FlaskConical as FlaskIcon, ClipboardCheck, TrendingUp, Smartphone,
-  ShieldAlert, Waves, Camera, Filter, Edit3
+  ShieldAlert, Waves, Camera, Filter, Edit3, Rocket
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
@@ -46,6 +46,12 @@ const navSections = [
       { name: 'Locations', icon: MapPin, page: 'Locations' },
       { name: 'Digital Twin', icon: Box, page: 'DigitalTwin' },
       { name: 'Sensors', icon: Radio, page: 'SensorIntegration' },
+    ]
+  },
+  {
+    label: 'Delivery',
+    items: [
+      { name: 'Projects', icon: Rocket, page: 'Projects' },
     ]
   },
   {
