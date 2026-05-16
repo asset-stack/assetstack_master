@@ -2,6 +2,15 @@
 module.exports = {
     darkMode: ["class"],
     content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+    safelist: [
+      // EVM health tones dynamically composed from indexHealth()
+      'bg-emerald-500', 'bg-amber-500', 'bg-rose-500',
+      'bg-emerald-500/70', 'bg-amber-500/70', 'bg-rose-500/70',
+      'text-emerald-600', 'text-amber-600', 'text-rose-600',
+      'text-emerald-700', 'text-amber-700', 'text-rose-700',
+      'border-emerald-200', 'border-amber-200', 'border-rose-200',
+      'border-emerald-500', 'border-amber-500', 'border-rose-500',
+    ],
   theme: {
   	extend: {
   		fontFamily: {

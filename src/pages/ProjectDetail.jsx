@@ -24,6 +24,9 @@ import ProjectAssets from '@/components/projects/ProjectAssets';
 import ProjectRisks from '@/components/projects/ProjectRisks';
 import ProjectWorkOrders from '@/components/projects/ProjectWorkOrders';
 import ProjectFormDialog from '@/components/projects/ProjectFormDialog';
+import ProjectEVMPanel from '@/components/projects/ProjectEVMPanel';
+import ProjectSCurve from '@/components/projects/ProjectSCurve';
+import ProjectCriticalPath from '@/components/projects/ProjectCriticalPath';
 import {
   STATUS_META,
   HEALTH_META,
@@ -213,6 +216,7 @@ export default function ProjectDetail() {
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="evm">EVM Analysis</TabsTrigger>
           <TabsTrigger value="schedule">Schedule</TabsTrigger>
           <TabsTrigger value="assets">
             Assets ({project.equipment_ids?.length || 0})
@@ -223,6 +227,7 @@ export default function ProjectDetail() {
 
         <TabsContent value="overview" className="space-y-4">
           <ProjectBudget project={project} />
+          <ProjectSCurve project={project} />
           <ProjectGantt
             phases={project.phases || []}
             projectStart={project.start_date}
@@ -230,7 +235,13 @@ export default function ProjectDetail() {
           />
         </TabsContent>
 
-        <TabsContent value="schedule">
+        <TabsContent value="evm" className="space-y-4">
+          <ProjectEVMPanel project={project} />
+          <ProjectSCurve project={project} />
+        </TabsContent>
+
+        <TabsContent value="schedule" className="space-y-4">
+          <ProjectCriticalPath phases={project.phases || []} />
           <ProjectGantt
             phases={project.phases || []}
             projectStart={project.start_date}

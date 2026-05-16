@@ -25,6 +25,11 @@ import PendingReviewSLA from '@/components/scan-analysis/PendingReviewSLA';
 import BulkVerifyBar from '@/components/scan-analysis/BulkVerifyBar';
 import SmartTriageQueue from '@/components/scan-analysis/SmartTriageQueue';
 import KeyboardReviewMode from '@/components/scan-analysis/KeyboardReviewMode';
+import ConfidenceAutoApprove from '@/components/scan-analysis/ConfidenceAutoApprove';
+import SeverityHeatmapOverlay from '@/components/scan-analysis/SeverityHeatmapOverlay';
+import ConditionTrendCompare from '@/components/scan-analysis/ConditionTrendCompare';
+import ConditionReportExport from '@/components/scan-analysis/ConditionReportExport';
+import KeyboardShortcutsHelp from '@/components/scan-analysis/KeyboardShortcutsHelp';
 import { toast } from 'sonner';
 
 export default function ScanAnalysisPage() {
@@ -208,7 +213,9 @@ export default function ScanAnalysisPage() {
             Upload 3D scans, overlay your asset register, and let AI detect condition anomalies that improve over time.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center flex-wrap">
+          <KeyboardShortcutsHelp />
+          {selectedScan && <ConditionReportExport scan={selectedScan} reports={reports} />}
           <Button
             onClick={() => setQuickAnalyzeOpen(true)}
             className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
@@ -340,6 +347,9 @@ export default function ScanAnalysisPage() {
               />
             )}
 
+            {/* Before/after comparison with previous scan of same location */}
+            <ConditionTrendCompare currentScan={selectedScan} />
+
             {/* Preview image with bboxes — uses selected frame if available, else scan preview */}
             {(selectedFrame?.image_url || selectedScan.preview_image_url) && (
               <div className="bg-white rounded-xl border border-slate-200 p-4">
@@ -348,6 +358,10 @@ export default function ScanAnalysisPage() {
                   Analyzed Image {selectedFrame ? `— ${selectedFrame.angle_label}` : ''}
                 </h4>
                 <div className="relative rounded-lg overflow-hidden bg-slate-100">
+                  <SeverityHeatmapOverlay
+                    reports={reports}
+                    imageUrl={selectedFrame?.image_url || selectedScan.preview_image_url}
+                  />
                   <img
                     src={selectedFrame?.image_url || selectedScan.preview_image_url}
                     alt="Scan preview"
@@ -431,6 +445,13 @@ export default function ScanAnalysisPage() {
 
               {filter === 'pending' && (
                 <div className="mt-3">
+                  <ConfidenceAutoApprove
+                    reports={reports}
+                    onDone={() => {
+                      qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
+                      qc.invalidateQueries({ queryKey: ['pendingTrainingSamples'] });
+                    }}
+                  />
                   <SmartTriageQueue
                     reports={reports}
                     onOpenKeyboardMode={() => setKeyboardMode(true)}

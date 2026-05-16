@@ -15,6 +15,7 @@ import ProjectStats from '@/components/projects/ProjectStats';
 import ProjectCard from '@/components/projects/ProjectCard';
 import AIComposerDialog from '@/components/projects/AIComposerDialog';
 import ProjectFormDialog from '@/components/projects/ProjectFormDialog';
+import ProjectPortfolioHeatmap from '@/components/projects/ProjectPortfolioHeatmap';
 import { STATUS_LANES } from '@/lib/projectUtils';
 
 export default function Projects() {
@@ -79,6 +80,8 @@ export default function Projects() {
       </div>
 
       <ProjectStats projects={projects} />
+
+      {projects.length > 0 && <ProjectPortfolioHeatmap projects={projects} />}
 
       {/* Filters */}
       <div className="flex flex-wrap items-center gap-2">
