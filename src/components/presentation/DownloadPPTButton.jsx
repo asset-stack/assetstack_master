@@ -50,26 +50,26 @@ export default function DownloadPPTButton({ deck, total, setIndex }) {
 
   return (
     <>
-      <button
-        onClick={handleDownload}
-        disabled={busy}
-        className="h-9 px-3 rounded-lg bg-orange-600 hover:bg-orange-500 disabled:opacity-70 text-white flex items-center gap-2 text-xs font-bold transition-colors hidden"
-        title="Download as PowerPoint">
-        
-        {busy ?
-        <>
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span className="hidden sm:inline tabular-nums">
-              {progress.current}/{progress.total}
-            </span>
-          </> :
+      
 
-        <>
-            <PresentationIcon className="w-4 h-4" />
-            <span className="hidden sm:inline">PPT</span>
-          </>
-        }
-      </button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
       {busy &&
       <ExportProgressOverlay
         label="Exporting PowerPoint"

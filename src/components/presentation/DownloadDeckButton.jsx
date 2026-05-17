@@ -50,26 +50,26 @@ export default function DownloadDeckButton({ deck, total, setIndex }) {
 
   return (
     <>
-      <button
-        onClick={handleDownload}
-        disabled={busy}
-        className="h-9 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-70 text-white flex items-center gap-2 text-xs font-bold transition-colors hidden"
-        title="Download as PDF">
-        
-        {busy ?
-        <>
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span className="hidden sm:inline tabular-nums">
-              {progress.current}/{progress.total}
-            </span>
-          </> :
+      
 
-        <>
-            <Download className="w-4 h-4" />
-            <span className="hidden sm:inline">PDF</span>
-          </>
-        }
-      </button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
       {busy &&
       <ExportProgressOverlay
         label="Exporting PDF"
