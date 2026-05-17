@@ -22,14 +22,14 @@ export default function DownloadDeckButton({ deck, total, setIndex }) {
       const images = await captureDeck({
         total,
         setIndex,
-        onProgress: setProgress,
+        onProgress: setProgress
       });
 
       const pdf = new jsPDF({
         orientation: 'landscape',
         unit: 'px',
         format: [1920, 1080],
-        compress: true,
+        compress: true
       });
 
       images.forEach((img, i) => {
@@ -53,30 +53,30 @@ export default function DownloadDeckButton({ deck, total, setIndex }) {
       <button
         onClick={handleDownload}
         disabled={busy}
-        className="h-9 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-70 text-white flex items-center gap-2 text-xs font-bold transition-colors"
-        title="Download as PDF"
-      >
-        {busy ? (
-          <>
+        className="h-9 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-70 text-white flex items-center gap-2 text-xs font-bold transition-colors hidden"
+        title="Download as PDF">
+        
+        {busy ?
+        <>
             <Loader2 className="w-4 h-4 animate-spin" />
             <span className="hidden sm:inline tabular-nums">
               {progress.current}/{progress.total}
             </span>
-          </>
-        ) : (
-          <>
+          </> :
+
+        <>
             <Download className="w-4 h-4" />
             <span className="hidden sm:inline">PDF</span>
           </>
-        )}
+        }
       </button>
-      {busy && (
-        <ExportProgressOverlay
-          label="Exporting PDF"
-          current={progress.current}
-          total={progress.total}
-        />
-      )}
-    </>
-  );
+      {busy &&
+      <ExportProgressOverlay
+        label="Exporting PDF"
+        current={progress.current}
+        total={progress.total} />
+
+      }
+    </>);
+
 }
