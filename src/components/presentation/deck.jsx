@@ -19,19 +19,31 @@ import {
 } from './moduleSlides';
 
 /**
- * AssetStack deck — 32 slides, full platform tour (~20 min).
- * All figures inside slides are illustrative demo data.
- *
- * Seven acts:
- *  I.   Open          — cover, TOC, the 82% stat
- *  II.  Problem       — the reality, before/after, the promise
- *  III. Four pillars  — register, maintenance, AI, condition reports
- *  IV.  Modules       — full tour across all 9 modules (NEW)
- *  V.   In motion     — fast upload, portfolio, predict, scans
- *  VI.  Proof         — finance, savings ledger, compliance
- *  VII. Close         — comparison, voices, ROI, CTA
+ * BOARDROOM CUT — 12 slides, ~12 minutes.
+ * Default. Sequoia/Apple-style pacing: hook → problem → solution → proof → close.
+ * Every slide changes the audience's mind. Nothing is inventory.
  */
-export const DECK = [
+export const BOARDROOM_DECK = [
+  { act: 'Open',    title: 'Cover',                   Component: SlideCoverV2 },
+  { act: 'Hook',    title: '82% are unpredictable',   Component: SlideBigStat },
+  { act: 'Shift',   title: 'Before & after',          Component: SlideBeforeAfter },
+  { act: 'Platform',title: 'The four pillars',        Component: SlideFourPillars },
+  { act: 'Wow',     title: 'AI command centre',       Component: SlideAssetMind },
+  { act: 'Wow',     title: 'Predict failures early',  Component: SlidePredict },
+  { act: 'Wow',     title: 'Scans → defects → WOs',   Component: SlideScans },
+  { act: 'Proof',   title: 'Finance & scenarios',     Component: SlideFinance },
+  { act: 'Proof',   title: 'Verified savings ledger', Component: SlideSavings },
+  { act: 'Why us',  title: 'The features no one has', Component: SlideComparison },
+  { act: 'Proof',   title: 'Compliance & trust',      Component: SlideCompliance },
+  { act: 'Close',   title: "Let's talk",              Component: SlideCTA },
+];
+
+/**
+ * FULL PLATFORM TOUR — 32 slides, ~20 minutes.
+ * For deep-dive evaluators, technical buyers, and RFP responses.
+ * Same seven-act structure as before with the module walkthrough intact.
+ */
+export const FULL_DECK = [
   // I. Open (3)
   { act: 'Open',     title: 'Cover',                  Component: SlideCoverV2 },
   { act: 'Open',     title: 'Inside this edition',    Component: SlideTOC, dynamic: true },
@@ -49,7 +61,7 @@ export const DECK = [
   { act: 'Pillars',  title: '03 · AI command centre', Component: SlideAssetMind },
   { act: 'Pillars',  title: '04 · Condition reports', Component: SlideConditionReports },
 
-  // IV. Modules tour (10) — full platform walkthrough
+  // IV. Modules tour (10)
   { act: 'Modules',  title: 'Nine modules, one model',Component: SlideModulesOverview },
   { act: 'Modules',  title: 'M1 · AssetMind',         Component: SlideModuleAssetMind },
   { act: 'Modules',  title: 'M2 · People',            Component: SlideModulePeople },
@@ -79,9 +91,5 @@ export const DECK = [
   { act: 'Close',    title: "Let's talk",             Component: SlideCTA },
 ];
 
-// Slides intentionally retired from the boardroom cut to keep length tight:
-// - SlideWorkOrders   (covered inside Maintenance + Field Ops)
-// - SlideSecurity     (rolled into Compliance & trust)
-// - SlideRoadmap      (covered verbally in the CTA)
-// - SlideThankYou     (CTA is now the closer)
-// Re-import from ./slides or ./wowSlides if you want them back.
+// Back-compat default export — Boardroom is the new default.
+export const DECK = BOARDROOM_DECK;

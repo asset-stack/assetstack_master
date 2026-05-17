@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, X, Maximize2, Minimize2, Grid3x3 } from 'lucide-react';
-import { DECK } from '../components/presentation/deck';
+import { ChevronLeft, ChevronRight, X, Maximize2, Minimize2, Grid3x3, Layers } from 'lucide-react';
+import { BOARDROOM_DECK, FULL_DECK } from '../components/presentation/deck';
 import DownloadDeckButton from '../components/presentation/DownloadDeckButton';
 
 export default function Presentation() {
@@ -10,9 +10,17 @@ export default function Presentation() {
   const [direction, setDirection] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showOverview, setShowOverview] = useState(false);
+  const [mode, setMode] = useState('boardroom'); // 'boardroom' | 'full'
 
+  const DECK = mode === 'full' ? FULL_DECK : BOARDROOM_DECK;
   const total = DECK.length;
-  const chapters = useMemo(() => DECK.map((s) => s.title), []);
+  const chapters = useMemo(() => DECK.map((s) => s.title), [DECK]);
+
+  const toggleMode = useCallback(() => {
+    setMode((m) => (m === 'boardroom' ? 'full' : 'boardroom'));
+    setIndex(0);
+    setDirection(1);
+  }, []);
 
   const go = useCallback((next) => {
     setIndex((curr) => {
@@ -36,7 +44,7 @@ export default function Presentation() {
       );
     }
     return <SlideComp />;
-  }, [chapters, go]);
+  }, [chapters, go, DECK]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
@@ -164,7 +172,17 @@ export default function Presentation() {
         </div>
 
         <div className="flex items-center gap-2">
-          <DownloadDeckButton chapters={chapters} onJumpStub={() => {}} />
+          <button
+            onClick={toggleMode}
+            className="h-9 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center gap-1.5 text-[11px] font-bold transition-colors border border-slate-800"
+            title={mode === 'boardroom' ? 'Switch to full 32-slide tour' : 'Switch to 12-slide boardroom cut'}
+          >
+            <Layers className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">
+              {mode === 'boardroom' ? 'Boardroom · 12' : 'Full tour · 32'}
+            </span>
+          </button>
+          <DownloadDeckButton deck={DECK} chapters={chapters} onJumpStub={() => {}} />
           <button
             onClick={() => setShowOverview(true)}
             className="w-9 h-9 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-colors"

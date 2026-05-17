@@ -2,20 +2,21 @@ import React, { useState } from 'react';
 import { Download, Loader2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { DECK } from './deck';
+import { BOARDROOM_DECK } from './deck';
 
 /**
  * Renders each slide off-screen at 1920x1080, snapshots it to canvas,
  * and assembles a 16:9 landscape multi-page PDF.
+ * Accepts a `deck` prop so the active deck (boardroom vs full) is exported.
  */
-export default function DownloadDeckButton({ chapters, onJumpStub }) {
+export default function DownloadDeckButton({ deck = BOARDROOM_DECK, chapters, onJumpStub }) {
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
 
   const handleDownload = async () => {
     if (busy) return;
     setBusy(true);
-    setProgress({ current: 0, total: DECK.length });
+    setProgress({ current: 0, total: deck.length });
 
     // Off-screen 1920x1080 stage
     const stage = document.createElement('div');
@@ -35,8 +36,8 @@ export default function DownloadDeckButton({ chapters, onJumpStub }) {
     });
 
     try {
-      for (let i = 0; i < DECK.length; i++) {
-        const slide = DECK[i];
+      for (let i = 0; i < deck.length; i++) {
+        const slide = deck[i];
         const SlideComp = slide.Component;
 
         // Render the slide
@@ -67,10 +68,11 @@ export default function DownloadDeckButton({ chapters, onJumpStub }) {
         if (i > 0) pdf.addPage([1920, 1080], 'landscape');
         pdf.addImage(imgData, 'JPEG', 0, 0, 1920, 1080, undefined, 'FAST');
 
-        setProgress({ current: i + 1, total: DECK.length });
+        setProgress({ current: i + 1, total: deck.length });
       }
 
-      pdf.save('AssetStack-Platform-Tour.pdf');
+      const name = deck.length > 20 ? 'AssetStack-Platform-Tour.pdf' : 'AssetStack-Boardroom.pdf';
+      pdf.save(name);
     } finally {
       root.unmount();
       document.body.removeChild(stage);
