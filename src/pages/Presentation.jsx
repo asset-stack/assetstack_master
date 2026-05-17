@@ -92,9 +92,41 @@ export default function Presentation() {
     exit: (dir) => ({ opacity: 0, x: dir > 0 ? -40 : 40 }),
   };
 
+  // The capture target wraps the visible slide at a logical 1920×1080 box.
+  // We scale it to fit the viewport so the user sees the same thing the
+  // exporter snapshots.
+  const stageRef = React.useRef(null);
+  const [stageScale, setStageScale] = React.useState(1);
+  React.useLayoutEffect(() => {
+    const update = () => {
+      const el = stageRef.current;
+      if (!el) return;
+      const parent = el.parentElement;
+      if (!parent) return;
+      const { clientWidth: w, clientHeight: h } = parent;
+      setStageScale(Math.min(w / 1920, h / 1080));
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
   return (
     <div className="fixed inset-0 bg-black flex flex-col z-50">
-      <div className="flex-1 relative overflow-hidden">
+      <div className="flex-1 relative overflow-hidden flex items-center justify-center">
+        <div
+          ref={stageRef}
+          data-slide-capture
+          style={{
+            width: 1920,
+            height: 1080,
+            transform: `scale(${stageScale})`,
+            transformOrigin: 'center center',
+            position: 'relative',
+            background: '#000',
+            flexShrink: 0,
+          }}
+        >
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={index}
@@ -109,6 +141,7 @@ export default function Presentation() {
             {renderSlide(index)}
           </motion.div>
         </AnimatePresence>
+        </div>
 
         <button
           aria-label="Previous slide"
@@ -183,8 +216,8 @@ export default function Presentation() {
               {mode === 'boardroom' ? 'Boardroom · 12' : 'Full tour · 32'}
             </span>
           </button>
-          <DownloadDeckButton deck={DECK} chapters={chapters} onJumpStub={() => {}} />
-          <DownloadPPTButton deck={DECK} chapters={chapters} onJumpStub={() => {}} />
+          <DownloadDeckButton deck={DECK} total={total} setIndex={setIndex} />
+          <DownloadPPTButton deck={DECK} total={total} setIndex={setIndex} />
           <button
             onClick={() => setShowOverview(true)}
             className="w-9 h-9 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
