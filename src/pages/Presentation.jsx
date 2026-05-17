@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, Maximize2, Minimize2, Grid3x3, Layers } from 'lucide-react';
 import { BOARDROOM_DECK, FULL_DECK } from '../components/presentation/deck';
 import DownloadDeckButton from '../components/presentation/DownloadDeckButton';
+import DownloadPPTButton from '../components/presentation/DownloadPPTButton';
 
 export default function Presentation() {
   const [index, setIndex] = useState(0);
@@ -183,6 +184,7 @@ export default function Presentation() {
             </span>
           </button>
           <DownloadDeckButton deck={DECK} chapters={chapters} onJumpStub={() => {}} />
+          <DownloadPPTButton deck={DECK} chapters={chapters} onJumpStub={() => {}} />
           <button
             onClick={() => setShowOverview(true)}
             className="w-9 h-9 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
