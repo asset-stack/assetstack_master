@@ -30,7 +30,7 @@ export const SlideAssetRegister = () => (
       <div className="col-span-2 grid grid-cols-1 gap-2.5 content-start">
         {[
           ['Register table', 'Filter, sort, bulk-edit thousands of assets at once.', Database],
-          ['Hierarchy tree', 'Council → site → system → asset → component.', GitBranch],
+          ['Hierarchy tree', 'Portfolio → site → system → asset → component.', GitBranch],
           ['Network globe', 'Geo view of every depot, station, building, asset.', MapPin],
           ['Smart filters', 'Save views by health, risk, age, type, location.', Filter],
           ['Asset detail', 'Sensors, scans, WO history, photos, depreciation, docs.', FileText],

@@ -197,10 +197,10 @@ export const SlideModuleAssets = () => (
     title="Every asset you own — one defensible record."
     subtitle="Register, hierarchy, network globe, digital twin, scans, sensors and locations — connected to every job, photo, doc and dollar."
     accent="sky"
-    headline="From the council-level globe down to the bearing inside the pump — two clicks, one source of truth."
+    headline="From the portfolio-level globe down to the bearing inside the pump — two clicks, one source of truth."
     features={[
       ['Equipment register', 'Filter, sort, bulk-edit thousands of assets.',     Cpu],
-      ['Asset tree',         'Council → site → system → asset → component.',     GitBranch],
+      ['Asset tree',         'Portfolio → site → system → asset → component.',   GitBranch],
       ['Network globe',      'Geo view of every depot, station, asset.',         Globe2],
       ['Locations',          'Sites, buildings, depots — geo-tagged.',           MapPin],
       ['Digital twin',       'BIM, LiDAR, photogrammetry mapped to assets.',     Box],
