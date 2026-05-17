@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Presentation as PresentationIcon, Loader2 } from 'lucide-react';
 import html2canvas from 'html2canvas';
-import PptxGenJS from 'pptxgenjs';
+import pptxgen from 'pptxgenjs';
 import { BOARDROOM_DECK } from './deck';
 
 /**
@@ -25,7 +25,9 @@ export default function DownloadPPTButton({ deck = BOARDROOM_DECK, chapters, onJ
     const { createRoot } = await import('react-dom/client');
     const root = createRoot(stage);
 
-    const pptx = new PptxGenJS();
+    // pptxgenjs ships as both a class and a default export; handle either shape
+    const PptxCtor = pptxgen.default || pptxgen;
+    const pptx = new PptxCtor();
     pptx.layout = 'LAYOUT_WIDE'; // 13.333 x 7.5 inches = 16:9
     pptx.title = deck.length > 20 ? 'AssetStack Platform Tour' : 'AssetStack Boardroom';
     pptx.company = 'AssetStack';
