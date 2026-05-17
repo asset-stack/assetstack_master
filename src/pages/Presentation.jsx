@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, Maximize2, Minimize2, Grid3x3 } from 'lucide-react';
 import { DECK } from '../components/presentation/deck';
+import DownloadDeckButton from '../components/presentation/DownloadDeckButton';
 
 export default function Presentation() {
   const [index, setIndex] = useState(0);
@@ -163,6 +164,7 @@ export default function Presentation() {
         </div>
 
         <div className="flex items-center gap-2">
+          <DownloadDeckButton chapters={chapters} onJumpStub={() => {}} />
           <button
             onClick={() => setShowOverview(true)}
             className="w-9 h-9 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
