@@ -35,19 +35,19 @@ export default function ContactSection() {
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Mail className="w-4 h-4 text-primary" />
                 </div>
-                <span>hello@assetstack.com</span>
+                <a href="mailto:david@assetstackai.com" className="hover:text-primary transition-colors">david@assetstackai.com</a>
+              </div>
+              <div className="flex items-center gap-3 text-[13px] text-slate-700">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Phone className="w-4 h-4 text-primary" />
+                </div>
+                <a href="tel:+61439032387" className="hover:text-primary transition-colors">+61 439 032 387</a>
               </div>
               <div className="flex items-center gap-3 text-[13px] text-slate-700">
                 <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Building2 className="w-4 h-4 text-primary" />
                 </div>
                 <span>Australian-built · Pilot engagements available</span>
-              </div>
-              <div className="flex items-center gap-3 text-[13px] text-slate-700">
-                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Phone className="w-4 h-4 text-primary" />
-                </div>
-                <span>Onboarding & data migration support included</span>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@ export default function ContactSection() {
                     placeholder="Asset count, sectors, current pain points…"
                   />
                 </div>
-                <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90 text-white text-[13px] font-semibold elevation-1">
+                <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90 text-white text-[13px] font-semibold elevation-1" onClick={() => { window.location.href = `mailto:david@assetstackai.com?subject=Demo Request&body=Name: ${form.name}%0AOrg: ${form.org}%0A%0A${form.message}`; }}>
                   Request a demo <Send className="w-3.5 h-3.5 ml-1.5" />
                 </Button>
                 <p className="text-[10px] text-slate-400 text-center">
