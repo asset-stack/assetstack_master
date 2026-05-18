@@ -2,92 +2,61 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import EditorialShell, { ed } from './EditorialShell';
 
-/**
- * Slide 02 · The stakes
- * One headline number. Editorial treatment. Citation underneath like a
- * Bloomberg cover. The number animates in by digit, not as a counter — we
- * want gravitas, not a slot machine.
- */
-const HEADLINE = '1.3T';
-const UNIT = 'USD';
-
 export default function Slide02Stakes() {
   return (
-    <EditorialShell surface="ink" folio="02" section="The Stakes">
+    <EditorialShell folio="02" section="The Stakes">
       <div className="h-full grid grid-cols-12 gap-10">
-        <div className="col-span-5 flex flex-col justify-between">
-          <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-[#F5F1E8]/55">
-            Global infrastructure deficit
+        <div className="col-span-5 flex flex-col justify-center">
+          <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-violet-300/70 mb-5">
+            The stakes
           </motion.div>
-
-          <div>
-            <motion.p
-              {...ed.fadeUp(0.4)}
-              className="font-serif text-2xl leading-snug text-balance text-[#F5F1E8]/90"
-            >
-              The world is sitting on{' '}
-              <span className="italic">trillions of dollars</span> of public
-              assets whose condition, risk, and remaining life are{' '}
-              <span className="italic">unknown</span> — until they fail.
-            </motion.p>
-
-            <motion.div {...ed.drawLine(0.9)} className="h-px bg-[#F5F1E8]/30 w-24 my-8" />
-
-            <motion.div {...ed.fadeUp(1.0)} className="space-y-3 text-[13px] text-[#F5F1E8]/70 leading-relaxed">
-              <p>
-                <span className="text-[#F5F1E8]">82%</span> of equipment
-                failures are not predictable with current tooling.
-              </p>
-              <p>
-                <span className="text-[#F5F1E8]">$260B</span> in annual
-                unplanned downtime across regulated infrastructure.
-              </p>
-              <p>
-                <span className="text-[#F5F1E8]">3.5%</span> of OECD GDP lost
-                each year to deferred renewal.
-              </p>
-            </motion.div>
-          </div>
-
-          <motion.div
-            {...ed.fadeIn(1.5)}
-            className="text-[10px] tracking-[0.25em] uppercase text-[#F5F1E8]/45"
+          <motion.h2
+            {...ed.fadeUp(0.35)}
+            className="font-sans font-semibold text-[3.5rem] leading-[1.0] tracking-[-0.03em] text-white text-balance"
+            style={{ fontFamily: "'Inter Tight', Inter, sans-serif" }}
           >
-            Sources · OECD 2024 · McKinsey Infrastructure Practice · Deloitte
-          </motion.div>
+            Boards cannot defend{' '}
+            <span className="italic font-serif text-white/60">what they cannot see.</span>
+          </motion.h2>
+          <motion.p {...ed.fadeUp(0.55)} className="mt-7 text-[16px] text-white/60 leading-relaxed max-w-md">
+            Public-asset registers are stale on the day they are signed off.
+            Renewal plans are guesses. Compliance is a binder in a basement.
+            Every year, the gap between the books and the buildings grows wider.
+          </motion.p>
         </div>
 
-        <div className="col-span-7 flex flex-col justify-center items-start">
-          <motion.div
-            {...ed.fadeUp(0.6)}
-            className="text-[11px] tracking-[0.3em] uppercase text-[#F5F1E8]/55 mb-4"
-          >
-            Global asset value at risk
+        <div className="col-span-7 flex flex-col justify-center items-end">
+          <motion.div {...ed.fadeUp(0.5)} className="text-[10px] tracking-[0.35em] uppercase text-white/40 mb-4 self-end">
+            Public assets at risk · global
           </motion.div>
-
-          <div className="flex items-baseline gap-6">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.0, ease: ed.ease, delay: 0.8 }}
-              className="font-serif text-[18rem] leading-[0.85] tracking-[-0.04em] text-[#F5F1E8]"
-            >
-              {HEADLINE}
-            </motion.div>
-            <motion.div
-              {...ed.fadeUp(1.1)}
-              className="font-serif italic text-3xl text-[#F5F1E8]/60 mb-6"
-            >
-              {UNIT}
-            </motion.div>
-          </div>
-
           <motion.div
-            {...ed.fadeUp(1.3)}
-            className="font-serif italic text-xl text-[#F5F1E8]/70 mt-2 max-w-md"
+            {...ed.scaleIn(0.65)}
+            className="font-sans font-semibold text-[16rem] leading-[0.85] tracking-[-0.06em] self-end"
+            style={{
+              fontFamily: "'Inter Tight', Inter, sans-serif",
+              background: 'linear-gradient(135deg, #FFFFFF 0%, #C084FC 60%, #6366F1 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
           >
-            in public assets that boards cannot currently report on with
-            confidence.
+            $1.3T
+          </motion.div>
+          <motion.p {...ed.fadeUp(1.0)} className="text-[16px] text-white/70 max-w-md text-right mt-4 leading-relaxed">
+            in public assets that boards cannot currently report on with confidence.
+          </motion.p>
+
+          <motion.div {...ed.fadeUp(1.2)} className="mt-10 grid grid-cols-3 gap-8 w-full">
+            {[
+              { v: '74%', l: 'Of registers untouched in 12+ months' },
+              { v: '$3.40', l: 'Reactive cost per $1 of prevention' },
+              { v: '11 yrs', l: 'Average asset data half-life' },
+            ].map((s) => (
+              <div key={s.v} className="border-t border-white/15 pt-3">
+                <div className="font-sans font-semibold text-2xl tabular-nums text-white">{s.v}</div>
+                <div className="text-[11px] tracking-[0.15em] uppercase text-white/45 mt-1.5 leading-tight">{s.l}</div>
+              </div>
+            ))}
           </motion.div>
         </div>
       </div>

@@ -2,39 +2,44 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import EditorialShell, { ed } from './EditorialShell';
 
-/**
- * Slide 12 · The ask
- * Stripped-back closing page. One sentence. One date. One name. One action.
- * No bullet lists. No "thank you." Just gravity.
- */
 export default function Slide12Ask() {
   return (
-    <EditorialShell surface="cream" folio="12" section="The Ask">
+    <EditorialShell folio="12" section="The Ask">
       <div className="h-full flex flex-col justify-between">
-        <div className="pt-8">
-          <motion.div
-            {...ed.fadeUp(0.2)}
-            className="text-[11px] tracking-[0.3em] uppercase text-[#0B1020]/55"
-          >
-            The ask
-          </motion.div>
-        </div>
+        <motion.div {...ed.fadeUp(0.2)} className="pt-2 text-[11px] tracking-[0.3em] uppercase text-violet-300/70">
+          The ask
+        </motion.div>
 
         <div>
           <motion.h1
             {...ed.fadeUp(0.4)}
-            className="font-serif text-[6.5rem] leading-[0.95] tracking-[-0.02em] text-balance max-w-5xl"
+            className="font-sans font-semibold text-[7rem] leading-[0.92] tracking-[-0.045em] text-balance max-w-5xl text-white"
+            style={{ fontFamily: "'Inter Tight', Inter, sans-serif" }}
           >
-            Give us <span className="italic text-[#3730A3]">ninety days</span>
+            Give us{' '}
+            <span
+              className="italic font-serif"
+              style={{
+                background: 'linear-gradient(135deg, #818CF8 0%, #A855F7 50%, #C084FC 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              ninety days
+            </span>
             <br />
             and one council ward.
           </motion.h1>
 
-          <motion.div {...ed.drawLine(0.9)} className="h-px bg-[#0B1020]/30 w-32 my-10" />
+          <motion.div
+            {...ed.drawLine(0.9)}
+            className="h-px w-32 my-10"
+            style={{ background: 'linear-gradient(to right, #A855F7, transparent)' }}
+          />
 
           <motion.p
             {...ed.fadeUp(1.0)}
-            className="font-serif italic text-2xl text-[#0B1020]/70 max-w-3xl leading-relaxed"
+            className="italic font-serif text-2xl text-white/65 max-w-3xl leading-relaxed"
           >
             We will return with a complete, audited asset register, three
             scenarios for next year&rsquo;s capital plan, and the first verified
@@ -53,21 +58,20 @@ export default function Slide12Ask() {
 
         <motion.div
           {...ed.fadeIn(1.7)}
-          className="flex items-end justify-between pt-12 border-t border-[#0B1020]/20"
+          className="flex items-end justify-between pt-10 border-t border-white/10"
         >
           <div>
-            <div className="text-[10px] tracking-[0.3em] uppercase text-[#0B1020]/55 mb-2">
-              To begin
+            <div className="text-[10px] tracking-[0.3em] uppercase text-white/45 mb-2">To begin</div>
+            <div
+              className="font-sans font-semibold text-2xl text-white"
+              style={{ fontFamily: "'Inter Tight', Inter, sans-serif" }}
+            >
+              assetstack.io/boardroom
             </div>
-            <div className="font-serif text-2xl">assetstack.io/boardroom</div>
           </div>
           <div className="text-right">
-            <div className="text-[10px] tracking-[0.3em] uppercase text-[#0B1020]/55 mb-2">
-              Edition signed
-            </div>
-            <div className="font-serif italic text-[#0B1020]/70">
-              AssetStack · Boardroom Edition · 2026
-            </div>
+            <div className="text-[10px] tracking-[0.3em] uppercase text-white/45 mb-2">Edition signed</div>
+            <div className="italic font-serif text-white/65">AssetStack · Boardroom Edition · 2026</div>
           </div>
         </motion.div>
       </div>
@@ -77,12 +81,19 @@ export default function Slide12Ask() {
 
 function Block({ label, value, sub }) {
   return (
-    <div className="border-t border-[#0B1020]/20 pt-4">
-      <div className="text-[10px] tracking-[0.3em] uppercase text-[#0B1020]/55 mb-2">
-        {label}
+    <div className="relative pt-4">
+      <div
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{ background: 'linear-gradient(to right, rgba(168, 85, 247, 0.5), transparent)' }}
+      />
+      <div className="text-[10px] tracking-[0.3em] uppercase text-white/45 mb-2">{label}</div>
+      <div
+        className="font-sans font-semibold text-4xl tracking-[-0.03em] tabular-nums text-white"
+        style={{ fontFamily: "'Inter Tight', Inter, sans-serif" }}
+      >
+        {value}
       </div>
-      <div className="font-serif text-4xl tracking-tight tabular-nums">{value}</div>
-      <div className="font-serif italic text-[13px] text-[#0B1020]/60 mt-2">{sub}</div>
+      <div className="italic font-serif text-[13px] text-white/55 mt-2">{sub}</div>
     </div>
   );
 }
