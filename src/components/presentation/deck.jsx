@@ -18,24 +18,44 @@ import {
   SlideModuleIntelligence, SlideModuleContractor,
 } from './moduleSlides';
 
+// Editorial Boardroom Edition — rebuilt May 2026 for boards, councils, govt.
+import Slide01Cover     from './editorial/Slide01Cover';
+import Slide02Stakes    from './editorial/Slide02Stakes';
+import Slide03Reality   from './editorial/Slide03Reality';
+import Slide04Shift     from './editorial/Slide04Shift';
+import Slide05Platform  from './editorial/Slide05Platform';
+import Slide06AssetMind from './editorial/Slide06AssetMind';
+import Slide07Predict   from './editorial/Slide07Predict';
+import Slide08Scans     from './editorial/Slide08Scans';
+import Slide09Finance   from './editorial/Slide09Finance';
+import Slide10Savings   from './editorial/Slide10Savings';
+import Slide11Trust     from './editorial/Slide11Trust';
+import Slide12Ask       from './editorial/Slide12Ask';
+
 /**
- * BOARDROOM CUT — 12 slides, ~12 minutes.
- * Default. Sequoia/Apple-style pacing: hook → problem → solution → proof → close.
- * Every slide changes the audience's mind. Nothing is inventory.
+ * BOARDROOM EDITION — 12 slides, ~12 minutes.
+ * Editorial McKinsey/Bloomberg aesthetic. Built for boards, councils, and
+ * government infrastructure committees. Cream and ink. Fraunces serif for
+ * stakes, Inter for data. One accent: deep indigo.
+ *
+ * Narrative arc:
+ *   Cover → Stakes → Reality → Shift → Platform →
+ *   AssetMind → Predict → Closed loop →
+ *   Finance → Savings → Trust → Ask.
  */
 export const BOARDROOM_DECK = [
-  { act: 'Open',    title: 'Cover',                   Component: SlideCoverV2 },
-  { act: 'Hook',    title: '82% are unpredictable',   Component: SlideBigStat },
-  { act: 'Shift',   title: 'Before & after',          Component: SlideBeforeAfter },
-  { act: 'Platform',title: 'The four pillars',        Component: SlideFourPillars },
-  { act: 'Wow',     title: 'AI command centre',       Component: SlideAssetMind },
-  { act: 'Wow',     title: 'Predict failures early',  Component: SlidePredict },
-  { act: 'Wow',     title: 'Scans → defects → WOs',   Component: SlideScans },
-  { act: 'Proof',   title: 'Finance & scenarios',     Component: SlideFinance },
-  { act: 'Proof',   title: 'Verified savings ledger', Component: SlideSavings },
-  { act: 'Why us',  title: 'The features no one has', Component: SlideComparison },
-  { act: 'Proof',   title: 'Compliance & trust',      Component: SlideCompliance },
-  { act: 'Close',   title: "Let's talk",              Component: SlideCTA },
+  { act: 'Open',     title: 'The case for a national asset OS', Component: Slide01Cover },
+  { act: 'Stakes',   title: 'The stakes',                       Component: Slide02Stakes },
+  { act: 'Reality',  title: 'Three uncomfortable truths',       Component: Slide03Reality },
+  { act: 'Shift',    title: 'Reactive → Predictive',            Component: Slide04Shift },
+  { act: 'Platform', title: 'One model, four surfaces',         Component: Slide05Platform },
+  { act: 'Wow',      title: 'AssetMind · decision layer',       Component: Slide06AssetMind },
+  { act: 'Wow',      title: 'Predict failures early',           Component: Slide07Predict },
+  { act: 'Wow',      title: 'Scans → defects → work orders',    Component: Slide08Scans },
+  { act: 'Proof',    title: 'Finance · three futures',          Component: Slide09Finance },
+  { act: 'Proof',    title: 'Verified savings ledger',          Component: Slide10Savings },
+  { act: 'Trust',    title: 'Compliance & trust',               Component: Slide11Trust },
+  { act: 'Close',    title: 'The ask · ninety days',            Component: Slide12Ask },
 ];
 
 /**
