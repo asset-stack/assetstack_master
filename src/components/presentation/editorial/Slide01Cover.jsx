@@ -23,26 +23,26 @@ export default function Slide01Cover() {
               className="font-sans font-semibold text-[5.5rem] leading-[0.92] tracking-[-0.04em] text-white text-balance"
               style={{ fontFamily: "'Inter Tight', Inter, sans-serif" }}
             >
-              The case for a{' '}
+              The operating system{' '}
               <span
                 className="italic font-serif"
                 style={{
-                  background: 'linear-gradient(135deg, #818CF8 0%, #A855F7 50%, #C084FC 100%)',
+                  background: 'linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #6366F1 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                 }}
               >
-                national
+                for public
               </span>
               <br />
-              asset operating system.
+              infrastructure.
             </motion.h1>
 
             <motion.p
               {...ed.fadeUp(0.65)}
               className="mt-7 text-[18px] text-white/70 max-w-2xl leading-relaxed"
             >
-              A position paper, prepared for boards, councils,<br />
+              A position paper for boards, councils,<br />
               and government infrastructure committees.
             </motion.p>
 
@@ -50,9 +50,9 @@ export default function Slide01Cover() {
               {...ed.fadeUp(0.8)}
               className="mt-5 text-[15px] text-white/45 max-w-2xl leading-relaxed"
             >
-              Every council, every department, every public agency runs on
-              assets it cannot see, cannot predict, and cannot defend at budget
-              time. This is what we built to fix that.
+              Every public agency runs on assets it cannot see, predict,
+              or defend at budget time. AssetStack is the system of record
+              that finally closes that gap.
             </motion.p>
           </div>
         </div>
@@ -62,8 +62,8 @@ export default function Slide01Cover() {
           {...ed.scaleIn(1.0)}
           className="relative mt-8 rounded-2xl overflow-hidden flex-1 min-h-0"
           style={{
-            boxShadow: '0 0 100px rgba(168, 85, 247, 0.35), 0 0 0 1px rgba(168, 85, 247, 0.25)',
-            background: 'linear-gradient(135deg, rgba(99,102,241,0.12), rgba(168,85,247,0.08))',
+            boxShadow: '0 0 100px rgba(59, 130, 246, 0.35), 0 0 0 1px rgba(59, 130, 246, 0.25)',
+            background: 'linear-gradient(135deg, rgba(99,102,241,0.12), rgba(59,130,246,0.08))',
             padding: '2px',
           }}
         >
@@ -88,7 +88,7 @@ function CrystalCube() {
       <div
         className="absolute inset-0"
         style={{
-          background: 'radial-gradient(circle at center, rgba(168, 85, 247, 0.4), rgba(99, 102, 241, 0.15) 50%, transparent 75%)',
+          background: 'radial-gradient(circle at center, rgba(59, 130, 246, 0.4), rgba(99, 102, 241, 0.15) 50%, transparent 75%)',
           filter: 'blur(30px)',
         }}
       />
@@ -116,9 +116,9 @@ function CrystalCube() {
               left: 40,
               top: 40,
               transform: f.t,
-              background: 'linear-gradient(135deg, rgba(168,85,247,0.25), rgba(99,102,241,0.15))',
-              border: '1px solid rgba(192, 132, 252, 0.5)',
-              boxShadow: 'inset 0 0 30px rgba(168, 85, 247, 0.3)',
+              background: 'linear-gradient(135deg, rgba(59,130,246,0.25), rgba(99,102,241,0.15))',
+              border: '1px solid rgba(96, 165, 250, 0.5)',
+              boxShadow: 'inset 0 0 30px rgba(59, 130, 246, 0.3)',
             }}
           />
         ))}

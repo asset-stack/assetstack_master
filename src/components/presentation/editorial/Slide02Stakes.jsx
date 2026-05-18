@@ -7,7 +7,7 @@ export default function Slide02Stakes() {
     <EditorialShell folio="02" section="The Stakes">
       <div className="h-full grid grid-cols-12 gap-10">
         <div className="col-span-5 flex flex-col justify-center">
-          <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-violet-300/70 mb-5">
+          <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-blue-300/70 mb-5">
             The stakes
           </motion.div>
           <motion.h2
@@ -15,13 +15,14 @@ export default function Slide02Stakes() {
             className="font-sans font-semibold text-[3.5rem] leading-[1.0] tracking-[-0.03em] text-white text-balance"
             style={{ fontFamily: "'Inter Tight', Inter, sans-serif" }}
           >
-            Boards cannot defend{' '}
-            <span className="italic font-serif text-white/60">what they cannot see.</span>
+            You cannot defend{' '}
+            <span className="italic font-serif text-white/60">what you cannot see.</span>
           </motion.h2>
           <motion.p {...ed.fadeUp(0.55)} className="mt-7 text-[16px] text-white/60 leading-relaxed max-w-md">
-            Public-asset registers are stale on the day they are signed off.
-            Renewal plans are guesses. Compliance is a binder in a basement.
-            Every year, the gap between the books and the buildings grows wider.
+            Public-asset registers are stale the day they&rsquo;re signed off.
+            Renewal plans are educated guesses. Compliance lives in a binder.
+            Each year, the gap between the books and the buildings widens —
+            and the bill comes due in failures, overruns, and audit findings.
           </motion.p>
         </div>
 
@@ -34,7 +35,7 @@ export default function Slide02Stakes() {
             className="font-sans font-semibold text-[16rem] leading-[0.85] tracking-[-0.06em] self-end"
             style={{
               fontFamily: "'Inter Tight', Inter, sans-serif",
-              background: 'linear-gradient(135deg, #FFFFFF 0%, #C084FC 60%, #6366F1 100%)',
+              background: 'linear-gradient(135deg, #FFFFFF 0%, #60A5FA 50%, #3B82F6 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -43,14 +44,14 @@ export default function Slide02Stakes() {
             $1.3T
           </motion.div>
           <motion.p {...ed.fadeUp(1.0)} className="text-[16px] text-white/70 max-w-md text-right mt-4 leading-relaxed">
-            in public assets that boards cannot currently report on with confidence.
+            of public infrastructure on books that boards cannot defend.
           </motion.p>
 
           <motion.div {...ed.fadeUp(1.2)} className="mt-10 grid grid-cols-3 gap-8 w-full">
             {[
               { v: '74%', l: 'Of registers untouched in 12+ months' },
               { v: '$3.40', l: 'Reactive cost per $1 of prevention' },
-              { v: '11 yrs', l: 'Average asset data half-life' },
+              { v: '1 in 3', l: 'Capital projects with no condition data' },
             ].map((s) => (
               <div key={s.v} className="border-t border-white/15 pt-3">
                 <div className="font-sans font-semibold text-2xl tabular-nums text-white">{s.v}</div>

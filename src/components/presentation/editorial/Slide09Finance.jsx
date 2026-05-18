@@ -18,7 +18,7 @@ export default function Slide09Finance() {
       <div className="h-full grid grid-cols-12 gap-10">
         <div className="col-span-4 flex flex-col justify-between">
           <div>
-            <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-violet-300/70 mb-4">
+            <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-blue-300/70 mb-4">
               Capital plan · 10-year horizon
             </motion.div>
             <motion.h2
@@ -26,20 +26,20 @@ export default function Slide09Finance() {
               className="font-sans font-semibold text-[3rem] leading-[1.0] tracking-[-0.03em] text-balance text-white mb-6"
               style={{ fontFamily: "'Inter Tight', Inter, sans-serif" }}
             >
-              Three futures,{' '}
-              <span className="italic font-serif text-white/60">one budget meeting.</span>
+              Three futures.{' '}
+              <span className="italic font-serif text-white/60">One budget conversation.</span>
             </motion.h2>
             <motion.p {...ed.fadeUp(0.5)} className="text-white/60 text-[14px] leading-relaxed mb-6 max-w-sm">
-              Inflation, climate stress, deferral rate. Adjust the levers, see
-              the backlog. Save the scenario. Print the board paper.
+              Adjust inflation, climate stress, and deferral rate. Watch the
+              backlog respond. Save the scenario. Export the board paper.
             </motion.p>
             <motion.div
               {...ed.drawLine(0.7)}
               className="h-px w-16 mb-6"
-              style={{ background: 'linear-gradient(to right, #A855F7, transparent)' }}
+              style={{ background: 'linear-gradient(to right, #3B82F6, transparent)' }}
             />
             <motion.p {...ed.fadeUp(0.8)} className="italic font-serif text-white/55 text-sm max-w-xs">
-              The chart is not the output. The defensible decision is.
+              The chart isn&rsquo;t the output. The defensible decision is.
             </motion.p>
           </div>
 
@@ -47,7 +47,7 @@ export default function Slide09Finance() {
             {[
               { color: '#F87171', name: 'Status quo', sub: 'Defer everything renewable' },
               { color: 'rgba(255,255,255,0.5)', name: 'Baseline', sub: 'Current capital programme' },
-              { color: '#A855F7', name: 'Proactive', sub: 'Predict-and-intervene' },
+              { color: '#3B82F6', name: 'Proactive', sub: 'Predict-and-intervene' },
             ].map((s) => (
               <div key={s.name} className="flex items-baseline gap-3">
                 <span className="w-3 h-0.5 mt-2" style={{ background: s.color }} />
@@ -75,7 +75,7 @@ export default function Slide09Finance() {
               <defs>
                 <linearGradient id="proactiveGrad" x1="0" y1="0" x2="1" y2="0">
                   <stop offset="0%" stopColor="#818CF8" />
-                  <stop offset="100%" stopColor="#A855F7" />
+                  <stop offset="100%" stopColor="#3B82F6" />
                 </linearGradient>
               </defs>
 
@@ -101,14 +101,14 @@ export default function Slide09Finance() {
               <motion.path
                 d={pathFor(PROACTIVE)}
                 fill="none" stroke="url(#proactiveGrad)" strokeWidth="0.8"
-                style={{ filter: 'drop-shadow(0 0 4px rgba(168, 85, 247, 0.7))' }}
+                style={{ filter: 'drop-shadow(0 0 4px rgba(59, 130, 246, 0.7))' }}
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
                 transition={{ duration: 1.6, ease: ed.ease, delay: 1.2 }}
                 vectorEffect="non-scaling-stroke"
               />
 
               <motion.circle cx="100" cy={100 - (STATUS_QUO[9] / MAX) * 100} r="1" fill="#F87171" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.4 }} />
-              <motion.circle cx="100" cy={100 - (PROACTIVE[9] / MAX) * 100} r="1" fill="#A855F7" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.6 }} />
+              <motion.circle cx="100" cy={100 - (PROACTIVE[9] / MAX) * 100} r="1" fill="#3B82F6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.6 }} />
             </svg>
 
             <div className="absolute left-0 right-[130px] -bottom-7 flex justify-between text-[10px] tabular-nums text-white/40">
@@ -130,11 +130,11 @@ export default function Slide09Finance() {
             >
               <div className="font-sans font-semibold text-xl" style={{
                 fontFamily: "'Inter Tight', Inter, sans-serif",
-                background: 'linear-gradient(135deg, #818CF8, #A855F7)',
+                background: 'linear-gradient(135deg, #818CF8, #3B82F6)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}>$5M</div>
-              <div className="text-[10px] tracking-[0.2em] uppercase text-violet-300/70">Proactive</div>
+              <div className="text-[10px] tracking-[0.2em] uppercase text-blue-300/70">Proactive</div>
             </motion.div>
 
             <motion.div {...ed.fadeUp(2.9)} className="absolute top-[40%] left-[50%] -translate-x-1/2 text-center">
@@ -142,7 +142,7 @@ export default function Slide09Finance() {
                 className="font-sans font-semibold text-5xl tabular-nums"
                 style={{
                   fontFamily: "'Inter Tight', Inter, sans-serif",
-                  background: 'linear-gradient(135deg, #FFFFFF, #C084FC)',
+                  background: 'linear-gradient(135deg, #FFFFFF, #60A5FA)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                 }}

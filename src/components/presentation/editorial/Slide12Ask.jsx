@@ -6,7 +6,7 @@ export default function Slide12Ask() {
   return (
     <EditorialShell folio="12" section="The Ask">
       <div className="h-full flex flex-col justify-between">
-        <motion.div {...ed.fadeUp(0.2)} className="pt-2 text-[11px] tracking-[0.3em] uppercase text-violet-300/70">
+        <motion.div {...ed.fadeUp(0.2)} className="pt-2 text-[11px] tracking-[0.3em] uppercase text-blue-300/70">
           The ask
         </motion.div>
 
@@ -20,7 +20,7 @@ export default function Slide12Ask() {
             <span
               className="italic font-serif"
               style={{
-                background: 'linear-gradient(135deg, #818CF8 0%, #A855F7 50%, #C084FC 100%)',
+                background: 'linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #6366F1 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}
@@ -28,22 +28,22 @@ export default function Slide12Ask() {
               ninety days
             </span>
             <br />
-            and one council ward.
+            and one site.
           </motion.h1>
 
           <motion.div
             {...ed.drawLine(0.9)}
             className="h-px w-32 my-10"
-            style={{ background: 'linear-gradient(to right, #A855F7, transparent)' }}
+            style={{ background: 'linear-gradient(to right, #3B82F6, transparent)' }}
           />
 
           <motion.p
             {...ed.fadeUp(1.0)}
             className="italic font-serif text-2xl text-white/65 max-w-3xl leading-relaxed"
           >
-            We will return with a complete, audited asset register, three
-            scenarios for next year&rsquo;s capital plan, and the first verified
-            entries on your savings ledger — at our cost.
+            We&rsquo;ll return with a fully audited asset register, three
+            costed scenarios for next year&rsquo;s capital plan, and the first
+            verified entries on your savings ledger. At our cost.
           </motion.p>
 
           <motion.div
@@ -51,7 +51,7 @@ export default function Slide12Ask() {
             className="mt-12 grid grid-cols-3 gap-10 max-w-4xl"
           >
             <Block label="Timeline" value="90 days" sub="from kickoff to board paper" />
-            <Block label="Scope"    value="One ward" sub="or one facility category" />
+            <Block label="Scope"    value="One site" sub="or one asset class" />
             <Block label="Cost"     value="Nil"      sub="for the pilot scope" />
           </motion.div>
         </div>
@@ -84,7 +84,7 @@ function Block({ label, value, sub }) {
     <div className="relative pt-4">
       <div
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(to right, rgba(168, 85, 247, 0.5), transparent)' }}
+        style={{ background: 'linear-gradient(to right, rgba(59, 130, 246, 0.5), transparent)' }}
       />
       <div className="text-[10px] tracking-[0.3em] uppercase text-white/45 mb-2">{label}</div>
       <div

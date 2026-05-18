@@ -14,7 +14,7 @@ export default function Slide05Platform() {
     <EditorialShell folio="05" section="The Platform">
       <div className="h-full grid grid-cols-12 gap-10">
         <div className="col-span-4 flex flex-col justify-center">
-          <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-violet-300/70 mb-4">
+          <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-blue-300/70 mb-4">
             One model, four surfaces
           </motion.div>
           <motion.h2
@@ -22,18 +22,19 @@ export default function Slide05Platform() {
             className="font-sans font-semibold text-[3rem] leading-[1.0] tracking-[-0.03em] text-white text-balance mb-6"
             style={{ fontFamily: "'Inter Tight', Inter, sans-serif" }}
           >
-            A single source of truth{' '}
-            <span className="italic font-serif text-white/60">about your assets.</span>
+            One model. Every workflow{' '}
+            <span className="italic font-serif text-white/60">inherits from it.</span>
           </motion.h2>
           <motion.p {...ed.fadeUp(0.5)} className="text-white/60 text-[15px] leading-relaxed max-w-md mb-6">
-            Most CMMS tools digitise paperwork. We chose to model the asset —
-            its condition, risk, cost, and remaining life — and let every
-            workflow inherit from that.
+            Most CMMS tools just digitise paperwork. We model the asset
+            itself — its condition, risk, cost, and remaining life — and
+            let registers, work orders, decisions, and field ops all read
+            from one source.
           </motion.p>
           <motion.div
             {...ed.drawLine(0.7)}
             className="h-px w-20 mb-6"
-            style={{ background: 'linear-gradient(to right, #A855F7, transparent)' }}
+            style={{ background: 'linear-gradient(to right, #3B82F6, transparent)' }}
           />
           <motion.p {...ed.fadeUp(0.8)} className="italic font-serif text-white/70 text-lg">
             The register is not a list.
@@ -54,7 +55,7 @@ export default function Slide05Platform() {
               style={{
                 width: s,
                 height: s,
-                borderColor: `rgba(168, 85, 247, ${0.06 + i * 0.05})`,
+                borderColor: `rgba(59, 130, 246, ${0.06 + i * 0.05})`,
               }}
             />
           ))}
@@ -64,9 +65,9 @@ export default function Slide05Platform() {
             {...ed.scaleIn(0.7)}
             className="relative z-10 w-[210px] h-[210px] rounded-full flex flex-col items-center justify-center text-center"
             style={{
-              background: 'radial-gradient(circle at 30% 30%, rgba(168, 85, 247, 0.4), rgba(99, 102, 241, 0.6), #1A0B2E)',
-              boxShadow: '0 0 80px rgba(168, 85, 247, 0.5), inset 0 0 30px rgba(0,0,0,0.3)',
-              border: '1px solid rgba(168, 85, 247, 0.4)',
+              background: 'radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.4), rgba(99, 102, 241, 0.6), #0B1530)',
+              boxShadow: '0 0 80px rgba(59, 130, 246, 0.5), inset 0 0 30px rgba(0,0,0,0.3)',
+              border: '1px solid rgba(59, 130, 246, 0.4)',
             }}
           >
             <div className="text-[9px] tracking-[0.3em] uppercase text-white/60 mb-2">Core</div>
@@ -94,7 +95,7 @@ export default function Slide05Platform() {
                 <div
                   className="text-sm font-semibold mb-1"
                   style={{
-                    background: 'linear-gradient(135deg, #A855F7, #6366F1)',
+                    background: 'linear-gradient(135deg, #3B82F6, #6366F1)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                   }}
@@ -136,7 +137,7 @@ export default function Slide05Platform() {
             })}
             <defs>
               <linearGradient id="violetLine" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#A855F7" stopOpacity="0.6" />
+                <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.6" />
                 <stop offset="100%" stopColor="#6366F1" stopOpacity="0.3" />
               </linearGradient>
             </defs>

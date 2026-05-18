@@ -23,7 +23,7 @@ export default function Slide04Shift() {
     <EditorialShell folio="04" section="The Shift">
       <div className="h-full flex flex-col">
         <div className="max-w-4xl mb-12">
-          <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-violet-300/70 mb-4">
+          <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-blue-300/70 mb-4">
             From reactive to predictive
           </motion.div>
           <motion.h2
@@ -32,7 +32,7 @@ export default function Slide04Shift() {
             style={{ fontFamily: "'Inter Tight', Inter, sans-serif" }}
           >
             Same buildings. Same budget.{' '}
-            <span className="italic font-serif text-white/60">A different operating mode.</span>
+            <span className="italic font-serif text-white/60">A different way of operating.</span>
           </motion.h2>
         </div>
 
@@ -43,7 +43,7 @@ export default function Slide04Shift() {
             transition={{ duration: 1.0, ease: ed.ease, delay: 0.5 }}
             style={{
               transformOrigin: 'top',
-              background: 'linear-gradient(to bottom, transparent, rgba(168, 85, 247, 0.4), transparent)',
+              background: 'linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.4), transparent)',
             }}
             className="absolute left-1/2 top-0 bottom-0 w-px"
           />
@@ -74,7 +74,7 @@ export default function Slide04Shift() {
           </div>
 
           <div>
-            <motion.div {...ed.fadeUp(0.7)} className="text-[11px] tracking-[0.3em] uppercase text-violet-300/80 mb-3">
+            <motion.div {...ed.fadeUp(0.7)} className="text-[11px] tracking-[0.3em] uppercase text-blue-300/80 mb-3">
               With AssetStack
             </motion.div>
             <motion.div
@@ -82,7 +82,7 @@ export default function Slide04Shift() {
               className="font-sans font-semibold text-[3rem] tracking-tight mb-10"
               style={{
                 fontFamily: "'Inter Tight', Inter, sans-serif",
-                background: 'linear-gradient(135deg, #818CF8, #A855F7, #C084FC)',
+                background: 'linear-gradient(135deg, #60A5FA, #3B82F6, #6366F1)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -97,7 +97,7 @@ export default function Slide04Shift() {
                   {...ed.fadeUp(1.0 + i * 0.08)}
                   className="flex items-baseline gap-4"
                 >
-                  <span className="font-sans text-xs tabular-nums text-violet-300/60 w-5">0{i + 1}</span>
+                  <span className="font-sans text-xs tabular-nums text-blue-300/60 w-5">0{i + 1}</span>
                   <span className="text-[20px] text-white leading-snug">{line}</span>
                 </motion.li>
               ))}

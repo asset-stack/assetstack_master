@@ -17,7 +17,7 @@ export default function Slide07Predict() {
       <div className="h-full grid grid-cols-12 gap-10">
         <div className="col-span-4 flex flex-col justify-between">
           <div>
-            <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-violet-300/70 mb-4">
+            <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-blue-300/70 mb-4">
               Failure prediction
             </motion.div>
             <motion.h2
@@ -25,7 +25,7 @@ export default function Slide07Predict() {
               className="font-sans font-semibold text-[3rem] leading-[1.0] tracking-[-0.03em] text-balance text-white"
               style={{ fontFamily: "'Inter Tight', Inter, sans-serif" }}
             >
-              The cheapest hour{' '}
+              The cheapest repair{' '}
               <span className="italic font-serif text-white/60">is the one before the failure.</span>
             </motion.h2>
           </div>
@@ -37,7 +37,7 @@ export default function Slide07Predict() {
                 className="font-sans font-semibold text-7xl tracking-[-0.04em] tabular-nums"
                 style={{
                   fontFamily: "'Inter Tight', Inter, sans-serif",
-                  background: 'linear-gradient(135deg, #FFFFFF, #C084FC)',
+                  background: 'linear-gradient(135deg, #FFFFFF, #60A5FA)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                 }}
@@ -68,10 +68,11 @@ export default function Slide07Predict() {
             <motion.div
               {...ed.drawLine(1.0)}
               className="h-px w-16"
-              style={{ background: 'linear-gradient(to right, #A855F7, transparent)' }}
+              style={{ background: 'linear-gradient(to right, #3B82F6, transparent)' }}
             />
             <motion.p {...ed.fadeUp(1.05)} className="italic font-serif text-white/55 text-sm max-w-xs">
-              Sensor telemetry, scan condition, and maintenance history feed a single remaining-life model per asset.
+              Sensor telemetry, scan condition, and work history feed a
+              single remaining-life model per asset — updated nightly.
             </motion.p>
           </div>
         </div>
@@ -89,11 +90,11 @@ export default function Slide07Predict() {
               <defs>
                 <linearGradient id="curveGrad" x1="0" y1="0" x2="1" y2="0">
                   <stop offset="0%" stopColor="#818CF8" />
-                  <stop offset="100%" stopColor="#A855F7" />
+                  <stop offset="100%" stopColor="#3B82F6" />
                 </linearGradient>
                 <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#A855F7" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#A855F7" stopOpacity="0" />
+                  <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.25" />
+                  <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
                 </linearGradient>
               </defs>
 
@@ -116,7 +117,7 @@ export default function Slide07Predict() {
               />
               <motion.line
                 x1="49" y1="0" x2="49" y2="100"
-                stroke="#A855F7" strokeOpacity="0.6" strokeWidth="0.25" strokeDasharray="0.8 1.2"
+                stroke="#3B82F6" strokeOpacity="0.6" strokeWidth="0.25" strokeDasharray="0.8 1.2"
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
                 transition={{ duration: 0.8, ease: ed.ease, delay: 1.5 }}
               />
@@ -134,7 +135,7 @@ export default function Slide07Predict() {
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
                 transition={{ duration: 1.8, ease: ed.ease, delay: 0.8 }}
                 vectorEffect="non-scaling-stroke"
-                style={{ filter: 'drop-shadow(0 0 4px rgba(168, 85, 247, 0.6))' }}
+                style={{ filter: 'drop-shadow(0 0 4px rgba(59, 130, 246, 0.6))' }}
               />
             </svg>
 
@@ -149,8 +150,8 @@ export default function Slide07Predict() {
               style={{ left: '38%', top: '-30px', width: '22%' }}
             >
               <div className="text-center">
-                <div className="italic font-serif text-violet-300 text-sm">Intervention window</div>
-                <div className="text-[10px] tracking-[0.2em] uppercase text-violet-300/60 mt-0.5">
+                <div className="italic font-serif text-blue-300 text-sm">Intervention window</div>
+                <div className="text-[10px] tracking-[0.2em] uppercase text-blue-300/60 mt-0.5">
                   Months 14 — 22
                 </div>
               </div>
@@ -159,7 +160,7 @@ export default function Slide07Predict() {
 
           <motion.div {...ed.fadeUp(2.0)} className="mt-12 flex items-center gap-8 text-[11px] text-white/55">
             <div className="flex items-center gap-2">
-              <span className="w-3 h-0.5" style={{ background: 'linear-gradient(to right, #818CF8, #A855F7)' }} />
+              <span className="w-3 h-0.5" style={{ background: 'linear-gradient(to right, #818CF8, #3B82F6)' }} />
               <span>Predicted condition</span>
             </div>
             <div className="flex items-center gap-2">
@@ -167,7 +168,7 @@ export default function Slide07Predict() {
               <span>Failure threshold</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 bg-violet-500/20 border border-violet-400/40" />
+              <span className="w-3 h-3 bg-blue-500/20 border border-blue-400/40" />
               <span>Optimal action window</span>
             </div>
           </motion.div>

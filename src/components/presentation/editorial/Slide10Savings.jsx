@@ -20,7 +20,7 @@ export default function Slide10Savings() {
       <div className="h-full flex flex-col">
         <div className="grid grid-cols-12 gap-10 mb-10">
           <div className="col-span-7">
-            <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-violet-300/70 mb-4">
+            <motion.div {...ed.fadeUp(0.2)} className="text-[11px] tracking-[0.3em] uppercase text-blue-300/70 mb-4">
               The savings ledger
             </motion.div>
             <motion.h2
@@ -28,13 +28,13 @@ export default function Slide10Savings() {
               className="font-sans font-semibold text-[3.25rem] leading-[1.0] tracking-[-0.03em] text-balance text-white"
               style={{ fontFamily: "'Inter Tight', Inter, sans-serif" }}
             >
-              Every dollar saved,{' '}
-              <span className="italic font-serif text-white/60">on the public record.</span>
+              Every dollar saved.{' '}
+              <span className="italic font-serif text-white/60">On the record.</span>
             </motion.h2>
             <motion.p {...ed.fadeUp(0.5)} className="mt-5 text-white/60 text-[15px] leading-relaxed max-w-xl">
-              An immutable ledger of every prevented failure: what we predicted,
-              what we spent, what we saved, and how each entry was verified.
-              Auditors love this. Boards love it more.
+              An immutable ledger of every prevented failure. Predicted cost,
+              actual cost, verified saving, signed-off method. Auditors
+              respect it. Boards rely on it. Treasurers quote it.
             </motion.p>
           </div>
           <div className="col-span-5 flex flex-col items-end justify-end">
@@ -46,7 +46,7 @@ export default function Slide10Savings() {
               className="font-sans font-semibold text-[6rem] leading-none tabular-nums tracking-[-0.04em]"
               style={{
                 fontFamily: "'Inter Tight', Inter, sans-serif",
-                background: 'linear-gradient(135deg, #FFFFFF 0%, #C084FC 60%, #6366F1 100%)',
+                background: 'linear-gradient(135deg, #FFFFFF 0%, #60A5FA 50%, #3B82F6 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}
@@ -62,7 +62,7 @@ export default function Slide10Savings() {
         <motion.div
           {...ed.drawLine(0.9)}
           className="h-px mb-3"
-          style={{ background: 'linear-gradient(to right, rgba(168, 85, 247, 0.5), rgba(99, 102, 241, 0.2), transparent)' }}
+          style={{ background: 'linear-gradient(to right, rgba(59, 130, 246, 0.5), rgba(99, 102, 241, 0.2), transparent)' }}
         />
 
         <div className="flex-1 flex flex-col">
@@ -91,7 +91,7 @@ export default function Slide10Savings() {
                 className="col-span-1 text-right tabular-nums font-sans font-semibold text-base"
                 style={{
                   fontFamily: "'Inter Tight', Inter, sans-serif",
-                  background: 'linear-gradient(135deg, #C084FC, #818CF8)',
+                  background: 'linear-gradient(135deg, #60A5FA, #3B82F6)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                 }}

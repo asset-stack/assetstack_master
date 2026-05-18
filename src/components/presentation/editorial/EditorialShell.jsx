@@ -30,7 +30,7 @@ export default function EditorialShell({
               left: '-10%',
               width: '60%',
               height: '70%',
-              background: 'radial-gradient(circle at center, rgba(99, 102, 241, 0.25) 0%, rgba(168, 85, 247, 0.08) 35%, transparent 65%)',
+              background: 'radial-gradient(circle at center, rgba(99, 102, 241, 0.25) 0%, rgba(99, 102, 241, 0.08) 35%, transparent 65%)',
               filter: 'blur(40px)',
             }}
           />
@@ -41,7 +41,7 @@ export default function EditorialShell({
               right: '-10%',
               width: '55%',
               height: '70%',
-              background: 'radial-gradient(circle at center, rgba(168, 85, 247, 0.18) 0%, rgba(99, 102, 241, 0.05) 40%, transparent 70%)',
+              background: 'radial-gradient(circle at center, rgba(59, 130, 246, 0.18) 0%, rgba(99, 102, 241, 0.05) 40%, transparent 70%)',
               filter: 'blur(50px)',
             }}
           />
@@ -90,7 +90,7 @@ export default function EditorialShell({
           transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
           className="h-px mx-16 origin-left relative z-10"
           style={{
-            background: 'linear-gradient(to right, rgba(255,255,255,0.2), rgba(168, 85, 247, 0.3), rgba(255,255,255,0.05))',
+            background: 'linear-gradient(to right, rgba(255,255,255,0.2), rgba(99, 102, 241, 0.35), rgba(255,255,255,0.05))',
           }}
         />
       )}

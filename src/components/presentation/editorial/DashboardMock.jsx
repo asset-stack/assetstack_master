@@ -11,11 +11,11 @@ export default function DashboardMock() {
       {/* Sidebar */}
       <div className="w-[140px] border-r border-white/5 p-3 flex flex-col gap-2">
         <div className="flex items-center gap-1.5 mb-3">
-          <div className="w-4 h-4 rounded" style={{ background: 'linear-gradient(135deg, #A855F7, #6366F1)' }} />
+          <div className="w-4 h-4 rounded" style={{ background: 'linear-gradient(135deg, #3B82F6, #6366F1)' }} />
           <span className="text-[9px] font-semibold text-white">AssetStack</span>
         </div>
         {['Dashboard', 'Assets', 'Maintenance', 'AI Mind', 'Reports'].map((item, i) => (
-          <div key={item} className={`text-[8px] py-1 px-1.5 rounded ${i === 0 ? 'bg-violet-500/15 text-violet-200' : 'text-white/40'}`}>
+          <div key={item} className={`text-[8px] py-1 px-1.5 rounded ${i === 0 ? 'bg-blue-500/15 text-blue-200' : 'text-white/40'}`}>
             {item}
           </div>
         ))}
@@ -31,18 +31,18 @@ export default function DashboardMock() {
         {/* Top row: map + KPI */}
         <div className="grid grid-cols-3 gap-3 flex-1">
           <div className="col-span-2 rounded-md p-3 relative overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.08), rgba(168,85,247,0.04))', border: '1px solid rgba(168,85,247,0.15)' }}
+            style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.08), rgba(59,130,246,0.04))', border: '1px solid rgba(59,130,246,0.15)' }}
           >
             <div className="text-[8px] tracking-wider uppercase text-white/40 mb-1">Asset Map</div>
             <svg viewBox="0 0 200 100" className="w-full h-[80%]">
               {/* Simplified continent outline */}
               <path d="M 30 40 Q 50 25, 90 30 T 170 45 L 175 70 Q 130 85, 80 75 T 35 70 Z"
-                fill="rgba(168,85,247,0.08)" stroke="rgba(168,85,247,0.3)" strokeWidth="0.5" />
+                fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.3)" strokeWidth="0.5" />
               {[
                 [50, 55], [70, 45], [85, 60], [110, 50], [130, 65], [150, 55],
                 [60, 65], [95, 70], [120, 45], [140, 70], [75, 55], [105, 60],
               ].map(([cx, cy], i) => (
-                <circle key={i} cx={cx} cy={cy} r="1.2" fill="#A855F7" opacity="0.8">
+                <circle key={i} cx={cx} cy={cy} r="1.2" fill="#3B82F6" opacity="0.8">
                   <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" begin={`${i * 0.2}s`} repeatCount="indefinite" />
                 </circle>
               ))}
@@ -50,7 +50,7 @@ export default function DashboardMock() {
           </div>
 
           <div className="rounded-md p-3 flex flex-col"
-            style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.05))', border: '1px solid rgba(168,85,247,0.2)' }}
+            style={{ background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(59,130,246,0.05))', border: '1px solid rgba(59,130,246,0.2)' }}
           >
             <div className="text-[8px] tracking-wider uppercase text-white/40 mb-2">Predictive</div>
             <div className="flex-1 flex flex-col items-center justify-center">
@@ -67,7 +67,7 @@ export default function DashboardMock() {
                 />
                 <defs>
                   <linearGradient id="gaugeG" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#A855F7" />
+                    <stop offset="0%" stopColor="#3B82F6" />
                     <stop offset="100%" stopColor="#6366F1" />
                   </linearGradient>
                 </defs>
@@ -94,7 +94,7 @@ export default function DashboardMock() {
                 <div key={a} className="grid grid-cols-3 text-[8px] py-1 border-b border-white/5">
                   <span className="text-white/70">{a}</span>
                   <span className="text-white/60 tabular-nums text-right">{b}</span>
-                  <span className={`text-right ${c === 'High' ? 'text-violet-300' : 'text-white/40'}`}>{c}</span>
+                  <span className={`text-right ${c === 'High' ? 'text-blue-300' : 'text-white/40'}`}>{c}</span>
                 </div>
               ))}
             </div>
@@ -107,12 +107,12 @@ export default function DashboardMock() {
             <svg viewBox="0 0 100 50" className="w-full h-[70%]">
               <defs>
                 <linearGradient id="areaG" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#A855F7" stopOpacity="0.5" />
-                  <stop offset="100%" stopColor="#A855F7" stopOpacity="0" />
+                  <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.5" />
+                  <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
                 </linearGradient>
               </defs>
               <path d="M 0 35 Q 15 28, 25 30 T 50 18 T 75 22 T 100 15 L 100 50 L 0 50 Z" fill="url(#areaG)" />
-              <path d="M 0 35 Q 15 28, 25 30 T 50 18 T 75 22 T 100 15" fill="none" stroke="#A855F7" strokeWidth="1" />
+              <path d="M 0 35 Q 15 28, 25 30 T 50 18 T 75 22 T 100 15" fill="none" stroke="#3B82F6" strokeWidth="1" />
             </svg>
           </div>
         </div>
