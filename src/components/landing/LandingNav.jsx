@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { Link as RouterLink } from 'react-router-dom';
 import BrandLogo from './BrandLogo';
 import DownloadBrochureButton from './DownloadBrochureButton';
 
@@ -66,6 +67,11 @@ export default function LandingNav() {
         </div>
 
         <div className="hidden lg:flex items-center gap-1.5">
+          <RouterLink to="/PrintLanding">
+            <Button variant="ghost" size="sm" className="text-slate-700 hover:bg-slate-100 text-[13px] font-semibold">
+              Export PDF
+            </Button>
+          </RouterLink>
           <DownloadBrochureButton
             variant="ghost"
             className="text-slate-700 hover:bg-slate-100 text-[13px] font-semibold"
