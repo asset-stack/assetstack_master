@@ -21,6 +21,11 @@ const FAQ = lazy(() => import('@/components/landing/FAQ'));
 const FinalCTA = lazy(() => import('@/components/landing/FinalCTA'));
 const ContactSection = lazy(() => import('@/components/landing/ContactSection'));
 
+// Sister-site sections
+const SisterHero = lazy(() => import('@/components/landing/sister/SisterHero'));
+const SisterEcosystem = lazy(() => import('@/components/landing/sister/SisterEcosystem'));
+const SisterFeaturesGrid = lazy(() => import('@/components/landing/sister/SisterFeaturesGrid'));
+
 // Central registry — single source of truth for landing sections.
 // Adding a new section: add an entry here AND default order in DEFAULT_SECTION_ORDER.
 export const SECTION_REGISTRY = {
@@ -41,19 +46,27 @@ export const SECTION_REGISTRY = {
   faq:                  { label: 'FAQ',                     description: 'Frequently asked questions',            component: FAQ,                   lazy: true,  fallbackHeight: 420 },
   finalCTA:             { label: 'Final CTA',               description: 'Closing call-to-action banner',         component: FinalCTA,              lazy: true,  fallbackHeight: 420 },
   contact:              { label: 'Contact Form',            description: 'Inbound lead capture form',             component: ContactSection,        lazy: true,  fallbackHeight: 520 },
+  sisterHero:           { label: 'Sister · Hero',           description: 'AI Infrastructure Intelligence hero (image-reveal)', component: SisterHero,       lazy: true,  fallbackHeight: 800 },
+  sisterEcosystem:      { label: 'Sister · Ecosystem',      description: 'One Connected Ecosystem scroll story', component: SisterEcosystem,       lazy: true,  fallbackHeight: 800 },
+  sisterFeatures:       { label: 'Sister · Features Grid',  description: 'Built for Complex Assets video grid',  component: SisterFeaturesGrid,    lazy: true,  fallbackHeight: 800 },
 };
 
 // Default order if no saved layout exists yet.
+// Matches the "Correct" layout: sister hero + ecosystem at top, current sections reordered,
+// sister features inserted mid-page, rest of current sections follow.
 export const DEFAULT_SECTION_ORDER = [
+  'sisterHero',
+  'sisterEcosystem',
   'hero',
   'liveCounters',
   'logoCloud',
-  'personaSwitcher',
   'mechanism',
   'whatsNew',
+  'sisterFeatures',
   'productTour',
   'savingsProof',
   'roiCalculator',
+  'personaSwitcher',
   'personaCards',
   'industries',
   'security',
