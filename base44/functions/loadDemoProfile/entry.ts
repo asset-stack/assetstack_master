@@ -194,14 +194,16 @@ Deno.serve(async (req) => {
       return Response.json({ error: `Unknown profile: ${profile_id}` }, { status: 400 });
     }
 
-    // SAFETY: only run in dev/test environment
-    const envHeader = req.headers.get('x-base44-environment') || req.headers.get('x-data-env') || '';
-    const isDev = envHeader === 'dev' || envHeader === 'test';
+    // SAFETY: only run in dev/test environment.
+    // Use server-side env vars (NOT client-supplied headers — those are forgeable).
+    // Acceptable signals: BASE44_APP_ENV=dev|test, or DEMO_PROFILE_ALLOW_PROD=true (explicit opt-in).
+    const appEnv = (Deno.env.get('BASE44_APP_ENV') || Deno.env.get('DENO_DEPLOY_ENV') || '').toLowerCase();
+    const allowProdOverride = Deno.env.get('DEMO_PROFILE_ALLOW_PROD') === 'true';
+    const isDev = appEnv === 'dev' || appEnv === 'test' || appEnv === 'development' || allowProdOverride;
     if (!isDev) {
       return Response.json({
-        error: 'Refusing to run: loadDemoProfile only operates on the Test database. Switch to Test mode and retry.',
-        env_header: envHeader,
-      }, { status: 400 });
+        error: 'Refusing to run: loadDemoProfile only operates on Test/Dev environments. Set BASE44_APP_ENV=dev or DEMO_PROFILE_ALLOW_PROD=true to override.',
+      }, { status: 403 });
     }
 
     const wipeResults = {};

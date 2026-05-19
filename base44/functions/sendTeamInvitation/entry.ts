@@ -1,4 +1,15 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+
+// HTML-escape free text to prevent stored-HTML injection in email bodies.
+const escapeHtml = (s) => {
+  if (typeof s !== 'string') return '';
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};
 
 Deno.serve(async (req) => {
   try {
@@ -53,15 +64,19 @@ Deno.serve(async (req) => {
       status: 'pending',
     });
 
-    // Send notification email
+    // Send notification email — every interpolation is HTML-escaped to prevent
+    // stored-HTML/phishing payload injection via tampered names or messages.
+    const safeName = escapeHtml(contractor.name);
+    const safeInviter = escapeHtml(user.full_name || user.email);
+    const safeMessage = message ? escapeHtml(String(message).slice(0, 1000)) : '';
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: contractor_email,
       subject: 'You\'ve been invited to join a team on AssetStack',
       body: `
         <h2>Team Invitation</h2>
-        <p>Hi ${contractor.name},</p>
-        <p><strong>${user.full_name || user.email}</strong> has invited you to join their team on AssetStack.</p>
-        ${message ? `<p>Message: "${message}"</p>` : ''}
+        <p>Hi ${safeName},</p>
+        <p><strong>${safeInviter}</strong> has invited you to join their team on AssetStack.</p>
+        ${safeMessage ? `<p>Message: "${safeMessage}"</p>` : ''}
         <p>Log in to your AssetStack account to accept or decline this invitation.</p>
         <p>Best regards,<br/>AssetStack</p>
       `
