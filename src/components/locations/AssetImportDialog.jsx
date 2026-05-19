@@ -9,6 +9,7 @@ import { base44 } from '@/api/base44Client';
 const EQUIPMENT_FIELDS = [
   { value: 'name', label: 'Name *' },
   { value: 'type', label: 'Type' },
+  { value: 'room', label: 'Room / Zone' },
   { value: 'manufacturer', label: 'Manufacturer' },
   { value: 'model', label: 'Model' },
   { value: 'serial_number', label: 'Serial Number' },
@@ -32,6 +33,7 @@ function guessField(header) {
   const patterns = {
     name: ['name', 'assetname', 'equipmentname', 'asset', 'title', 'description'],
     type: ['type', 'category', 'assettype', 'class'],
+    room: ['room', 'zone', 'area', 'subarea', 'roomname', 'roomno', 'roomnumber', 'space', 'level', 'floor'],
     manufacturer: ['manufacturer', 'make', 'brand', 'vendor', 'manuf'],
     model: ['model', 'modelnumber', 'modelno'],
     serial_number: ['serial', 'serialnumber', 'sn', 'serialno'],

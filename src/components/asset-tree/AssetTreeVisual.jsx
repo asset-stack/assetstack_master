@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import Tree from 'react-d3-tree';
 import { motion } from 'framer-motion';
 import {
-  Search, Layers, MapPin, Cpu, AlertTriangle,
+  Search, Layers, MapPin, Cpu, AlertTriangle, DoorOpen,
   Maximize2, GitBranch, Network
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -51,7 +51,7 @@ export default function AssetTreeVisual() {
     total: equipment.length,
     critical: equipment.filter(e => e.risk_level === 'critical' || e.status === 'critical').length,
     locations: new Set(equipment.map(e => e.location || 'Unassigned')).size,
-    types: new Set(equipment.map(e => e.type)).size,
+    rooms: new Set(equipment.map(e => `${e.location || ''}::${e.room?.trim() || 'Unassigned room'}`)).size,
   }), [equipment]);
 
   const handleNodeClick = (nodeDatum) => {
@@ -87,7 +87,7 @@ export default function AssetTreeVisual() {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="location">By Location</SelectItem>
+            <SelectItem value="location">Location → Room → Asset</SelectItem>
             <SelectItem value="type">By Type</SelectItem>
             <SelectItem value="status">By Status</SelectItem>
             <SelectItem value="criticality">By Criticality</SelectItem>
@@ -118,7 +118,7 @@ export default function AssetTreeVisual() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
         <StatCard icon={Cpu} label="Total Assets" value={stats.total} color="indigo" />
         <StatCard icon={MapPin} label="Locations" value={stats.locations} color="sky" />
-        <StatCard icon={Layers} label="Asset Types" value={stats.types} color="violet" />
+        <StatCard icon={DoorOpen} label="Rooms" value={stats.rooms} color="teal" />
         <StatCard icon={AlertTriangle} label="Critical" value={stats.critical} color="rose" />
       </div>
 
@@ -205,6 +205,7 @@ function StatCard({ icon: Icon, label, value, color }) {
     indigo: 'bg-indigo-50 text-indigo-600',
     sky: 'bg-sky-50 text-sky-600',
     violet: 'bg-violet-50 text-violet-600',
+    teal: 'bg-teal-50 text-teal-600',
     rose: 'bg-rose-50 text-rose-600',
   };
   return (

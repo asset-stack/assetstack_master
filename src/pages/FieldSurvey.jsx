@@ -40,6 +40,7 @@ export default function FieldSurvey() {
     return equipment.filter((e) =>
       e.name?.toLowerCase().includes(q) ||
       e.location?.toLowerCase().includes(q) ||
+      e.room?.toLowerCase().includes(q) ||
       e.specifications?.room_location?.toLowerCase().includes(q)
     ).slice(0, 50);
   }, [equipment, search]);
@@ -104,7 +105,7 @@ export default function FieldSurvey() {
               <button key={eq.id} onClick={() => setSelected(eq)}
                 className="w-full text-left p-3 rounded-lg border hover:bg-indigo-50 hover:border-indigo-300">
                 <div className="font-semibold text-slate-900 text-sm">{eq.name}</div>
-                <div className="text-xs text-slate-500 flex items-center gap-1"><MapPin className="w-3 h-3" />{eq.location} · {eq.specifications?.room_location || '—'}</div>
+                <div className="text-xs text-slate-500 flex items-center gap-1"><MapPin className="w-3 h-3" />{eq.location} · {eq.room || eq.specifications?.room_location || '—'}</div>
               </button>
             ))}
           </div>
@@ -117,7 +118,7 @@ export default function FieldSurvey() {
             <img src={getReferencePhoto(selected.specifications?.component_type)} alt="reference" className="w-20 h-20 rounded-lg object-cover" />
             <div className="flex-1">
               <div className="font-bold text-slate-900">{selected.name}</div>
-              <div className="text-xs text-slate-500">{selected.location} · {selected.specifications?.room_location}</div>
+              <div className="text-xs text-slate-500">{selected.location} · {selected.room || selected.specifications?.room_location || '—'}</div>
               <div className="text-xs text-slate-400 mt-1">Current: C{selected.specifications?.condition_grade ?? '?'}</div>
             </div>
             <Button variant="ghost" size="sm" onClick={() => setSelected(null)}>Cancel</Button>

@@ -53,11 +53,15 @@
     },
     "location": {
       "type": "string",
-      "description": "Physical location/zone (name \u2014 kept for back-compat)"
+      "description": "Physical location/site name (matches Location.name). Required \u2014 every asset must belong to a Location."
     },
     "location_id": {
       "type": "string",
       "description": "Foreign key to Location entity"
+    },
+    "room": {
+      "type": "string",
+      "description": "Room / zone / sub-area within the location (e.g. 'Plant Room', 'Level 2 \u2014 Office 204', 'Pump Bay A'). Every asset should be tied to a room."
     },
     "installation_date": {
       "type": "string",

@@ -8,7 +8,7 @@ const STATUSES = ['operational', 'degraded', 'critical', 'maintenance', 'offline
 const RISKS = ['low', 'medium', 'high', 'critical'];
 const CRITICALITIES = ['low', 'medium', 'high', 'mission_critical'];
 
-export default function RegisterFilters({ filters, onChange, locationOptions = [], typeOptions = [] }) {
+export default function RegisterFilters({ filters, onChange, locationOptions = [], roomOptions = [], typeOptions = [] }) {
   const toggle = (key, value) => {
     const current = filters[key] || [];
     const next = current.includes(value)
@@ -17,7 +17,7 @@ export default function RegisterFilters({ filters, onChange, locationOptions = [
     onChange({ ...filters, [key]: next });
   };
 
-  const clear = () => onChange({ status: [], risk: [], criticality: [], location: [], type: [] });
+  const clear = () => onChange({ status: [], risk: [], criticality: [], location: [], room: [], type: [] });
 
   const totalActive = Object.values(filters).reduce((s, arr) => s + (arr?.length || 0), 0);
 
@@ -27,6 +27,7 @@ export default function RegisterFilters({ filters, onChange, locationOptions = [
       <FacetButton label="Risk" options={RISKS} selected={filters.risk} onToggle={(v) => toggle('risk', v)} />
       <FacetButton label="Criticality" options={CRITICALITIES} selected={filters.criticality} onToggle={(v) => toggle('criticality', v)} />
       <FacetButton label="Location" options={locationOptions} selected={filters.location} onToggle={(v) => toggle('location', v)} searchable />
+      <FacetButton label="Room" options={roomOptions} selected={filters.room} onToggle={(v) => toggle('room', v)} searchable />
       <FacetButton label="Type" options={typeOptions} selected={filters.type} onToggle={(v) => toggle('type', v)} searchable />
 
       {totalActive > 0 && (

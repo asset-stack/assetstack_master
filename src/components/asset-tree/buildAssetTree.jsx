@@ -1,5 +1,6 @@
-// Build a hierarchical tree from flat equipment array
-// Structure: Root -> Location -> Type group -> Asset
+// Build a hierarchical tree from a flat equipment array.
+// Canonical standard across the app: Location → Room → Asset.
+// Other groupings (type, criticality, status) are flat: Group → Asset.
 
 export function buildAssetTree(equipment, groupBy = 'location') {
   if (!equipment?.length) {
@@ -10,7 +11,7 @@ export function buildAssetTree(equipment, groupBy = 'location') {
     };
   }
 
-  // First level grouping
+  // First-level grouping
   const primary = {};
   equipment.forEach((eq) => {
     const key = groupBy === 'location'
@@ -30,25 +31,25 @@ export function buildAssetTree(equipment, groupBy = 'location') {
   const children = Object.entries(primary)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([name, items]) => {
-      // Second level: group by type within each primary group (only when groupBy is location)
+      // CANONICAL: when grouped by location, second level is ROOM (not type)
       let subChildren;
       if (groupBy === 'location') {
-        const byType = {};
+        const byRoom = {};
         items.forEach((eq) => {
-          const t = eq.type?.replace(/_/g, ' ') || 'Unknown';
-          if (!byType[t]) byType[t] = [];
-          byType[t].push(eq);
+          const r = eq.room?.trim() || 'Unassigned room';
+          if (!byRoom[r]) byRoom[r] = [];
+          byRoom[r].push(eq);
         });
-        subChildren = Object.entries(byType)
+        subChildren = Object.entries(byRoom)
           .sort(([a], [b]) => a.localeCompare(b))
-          .map(([typeName, typeItems]) => ({
-            name: typeName,
+          .map(([roomName, roomItems]) => ({
+            name: roomName,
             attributes: {
-              kind: 'group',
-              count: typeItems.length,
-              critical: typeItems.filter(e => e.risk_level === 'critical' || e.status === 'critical').length,
+              kind: 'room',
+              count: roomItems.length,
+              critical: roomItems.filter(e => e.risk_level === 'critical' || e.status === 'critical').length,
             },
-            children: typeItems.map(assetToNode),
+            children: roomItems.map(assetToNode),
           }));
       } else {
         subChildren = items.map(assetToNode);
@@ -89,6 +90,7 @@ function assetToNode(eq) {
       health_score: eq.health_score,
       risk_level: eq.risk_level,
       location: eq.location,
+      room: eq.room,
       manufacturer: eq.manufacturer,
       model: eq.model,
       serial_number: eq.serial_number,

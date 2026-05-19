@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Cpu, MapPin, Activity, AlertTriangle, Calendar, Gauge, Wrench } from 'lucide-react';
+import { X, Cpu, MapPin, Activity, AlertTriangle, Calendar, Gauge, Wrench, DoorOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
@@ -80,6 +80,7 @@ export default function AssetDetailsPanel({ asset, onClose }) {
             {/* Quick facts */}
             <div className="grid grid-cols-2 gap-3">
               <InfoCard icon={MapPin} label="Location" value={asset.location || '—'} />
+              <InfoCard icon={DoorOpen} label="Room" value={asset.room || '—'} />
               <InfoCard icon={Activity} label="Operating Hrs" value={asset.operating_hours?.toLocaleString() || '0'} />
               <InfoCard icon={AlertTriangle} label="Failure Prob." value={asset.failure_probability ? `${asset.failure_probability}%` : '—'} />
               <InfoCard icon={Calendar} label="Last Maint." value={asset.last_maintenance_date || '—'} />

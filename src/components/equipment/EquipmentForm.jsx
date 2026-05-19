@@ -29,6 +29,7 @@ export default function EquipmentForm({ open, onOpenChange, equipment, onSave, i
     name: '',
     type: 'motor',
     location: '',
+    room: '',
     manufacturer: '',
     model: '',
     serial_number: '',
@@ -55,6 +56,7 @@ export default function EquipmentForm({ open, onOpenChange, equipment, onSave, i
         name: equipment.name || '',
         type: equipment.type || 'motor',
         location: equipment.location || '',
+        room: equipment.room || '',
         manufacturer: equipment.manufacturer || '',
         model: equipment.model || '',
         serial_number: equipment.serial_number || '',
@@ -77,6 +79,7 @@ export default function EquipmentForm({ open, onOpenChange, equipment, onSave, i
         name: '',
         type: 'motor',
         location: defaultLocation || '',
+        room: '',
         manufacturer: '',
         model: '',
         serial_number: '',
@@ -191,6 +194,15 @@ export default function EquipmentForm({ open, onOpenChange, equipment, onSave, i
                       required
                     />
                   )}
+                </div>
+                <div className="space-y-2">
+                  <Label>Room / Zone</Label>
+                  <Input
+                    value={formData.room}
+                    onChange={(e) => setFormData({ ...formData, room: e.target.value })}
+                    placeholder="e.g. Plant Room, Level 2 — Office 204"
+                  />
+                  <p className="text-[11px] text-slate-500">Every asset should be tied to a room or zone inside its location.</p>
                 </div>
                 <div className="space-y-2">
                   <Label>Manufacturer</Label>

@@ -40,7 +40,12 @@ function AssetRow({ asset, selected, onSelect, onClick, density = 'comfortable' 
 
       <div className="flex items-center gap-1.5 min-w-0">
         <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-        <span className="text-[12px] text-slate-700 truncate">{asset.location || 'Unassigned'}</span>
+        <div className="min-w-0">
+          <span className="text-[12px] text-slate-700 truncate block leading-tight">{asset.location || 'Unassigned'}</span>
+          {asset.room && (
+            <span className="text-[10px] text-teal-700 truncate block leading-tight">{asset.room}</span>
+          )}
+        </div>
       </div>
 
       <HealthBar score={asset.health_score} />

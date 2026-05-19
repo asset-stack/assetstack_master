@@ -19,7 +19,7 @@ export default function AssetTree() {
               </div>
             </div>
             <p className="text-sm text-slate-500">
-              Every asset, every signal, every action — in one defensible register.
+              Every asset organised by <span className="font-semibold text-slate-700">Location → Room → Asset</span> — one defensible register.
             </p>
           </div>
 

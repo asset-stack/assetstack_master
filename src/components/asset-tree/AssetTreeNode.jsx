@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Building2, Cpu, Layers } from 'lucide-react';
+import { MapPin, Building2, Cpu, Layers, DoorOpen } from 'lucide-react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 // Map status to colors
@@ -14,6 +14,7 @@ const statusColors = {
 const typeColors = {
   root: { bg: 'linear-gradient(135deg,#6366f1,#8b5cf6)', border: '#4f46e5', text: '#ffffff' },
   location: { bg: 'linear-gradient(135deg,#0ea5e9,#06b6d4)', border: '#0284c7', text: '#ffffff' },
+  room: { bg: 'linear-gradient(135deg,#14b8a6,#0d9488)', border: '#0d9488', text: '#ffffff' },
   group: { bg: 'linear-gradient(135deg,#8b5cf6,#ec4899)', border: '#7c3aed', text: '#ffffff' },
 };
 
@@ -28,9 +29,9 @@ export default function AssetTreeNode({ nodeDatum, toggleNode, onNodeClick }) {
   const hasChildren = (nodeDatum.children && nodeDatum.children.length > 0) || (nodeDatum._children && nodeDatum._children.length > 0);
 
   // Root / grouping nodes
-  if (kind === 'root' || kind === 'location' || kind === 'group') {
+  if (kind === 'root' || kind === 'location' || kind === 'room' || kind === 'group') {
     const palette = typeColors[kind];
-    const Icon = kind === 'location' ? MapPin : kind === 'group' ? Layers : Building2;
+    const Icon = kind === 'location' ? MapPin : kind === 'room' ? DoorOpen : kind === 'group' ? Layers : Building2;
     const iconHtml = iconSvg(Icon, '#fff', 18);
     const count = attributes.count || 0;
     const critical = attributes.critical || 0;

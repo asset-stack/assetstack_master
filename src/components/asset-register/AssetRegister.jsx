@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   Search, Command, Layers, Download, ChevronDown, ChevronRight,
-  Rows, Rows3, AlignJustify
+  Rows, Rows3, AlignJustify, MapPin, DoorOpen
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Input } from '@/components/ui/input';
@@ -17,7 +17,7 @@ import CommandPalette from './CommandPalette';
 import BulkActionBar from './BulkActionBar';
 import { applyFilters, groupAssets, exportToCSV } from './registerUtils';
 
-const DEFAULT_FILTERS = { status: [], risk: [], criticality: [], location: [], type: [] };
+const DEFAULT_FILTERS = { status: [], risk: [], criticality: [], location: [], room: [], type: [] };
 
 export default function AssetRegister() {
   const [search, setSearch] = useState('');
@@ -50,6 +50,10 @@ export default function AssetRegister() {
 
   const locationOptions = useMemo(
     () => Array.from(new Set(equipment.map((e) => e.location).filter(Boolean))).sort(),
+    [equipment]
+  );
+  const roomOptions = useMemo(
+    () => Array.from(new Set(equipment.map((e) => e.room?.trim()).filter(Boolean))).sort(),
     [equipment]
   );
   const typeOptions = useMemo(
@@ -111,7 +115,8 @@ export default function AssetRegister() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="location">By Location</SelectItem>
+              <SelectItem value="location">By Location → Room</SelectItem>
+              <SelectItem value="room">By Room</SelectItem>
               <SelectItem value="type">By Type</SelectItem>
               <SelectItem value="status">By Status</SelectItem>
               <SelectItem value="criticality">By Criticality</SelectItem>
@@ -146,6 +151,7 @@ export default function AssetRegister() {
           filters={filters}
           onChange={setFilters}
           locationOptions={locationOptions}
+          roomOptions={roomOptions}
           typeOptions={typeOptions}
         />
       </div>
@@ -160,7 +166,7 @@ export default function AssetRegister() {
           onCheckedChange={selectAllVisible}
         />
         <span>Asset</span>
-        <span>Location</span>
+        <span>Location · Room</span>
         <span>Health</span>
         <span>Risk</span>
         <span className="text-right">Fail %</span>
@@ -178,15 +184,17 @@ export default function AssetRegister() {
         ) : (
           groups.map((group) => {
             const isCollapsed = collapsedGroups.has(group.key);
+            const hasRoomSubGroups = group.subGroups && group.subGroups.length > 0;
             return (
               <div key={group.key}>
                 {groupBy !== 'none' && (
                   <button
                     onClick={() => toggleGroup(group.key)}
-                    className="w-full flex items-center gap-2 px-3 py-1.5 bg-slate-50/80 border-b border-slate-100 hover:bg-slate-100 transition-colors text-left sticky top-0 z-10"
+                    className="w-full flex items-center gap-2 px-3 py-1.5 bg-indigo-50/40 border-b border-slate-100 hover:bg-indigo-50 transition-colors text-left sticky top-0 z-10"
                   >
                     {isCollapsed ? <ChevronRight className="w-3.5 h-3.5 text-slate-400" /> : <ChevronDown className="w-3.5 h-3.5 text-slate-400" />}
-                    <span className="text-[12px] font-bold text-slate-700 capitalize">{group.key.replace(/_/g, ' ')}</span>
+                    <MapPin className="w-3 h-3 text-indigo-500" />
+                    <span className="text-[12px] font-bold text-slate-800 capitalize">{group.key.replace(/_/g, ' ')}</span>
                     <span className="text-[11px] text-slate-500">· {group.count}</span>
                     {group.critical > 0 && (
                       <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">
@@ -200,7 +208,33 @@ export default function AssetRegister() {
                     )}
                   </button>
                 )}
-                {!isCollapsed && group.items.map((asset) => (
+                {!isCollapsed && hasRoomSubGroups && (
+                  group.subGroups.map((room) => (
+                    <div key={`${group.key}::${room.key}`}>
+                      <div className="flex items-center gap-2 px-3 py-1 pl-9 bg-teal-50/40 border-b border-slate-100">
+                        <DoorOpen className="w-3 h-3 text-teal-600" />
+                        <span className="text-[11px] font-semibold text-slate-700">{room.key}</span>
+                        <span className="text-[10px] text-slate-500">· {room.count}</span>
+                        {room.critical > 0 && (
+                          <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">
+                            {room.critical} critical
+                          </span>
+                        )}
+                      </div>
+                      {room.items.map((asset) => (
+                        <AssetRow
+                          key={asset.id}
+                          asset={asset}
+                          selected={selected.has(asset.id)}
+                          onSelect={() => toggleSelect(asset.id)}
+                          onClick={() => setActiveAsset(asset)}
+                          density={density}
+                        />
+                      ))}
+                    </div>
+                  ))
+                )}
+                {!isCollapsed && !hasRoomSubGroups && group.items.map((asset) => (
                   <AssetRow
                     key={asset.id}
                     asset={asset}

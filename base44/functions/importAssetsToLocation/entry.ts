@@ -74,6 +74,7 @@ Deno.serve(async (req) => {
       };
 
       // Optional fields — only set if present and valid
+      if (row.room) record.room = String(row.room).trim();
       if (row.manufacturer) record.manufacturer = String(row.manufacturer);
       if (row.model) record.model = String(row.model);
       if (row.serial_number) record.serial_number = String(row.serial_number);
@@ -94,6 +95,7 @@ Deno.serve(async (req) => {
       // Stash any extra/unmapped fields under specifications
       const knownKeys = new Set([
         'name', 'type', 'manufacturer', 'model', 'serial_number', 'location', 'location_id',
+        'room',
         'installation_date', 'last_maintenance_date', 'operating_hours', 'rated_capacity',
         'capacity_unit', 'health_score', 'status', 'risk_level', 'predicted_failure_date',
         'remaining_useful_life_days', 'failure_probability', 'criticality', 'image_url',

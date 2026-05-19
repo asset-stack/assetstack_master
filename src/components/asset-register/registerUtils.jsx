@@ -22,11 +22,12 @@ export const CRITICALITY_BADGE = {
   mission_critical: 'bg-rose-50 text-rose-700',
 };
 
-// Compute a 0-100 data quality score based on completeness of key fields
+// Compute a 0-100 data quality score based on completeness of key fields.
+// Room is part of the canonical Location → Room → Asset standard, so include it.
 export function computeDataQuality(asset) {
   const fields = [
     'manufacturer', 'model', 'serial_number', 'installation_date',
-    'last_maintenance_date', 'rated_capacity', 'criticality', 'location',
+    'last_maintenance_date', 'rated_capacity', 'criticality', 'location', 'room',
     'health_score', 'operating_hours',
   ];
   const filled = fields.filter((f) => asset[f] !== undefined && asset[f] !== null && asset[f] !== '').length;
@@ -54,23 +55,25 @@ export function applyFilters(assets, filters, search) {
     if (filters.risk?.length && !filters.risk.includes(a.risk_level)) return false;
     if (filters.criticality?.length && !filters.criticality.includes(a.criticality)) return false;
     if (filters.location?.length && !filters.location.includes(a.location)) return false;
+    if (filters.room?.length && !filters.room.includes(a.room || 'Unassigned room')) return false;
     if (filters.type?.length && !filters.type.includes(a.type)) return false;
     if (q) {
-      const hay = `${a.name || ''} ${a.location || ''} ${a.type || ''} ${a.manufacturer || ''} ${a.model || ''} ${a.serial_number || ''}`.toLowerCase();
+      const hay = `${a.name || ''} ${a.location || ''} ${a.room || ''} ${a.type || ''} ${a.manufacturer || ''} ${a.model || ''} ${a.serial_number || ''}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
   });
 }
 
-// Group assets by a field, returning [{ key, items, count, critical, avgHealth }]
+// Group assets by a field, returning [{ key, items, count, critical, avgHealth, subGroups? }]
+// When groupBy === 'location', items are nested by room (Location → Room → Asset standard).
 export function groupAssets(assets, groupBy) {
   if (groupBy === 'none') {
     return [{ key: 'all', items: assets, count: assets.length, critical: 0, avgHealth: null }];
   }
   const buckets = new Map();
   for (const a of assets) {
-    const key = a[groupBy] || 'Unassigned';
+    const key = a[groupBy] || (groupBy === 'room' ? 'Unassigned room' : 'Unassigned');
     if (!buckets.has(key)) buckets.set(key, []);
     buckets.get(key).push(a);
   }
@@ -80,7 +83,27 @@ export function groupAssets(assets, groupBy) {
       const avgHealth = items.length
         ? Math.round(items.reduce((s, i) => s + (Number(i.health_score) || 0), 0) / items.length)
         : null;
-      return { key, items, count: items.length, critical, avgHealth };
+
+      // Canonical sub-grouping: when grouping by location, nest by room
+      let subGroups = null;
+      if (groupBy === 'location') {
+        const roomMap = new Map();
+        for (const a of items) {
+          const r = a.room?.trim() || 'Unassigned room';
+          if (!roomMap.has(r)) roomMap.set(r, []);
+          roomMap.get(r).push(a);
+        }
+        subGroups = Array.from(roomMap.entries())
+          .map(([roomKey, roomItems]) => ({
+            key: roomKey,
+            items: roomItems,
+            count: roomItems.length,
+            critical: roomItems.filter((i) => i.status === 'critical' || i.risk_level === 'critical').length,
+          }))
+          .sort((a, b) => a.key.localeCompare(b.key));
+      }
+
+      return { key, items, count: items.length, critical, avgHealth, subGroups };
     })
     .sort((a, b) => b.count - a.count);
 }
@@ -89,7 +112,7 @@ export function groupAssets(assets, groupBy) {
 export function exportToCSV(assets) {
   if (!assets?.length) return;
   const cols = [
-    'name', 'type', 'location', 'manufacturer', 'model', 'serial_number',
+    'name', 'type', 'location', 'room', 'manufacturer', 'model', 'serial_number',
     'status', 'risk_level', 'criticality', 'health_score', 'failure_probability',
     'operating_hours', 'installation_date', 'last_maintenance_date',
   ];

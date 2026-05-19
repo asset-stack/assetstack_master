@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  X, Cpu, Activity, AlertTriangle, Calendar, Gauge, Wrench,
+  X, Cpu, Activity, AlertTriangle, Calendar, Gauge, Wrench, MapPin, DoorOpen,
   Sparkles, FileText, Camera, Package, ShieldCheck, TrendingDown, Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -71,6 +71,7 @@ export default function RegisterDetailsPanel({ asset, onClose }) {
                 <h3 className="font-bold text-slate-900 text-base leading-tight truncate">{asset.name}</h3>
                 <p className="text-xs text-slate-500 mt-0.5 capitalize truncate">
                   {asset.type?.replace(/_/g, ' ')} · {asset.location || 'Unassigned'}
+                  {asset.room && <span className="text-teal-700"> · {asset.room}</span>}
                 </p>
               </div>
             </div>
@@ -122,6 +123,8 @@ export default function RegisterDetailsPanel({ asset, onClose }) {
             </div>
 
             <div className="grid grid-cols-2 gap-2">
+              <InfoCard icon={MapPin} label="Location" value={asset.location || '—'} />
+              <InfoCard icon={DoorOpen} label="Room" value={asset.room || '—'} />
               <InfoCard icon={Activity} label="Operating Hrs" value={asset.operating_hours?.toLocaleString() || '0'} />
               <InfoCard icon={TrendingDown} label="Failure Prob." value={asset.failure_probability != null ? `${asset.failure_probability}%` : '—'} />
               <InfoCard icon={Calendar} label="Last Maint." value={asset.last_maintenance_date || '—'} />
