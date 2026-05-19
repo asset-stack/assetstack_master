@@ -1,0 +1,36 @@
+{
+  "name": "LandingLayout",
+  "type": "object",
+  "properties": {
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Singleton flag \u2014 there is only ever one active LandingLayout row."
+    },
+    "sections": {
+      "type": "array",
+      "description": "Ordered list of landing-page sections. Order in this array = display order.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Section identifier matching the sectionRegistry key"
+          },
+          "visible": {
+            "type": "boolean",
+            "default": true,
+            "description": "If false, the section is not rendered on the live landing page"
+          }
+        },
+        "required": [
+          "key"
+        ]
+      }
+    },
+    "last_edited_by": {
+      "type": "string"
+    }
+  },
+  "required": []
+}

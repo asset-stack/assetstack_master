@@ -51,6 +51,7 @@ import Presentation from './pages/Presentation';
 import Projects from './pages/Projects';
 import ProjectDetail from './pages/ProjectDetail';
 import PrintLanding from './pages/PrintLanding';
+import LandingEditor from './pages/LandingEditor';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -294,6 +295,11 @@ const AuthenticatedApp = () => {
           } />
       <Route path="/Presentation" element={<Presentation />} />
       <Route path="/PrintLanding" element={<PrintLanding />} />
+      <Route path="/LandingEditor" element={
+            <LayoutWrapper currentPageName="LandingEditor">
+              <LandingEditor />
+            </LayoutWrapper>
+          } />
       <Route path="/Projects" element={
             <LayoutWrapper currentPageName="Projects">
               <Projects />

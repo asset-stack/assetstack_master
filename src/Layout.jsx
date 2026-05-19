@@ -9,7 +9,7 @@ import {
   ChevronDown, GitBranch, Globe2, FlaskConical, ShieldCheck,
   Package, Wallet, Building2, CalendarDays, AlertOctagon, Banknote,
   Target, FlaskConical as FlaskIcon, ClipboardCheck, TrendingUp, Smartphone,
-  ShieldAlert, Waves, Camera, Filter, Edit3, Rocket
+  ShieldAlert, Waves, Camera, Filter, Edit3, Rocket, Layout as LayoutIcon
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
@@ -125,6 +125,7 @@ const navSections = [
     label: 'Admin',
     items: [
       { name: 'Security Center', icon: ShieldCheck, page: 'SecurityCenter' },
+      { name: 'Landing Editor', icon: LayoutIcon, page: 'LandingEditor' },
       { name: 'Setup Guide', icon: Sparkles, page: 'SetupGuide' },
       { name: 'Setup', icon: Settings, page: 'Onboarding' },
       { name: 'Import Data', icon: Upload, page: 'DataImport' },
