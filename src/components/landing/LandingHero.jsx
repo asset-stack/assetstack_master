@@ -18,14 +18,14 @@ export default function LandingHero() {
 
   return (
     <section
-      className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden bg-white"
+      className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden"
       onMouseMove={handleMove}
       onMouseLeave={() => setBannerPos(null)}
     >
       {/* Interactive image banner background */}
       <div
         ref={bannerWrapRef}
-        className="absolute inset-0 -z-10"
+        className="absolute inset-0 z-0"
       >
         <HeroBanner pos={bannerPos} />
       </div>
