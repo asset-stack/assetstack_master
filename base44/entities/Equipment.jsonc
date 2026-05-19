@@ -53,7 +53,11 @@
     },
     "location": {
       "type": "string",
-      "description": "Physical location/zone"
+      "description": "Physical location/zone (name \u2014 kept for back-compat)"
+    },
+    "location_id": {
+      "type": "string",
+      "description": "Foreign key to Location entity"
     },
     "installation_date": {
       "type": "string",
@@ -139,6 +143,10 @@
         "type": "string"
       },
       "description": "Tags for categorization"
+    },
+    "import_batch_id": {
+      "type": "string",
+      "description": "Identifier of the import batch this asset was created in (for undo)"
     }
   },
   "required": [

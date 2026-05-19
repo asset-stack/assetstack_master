@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import LocationForm from '@/components/locations/LocationForm';
 import LocationHubCard from '@/components/locations/LocationHubCard';
+import AssetImportDialog from '@/components/locations/AssetImportDialog';
 import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 const UNFIXED_STATUSES = new Set(['pending', 'approved']);
@@ -14,6 +15,7 @@ export default function Locations() {
   const [search, setSearch] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [importingTo, setImportingTo] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: locations = [] } = useQuery({
@@ -143,6 +145,7 @@ export default function Locations() {
                 stats={statsFor(loc.name, loc.id)}
                 onEdit={(l) => { setEditing(l); setIsFormOpen(true); }}
                 onDelete={(l) => deleteMutation.mutate(l.id)}
+                onImportAssets={(l) => setImportingTo(l)}
               />
             ))}
           </div>
@@ -162,6 +165,16 @@ export default function Locations() {
         onOpenChange={setIsFormOpen}
         location={editing}
         onSaved={() => { setIsFormOpen(false); setEditing(null); queryClient.invalidateQueries({ queryKey: ['locations'] }); }}
+      />
+
+      <AssetImportDialog
+        open={!!importingTo}
+        onOpenChange={(v) => { if (!v) setImportingTo(null); }}
+        location={importingTo}
+        onImported={() => {
+          queryClient.invalidateQueries({ queryKey: ['locations'] });
+          queryClient.invalidateQueries({ queryKey: ['equipment'] });
+        }}
       />
     </div>
   );
