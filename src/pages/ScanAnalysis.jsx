@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Upload, Sparkles, Loader2, Box, Brain, Filter, CheckCircle2, ImagePlus, Camera, ClipboardCheck } from 'lucide-react';
+import { Upload, Sparkles, Loader2, Box, Brain, Filter, CheckCircle2, ImagePlus, Camera, ClipboardCheck, FileSpreadsheet } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import ScanViewer3D from '@/components/scan-analysis/ScanViewer3D';
@@ -20,6 +20,7 @@ import ScanFramesGallery from '@/components/scan-analysis/ScanFramesGallery';
 import BulkPhotoUpload from '@/components/scan-analysis/BulkPhotoUpload';
 import AddManualFindingDialog from '@/components/scan-analysis/AddManualFindingDialog';
 import AddMissedFindingDialog from '@/components/scan-analysis/AddMissedFindingDialog';
+import ImportFindingsDialog from '@/components/scan-analysis/ImportFindingsDialog';
 import HowItWorks from '@/components/scan-analysis/HowItWorks';
 import RealPhotoWorkflowGuide from '@/components/scan-analysis/RealPhotoWorkflowGuide';
 import AddPhotoFrames from '@/components/scan-analysis/AddPhotoFrames';
@@ -41,6 +42,7 @@ export default function ScanAnalysisPage() {
   const [quickAnalyzeOpen, setQuickAnalyzeOpen] = useState(false);
   const [manualFindingOpen, setManualFindingOpen] = useState(false);
   const [missedFindingOpen, setMissedFindingOpen] = useState(false);
+  const [importFindingsOpen, setImportFindingsOpen] = useState(false);
   const [selectedScanId, setSelectedScanId] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState(null); // { current, total } | null
@@ -238,6 +240,9 @@ export default function ScanAnalysisPage() {
             className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
           >
             <ImagePlus className="w-4 h-4 mr-2" /> Analyze Image
+          </Button>
+          <Button onClick={() => setImportFindingsOpen(true)} variant="outline">
+            <FileSpreadsheet className="w-4 h-4 mr-2" /> Import Findings (CSV/Excel)
           </Button>
           <Button onClick={() => setUploadOpen(true)} variant="outline">
             <Upload className="w-4 h-4 mr-2" /> Upload 3D Scan
@@ -603,6 +608,17 @@ export default function ScanAnalysisPage() {
         onCreated={() => {
           qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan?.id] });
           qc.invalidateQueries({ queryKey: ['pendingTrainingSamples'] });
+        }}
+      />
+
+      <ImportFindingsDialog
+        open={importFindingsOpen}
+        onClose={() => setImportFindingsOpen(false)}
+        scopeScanId={selectedScan?.id}
+        scopeScanName={selectedScan?.name}
+        onCompleted={() => {
+          qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan?.id] });
+          qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
         }}
       />
     </div>
