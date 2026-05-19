@@ -139,10 +139,17 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
             </div>
           </div>
         )}
-        <div className="absolute top-2 right-2 bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg">
-          <Sparkles className="w-3 h-3" />
-          AI {Math.round(report.ai_confidence || 0)}%
-        </div>
+        {report.ai_model_version === 'manual' || report.ai_confidence == null ? (
+          <div className="absolute top-2 right-2 bg-emerald-600 text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg">
+            <ClipboardCheck className="w-3 h-3" />
+            Manual
+          </div>
+        ) : (
+          <div className="absolute top-2 right-2 bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg">
+            <Sparkles className="w-3 h-3" />
+            AI {Math.round(report.ai_confidence || 0)}%
+          </div>
+        )}
       </div>
 
       <div className="p-4">

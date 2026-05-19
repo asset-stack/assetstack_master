@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Upload, Sparkles, Loader2, Box, Brain, Filter, CheckCircle2, ImagePlus, Camera } from 'lucide-react';
+import { Upload, Sparkles, Loader2, Box, Brain, Filter, CheckCircle2, ImagePlus, Camera, ClipboardCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import ScanViewer3D from '@/components/scan-analysis/ScanViewer3D';
@@ -18,6 +18,7 @@ import OBJFrameCapture from '@/components/scan-analysis/OBJFrameCapture';
 
 import ScanFramesGallery from '@/components/scan-analysis/ScanFramesGallery';
 import BulkPhotoUpload from '@/components/scan-analysis/BulkPhotoUpload';
+import AddManualFindingDialog from '@/components/scan-analysis/AddManualFindingDialog';
 import HowItWorks from '@/components/scan-analysis/HowItWorks';
 import RealPhotoWorkflowGuide from '@/components/scan-analysis/RealPhotoWorkflowGuide';
 import AddPhotoFrames from '@/components/scan-analysis/AddPhotoFrames';
@@ -37,6 +38,7 @@ export default function ScanAnalysisPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [bulkPhotoOpen, setBulkPhotoOpen] = useState(false);
   const [quickAnalyzeOpen, setQuickAnalyzeOpen] = useState(false);
+  const [manualFindingOpen, setManualFindingOpen] = useState(false);
   const [selectedScanId, setSelectedScanId] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState(null); // { current, total } | null
@@ -418,14 +420,24 @@ export default function ScanAnalysisPage() {
             <MLTrainingPanel />
 
             <div className="bg-white rounded-xl border border-slate-200 p-4">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-3 gap-2">
                 <h3 className="font-bold text-slate-900 flex items-center gap-2">
                   <Brain className="w-4 h-4 text-indigo-600" /> Verify Condition Reports
                 </h3>
-                <Badge variant="outline">{stats.total}</Badge>
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setManualFindingOpen(true)}
+                    className="h-7 text-[11px] text-emerald-700 border-emerald-200 hover:bg-emerald-50"
+                  >
+                    <ClipboardCheck className="w-3 h-3 mr-1" /> Log finding
+                  </Button>
+                  <Badge variant="outline">{stats.total}</Badge>
+                </div>
               </div>
               <div className="mb-3 rounded-lg bg-indigo-50 border border-indigo-100 p-3 text-xs text-indigo-800">
-                Review each highlighted asset photo, then click <span className="font-bold">Verify</span>, <span className="font-bold">Fix AI</span>, or <span className="font-bold">Not issue</span>.
+                Review each highlighted asset photo, then click <span className="font-bold">Verify</span>, <span className="font-bold">Fix AI</span>, or <span className="font-bold">Not issue</span>. Or <span className="font-bold">Log finding</span> for defects you spot yourself.
               </div>
 
               <div className="grid grid-cols-4 gap-1 mb-3 text-center text-[10px]">
@@ -553,6 +565,19 @@ export default function ScanAnalysisPage() {
           qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
           qc.invalidateQueries({ queryKey: ['assetPhotos'] });
           if (result?.scan_id) setSelectedScanId(result.scan_id);
+        }}
+      />
+
+      <AddManualFindingDialog
+        open={manualFindingOpen}
+        onClose={() => setManualFindingOpen(false)}
+        scan={selectedScan}
+        frames={frames}
+        equipment={equipment}
+        onCreated={() => {
+          qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan?.id] });
+          qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
+          qc.invalidateQueries({ queryKey: ['pendingTrainingSamples'] });
         }}
       />
     </div>
