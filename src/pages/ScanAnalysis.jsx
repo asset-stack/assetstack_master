@@ -19,6 +19,7 @@ import OBJFrameCapture from '@/components/scan-analysis/OBJFrameCapture';
 import ScanFramesGallery from '@/components/scan-analysis/ScanFramesGallery';
 import BulkPhotoUpload from '@/components/scan-analysis/BulkPhotoUpload';
 import AddManualFindingDialog from '@/components/scan-analysis/AddManualFindingDialog';
+import AddMissedFindingDialog from '@/components/scan-analysis/AddMissedFindingDialog';
 import HowItWorks from '@/components/scan-analysis/HowItWorks';
 import RealPhotoWorkflowGuide from '@/components/scan-analysis/RealPhotoWorkflowGuide';
 import AddPhotoFrames from '@/components/scan-analysis/AddPhotoFrames';
@@ -39,6 +40,7 @@ export default function ScanAnalysisPage() {
   const [bulkPhotoOpen, setBulkPhotoOpen] = useState(false);
   const [quickAnalyzeOpen, setQuickAnalyzeOpen] = useState(false);
   const [manualFindingOpen, setManualFindingOpen] = useState(false);
+  const [missedFindingOpen, setMissedFindingOpen] = useState(false);
   const [selectedScanId, setSelectedScanId] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState(null); // { current, total } | null
@@ -368,10 +370,21 @@ export default function ScanAnalysisPage() {
             {/* Preview image with bboxes — uses selected frame if available, else scan preview */}
             {(selectedFrame?.image_url || selectedScan.preview_image_url) && (
               <div className="bg-white rounded-xl border border-slate-200 p-4">
-                <h4 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
-                  <Filter className="w-4 h-4" />
-                  Analyzed Image {selectedFrame ? `— ${selectedFrame.angle_label}` : ''}
-                </h4>
+                <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
+                  <h4 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                    <Filter className="w-4 h-4" />
+                    Analyzed Image {selectedFrame ? `— ${selectedFrame.angle_label}` : ''}
+                  </h4>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setMissedFindingOpen(true)}
+                    className="h-7 text-[11px] text-emerald-700 border-emerald-200 hover:bg-emerald-50"
+                    title="Draw a box around a defect the AI missed"
+                  >
+                    <ImagePlus className="w-3 h-3 mr-1" /> AI missed something?
+                  </Button>
+                </div>
                 <div className="relative rounded-lg overflow-hidden bg-slate-100">
                   <SeverityHeatmapOverlay
                     reports={reports}
@@ -577,6 +590,18 @@ export default function ScanAnalysisPage() {
         onCreated={() => {
           qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan?.id] });
           qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
+          qc.invalidateQueries({ queryKey: ['pendingTrainingSamples'] });
+        }}
+      />
+
+      <AddMissedFindingDialog
+        open={missedFindingOpen}
+        onClose={() => setMissedFindingOpen(false)}
+        scan={selectedScan}
+        imageUrl={selectedFrame?.image_url || selectedScan?.preview_image_url}
+        equipment={equipment}
+        onCreated={() => {
+          qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan?.id] });
           qc.invalidateQueries({ queryKey: ['pendingTrainingSamples'] });
         }}
       />

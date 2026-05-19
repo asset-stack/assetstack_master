@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 import AnomalyEvidencePack from './AnomalyEvidencePack';
+import BboxDrawCanvas from './BboxDrawCanvas';
 
 const severityColors = {
   minor: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -27,6 +28,7 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
   const [mode, setMode] = useState(null); // 'correct' | 'assign' | null
   const [correctedType, setCorrectedType] = useState(report.anomaly_type);
   const [correctedSeverity, setCorrectedSeverity] = useState(report.severity);
+  const [correctedBbox, setCorrectedBbox] = useState(report.bounding_box || null);
   const [notes, setNotes] = useState(report.reviewer_notes || '');
   const [loading, setLoading] = useState(false);
   const [savingAssign, setSavingAssign] = useState(false);
@@ -61,9 +63,10 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
   useEffect(() => {
     setCorrectedType(report.anomaly_type);
     setCorrectedSeverity(report.severity);
+    setCorrectedBbox(report.bounding_box || null);
     setNotes(report.reviewer_notes || '');
     setMode(null);
-  }, [report.id, report.anomaly_type, report.severity, report.reviewer_notes, report.review_status]);
+  }, [report.id, report.anomaly_type, report.severity, report.reviewer_notes, report.review_status, report.bounding_box]);
 
   const allowedSeverity = ['minor', 'moderate', 'major', 'critical'];
 
@@ -86,6 +89,8 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
         // Also update the primary fields so downstream displays/filters reflect the correction
         updates.anomaly_type = safeType;
         updates.severity = safeSeverity;
+        // Save the redrawn bbox if the reviewer changed it — this is the highest-value training signal
+        if (correctedBbox) updates.bounding_box = correctedBbox;
       }
       await base44.entities.ConditionReport.update(report.id, updates);
       toast?.success?.(
@@ -238,6 +243,19 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
                 ))}
               </SelectContent>
             </Select>
+
+            {/* Redraw bbox — strongest training signal */}
+            {report.image_url && (
+              <div className="pt-1">
+                <p className="text-[10px] font-semibold text-amber-900 mb-1">Redraw box (optional)</p>
+                <BboxDrawCanvas
+                  imageUrl={report.image_url}
+                  initialBbox={correctedBbox}
+                  color="border-amber-500"
+                  onChange={setCorrectedBbox}
+                />
+              </div>
+            )}
           </div>
         )}
 
