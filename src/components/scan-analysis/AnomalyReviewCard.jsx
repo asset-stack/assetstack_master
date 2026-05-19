@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Check, X, Edit3, Sparkles, ShieldCheck, ClipboardCheck, CheckCircle2, Loader2 } from 'lucide-react';
+import { Check, X, Edit3, Sparkles, ShieldCheck, ClipboardCheck, CheckCircle2, Loader2, Link2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
+import AnomalyEvidencePack from './AnomalyEvidencePack';
 
 const severityColors = {
   minor: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -22,11 +24,38 @@ const anomalyTypes = [
 ];
 
 export default function AnomalyReviewCard({ report, onReviewed }) {
-  const [mode, setMode] = useState(null); // 'correct' | null
+  const [mode, setMode] = useState(null); // 'correct' | 'assign' | null
   const [correctedType, setCorrectedType] = useState(report.anomaly_type);
   const [correctedSeverity, setCorrectedSeverity] = useState(report.severity);
   const [notes, setNotes] = useState(report.reviewer_notes || '');
   const [loading, setLoading] = useState(false);
+  const [savingAssign, setSavingAssign] = useState(false);
+
+  // Lightweight equipment list for re-assignment (cached across cards)
+  const { data: equipmentList = [] } = useQuery({
+    queryKey: ['equipmentMini'],
+    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+    staleTime: 60_000,
+  });
+
+  const handleReassign = async (newEquipmentId) => {
+    if (newEquipmentId === report.equipment_id) return;
+    setSavingAssign(true);
+    try {
+      const eq = equipmentList.find((e) => e.id === newEquipmentId);
+      await base44.entities.ConditionReport.update(report.id, {
+        equipment_id: newEquipmentId || null,
+        equipment_name: eq?.name || '',
+      });
+      toast?.success?.(eq ? `Linked to ${eq.name}` : 'Unlinked');
+      setMode(null);
+      onReviewed && onReviewed();
+    } catch (err) {
+      toast?.error?.(`Could not link: ${err?.message || 'Unknown'}`);
+    } finally {
+      setSavingAssign(false);
+    }
+  };
 
   // Re-sync local state when the parent report record changes (e.g. after a save invalidates cache)
   useEffect(() => {
@@ -140,12 +169,42 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
                 {report.severity} • score {report.condition_score}
               </Badge>
             </div>
-            {report.equipment_name && (
-              <p className="text-xs text-slate-500 mt-1">on {report.equipment_name}</p>
-            )}
+            <div className="flex items-center gap-1 mt-1 flex-wrap">
+              <p className="text-xs text-slate-500">
+                {report.equipment_name ? `on ${report.equipment_name}` : <span className="text-amber-700">Unassigned</span>}
+              </p>
+              <button
+                type="button"
+                onClick={() => setMode(mode === 'assign' ? null : 'assign')}
+                className="text-[10px] text-indigo-600 hover:text-indigo-800 underline underline-offset-2 flex items-center gap-0.5"
+              >
+                <Link2 className="w-3 h-3" /> {report.equipment_id ? 'change' : 'link asset'}
+              </button>
+            </div>
           </div>
           <Badge variant="outline" className="text-[10px]">{report.ai_model_version}</Badge>
         </div>
+
+        {mode === 'assign' && (
+          <div className="mb-3 p-3 bg-indigo-50 border border-indigo-200 rounded-lg space-y-2">
+            <p className="text-xs font-semibold text-indigo-900 flex items-center gap-1">
+              <Link2 className="w-3 h-3" /> Link this anomaly to an asset
+            </p>
+            <Select
+              value={report.equipment_id || undefined}
+              onValueChange={handleReassign}
+              disabled={savingAssign}
+            >
+              <SelectTrigger className="h-8 text-xs bg-white"><SelectValue placeholder="Pick asset…" /></SelectTrigger>
+              <SelectContent className="max-h-72">
+                {equipmentList.map((e) => (
+                  <SelectItem key={e.id} value={e.id} className="text-xs">{e.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {savingAssign && <p className="text-[10px] text-indigo-700">Saving…</p>}
+          </div>
+        )}
 
         {report.ai_description && (
           <p className="text-sm text-slate-700 mb-3 leading-relaxed">{report.ai_description}</p>
@@ -187,16 +246,19 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
             <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" />
             {isReviewed ? 'Change verification' : 'Verification action'}
           </span>
-          {isReviewed && (
-            <button
-              type="button"
-              onClick={() => handleReview('pending')}
-              disabled={loading}
-              className="text-[10px] text-slate-500 hover:text-slate-800 underline underline-offset-2"
-            >
-              Reopen
-            </button>
-          )}
+          <div className="flex items-center gap-1">
+            <AnomalyEvidencePack report={report} equipment={equipmentList} />
+            {isReviewed && (
+              <button
+                type="button"
+                onClick={() => handleReview('pending')}
+                disabled={loading}
+                className="text-[10px] text-slate-500 hover:text-slate-800 underline underline-offset-2"
+              >
+                Reopen
+              </button>
+            )}
+          </div>
         </div>
         <div className="grid grid-cols-3 gap-2">
           <Button

@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Upload, Sparkles, Loader2, Box, Brain, Filter, CheckCircle2, ImagePlus } from 'lucide-react';
+import { Upload, Sparkles, Loader2, Box, Brain, Filter, CheckCircle2, ImagePlus, Camera } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import ScanViewer3D from '@/components/scan-analysis/ScanViewer3D';
@@ -17,6 +17,7 @@ import QuickAnalyzeImage from '@/components/scan-analysis/QuickAnalyzeImage';
 import OBJFrameCapture from '@/components/scan-analysis/OBJFrameCapture';
 
 import ScanFramesGallery from '@/components/scan-analysis/ScanFramesGallery';
+import BulkPhotoUpload from '@/components/scan-analysis/BulkPhotoUpload';
 import HowItWorks from '@/components/scan-analysis/HowItWorks';
 import RealPhotoWorkflowGuide from '@/components/scan-analysis/RealPhotoWorkflowGuide';
 import AddPhotoFrames from '@/components/scan-analysis/AddPhotoFrames';
@@ -34,6 +35,7 @@ import { toast } from 'sonner';
 
 export default function ScanAnalysisPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
+  const [bulkPhotoOpen, setBulkPhotoOpen] = useState(false);
   const [quickAnalyzeOpen, setQuickAnalyzeOpen] = useState(false);
   const [selectedScanId, setSelectedScanId] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
@@ -56,7 +58,12 @@ export default function ScanAnalysisPage() {
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipmentList'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 50),
+    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+  });
+
+  const { data: locations = [] } = useQuery({
+    queryKey: ['locationsList'],
+    queryFn: () => base44.entities.Location.list('-created_date', 100),
   });
 
   const { data: reports = [] } = useQuery({
@@ -216,6 +223,12 @@ export default function ScanAnalysisPage() {
         <div className="flex gap-2 items-center flex-wrap">
           <KeyboardShortcutsHelp />
           {selectedScan && <ConditionReportExport scan={selectedScan} reports={reports} />}
+          <Button
+            onClick={() => setBulkPhotoOpen(true)}
+            className="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700"
+          >
+            <Camera className="w-4 h-4 mr-2" /> Bulk Photo Upload
+          </Button>
           <Button
             onClick={() => setQuickAnalyzeOpen(true)}
             className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
@@ -528,6 +541,18 @@ export default function ScanAnalysisPage() {
         onChanged={() => {
           qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan?.id] });
           qc.invalidateQueries({ queryKey: ['workOrders'] });
+        }}
+      />
+
+      <BulkPhotoUpload
+        open={bulkPhotoOpen}
+        onOpenChange={setBulkPhotoOpen}
+        equipment={equipment}
+        locations={locations}
+        onCompleted={(result) => {
+          qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
+          qc.invalidateQueries({ queryKey: ['assetPhotos'] });
+          if (result?.scan_id) setSelectedScanId(result.scan_id);
         }}
       />
     </div>
