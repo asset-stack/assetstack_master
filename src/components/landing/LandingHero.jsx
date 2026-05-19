@@ -1,31 +1,34 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play, ShieldCheck } from 'lucide-react';
 import HeroProductCanvas from './HeroProductCanvas';
 import HeroLiveAssetMind from './HeroLiveAssetMind';
+import HeroBanner from './HeroBanner';
 
 export default function LandingHero() {
+  const [bannerPos, setBannerPos] = useState(null);
+  const bannerWrapRef = useRef(null);
+
+  const handleMove = (e) => {
+    const rect = bannerWrapRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setBannerPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
   return (
     <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden bg-white">
-      {/* Subtle dotted backdrop */}
+      {/* Interactive image banner background */}
       <div
-        aria-hidden
-        className="absolute inset-0 -z-10 opacity-[0.4]"
-        style={{
-          backgroundImage:
-            'radial-gradient(hsl(220 14% 80%) 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
-          maskImage:
-            'radial-gradient(ellipse at 50% 30%, black 30%, transparent 70%)',
-          WebkitMaskImage:
-            'radial-gradient(ellipse at 50% 30%, black 30%, transparent 70%)',
-        }}
-      />
-      {/* Soft blue ambient */}
-      <div aria-hidden className="absolute -top-32 left-1/2 -translate-x-1/2 -z-10 w-[1100px] h-[600px] bg-gradient-to-b from-primary/10 via-blue-200/20 to-transparent blur-3xl rounded-full" />
+        ref={bannerWrapRef}
+        onMouseMove={handleMove}
+        onMouseLeave={() => setBannerPos(null)}
+        className="absolute inset-0 -z-10"
+      >
+        <HeroBanner pos={bannerPos} />
+      </div>
 
-      <div className="max-w-[1280px] mx-auto px-5 md:px-8">
+      <div className="max-w-[1280px] mx-auto px-5 md:px-8 relative z-10">
         {/* Eyebrow */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
