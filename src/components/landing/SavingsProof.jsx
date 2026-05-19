@@ -113,7 +113,7 @@ export default function SavingsProof() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
-            className="rounded-2xl border border-slate-200 bg-white p-7 hover-lift hover:border-primary/30 elevation-1 hover:elevation-2 hidden">
+            className="rounded-2xl border border-slate-200 bg-white p-7 hover-lift hover:border-primary/30 elevation-1 hover:elevation-2">
             
               <div className="flex items-center justify-between mb-5">
                 <div className="text-[15px] font-semibold text-slate-900">{s.org}</div>

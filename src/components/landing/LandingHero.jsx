@@ -44,15 +44,15 @@ export default function LandingHero() {
 
         {/* Editorial headline */}
         <motion.h1
+          id="hero-heading"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center text-[44px] sm:text-6xl md:text-7xl lg:text-[88px] font-semibold tracking-[-0.04em] leading-[0.98] text-slate-900 text-balance"
+          className="text-center text-[40px] sm:text-5xl md:text-6xl lg:text-[76px] font-semibold tracking-[-0.04em] leading-[1.02] text-slate-900 text-balance"
         >
-          The AI operating system
+          Stop discovering breakdowns
           <br className="hidden sm:block" />
-          {' '}for{' '}
-          <span className="font-serif italic font-medium text-primary">physical assets.</span>
+          {' '}<span className="font-serif italic font-medium text-primary">after they cost you $200K.</span>
         </motion.h1>
 
         {/* Subhead */}
@@ -62,7 +62,7 @@ export default function LandingHero() {
           transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="mt-7 text-center text-[17px] md:text-xl text-slate-600 max-w-2xl mx-auto leading-[1.5] text-pretty"
         >
-          Detect defects from photos. Predict failures from live data. Dispatch the right work — and prove every avoided breakdown with audit-ready evidence.
+          AssetStack reads your photos, your sensors, and your maintenance history — then tells you which asset is about to fail, who should fix it, and proves the savings in a ledger your CFO can audit. Used by <span className="text-slate-900 font-semibold">Bunbury Council</span> and <span className="text-slate-900 font-semibold">Lycopodium</span> on 100+ assets.
         </motion.p>
 
         {/* CTAs */}
@@ -70,17 +70,18 @@ export default function LandingHero() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-9 flex flex-col sm:flex-row gap-2.5 justify-center items-center"
+          className="mt-9 flex flex-col gap-2 justify-center items-center"
         >
           <a href="#contact">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white elevation-2 h-11 px-6 text-[14px] font-semibold rounded-lg">
-              Book a demo <ArrowRight className="w-4 h-4 ml-1.5" />
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white elevation-2 h-12 px-7 text-[15px] font-semibold rounded-lg">
+              See it on your assets — 30 min <ArrowRight className="w-4 h-4 ml-1.5" />
             </Button>
           </a>
-          <a href="#tour">
-            <Button size="lg" variant="outline" className="h-11 px-6 text-[14px] font-semibold border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 rounded-lg">
-              <Play className="w-3.5 h-3.5 mr-1.5 fill-slate-700" /> Watch 60-second tour
-            </Button>
+          <p className="text-[12px] text-slate-500 mt-1">
+            No slides. Bring 5 of your toughest assets — we'll show predictions on them live.
+          </p>
+          <a href="#tour" className="text-[13px] text-slate-500 hover:text-primary underline underline-offset-4 decoration-slate-300 hover:decoration-primary transition-colors mt-2 inline-flex items-center gap-1.5">
+            <Play className="w-3 h-3" /> Or watch the 60-second tour
           </a>
         </motion.div>
 
