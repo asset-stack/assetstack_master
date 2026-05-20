@@ -140,7 +140,7 @@ export default function HeroDitherCanvas({ imageUrl }) {
         uScaleResolution: { value: 1.0 },
         uMatrixSize: { value: 8.0 },
         uColorNum: { value: 2.0 },
-        uColorDark: { value: new THREE.Color(25 / 255, 37 / 255, 170 / 255) },
+        uColorDark: { value: new THREE.Color(8 / 255, 14 / 255, 90 / 255) },
         uColorLight: { value: new THREE.Color(183 / 255, 185 / 255, 211 / 255) },
         uBiasNoiseScale: { value: 1.2 },
         uBiasNoiseSpeed: { value: 0.03 },
