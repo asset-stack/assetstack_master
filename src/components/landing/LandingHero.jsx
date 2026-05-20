@@ -76,7 +76,7 @@ export default function LandingHero() {
               <p
                 className="text-white/85"
                 style={{
-                  fontFamily: "'Courier New', monospace",
+                  fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif",
                   fontSize: 'clamp(0.75rem, 1.2vw, 1rem)',
                   lineHeight: 1.5
                 }}>
