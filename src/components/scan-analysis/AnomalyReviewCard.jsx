@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 import AnomalyEvidencePack from './AnomalyEvidencePack';
 import BboxDrawCanvas from './BboxDrawCanvas';
+import { scoreForSeverity } from './severityScale';
 
 const severityColors = {
   minor: 'bg-blue-100 text-blue-700 border-blue-200',
@@ -71,6 +72,11 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
   const allowedSeverity = ['minor', 'moderate', 'major', 'critical'];
 
   const handleReview = async (status) => {
+    // Enforce reviewer notes on rejection — rejection without an explanation is training noise.
+    if (status === 'rejected' && !notes.trim()) {
+      toast?.error?.('Please add a short note explaining why this is not an issue — it helps train the model.');
+      return;
+    }
     setLoading(true);
     try {
       const user = await base44.auth.me();
@@ -89,6 +95,8 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
         // Also update the primary fields so downstream displays/filters reflect the correction
         updates.anomaly_type = safeType;
         updates.severity = safeSeverity;
+        // Keep condition_score in sync with the corrected severity (1=excellent, 5=failed)
+        updates.condition_score = scoreForSeverity(safeSeverity);
         // Save the redrawn bbox if the reviewer changed it — this is the highest-value training signal
         if (correctedBbox) updates.bounding_box = correctedBbox;
       }
@@ -260,11 +268,14 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
         )}
 
         <Textarea
-          placeholder="Optional verification notes, e.g. ‘confirmed crack on chair leg’ or ‘false detection’…"
+          placeholder="Notes (required when rejecting). E.g. ‘confirmed crack on chair leg’ or ‘shadow, not a crack’…"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          className="text-xs mb-3 min-h-[60px]"
+          className="text-xs mb-1 min-h-[60px]"
         />
+        <p className="text-[10px] text-slate-500 mb-3">
+          A short note on rejection trains the model to avoid the same false positive.
+        </p>
 
         <div className="mb-2 flex items-center justify-between gap-2 text-xs font-semibold text-slate-700">
           <span className="flex items-center gap-1.5">

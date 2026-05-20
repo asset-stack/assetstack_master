@@ -12,6 +12,7 @@ import ScanCard from '@/components/scan-analysis/ScanCard';
 import ScanUploadDialog from '@/components/scan-analysis/ScanUploadDialog';
 import AnomalyReviewCard from '@/components/scan-analysis/AnomalyReviewCard';
 import MLTrainingPanel from '@/components/scan-analysis/MLTrainingPanel';
+import ModelPerformancePanel from '@/components/scan-analysis/ModelPerformancePanel';
 import DeskConditionDemo from '@/components/scan-analysis/DeskConditionDemo';
 import QuickAnalyzeImage from '@/components/scan-analysis/QuickAnalyzeImage';
 import OBJFrameCapture from '@/components/scan-analysis/OBJFrameCapture';
@@ -436,6 +437,7 @@ export default function ScanAnalysisPage() {
           {/* Right: ML + Review */}
           <div className="space-y-4">
             <MLTrainingPanel />
+            <ModelPerformancePanel />
 
             <div className="bg-white rounded-xl border border-slate-200 p-4">
               <div className="flex items-center justify-between mb-3 gap-2">
