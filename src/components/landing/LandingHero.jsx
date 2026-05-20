@@ -54,7 +54,7 @@ export default function LandingHero() {
         <div className="relative z-[4] px-5 md:px-10 pb-12 md:pb-20 max-w-[1480px] w-full mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-[0.9375rem] lg:items-end">
             {/* Title */}
-            <div className="lg:col-span-9 overflow-hidden lg:self-end">
+            <div className="lg:col-span-9 overflow-hidden lg:self-end lg:-mb-[0.18em]">
               <h1
                 id="hero-heading"
                 ref={titleRef}
