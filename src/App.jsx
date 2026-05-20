@@ -53,6 +53,7 @@ import ProjectDetail from './pages/ProjectDetail';
 import PrintLanding from './pages/PrintLanding';
 import LandingEditor from './pages/LandingEditor';
 import ConditionInspector from './pages/ConditionInspector';
+import VerifyReports from './pages/VerifyReports';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -304,6 +305,11 @@ const AuthenticatedApp = () => {
       <Route path="/ConditionInspector" element={
             <LayoutWrapper currentPageName="ConditionInspector">
               <ConditionInspector />
+            </LayoutWrapper>
+          } />
+      <Route path="/VerifyReports" element={
+            <LayoutWrapper currentPageName="VerifyReports">
+              <VerifyReports />
             </LayoutWrapper>
           } />
       <Route path="/Projects" element={
