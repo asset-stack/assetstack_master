@@ -58,7 +58,7 @@ export default function LandingHero() {
               <h1
                 id="hero-heading"
                 ref={titleRef}
-                className="text-white font-normal leading-[0.92] tracking-[-0.01em] block pt-1"
+                className="text-white font-normal leading-[0.92] tracking-[-0.01em] block pt-1 text-sm"
                 style={{
                   fontFamily: "Georgia, 'Times New Roman', serif",
                   fontSize: 'clamp(3rem, 13vw, 10rem)'
