@@ -54,14 +54,14 @@ export default function LandingHero() {
         <div className="relative z-[4] px-5 md:px-10 pb-12 md:pb-20 max-w-[1480px] w-full mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-[0.9375rem] lg:items-end">
             {/* Title */}
-            <div className="lg:col-span-9 overflow-hidden lg:self-end lg:-mb-[0.18em]">
+            <div className="lg:col-span-9 overflow-hidden lg:self-end lg:-mb-[0.18em] lg:translate-y-12">
               <h1
                 id="hero-heading"
                 ref={titleRef}
                 className="text-white font-normal leading-[0.92] tracking-[-0.01em] block pt-1 text-sm"
                 style={{
                   fontFamily: "Georgia, 'Times New Roman', serif",
-                  fontSize: 'clamp(3rem, 13vw, 10rem)'
+                  fontSize: 'clamp(2.4rem, 10.4vw, 8rem)'
                 }}>
                 
                 AI Infrastructure<br />Intelligence Platform.
