@@ -52,9 +52,9 @@ export default function LandingHero() {
 
         {/* Hero content — bottom-aligned editorial layout */}
         <div className="relative z-[4] px-5 md:px-10 pb-12 md:pb-20 max-w-[1480px] w-full mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-[0.9375rem]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-[0.9375rem] lg:items-end">
             {/* Title */}
-            <div className="lg:col-span-9 overflow-hidden">
+            <div className="lg:col-span-9 overflow-hidden lg:self-end">
               <h1
                 id="hero-heading"
                 ref={titleRef}
@@ -71,7 +71,7 @@ export default function LandingHero() {
             {/* Tagline + CTAs */}
             <div
               ref={taglineRef}
-              className="lg:col-span-4 lg:col-start-9 lg:self-end mt-6 lg:mt-0 lg:pb-2"
+              className="lg:col-span-4 lg:col-start-9 lg:self-end mt-6 lg:mt-0"
             >
               <p
                 className="text-white/85"
