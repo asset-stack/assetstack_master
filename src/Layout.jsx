@@ -127,6 +127,7 @@ const navSections = [
     label: 'Admin',
     items: [
       { name: 'Security Center', icon: ShieldCheck, page: 'SecurityCenter' },
+      { name: 'SWSC Audit', icon: FileText, page: 'SWSCAudit' },
       { name: 'Landing Editor', icon: LayoutIcon, page: 'LandingEditor' },
       { name: 'Setup Guide', icon: Sparkles, page: 'SetupGuide' },
       { name: 'Setup', icon: Settings, page: 'Onboarding' },

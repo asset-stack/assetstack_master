@@ -54,6 +54,7 @@ import PrintLanding from './pages/PrintLanding';
 import LandingEditor from './pages/LandingEditor';
 import ConditionInspector from './pages/ConditionInspector';
 import VerifyReports from './pages/VerifyReports';
+import SWSCAudit from './pages/SWSCAudit.jsx';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -310,6 +311,11 @@ const AuthenticatedApp = () => {
       <Route path="/VerifyReports" element={
             <LayoutWrapper currentPageName="VerifyReports">
               <VerifyReports />
+            </LayoutWrapper>
+          } />
+      <Route path="/SWSCAudit" element={
+            <LayoutWrapper currentPageName="SWSCAudit">
+              <SWSCAudit />
             </LayoutWrapper>
           } />
       <Route path="/Projects" element={
