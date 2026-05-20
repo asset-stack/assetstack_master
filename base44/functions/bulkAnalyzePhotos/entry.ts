@@ -2,16 +2,17 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 // Process a batch of already-uploaded photos:
 // 1. Optionally create a DigitalTwinModel "photo-set scan" to group the photos
-// 2. Create AssetPhoto records (so they appear in the Photo Library)
+// 2. Create AssetPhoto records using bulkCreate (much faster for large batches)
 //
 // AI condition analysis is invoked from the FRONTEND per photo after this returns
-// (using the existing analyzeScanCondition function) — same pattern as ScanAnalysis re-run.
+// (using the existing analyzeScanCondition function).
 //
 // Payload:
 //   photos: [{ file_url, equipment_id?, equipment_name?, location_id?, location_name?,
 //              captured_date?, notes?, photo_type?, lat?, lng? }]
 //   create_scan: bool — if true, group all photos under one new DigitalTwinModel
 //   scan_name: string — name for the scan (if create_scan)
+//   existing_scan_id: string — if provided, skip scan creation and attach photos to this scan
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -19,19 +20,19 @@ Deno.serve(async (req) => {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const { photos = [], create_scan = false, scan_name, location_id, location_name } = body;
+    const { photos = [], create_scan = false, scan_name, location_id, location_name, existing_scan_id } = body;
     if (!Array.isArray(photos) || photos.length === 0) {
       return Response.json({ error: 'photos[] is required' }, { status: 400 });
     }
 
-    let scanId = null;
+    let scanId = existing_scan_id || null;
     let scanName = scan_name;
 
-    // 1. Optionally create a parent scan to group photos
-    if (create_scan) {
+    // 1. Optionally create a parent scan to group photos (only if not resuming an existing one)
+    if (create_scan && !existing_scan_id) {
       const scan = await base44.asServiceRole.entities.DigitalTwinModel.create({
         name: scan_name || `Photo set — ${new Date().toISOString().slice(0, 10)}`,
-        description: `Bulk photo upload of ${photos.length} image(s)`,
+        description: `Bulk photo upload — pending photo records`,
         location_id: location_id || null,
         location_name: location_name || null,
         model_type: 'photogrammetry',
@@ -44,31 +45,46 @@ Deno.serve(async (req) => {
       scanName = scan.name;
     }
 
-    const createdPhotos = [];
+    // 2. Prepare AssetPhoto records — drop any without an equipment_id (those go in errors)
     const photoErrors = [];
-
-    // 2. Create AssetPhoto records
+    const validRecords = [];
     for (const p of photos) {
+      if (!p.equipment_id) {
+        photoErrors.push({ file_url: p.file_url, error: 'missing equipment_id' });
+        continue;
+      }
+      validRecords.push({
+        equipment_id: p.equipment_id,
+        equipment_name: p.equipment_name || '',
+        photo_url: p.file_url,
+        captured_date: p.captured_date || new Date().toISOString().slice(0, 10),
+        captured_by_email: user.email,
+        condition_grade_at_capture: p.condition_grade_at_capture || null,
+        notes: p.notes || '',
+        photo_type: p.photo_type || 'inspection',
+        lat: p.lat || null,
+        lng: p.lng || null,
+      });
+    }
+
+    // 3. Bulk-create in chunks of 100 (SDK limit-friendly + safer for huge batches)
+    let createdCount = 0;
+    const CHUNK = 100;
+    for (let i = 0; i < validRecords.length; i += CHUNK) {
+      const chunk = validRecords.slice(i, i + CHUNK);
       try {
-        if (!p.equipment_id) {
-          photoErrors.push({ file_url: p.file_url, error: 'missing equipment_id' });
-          continue;
-        }
-        const created = await base44.asServiceRole.entities.AssetPhoto.create({
-          equipment_id: p.equipment_id,
-          equipment_name: p.equipment_name || '',
-          photo_url: p.file_url,
-          captured_date: p.captured_date || new Date().toISOString().slice(0, 10),
-          captured_by_email: user.email,
-          condition_grade_at_capture: p.condition_grade_at_capture || null,
-          notes: p.notes || '',
-          photo_type: p.photo_type || 'inspection',
-          lat: p.lat || null,
-          lng: p.lng || null,
-        });
-        createdPhotos.push(created);
+        const created = await base44.asServiceRole.entities.AssetPhoto.bulkCreate(chunk);
+        createdCount += Array.isArray(created) ? created.length : chunk.length;
       } catch (e) {
-        photoErrors.push({ file_url: p.file_url, error: e.message });
+        // Fall back to one-by-one for this chunk so we don't lose the whole batch
+        for (const rec of chunk) {
+          try {
+            await base44.asServiceRole.entities.AssetPhoto.create(rec);
+            createdCount++;
+          } catch (err) {
+            photoErrors.push({ file_url: rec.photo_url, error: err.message });
+          }
+        }
       }
     }
 
@@ -76,7 +92,7 @@ Deno.serve(async (req) => {
       success: true,
       scan_id: scanId,
       scan_name: scanName,
-      photos_created: createdPhotos.length,
+      photos_created: createdCount,
       photo_errors: photoErrors,
     });
   } catch (error) {

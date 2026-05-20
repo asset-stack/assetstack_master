@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Camera, Search, Upload, MapPin, Calendar, Loader2, ImageIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { PHOTO_LIBRARY } from '@/lib/photoLibrary';
-import BulkPhotoUpload from '@/components/scan-analysis/BulkPhotoUpload';
+import BulkPhotoUpload from '@/components/scan-analysis/BulkPhotoUpload.jsx';
 
 const PHOTO_TYPES = ['all', 'inspection', 'defect', 'baseline', 'post_repair', 'reference'];
 const TYPE_COLORS = {

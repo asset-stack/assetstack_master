@@ -18,7 +18,7 @@ import QuickAnalyzeImage from '@/components/scan-analysis/QuickAnalyzeImage';
 import OBJFrameCapture from '@/components/scan-analysis/OBJFrameCapture';
 
 import ScanFramesGallery from '@/components/scan-analysis/ScanFramesGallery';
-import BulkPhotoUpload from '@/components/scan-analysis/BulkPhotoUpload';
+import BulkPhotoUpload from '@/components/scan-analysis/BulkPhotoUpload.jsx';
 import AddManualFindingDialog from '@/components/scan-analysis/AddManualFindingDialog';
 import AddMissedFindingDialog from '@/components/scan-analysis/AddMissedFindingDialog';
 import ImportFindingsDialog from '@/components/scan-analysis/ImportFindingsDialog';
