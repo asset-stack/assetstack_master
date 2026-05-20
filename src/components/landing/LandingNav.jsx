@@ -68,7 +68,11 @@ export default function LandingNav() {
               <Link
                 key={l.href}
                 to={l.href}
-                className="px-3 py-2 text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                className={`px-3 py-2 text-[13px] font-medium transition-colors ${
+                  pastHero
+                    ? 'text-slate-600 hover:text-slate-900'
+                    : 'text-white/85 hover:text-white'
+                }`}
               >
                 {l.label}
               </Link>
@@ -76,7 +80,11 @@ export default function LandingNav() {
               <a
                 key={l.href}
                 href={l.href}
-                className="px-3 py-2 text-[13px] font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                className={`px-3 py-2 text-[13px] font-medium transition-colors ${
+                  pastHero
+                    ? 'text-slate-600 hover:text-slate-900'
+                    : 'text-white/85 hover:text-white'
+                }`}
               >
                 {l.label}
               </a>
@@ -86,26 +94,57 @@ export default function LandingNav() {
 
         <div className="hidden lg:flex items-center gap-1.5">
           <RouterLink to="/PrintLanding">
-            <Button variant="ghost" size="sm" className="text-slate-700 hover:bg-slate-100 text-[13px] font-semibold">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`text-[13px] font-semibold ${
+                pastHero
+                  ? 'text-slate-700 hover:bg-slate-100'
+                  : 'text-white hover:bg-white/10 hover:text-white'
+              }`}
+            >
               Export PDF
             </Button>
           </RouterLink>
           <DownloadBrochureButton
             variant="ghost"
-            className="text-slate-700 hover:bg-slate-100 text-[13px] font-semibold"
+            className={`text-[13px] font-semibold ${
+              pastHero
+                ? 'text-slate-700 hover:bg-slate-100'
+                : 'text-white hover:bg-white/10 hover:text-white'
+            }`}
             label="Brochure"
           />
-          <Button onClick={handleSignIn} variant="outline" size="sm" className="text-slate-800 border-slate-300 hover:bg-slate-50 text-[13px] font-semibold">
+          <Button
+            onClick={handleSignIn}
+            variant="outline"
+            size="sm"
+            className={`text-[13px] font-semibold ${
+              pastHero
+                ? 'text-slate-800 border-slate-300 hover:bg-slate-50'
+                : 'text-white border-white/50 bg-transparent hover:bg-white/10 hover:text-white'
+            }`}
+          >
             Sign in
           </Button>
           <a href="#contact">
-            <Button size="sm" className="bg-primary hover:bg-primary/90 text-white elevation-2 text-[13px] font-semibold">
+            <Button
+              size="sm"
+              className={`text-[13px] font-semibold elevation-2 ${
+                pastHero
+                  ? 'bg-primary hover:bg-primary/90 text-white'
+                  : 'bg-white text-[#1925aa] hover:bg-white/90'
+              }`}
+            >
               Book a demo <ArrowRight className="w-3.5 h-3.5 ml-1" />
             </Button>
           </a>
         </div>
 
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="lg:hidden p-2 text-slate-700">
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className={`lg:hidden p-2 ${pastHero ? 'text-slate-700' : 'text-white'}`}
+        >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
