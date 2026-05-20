@@ -134,7 +134,7 @@ export default function HeroDitherCanvas({ imageUrl }) {
         uTextureSize: { value: new THREE.Vector2() },
         uPlaneSize: { value: new THREE.Vector2() },
         uTime: { value: 0 },
-        uBias: { value: -0.05 },
+        uBias: { value: 0.1 },
         uPixelSize: { value: 1.0 },
         uPixelSizeMultiplier: { value: 3.5 },
         uScaleResolution: { value: 1.0 },

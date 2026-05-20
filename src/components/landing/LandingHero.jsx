@@ -12,14 +12,26 @@ const HERO_IMG =
 export default function LandingHero() {
   const titleRef = useRef(null);
   const taglineRef = useRef(null);
+  const linesRef = useRef([]);
 
   useEffect(() => {
-    // Entrance animation
+    // Entrance animation — matches GSAP timeline from source
+    gsap.set(linesRef.current, { scaleY: 0, transformOrigin: 'top' });
     gsap.set(titleRef.current, { y: '110%' });
     gsap.set(taglineRef.current, { opacity: 0, y: 14 });
 
     const tl = gsap.timeline({ delay: 0.2 });
-    tl.to(titleRef.current, { y: '0%', duration: 1.05, ease: 'expo.out' })
+    tl.to(linesRef.current, {
+      scaleY: 1,
+      duration: 1.3,
+      stagger: 0.1,
+      ease: 'power3.inOut',
+    })
+      .to(
+        titleRef.current,
+        { y: '0%', duration: 1.05, ease: 'expo.out' },
+        '-=1.1'
+      )
       .to(
         taglineRef.current,
         { opacity: 1, y: 0, duration: 0.75, ease: 'power2.out' },
@@ -49,6 +61,21 @@ export default function LandingHero() {
               'linear-gradient(to bottom, transparent 55%, rgba(10,15,100,0.45) 100%)',
           }}
         />
+
+        {/* 12-col vertical guides (desktop) */}
+        <div
+          className="absolute inset-0 z-[3] pointer-events-none hidden lg:grid grid-cols-12 gap-x-[0.9375rem] px-[0.9375rem]"
+          aria-hidden
+        >
+          {Array.from({ length: 12 }).map((_, i) => (
+            <i
+              key={i}
+              ref={(el) => (linesRef.current[i] = el)}
+              className="block h-full border-l"
+              style={{ borderColor: 'rgba(255,255,255,0.18)' }}
+            />
+          ))}
+        </div>
 
         {/* Hero content — bottom-aligned editorial layout */}
         <div className="relative z-[4] px-5 md:px-10 pb-12 md:pb-20 max-w-[1480px] w-full mx-auto">
