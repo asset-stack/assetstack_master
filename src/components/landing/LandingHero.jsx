@@ -64,7 +64,7 @@ export default function LandingHero() {
                   fontSize: 'clamp(3rem, 13vw, 10rem)'
                 }}>
                 
-                Built to last.<br />Managed to perform.
+                AI Infrastructure<br />Intelligence Platform.
               </h1>
             </div>
 
@@ -81,10 +81,7 @@ export default function LandingHero() {
                   lineHeight: 1.5
                 }}>
                 
-                AssetStack reads your photos, sensors and<br />
-                history — predicts failures before they cost<br />
-                $200K, and proves every saving in a ledger<br />
-                your CFO can audit.
+                AssetStack connects inspections, digital twins, sensor data and machine learning to predict failures and optimise maintenance.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3">
