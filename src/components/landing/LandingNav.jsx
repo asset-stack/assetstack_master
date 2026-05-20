@@ -10,12 +10,22 @@ import DownloadBrochureButton from './DownloadBrochureButton';
 
 export default function LandingNav() {
   const [scrolled, setScrolled] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 12);
+      // Hero is 100vh — swap logo once user scrolls past it
+      setPastHero(window.scrollY > window.innerHeight - 80);
+    };
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
   }, []);
 
   const links = [
@@ -41,7 +51,15 @@ export default function LandingNav() {
     >
       <div className="max-w-[1280px] mx-auto px-5 md:px-8 flex items-center justify-between h-16">
         <Link to="/Landing" className="group">
-          <BrandLogo size={32} />
+          {pastHero ? (
+            <BrandLogo size={32} />
+          ) : (
+            <img
+              src="https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/c1034c5ca_AssetStack_Logo_Whitecopy.png"
+              alt="AssetStack"
+              className="block h-7 w-auto"
+            />
+          )}
         </Link>
 
         <div className="hidden lg:flex items-center gap-1">
