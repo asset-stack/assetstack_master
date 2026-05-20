@@ -1,81 +1,103 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play } from 'lucide-react';
+import HeroDitherCanvas from './HeroDitherCanvas';
 import HeroLiveAssetMind from './HeroLiveAssetMind';
 import HeroProductCanvas from './HeroProductCanvas';
 
-const HERO_IMG = "https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/b37f3860d_architectural-elegance-of-the-sails-at-the-sydney-2026-01-09-11-39-37-utc.jpg";
+const HERO_IMG =
+  'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/b37f3860d_architectural-elegance-of-the-sails-at-the-sydney-2026-01-09-11-39-37-utc.jpg';
 
 export default function LandingHero() {
+  const titleRef = useRef(null);
+  const taglineRef = useRef(null);
+  const linesRef = useRef([]);
+
+  useEffect(() => {
+    // Entrance animation — matches GSAP timeline from source
+    gsap.set(linesRef.current, { scaleY: 0, transformOrigin: 'top' });
+    gsap.set(titleRef.current, { y: '110%' });
+    gsap.set(taglineRef.current, { opacity: 0, y: 14 });
+
+    const tl = gsap.timeline({ delay: 0.2 });
+    tl.to(linesRef.current, {
+      scaleY: 1,
+      duration: 1.3,
+      stagger: 0.1,
+      ease: 'power3.inOut',
+    })
+      .to(
+        titleRef.current,
+        { y: '0%', duration: 1.05, ease: 'expo.out' },
+        '-=1.1'
+      )
+      .to(
+        taglineRef.current,
+        { opacity: 1, y: 0, duration: 0.75, ease: 'power2.out' },
+        '-=0.65'
+      );
+
+    return () => tl.kill();
+  }, []);
+
   return (
     <>
-      {/* Editorial full-bleed hero */}
       <section
-        className="relative w-full overflow-hidden"
+        id="hero"
+        className="relative w-full overflow-hidden flex flex-col justify-end"
         style={{ background: '#1925aa', height: '100vh', minHeight: 640 }}
         aria-labelledby="hero-heading"
       >
-        {/* Background image */}
-        <div
-          aria-hidden
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: `url('${HERO_IMG}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
+        {/* WebGL dither canvas */}
+        <HeroDitherCanvas imageUrl={HERO_IMG} />
 
-        {/* Gradient overlay for legibility */}
+        {/* Bottom fade for legibility */}
         <div
           aria-hidden
-          className="absolute inset-0 z-10"
+          className="absolute inset-0 z-[2] pointer-events-none"
           style={{
             background:
-              'linear-gradient(180deg, rgba(10,15,100,0.35) 0%, rgba(10,15,100,0.25) 45%, rgba(10,15,100,0.75) 100%)',
+              'linear-gradient(to bottom, transparent 55%, rgba(10,15,100,0.45) 100%)',
           }}
         />
 
         {/* 12-col vertical guides (desktop) */}
-        <div className="hero-lines absolute inset-0 z-20 hidden lg:grid grid-cols-12 gap-x-4 px-4 pointer-events-none">
+        <div
+          className="absolute inset-0 z-[3] pointer-events-none hidden lg:grid grid-cols-12 gap-x-[0.9375rem] px-[0.9375rem]"
+          aria-hidden
+        >
           {Array.from({ length: 12 }).map((_, i) => (
-            <motion.i
+            <i
               key={i}
-              initial={{ scaleY: 0 }}
-              animate={{ scaleY: 1 }}
-              transition={{ duration: 1.2, delay: 0.4 + i * 0.04, ease: [0.22, 1, 0.36, 1] }}
+              ref={(el) => (linesRef.current[i] = el)}
               className="block h-full border-l"
-              style={{ borderColor: 'rgba(255,255,255,0.18)', transformOrigin: 'top' }}
+              style={{ borderColor: 'rgba(255,255,255,0.18)' }}
             />
           ))}
         </div>
 
         {/* Hero content — bottom-aligned editorial layout */}
-        <div className="relative z-30 h-full flex flex-col justify-end px-5 pb-12 md:px-10 md:pb-20 max-w-[1480px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-4">
+        <div className="relative z-[4] px-5 md:px-10 pb-12 md:pb-20 max-w-[1480px] w-full mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-[0.9375rem]">
             {/* Title */}
             <div className="lg:col-span-9 overflow-hidden">
-              <motion.h1
+              <h1
                 id="hero-heading"
-                initial={{ y: '110%' }}
-                animate={{ y: '0%' }}
-                transition={{ duration: 1.1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="text-white font-serif font-normal leading-[0.92] tracking-[-0.01em]"
+                ref={titleRef}
+                className="text-white font-normal leading-[0.92] tracking-[-0.01em] block"
                 style={{
                   fontFamily: "Georgia, 'Times New Roman', serif",
                   fontSize: 'clamp(3rem, 13vw, 10rem)',
                 }}
               >
                 Built to last.<br />Managed to perform.
-              </motion.h1>
+              </h1>
             </div>
 
-            {/* Tagline */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1.2 }}
+            {/* Tagline + CTAs */}
+            <div
+              ref={taglineRef}
               className="lg:col-span-4 lg:col-start-9 lg:self-end mt-6 lg:mt-0 lg:pb-2"
             >
               <p
@@ -92,12 +114,7 @@ export default function LandingHero() {
                 your CFO can audit.
               </p>
 
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1.5 }}
-                className="mt-6 flex flex-wrap gap-3"
-              >
+              <div className="mt-6 flex flex-wrap gap-3">
                 <a href="#contact">
                   <Button
                     size="lg"
@@ -112,13 +129,13 @@ export default function LandingHero() {
                 >
                   <Play className="w-3.5 h-3.5" /> 60-sec tour
                 </a>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Keep the live AssetMind + product canvas below the editorial hero */}
+      {/* Live AssetMind + product canvas below the editorial hero */}
       <section className="bg-white pt-16 md:pt-24 pb-12">
         <div className="max-w-[1280px] mx-auto px-5 md:px-8">
           <HeroLiveAssetMind />
