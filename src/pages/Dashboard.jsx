@@ -30,7 +30,12 @@ export default function Dashboard() {
 
   const { data: equipment = [], isLoading: loadingEquipment } = useQuery({
     queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 100),
+    queryFn: () => base44.entities.Equipment.list('-created_date', 1000),
+  });
+
+  const { data: locations = [] } = useQuery({
+    queryKey: ['locations'],
+    queryFn: () => base44.entities.Location.list('-created_date', 200),
   });
 
   const { data: alerts = [], isLoading: loadingAlerts } = useQuery({
@@ -139,7 +144,9 @@ export default function Dashboard() {
                 <div className="flex items-center gap-2">
                   <p className="text-xs text-slate-500">Bunbury Council</p>
                   <span className="text-xs text-slate-300">•</span>
-                  <p className="text-xs text-indigo-600 font-medium">South West Sports Centre</p>
+                  <p className="text-xs text-indigo-600 font-medium">
+                    {locations.length > 0 ? `${locations.length} locations` : 'All locations'} · {totalEquipment} assets
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200/60 rounded-full ml-2">
