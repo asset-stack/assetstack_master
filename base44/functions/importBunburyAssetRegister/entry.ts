@@ -161,10 +161,14 @@ Deno.serve(async (req) => {
         if (compType) tags.push(String(compType));
         if (locationName) tags.push(locationName);
 
+        // Normalize room: strip leading "R01/" code prefix if present
+        const roomClean = roomLoc ? String(roomLoc).replace(/^R\d+\s*\/\s*/i, '').trim() : null;
+
         const eq = {
-          name: `${name}${roomLoc ? ` (${roomLoc})` : ''}`.slice(0, 250),
+          name: `${name}${roomClean ? ` (${roomClean})` : ''}`.slice(0, 250),
           type: 'building',
-          location: locationName + (roomLoc ? ` · ${roomLoc}` : ''),
+          location: locationName,
+          room: roomClean,
           status: gradeToStatus(grade),
           risk_level: gradeToRisk(grade),
           health_score: gradeToHealth(grade),
