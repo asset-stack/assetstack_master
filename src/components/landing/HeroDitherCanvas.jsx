@@ -11,9 +11,13 @@ export default function HeroDitherCanvas({ imageUrl }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    const hero = containerRef.current;
+    const container = containerRef.current;
     const canvas = canvasRef.current;
-    if (!hero || !canvas) return;
+    if (!container || !canvas) return;
+    // Listen for mouse events on the hero <section> so the trail
+    // responds across the whole hero area (including over text/CTAs),
+    // not just the canvas container.
+    const hero = container.closest('#hero') || container;
 
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: false, antialias: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -341,8 +345,8 @@ export default function HeroDitherCanvas({ imageUrl }) {
     hero.addEventListener('mouseleave', onLeave);
 
     function onResize() {
-      const w = hero.offsetWidth;
-      const h = hero.offsetHeight;
+      const w = container.offsetWidth;
+      const h = container.offsetHeight;
       const dpr = renderer.getPixelRatio();
       renderer.setSize(w, h);
       ditherMat.uniforms.uResolution.value.set(w * dpr, h * dpr);
