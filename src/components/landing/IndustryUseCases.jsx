@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, Pickaxe, Heart, Factory, Train, Zap, ArrowRight } from 'lucide-react';
+import { Building2, Pickaxe, Heart, Factory, Train, Zap, ArrowRight, GraduationCap } from 'lucide-react';
 
 // Each industry shows what the platform actually does for that use case —
 // not fabricated outcome metrics. Capabilities below all map to features
@@ -40,6 +40,13 @@ const INDUSTRIES = [
     headline: 'Portfolio-wide visibility.',
     sub: 'Property groups and asset managers oversee large portfolios of buildings and infrastructure assets. AssetStack provides visibility across entire portfolios, enabling proactive maintenance and long-term asset planning.',
     capabilities: ['Multi-site', 'Depreciation', 'Lifecycle tracking'],
+  },
+  {
+    id: 'education', icon: GraduationCap, name: 'Education & Campus Infrastructure',
+    img: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/1bda50aa6_Education.jpg',
+    headline: 'Extensive campus environments.',
+    sub: 'Educational institutions manage extensive campus environments with diverse infrastructure assets. AssetStack enables institutions to monitor facilities, maintain infrastructure and optimise maintenance operations across campuses.',
+    capabilities: ['Facility monitoring', 'Maintenance operations', 'Asset tracking'],
   },
 ];
 
