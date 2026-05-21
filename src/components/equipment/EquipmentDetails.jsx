@@ -2,18 +2,38 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   X, Activity, Clock, MapPin, Calendar, Wrench, AlertTriangle, 
-  TrendingUp, Cpu, Gauge, Thermometer, Zap, Droplet, Pencil, Trash2
+  TrendingUp, Cpu, Gauge, Thermometer, Zap, Droplet, Pencil, Trash2, ArrowRight
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { format } from 'date-fns';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import HealthGauge from '../dashboard/HealthGauge';
 import SensorReadingsChart from './SensorReadingsChart';
+import TaskDetailsDialog from '../maintenance/TaskDetailsDialog';
 
 export default function EquipmentDetails({ equipment, readings, onClose, onEdit, onDelete }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+
+  const { data: maintenanceTasks = [] } = useQuery({
+    queryKey: ['maintenanceHistory', equipment.id],
+    queryFn: () => base44.entities.MaintenanceTask.filter({ equipment_id: equipment.id }, '-completed_date', 50),
+    enabled: !!equipment.id,
+  });
+
+  const getTaskStatusColor = (status) => {
+    const colors = {
+      completed: 'bg-emerald-500/20 text-emerald-400',
+      scheduled: 'bg-blue-500/20 text-blue-400',
+      in_progress: 'bg-amber-500/20 text-amber-400',
+      overdue: 'bg-rose-500/20 text-rose-400'
+    };
+    return colors[status] || 'bg-slate-500/20 text-slate-400';
+  };
   const getStatusColor = (status) => {
     const colors = {
       operational: 'bg-emerald-500',
@@ -216,14 +236,59 @@ export default function EquipmentDetails({ equipment, readings, onClose, onEdit,
             </TabsContent>
 
             <TabsContent value="history" className="mt-4">
-              <div className="text-center py-12 text-slate-400">
-                <Wrench className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p>View maintenance tasks for this equipment</p>
-                <Button className="mt-4 bg-blue-600 hover:bg-blue-700">View Tasks</Button>
-              </div>
+              {maintenanceTasks.length > 0 ? (
+                <div className="space-y-3">
+                  {maintenanceTasks.map((task) => (
+                    <div 
+                      key={task.id} 
+                      onClick={() => setSelectedTask(task)}
+                      className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50 hover:bg-slate-800 cursor-pointer transition-colors group flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                    >
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <Badge variant="outline" className={`border-0 ${getTaskStatusColor(task.status)} capitalize`}>
+                            {task.status?.replace('_', ' ')}
+                          </Badge>
+                          <span className="text-xs text-slate-400 capitalize">{task.type}</span>
+                        </div>
+                        <h4 className="text-sm font-medium text-white group-hover:text-blue-400 transition-colors">{task.title}</h4>
+                      </div>
+                      
+                      <div className="flex items-center gap-6 text-sm text-slate-400">
+                        <div className="flex flex-col sm:items-end">
+                          <span className="text-xs">Date</span>
+                          <span className="text-white">
+                            {task.completed_date 
+                              ? format(new Date(task.completed_date), 'MMM d, yyyy') 
+                              : task.scheduled_date ? format(new Date(task.scheduled_date), 'MMM d, yyyy') : 'N/A'
+                            }
+                          </span>
+                        </div>
+                        <div className="flex flex-col sm:items-end">
+                          <span className="text-xs">Assigned To</span>
+                          <span className="text-white">{task.assigned_to || 'Unassigned'}</span>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors hidden sm:block" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-slate-400">
+                  <Wrench className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                  <p>No maintenance tasks found for this equipment.</p>
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </div>
+
+        <TaskDetailsDialog
+          open={!!selectedTask}
+          onClose={() => setSelectedTask(null)}
+          task={selectedTask}
+          equipment={equipment}
+        />
 
         <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
           <DialogContent className="bg-white max-w-md">
