@@ -2,74 +2,74 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import {
   Target, FlaskConical, ClipboardCheck, TrendingUp, Waves,
-  Camera, MessageSquare, Edit3, ShieldAlert, Sparkles
-} from 'lucide-react';
+  Camera, MessageSquare, Edit3, ShieldAlert, Sparkles } from
+'lucide-react';
 
 const features = [
-  {
-    icon: Target,
-    title: 'Funding Optimiser',
-    desc: 'Knapsack-style solver picks the renewal mix that maximises risk reduction per dollar — under any budget cap.',
-    badge: 'Capital planning',
-    accent: 'from-indigo-500 to-blue-500',
-  },
-  {
-    icon: FlaskConical,
-    title: 'Scenario Modeller',
-    desc: 'What-if sliders for budget, inflation, deferral and climate stress — see backlog projections rebuild live.',
-    badge: 'Strategy',
-    accent: 'from-violet-500 to-purple-500',
-  },
-  {
-    icon: MessageSquare,
-    title: 'AssetMind Aggregation',
-    desc: 'Ask portfolio-level questions in plain English. The LLM aggregates across every asset, location and ledger entry.',
-    badge: 'AI assistant',
-    accent: 'from-fuchsia-500 to-pink-500',
-  },
-  {
-    icon: ClipboardCheck,
-    title: 'Inspection Cycles',
-    desc: 'Auto-derived inspection cadence per asset class with overdue/at-risk surfacing — never miss a regulatory window.',
-    badge: 'Field ops',
-    accent: 'from-emerald-500 to-teal-500',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Cohort Performance',
-    desc: 'Spot systemic reliability issues — actual vs expected wear across like-for-like asset cohorts.',
-    badge: 'Intelligence',
-    accent: 'from-cyan-500 to-sky-500',
-  },
-  {
-    icon: Waves,
-    title: 'Climate Risk Overlay',
-    desc: 'Coastal salt-spray and exposure zones recalculate useful-life and replacement value at risk for every asset.',
-    badge: 'Climate',
-    accent: 'from-blue-500 to-cyan-500',
-  },
-  {
-    icon: Camera,
-    title: 'Photo-Diff Inspector',
-    desc: 'AI compares before/after photos of heritage and critical assets — flagging drift, damage and degradation.',
-    badge: 'Heritage',
-    accent: 'from-orange-500 to-amber-500',
-  },
-  {
-    icon: Edit3,
-    title: 'Bulk Condition Update',
-    desc: 'Field teams update hundreds of conditions in a single sweep — fully audited and offline-friendly.',
-    badge: 'Field ops',
-    accent: 'from-rose-500 to-red-500',
-  },
-  {
-    icon: ShieldAlert,
-    title: 'Data Quality Engine',
-    desc: 'Detects duplicates, anomalies and missing fields — keeps the register audit-ready at all times.',
-    badge: 'Hygiene',
-    accent: 'from-amber-500 to-yellow-500',
-  },
-];
+{
+  icon: Target,
+  title: 'Funding Optimiser',
+  desc: 'Knapsack-style solver picks the renewal mix that maximises risk reduction per dollar — under any budget cap.',
+  badge: 'Capital planning',
+  accent: 'from-indigo-500 to-blue-500'
+},
+{
+  icon: FlaskConical,
+  title: 'Scenario Modeller',
+  desc: 'What-if sliders for budget, inflation, deferral and climate stress — see backlog projections rebuild live.',
+  badge: 'Strategy',
+  accent: 'from-violet-500 to-purple-500'
+},
+{
+  icon: MessageSquare,
+  title: 'AssetMind Aggregation',
+  desc: 'Ask portfolio-level questions in plain English. The LLM aggregates across every asset, location and ledger entry.',
+  badge: 'AI assistant',
+  accent: 'from-fuchsia-500 to-pink-500'
+},
+{
+  icon: ClipboardCheck,
+  title: 'Inspection Cycles',
+  desc: 'Auto-derived inspection cadence per asset class with overdue/at-risk surfacing — never miss a regulatory window.',
+  badge: 'Field ops',
+  accent: 'from-emerald-500 to-teal-500'
+},
+{
+  icon: TrendingUp,
+  title: 'Cohort Performance',
+  desc: 'Spot systemic reliability issues — actual vs expected wear across like-for-like asset cohorts.',
+  badge: 'Intelligence',
+  accent: 'from-cyan-500 to-sky-500'
+},
+{
+  icon: Waves,
+  title: 'Climate Risk Overlay',
+  desc: 'Coastal salt-spray and exposure zones recalculate useful-life and replacement value at risk for every asset.',
+  badge: 'Climate',
+  accent: 'from-blue-500 to-cyan-500'
+},
+{
+  icon: Camera,
+  title: 'Photo-Diff Inspector',
+  desc: 'AI compares before/after photos of heritage and critical assets — flagging drift, damage and degradation.',
+  badge: 'Heritage',
+  accent: 'from-orange-500 to-amber-500'
+},
+{
+  icon: Edit3,
+  title: 'Bulk Condition Update',
+  desc: 'Field teams update hundreds of conditions in a single sweep — fully audited and offline-friendly.',
+  badge: 'Field ops',
+  accent: 'from-rose-500 to-red-500'
+},
+{
+  icon: ShieldAlert,
+  title: 'Data Quality Engine',
+  desc: 'Detects duplicates, anomalies and missing fields — keeps the register audit-ready at all times.',
+  badge: 'Hygiene',
+  accent: 'from-amber-500 to-yellow-500'
+}];
+
 
 export default function WhatsNewShowcase() {
   return (
@@ -87,8 +87,8 @@ export default function WhatsNewShowcase() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16"
-        >
+          className="text-center mb-16">
+          
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold mb-4">
             <Sparkles className="w-3.5 h-3.5" />
             The decision-grade asset platform
@@ -96,9 +96,9 @@ export default function WhatsNewShowcase() {
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-4 text-balance">
             From asset register to <span className="text-gradient">decision system</span>
           </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto text-balance">
-            Nine integrated modules covering capital planning, field operations and portfolio intelligence —
-            built on a single AI-native asset register.
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto text-balance">Nine integrated modules covering capital planning, field operations and portfolio intelligence, built on a single AI-native asset register.
+
+
           </p>
         </motion.div>
 
@@ -112,8 +112,8 @@ export default function WhatsNewShowcase() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.05 }}
-              >
+                transition={{ duration: 0.4, delay: idx * 0.05 }}>
+                
                 <div className="group block h-full rounded-2xl border border-slate-200 bg-white p-6 hover-lift hover:border-slate-300 elevation-1 hover:elevation-2 transition-all">
                   <div className={`inline-flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br ${f.accent} text-white shadow-lg mb-4`}>
                     <Icon className="w-5 h-5" />
@@ -126,8 +126,8 @@ export default function WhatsNewShowcase() {
                   <h3 className="text-lg font-semibold text-slate-900 mb-2">{f.title}</h3>
                   <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
                 </div>
-              </motion.div>
-            );
+              </motion.div>);
+
           })}
         </div>
 
@@ -137,8 +137,8 @@ export default function WhatsNewShowcase() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mt-14 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 p-8 md:p-10 text-center"
-        >
+          className="mt-14 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 p-8 md:p-10 text-center">
+          
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 text-balance">
             Try the new Funding Optimiser on your own register
           </h3>
@@ -148,14 +148,14 @@ export default function WhatsNewShowcase() {
           <div className="flex flex-wrap justify-center gap-3">
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-slate-900 font-semibold hover:bg-slate-100 transition-colors"
-            >
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-slate-900 font-semibold hover:bg-slate-100 transition-colors">
+              
               <Target className="w-4 h-4" />
               Book a demo
             </a>
           </div>
         </motion.div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
