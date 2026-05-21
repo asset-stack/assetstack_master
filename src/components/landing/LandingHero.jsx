@@ -3,8 +3,6 @@ import { gsap } from 'gsap';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play } from 'lucide-react';
 import HeroDitherCanvas from './HeroDitherCanvas';
-import HeroLiveAssetMind from './HeroLiveAssetMind';
-import HeroProductCanvas from './HeroProductCanvas';
 
 const HERO_IMG =
 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/b37f3860d_architectural-elegance-of-the-sails-at-the-sydney-2026-01-09-11-39-37-utc.jpg';
@@ -105,13 +103,6 @@ export default function LandingHero() {
         </div>
       </section>
 
-      {/* Live AssetMind + product canvas below the editorial hero */}
-      <section className="bg-white pt-16 md:pt-24 pb-12">
-        <div className="max-w-[1280px] mx-auto px-5 md:px-8">
-          <HeroLiveAssetMind />
-          <HeroProductCanvas />
-        </div>
-      </section>
     </>);
 
 }

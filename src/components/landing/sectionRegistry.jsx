@@ -2,6 +2,7 @@ import { lazy } from 'react';
 
 // Eagerly loaded (above the fold)
 import LandingHero from '@/components/landing/LandingHero';
+import AssetMindSection from '@/components/landing/AssetMindSection';
 import LiveCounters from '@/components/landing/LiveCounters';
 
 // Lazy loaded (below the fold)
@@ -30,6 +31,7 @@ const SisterFeaturesGrid = lazy(() => import('@/components/landing/sister/Sister
 // Adding a new section: add an entry here AND default order in DEFAULT_SECTION_ORDER.
 export const SECTION_REGISTRY = {
   hero:                 { label: 'Hero',                    description: 'Top hero with live AssetMind widget',   component: LandingHero,           lazy: false, fallbackHeight: 0 },
+  assetMind:            { label: 'AssetMind Demo',          description: 'Interactive AssetMind chat and Command Center', component: AssetMindSection,      lazy: false, fallbackHeight: 600 },
   liveCounters:         { label: 'Live Counters',           description: 'Instant proof-density metrics row',     component: LiveCounters,          lazy: false, fallbackHeight: 0 },
   logoCloud:            { label: 'Logo Wall',               description: 'Customer / partner logos',              component: LogoCloud,             lazy: true,  fallbackHeight: 120 },
   personaSwitcher:      { label: 'Persona Switcher',        description: 'Tailors the rest of the page',          component: PersonaSwitcher,       lazy: true,  fallbackHeight: 520 },
@@ -58,6 +60,7 @@ export const DEFAULT_SECTION_ORDER = [
   'sisterHero',
   'sisterEcosystem',
   'hero',
+  'assetMind',
   'liveCounters',
   'logoCloud',
   'mechanism',
