@@ -47,13 +47,8 @@ export default function MechanismSection() {
 
   return (
     <section id="mechanism" className="py-20 md:py-28 bg-slate-950 text-white relative overflow-hidden">
-      {/* background animation */}
-      <iframe
-        src="https://media.base44.com/files/public/6a0a6a5d4d043b0e41a16d90/5656a8cdf_Dave_Banner.html"
-        className="absolute inset-0 w-full h-full pointer-events-none border-none z-0"
-        aria-hidden
-        title="Mechanism Background Animation"
-      />
+      {/* background animation removed to prevent auto-downloads */}
+      <div className="absolute inset-0 w-full h-full z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/20 via-background to-background opacity-50 pointer-events-none" />
 
       <div className="relative z-10 max-w-[1280px] mx-auto px-5 md:px-8">
         <div className="text-center mb-12">
