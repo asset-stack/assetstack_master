@@ -7,7 +7,7 @@ import { Box, ExternalLink } from 'lucide-react';
  * Default points to the South West Sports Centre tour.
  */
 export default function MatterportEmbed({
-  modelId = 'SxQL3iGyoDo',
+  modelId = '4xXzHXiFbDV',
   title = 'South West Sports Centre',
   subtitle = '3D Digital Twin · Matterport',
   height = 320,
