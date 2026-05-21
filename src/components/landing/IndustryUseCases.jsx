@@ -7,10 +7,10 @@ import { Building2, Pickaxe, Car, Factory, Train, Zap, ArrowRight } from 'lucide
 // shipped in the app (Equipment, Scan Analysis, Predictions, WorkOrders, etc.).
 const INDUSTRIES = [
   {
-    id: 'councils', icon: Building2, name: 'Councils & LGAs',
-    img: 'https://media.base44.com/images/public/6970c68cc08dbe7897c72f22/08a3a2366_generated_image.png',
+    id: 'councils', icon: Building2, name: 'Government & Local Councils',
+    img: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/266a1b2ec_empty-gymnasium-with-courts-2026-03-18-05-24-20-utc.jpg',
     headline: 'Civic infrastructure, on one map.',
-    sub: 'Stadiums, libraries, bridges and community buildings — digitised, condition-tracked and planned from a single platform.',
+    sub: 'Local governments manage extensive portfolios of public infrastructure including buildings, parks, roads and community facilities. AssetStack provides a centralised platform to monitor asset condition, plan maintenance and improve long-term infrastructure management.',
     capabilities: ['Asset register', 'Condition scans', 'Maintenance planning'],
   },
   {
