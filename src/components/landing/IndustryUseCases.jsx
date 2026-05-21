@@ -35,10 +35,10 @@ const INDUSTRIES = [
     capabilities: ['Sensor integration', 'Predictive analytics', 'Alerts'],
   },
   {
-    id: 'property', icon: Factory, name: 'Property & portfolios',
-    img: 'https://media.base44.com/images/public/6970c68cc08dbe7897c72f22/da5884447_generated_image.png',
+    id: 'property', icon: Factory, name: 'Property & Asset Portfolio Managers',
+    img: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/73a24b69e_Property.jpg',
     headline: 'Portfolio-wide visibility.',
-    sub: 'Multi-site building systems, lifecycle tracking and depreciation in one place.',
+    sub: 'Property groups and asset managers oversee large portfolios of buildings and infrastructure assets. AssetStack provides visibility across entire portfolios, enabling proactive maintenance and long-term asset planning.',
     capabilities: ['Multi-site', 'Depreciation', 'Lifecycle tracking'],
   },
 ];
