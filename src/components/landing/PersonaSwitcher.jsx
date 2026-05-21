@@ -65,7 +65,7 @@ export default function PersonaSwitcher() {
           <h2 className="mt-3 text-3xl md:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] text-slate-900 text-balance">
             One platform. <span className="font-serif italic font-medium text-primary">Every role.</span>
           </h2>
-          <p className="mt-3 text-[15px] md:text-base text-slate-600 max-w-xl mx-auto">Pick how you'll use AssetStack. Build outwe'll remember and tailor what you see across the site.
+          <p className="mt-3 text-[15px] md:text-base text-slate-600 max-w-xl mx-auto">Pick how you'll use AssetStack. Build out modules  across the site.
 
           </p>
         </div>
