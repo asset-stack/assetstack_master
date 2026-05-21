@@ -2,13 +2,20 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Box, Eye, Wifi, ClipboardCheck, BarChart3, Brain } from 'lucide-react';
 
+import AssetTreePreview from '@/components/landing/industries/previews/AssetTreePreview';
+import PredictionsPreview from '@/components/landing/industries/previews/PredictionsPreview';
+import WorkOrdersPreview from '@/components/landing/industries/previews/WorkOrdersPreview';
+import SensorsPreview from '@/components/landing/industries/previews/SensorsPreview';
+import DashboardPreview from '@/components/landing/industries/previews/DashboardPreview';
+import AssetMindPreview from '@/components/landing/industries/previews/AssetMindPreview';
+
 const features = [
-  { icon: Box, title: 'Digital Twin Infrastructure', description: 'Visualise infrastructure networks in 3D using LiDAR and geospatial modelling.', videoId: '1y_iHAThGp10hF8uzWI0GlBOhDBleFrLj', aspectRatio: '1950/1080' },
-  { icon: Eye, title: 'Predictive Maintenance', description: 'AI models detect anomalies and forecast equipment failures before they occur.', videoId: '1lCpd--mxB7feALDk-YSoqVCnGrvxvNd0', aspectRatio: '3024/1708' },
-  { icon: ClipboardCheck, title: 'Inspection Workflows', description: 'Capture structured inspection data using mobile workflows and automated tagging.', videoId: '1y9r1er-KXmjVFin7YeZOS8w1kIdq2Mzw', aspectRatio: '3024/1708' },
-  { icon: Wifi, title: 'IoT Sensor Integration', description: 'Connect sensor networks and operational systems to monitor asset health.', videoId: '1yuVoILNDUc1DUtR89PEJflTarapdX5ba', aspectRatio: '1885/1080' },
-  { icon: BarChart3, title: 'Operational Analytics', description: 'Track asset performance, technician efficiency and maintenance trends.', videoId: '1QoiaQ39jh9eN_L9oqfDGNhbTFnFnZyxe', aspectRatio: '1912/1080' },
-  { icon: Brain, title: 'AI Decision Engine', description: 'Machine learning models analyse asset behaviour and recommend maintenance actions.', videoId: '1kugYl5Ggq-nwqVOJelR4mH7URXBylOto', aspectRatio: '2992/1714' },
+  { icon: Box, title: 'Digital Twin Infrastructure', description: 'Visualise infrastructure networks in 3D using LiDAR and geospatial modelling.', preview: AssetTreePreview },
+  { icon: Eye, title: 'Predictive Maintenance', description: 'AI models detect anomalies and forecast equipment failures before they occur.', preview: PredictionsPreview },
+  { icon: ClipboardCheck, title: 'Inspection Workflows', description: 'Capture structured inspection data using mobile workflows and automated tagging.', preview: WorkOrdersPreview },
+  { icon: Wifi, title: 'IoT Sensor Integration', description: 'Connect sensor networks and operational systems to monitor asset health.', preview: SensorsPreview },
+  { icon: BarChart3, title: 'Operational Analytics', description: 'Track asset performance, technician efficiency and maintenance trends.', preview: DashboardPreview },
+  { icon: Brain, title: 'AI Decision Engine', description: 'Machine learning models analyse asset behaviour and recommend maintenance actions.', preview: AssetMindPreview },
 ];
 
 export default function SisterFeaturesGrid() {
@@ -90,26 +97,19 @@ export default function SisterFeaturesGrid() {
             })}
           </div>
           <div
-            className="rounded-2xl overflow-hidden bg-black lg:sticky lg:top-8"
-            style={{ aspectRatio: active.aspectRatio || '1950/1080' }}
+            className="rounded-2xl overflow-hidden bg-slate-50 border border-slate-200 lg:sticky lg:top-8 shadow-xl"
+            style={{ aspectRatio: '16/10' }}
           >
             <AnimatePresence mode="wait">
               <motion.div
-                key={active.videoId}
+                key={active.title}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="w-full h-full"
+                className="w-full h-full relative"
               >
-                <iframe
-                  src={`https://drive.google.com/file/d/${active.videoId}/preview?autoplay=1&mute=1&sz=w640`}
-                  width="100%"
-                  height="100%"
-                  allow="autoplay"
-                  style={{ border: 'none', display: 'block', width: '100%', height: '100%' }}
-                  title={active.title}
-                />
+                <active.preview />
               </motion.div>
             </AnimatePresence>
           </div>
