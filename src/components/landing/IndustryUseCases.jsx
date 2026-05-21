@@ -28,18 +28,11 @@ const INDUSTRIES = [
     capabilities: ['Network globe', 'Digital twin', 'Remote inspection'],
   },
   {
-    id: 'utilities', icon: Zap, name: 'Utilities & energy',
-    img: 'https://media.base44.com/images/public/6970c68cc08dbe7897c72f22/3aeaf8e74_generated_image.png',
+    id: 'utilities', icon: Zap, name: 'Utilities, Energy & Resources',
+    img: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/fb57216d8_Utilities.jpg',
     headline: 'Distributed assets, real-time visibility.',
-    sub: 'Substations, pipelines and grid infrastructure unified with sensor telemetry and predictive analytics.',
+    sub: 'Utilities, energy providers and resource operators manage distributed infrastructure across large geographic areas. AssetStack provides real-time monitoring and predictive insights across critical infrastructure systems.',
     capabilities: ['Sensor integration', 'Predictive analytics', 'Alerts'],
-  },
-  {
-    id: 'mining', icon: Pickaxe, name: 'Mining & resources',
-    img: 'https://media.base44.com/images/public/6970c68cc08dbe7897c72f22/bd9da7ad1_generated_image.png',
-    headline: 'Remote fleets and processing facilities.',
-    sub: 'Track equipment health, trigger predictive work orders, and plan around shutdown windows.',
-    capabilities: ['Equipment health', 'Work orders', 'ML predictions'],
   },
   {
     id: 'property', icon: Factory, name: 'Property & portfolios',
