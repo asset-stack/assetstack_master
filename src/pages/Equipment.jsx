@@ -160,6 +160,15 @@ export default function Equipment() {
     const matchesRisk = filterRisk === 'all' || e.risk_level === filterRisk;
     const matchesLocation = filterLocation === 'all' || e.location === filterLocation;
     return matchesSearch && matchesType && matchesStatus && matchesRisk && matchesLocation;
+  }).sort((a, b) => {
+    const riskWeights = { critical: 4, high: 3, medium: 2, low: 1 };
+    const weightA = riskWeights[deriveRiskLevel(a)] || 0;
+    const weightB = riskWeights[deriveRiskLevel(b)] || 0;
+    if (weightA !== weightB) return weightB - weightA;
+    // Tie breaker: lowest health score first
+    const healthA = deriveHealthScore(a) ?? 100;
+    const healthB = deriveHealthScore(b) ?? 100;
+    return healthA - healthB;
   });
 
   const handleSaveEquipment = (data) => {
