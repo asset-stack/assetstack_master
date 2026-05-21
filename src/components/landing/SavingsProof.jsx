@@ -2,28 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck, ArrowUpRight, FileCheck2 } from 'lucide-react';
 
-// Customer stories — based on real engagements documented on the Case Studies page.
-// Outcome figures shown here are illustrative ranges drawn from those engagements; precise
-// per-asset numbers are kept on the Case Studies page where they belong.
-const STORIES = [
-{
-  org: 'Bunbury Council',
-  asset: 'Critical infrastructure portfolio · LGA, WA',
-  headline: '90%',
-  headlineLabel: 'Asset visibility',
-  sub: '15+ critical assets digitised across stadiums, civic buildings and community infrastructure.',
-  quote: 'AssetStack has significantly improved our ability to monitor infrastructure assets and plan maintenance activities more effectively.',
-  role: 'Bunbury Council Infrastructure Team'
-},
-{
-  org: 'Lycopodium',
-  asset: 'National rail network · Australia',
-  headline: '100+',
-  headlineLabel: 'Rail assets digitised',
-  sub: 'High-resolution scans of rail intersections and crossings unified into one digital twin layer.',
-  quote: 'AssetStack has enabled us to better understand and manage our rail infrastructure at scale.',
-  role: 'Stuart Sutherland — Managing Director, Lycopodium'
-}];
+
 
 
 // Sample ledger rows — the Verified Savings Ledger is a real product feature (see /SavingsLedger).
@@ -104,31 +83,7 @@ export default function SavingsProof() {
           </div>
         </motion.div>
 
-        {/* Customer stories */}
-        <div className="mt-10 grid md:grid-cols-2 gap-4">
-          {STORIES.map((s, i) =>
-          <motion.div
-            key={s.org}
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            className="rounded-2xl border border-slate-200 bg-white p-7 hover-lift hover:border-primary/30 elevation-1 hover:elevation-2">
-            
-              <div className="flex items-center justify-between mb-5">
-                <div className="text-[15px] font-semibold text-slate-900">{s.org}</div>
-                <ArrowUpRight className="w-4 h-4 text-slate-300" />
-              </div>
-              <div className="mb-5 pb-5 border-b border-slate-100">
-                <div className="text-4xl font-semibold text-primary tabular-nums tracking-tight">{s.headline}</div>
-                <div className="text-[10px] uppercase tracking-wider text-slate-500 mt-1">{s.headlineLabel}</div>
-                <p className="mt-3 text-[13px] text-slate-600 leading-relaxed">{s.sub}</p>
-              </div>
-              <p className="text-[14px] text-slate-700 leading-relaxed font-serif italic">"{s.quote}"</p>
-              <div className="mt-3 text-[12px] text-slate-500">{s.role} · {s.asset}</div>
-            </motion.div>
-          )}
-        </div>
+
       </div>
     </section>);
 
