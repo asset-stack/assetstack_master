@@ -251,6 +251,7 @@ export default function EquipmentDetails({ equipment, readings, onClose, onEdit,
                     title={equipment.name}
                     subtitle={`R16 - Plant Room • ${equipment.location || 'South West Sports Centre'}`}
                     height={450}
+                    urlParams="sr=-.34,-1.02&ss=6"
                   />
                 </div>
               </div>

@@ -11,8 +11,10 @@ export default function MatterportEmbed({
   title = 'South West Sports Centre',
   subtitle = '3D Digital Twin · Matterport',
   height = 260,
+  urlParams = '',
 }) {
-  const src = `https://my.matterport.com/show/?m=${modelId}&play=1&qs=1&brand=0&hr=0&help=0`;
+  const baseParams = `play=1&qs=1&brand=0&hr=0&help=0`;
+  const src = `https://my.matterport.com/show/?m=${modelId}&${baseParams}${urlParams ? '&' + urlParams : ''}`;
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col shadow-sm">
