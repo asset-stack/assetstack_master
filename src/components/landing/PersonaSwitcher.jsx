@@ -7,7 +7,7 @@ const PERSONAS = [
   id: 'asset_manager',
   icon: Briefcase,
   label: 'Asset Manager',
-  headline: 'Your backlog, condition and capital plan — at a glance',
+  headline: 'Your backlog, condition and capital plan at a glance',
   bullets: ['Live backlog reduction', 'Risk-ranked renewals', 'IIMM-aligned reporting'],
   accent: 'from-indigo-500 to-blue-500'
 },
