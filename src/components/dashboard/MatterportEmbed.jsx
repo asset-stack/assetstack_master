@@ -10,7 +10,7 @@ export default function MatterportEmbed({
   modelId = '4xXzHXiFbDV',
   title = 'South West Sports Centre',
   subtitle = '3D Digital Twin · Matterport',
-  height = 320,
+  height = 220,
 }) {
   const src = `https://my.matterport.com/show/?m=${modelId}&play=1&qs=1&brand=0&hr=0&help=0`;
 
