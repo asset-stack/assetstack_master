@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, Pickaxe, Car, Factory, Train, Zap, ArrowRight } from 'lucide-react';
+import { Building2, Pickaxe, Heart, Factory, Train, Zap, ArrowRight } from 'lucide-react';
 
 // Each industry shows what the platform actually does for that use case —
 // not fabricated outcome metrics. Capabilities below all map to features
@@ -12,6 +12,13 @@ const INDUSTRIES = [
     headline: 'Civic infrastructure, on one map.',
     sub: 'Local governments manage extensive portfolios of public infrastructure including buildings, parks, roads and community facilities. AssetStack provides a centralised platform to monitor asset condition, plan maintenance and improve long-term infrastructure management.',
     capabilities: ['Asset register', 'Condition scans', 'Maintenance planning'],
+  },
+  {
+    id: 'healthcare', icon: Heart, name: 'Healthcare & Aged Care',
+    img: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/df3455ca5_neo-gothic-brick-church-of-holy-virgin-mary-scapul-2026-03-25-09-10-56-utc.jpg',
+    headline: 'Multi-site facility management.',
+    sub: 'Healthcare and aged care providers operate multiple facilities with complex infrastructure requirements. AssetStack enables organisations to monitor building systems, maintain compliance and optimise maintenance across facility networks.',
+    capabilities: ['Multi-site', 'Compliance', 'Building systems'],
   },
   {
     id: 'rail', icon: Train, name: 'Rail & transport',
@@ -40,13 +47,6 @@ const INDUSTRIES = [
     headline: 'Portfolio-wide visibility.',
     sub: 'Multi-site building systems, lifecycle tracking and depreciation in one place.',
     capabilities: ['Multi-site', 'Depreciation', 'Lifecycle tracking'],
-  },
-  {
-    id: 'fleet', icon: Car, name: 'Fleet & logistics',
-    img: 'https://media.base44.com/images/public/6970c68cc08dbe7897c72f22/4c517161f_generated_image.png',
-    headline: 'Vehicles in service, when it matters.',
-    sub: 'Photo-based condition checks plus telemetry-driven failure prediction across vans, trucks and EVs.',
-    capabilities: ['Photo inspection', 'Telemetry', 'Failure prediction'],
   },
 ];
 
