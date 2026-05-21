@@ -340,9 +340,9 @@ export default function SensorIntegration() {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            {config.last_reading_value !== undefined ? (
+                            {config.last_reading_value !== undefined && config.last_reading_value !== null ? (
                               <div>
-                                <span className="font-medium">{config.last_reading_value?.toFixed(2)}</span>
+                                <span className="font-medium">{Number(config.last_reading_value).toFixed(2)}</span>
                                 <span className="text-slate-400 ml-1">{config.unit}</span>
                                 {config.last_reading_at && (
                                   <p className="text-xs text-slate-400">

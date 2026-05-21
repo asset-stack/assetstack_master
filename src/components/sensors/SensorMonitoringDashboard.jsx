@@ -98,7 +98,7 @@ export default function SensorMonitoringDashboard({ sensorConfigs, equipment, re
         <div className="bg-white border border-slate-200 rounded-lg p-3 shadow-lg">
           <p className="text-xs text-slate-500">{label}</p>
           <p className="font-medium text-slate-900">
-            {payload[0].value?.toFixed(2)}
+            {typeof payload[0].value === 'number' ? payload[0].value.toFixed(2) : '--'}
           </p>
         </div>
       );
@@ -168,9 +168,9 @@ export default function SensorMonitoringDashboard({ sensorConfigs, equipment, re
             const readings = getReadingsForSensor(config);
             const trend = getTrend(readings);
             const latestValue = config.last_reading_value;
-            const isOverThreshold = latestValue !== undefined && (
-              (config.threshold_max !== undefined && latestValue > config.threshold_max) ||
-              (config.threshold_min !== undefined && latestValue < config.threshold_min)
+            const isOverThreshold = latestValue != null && (
+              (config.threshold_max != null && latestValue > config.threshold_max) ||
+              (config.threshold_min != null && latestValue < config.threshold_min)
             );
 
             return (
@@ -209,7 +209,7 @@ export default function SensorMonitoringDashboard({ sensorConfigs, equipment, re
                 {/* Value Display */}
                 <div className="flex items-end gap-3 mb-4">
                   <span className="text-3xl font-bold text-slate-900">
-                    {latestValue !== undefined ? latestValue.toFixed(1) : '--'}
+                    {typeof latestValue === 'number' ? latestValue.toFixed(1) : '--'}
                   </span>
                   <span className="text-slate-500 mb-1">{config.unit}</span>
                   <div className="ml-auto flex items-center gap-1">
