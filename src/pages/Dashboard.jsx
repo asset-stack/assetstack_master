@@ -19,6 +19,7 @@ import EquipmentCard from '@/components/dashboard/EquipmentCard';
 import EquipmentDetails from '@/components/equipment/EquipmentDetails';
 import OnboardingBanner from '@/components/onboarding/OnboardingBanner';
 import NotificationsPanel from '@/components/dashboard/NotificationsPanel';
+import MatterportEmbed from '@/components/dashboard/MatterportEmbed';
 import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 export default function Dashboard() {
@@ -267,10 +268,13 @@ export default function Dashboard() {
           <div className="sm:hidden" />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+          {/* Matterport 3D Tour — South West Sports Centre */}
+          <MatterportEmbed height={360} />
+
           {/* Fleet Overview */}
           <FleetOverview equipment={equipment} />
-          
+
           {/* Risk Heatmap */}
           <div className="lg:col-span-2">
             <RiskHeatmap equipment={equipment} />
