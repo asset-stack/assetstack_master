@@ -2,13 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { HardHat, Briefcase, TrendingUp } from 'lucide-react';
 
-// Persona cards describe what the platform does for each role — written
+// Persona cards describe what the platform does for each role written
 // as platform statements, not attributed testimonials.
 const PERSONAS = [
   {
     icon: HardHat,
     role: 'Field Technician',
-    statement: 'One app. The next work order, the checklist, the photo upload, the part list — all on the device.',
+    statement: 'One app. The next work order, the checklist, the photo upload, the part list all on the device.',
     detail: 'Mobile work orders · Photo inspection · Offline-friendly',
     bg: 'bg-gradient-to-br from-blue-50 to-blue-100/40',
   },
@@ -22,7 +22,7 @@ const PERSONAS = [
   {
     icon: TrendingUp,
     role: 'Asset Owner / CFO',
-    statement: 'Every line in the Verified Savings Ledger ties to a prediction, an intervention, and reviewed evidence — ready for audit.',
+    statement: 'Every line in the Verified Savings Ledger ties to a prediction, an intervention, and reviewed evidence ready for audit.',
     detail: 'Verified savings · Depreciation · Audit-grade trail',
     bg: 'bg-gradient-to-br from-primary/[0.06] to-primary/[0.02]',
   },
