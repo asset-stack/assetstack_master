@@ -6,7 +6,7 @@ const FEATURES = [
 { icon: Lock, title: 'Encryption in transit & at rest', text: 'Customer data is encrypted on the wire and on disk via the underlying cloud platform.' },
 { icon: FileSearch, title: 'Detailed audit trail', text: 'Every prediction, retrain, and savings entry is logged with the actor, timestamp and outcome.' },
 { icon: Database, title: 'Per-tenant data isolation', text: 'Your records are logically scoped to your workspace and never used to train shared models.' },
-{ icon: KeyRound, title: 'Role-based access control', text: 'Granular permissions per role — from technicians to admins — configurable in-product.' },
+{ icon: KeyRound, title: 'Role-based access control', text: 'Granular permissions per role from technicians to admins configurable in-product.' },
 { icon: ServerCog, title: 'Deployment options', text: 'Run on our managed cloud today; private-cloud and self-hosted deployment available on Enterprise.' },
 { icon: ShieldCheck, title: 'Compliance-ready posture', text: 'Architecture and processes designed to support SOC 2 and ISO 27001 evidence requests.' }];
 
