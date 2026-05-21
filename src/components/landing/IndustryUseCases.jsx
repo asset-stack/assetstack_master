@@ -15,7 +15,7 @@ const INDUSTRIES = [
   },
   {
     id: 'healthcare', icon: Heart, name: 'Healthcare & Aged Care',
-    img: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/df3455ca5_neo-gothic-brick-church-of-holy-virgin-mary-scapul-2026-03-25-09-10-56-utc.jpg',
+    img: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/3675cd51d_Hospital.jpg',
     headline: 'Multi-site facility management.',
     sub: 'Healthcare and aged care providers operate multiple facilities with complex infrastructure requirements. AssetStack enables organisations to monitor building systems, maintain compliance and optimise maintenance across facility networks.',
     capabilities: ['Multi-site', 'Compliance', 'Building systems'],
