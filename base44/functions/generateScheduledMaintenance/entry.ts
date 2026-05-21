@@ -18,9 +18,9 @@ Deno.serve(async (req) => {
     const technicians = await base44.asServiceRole.entities.Technician.filter({ 
       availability_status: 'available' 
     });
-    const existingTasks = await base44.asServiceRole.entities.MaintenanceTask.filter({
-      status: 'scheduled'
-    });
+    const scheduledTasks = await base44.asServiceRole.entities.MaintenanceTask.filter({ status: 'scheduled' });
+    const pendingTasks = await base44.asServiceRole.entities.MaintenanceTask.filter({ status: 'pending_approval' });
+    const existingTasks = [...scheduledTasks, ...pendingTasks];
 
     const equipmentMap = equipment.reduce((acc, e) => { acc[e.id] = e; return acc; }, {});
     const today = new Date();
@@ -144,7 +144,7 @@ Deno.serve(async (req) => {
           description: plan.task_template?.description || `Scheduled maintenance per plan: ${plan.name}. ${reason}`,
           type: plan.task_template?.type || 'preventive',
           priority: plan.task_template?.priority || 'medium',
-          status: 'scheduled',
+          status: 'pending_approval',
           scheduled_date: scheduledDate.toISOString().split('T')[0],
           estimated_duration_hours: plan.task_template?.estimated_hours || 4,
           assigned_to: assignedTo,
@@ -203,7 +203,7 @@ Deno.serve(async (req) => {
           description: `Platform assumed upcoming task based on operational patterns. ${template.reason}`,
           type: template.type,
           priority: "medium",
-          status: "scheduled",
+          status: "pending_approval",
           scheduled_date: scheduledDate.toISOString().split('T')[0],
           estimated_duration_hours: template.hours,
           assigned_to: null,

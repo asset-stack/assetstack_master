@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   CalendarClock, FileText, Sparkles, Play, Loader2, RefreshCw, 
-  Clock, CheckCircle2, AlertTriangle
+  Clock, CheckCircle2, AlertTriangle, Check
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,30 @@ export default function MaintenancePlanning() {
     queryFn: () => base44.entities.MaintenanceTrigger.list('-created_date', 50),
   });
 
+  const { data: pendingTasks = [], refetch: refetchPendingTasks } = useQuery({
+    queryKey: ['pendingTasks'],
+    queryFn: () => base44.entities.MaintenanceTask.filter({ status: 'pending_approval' }),
+  });
+
+  const approveTask = async (id) => {
+    await base44.entities.MaintenanceTask.update(id, { status: 'scheduled' });
+    queryClient.invalidateQueries(['pendingTasks']);
+    queryClient.invalidateQueries(['tasks']);
+  };
+
+  const rejectTask = async (id) => {
+    await base44.entities.MaintenanceTask.delete(id);
+    queryClient.invalidateQueries(['pendingTasks']);
+  };
+
+  const approveAll = async () => {
+    for (const task of pendingTasks) {
+      await base44.entities.MaintenanceTask.update(task.id, { status: 'scheduled' });
+    }
+    queryClient.invalidateQueries(['pendingTasks']);
+    queryClient.invalidateQueries(['tasks']);
+  };
+
   const runScheduledGeneration = async () => {
     setIsGenerating(true);
     setLastRunResult(null);
@@ -46,6 +70,7 @@ export default function MaintenancePlanning() {
       setLastRunResult(result.data);
       queryClient.invalidateQueries(['tasks']);
       queryClient.invalidateQueries(['maintenancePlans']);
+      queryClient.invalidateQueries(['pendingTasks']);
     } catch (error) {
       console.error('Error running scheduled generation:', error);
       setLastRunResult({ error: error.message });
@@ -205,13 +230,62 @@ export default function MaintenancePlanning() {
             </TabsList>
           </div>
 
-          <TabsContent value="plans" className="mt-0">
+          <TabsContent value="plans" className="mt-0 space-y-6">
             <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
               <MaintenancePlanManager 
                 equipment={equipment}
                 technicians={technicians}
               />
             </div>
+
+            {pendingTasks.length > 0 && (
+              <div className="bg-white rounded-xl border border-amber-200 shadow-sm overflow-hidden">
+                <div className="bg-amber-50 px-6 py-4 border-b border-amber-200 flex justify-between items-center">
+                  <div className="flex items-center gap-2 text-amber-800">
+                    <AlertTriangle className="w-5 h-5" />
+                    <h3 className="font-semibold">Pending Generated Tasks</h3>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">{pendingTasks.length} Requires Approval</Badge>
+                    <Button size="sm" onClick={approveAll} className="h-8 bg-amber-600 hover:bg-amber-700 text-white">
+                      <Check className="w-4 h-4 mr-1.5" />
+                      Approve All
+                    </Button>
+                  </div>
+                </div>
+                <div className="p-0 overflow-x-auto">
+                  <table className="w-full text-sm text-left text-slate-600">
+                    <thead className="text-xs text-slate-500 uppercase bg-slate-50/50 border-b border-slate-200">
+                      <tr>
+                        <th className="px-6 py-3 font-medium">Task Title</th>
+                        <th className="px-6 py-3 font-medium">Type</th>
+                        <th className="px-6 py-3 font-medium">Scheduled Date</th>
+                        <th className="px-6 py-3 font-medium">Hours</th>
+                        <th className="px-6 py-3 font-medium text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {pendingTasks.map(task => (
+                        <tr key={task.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50/50 transition-colors">
+                          <td className="px-6 py-3 font-medium text-slate-900">{task.title}</td>
+                          <td className="px-6 py-3 capitalize">
+                            <Badge variant="outline" className="font-normal text-slate-600">{task.type}</Badge>
+                          </td>
+                          <td className="px-6 py-3">{task.scheduled_date}</td>
+                          <td className="px-6 py-3">{task.estimated_duration_hours}h</td>
+                          <td className="px-6 py-3 text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <Button variant="outline" size="sm" className="h-8 text-rose-600 border-rose-200 hover:bg-rose-50 hover:text-rose-700" onClick={() => rejectTask(task.id)}>Reject</Button>
+                              <Button size="sm" className="h-8 bg-emerald-600 hover:bg-emerald-700 text-white" onClick={() => approveTask(task.id)}>Approve</Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </TabsContent>
 
           <TabsContent value="templates" className="mt-0">
