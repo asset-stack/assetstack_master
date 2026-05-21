@@ -112,7 +112,7 @@ export default function NodeActionDialog({ open, onClose, node, networkName }) {
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) { reset(); onClose(); } }}>
-      <DialogContent className="max-w-lg bg-slate-900 border-white/10 text-white">
+      <DialogContent className="max-w-lg bg-slate-900 border-white/10 text-white z-[200]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <MapPin className="w-5 h-5 text-indigo-400" />

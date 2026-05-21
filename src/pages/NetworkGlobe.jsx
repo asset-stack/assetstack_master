@@ -408,7 +408,7 @@ export default function NetworkGlobePage() {
             focusStation={drilldownStation}
             onClose={() => setDrilldownOpen(false)}
             onSelectStation={(s) => { setSelected(s); setDrilldownStation(s); }}
-            onNodeAction={(n) => setActionNode(n)}
+            onNodeAction={(n) => { setDrilldownOpen(false); setActionNode(n); }}
           />
         )}
       </AnimatePresence>
