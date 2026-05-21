@@ -18,7 +18,7 @@ export default function AssetTreeVisual() {
   const containerRef = useRef(null);
   const [translate, setTranslate] = useState({ x: 300, y: 300 });
   const [groupBy, setGroupBy] = useState('location');
-  const [orientation, setOrientation] = useState('horizontal');
+  const [orientation, setOrientation] = useState('vertical');
   const [pathFunc, setPathFunc] = useState('diagonal');
   const [search, setSearch] = useState('');
   const [selectedAsset, setSelectedAsset] = useState(null);

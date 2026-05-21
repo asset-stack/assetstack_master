@@ -4,7 +4,7 @@ import AssetRegister from '@/components/asset-register/AssetRegister';
 import AssetTreeVisual from '@/components/asset-tree/AssetTreeVisual';
 
 export default function AssetTree() {
-  const [view, setView] = useState('register');
+  const [view, setView] = useState('tree');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
