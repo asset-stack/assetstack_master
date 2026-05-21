@@ -14,7 +14,7 @@ export const INDUSTRIES = [
     title: 'Government & Local Councils',
     shortLabel: 'Government',
     icon: Building2,
-    image: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&auto=format&fit=crop&q=70',
+    image: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/266a1b2ec_empty-gymnasium-with-courts-2026-03-18-05-24-20-utc.jpg',
     description:
       'Local governments manage extensive portfolios of public infrastructure including buildings, parks, roads and community facilities. AssetStack provides a centralised platform to monitor asset condition, plan maintenance and improve long-term infrastructure management.',
     useCases: [
