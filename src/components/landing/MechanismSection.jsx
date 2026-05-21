@@ -50,11 +50,7 @@ export default function MechanismSection() {
       {/* background animation */}
       <iframe
         src="https://media.base44.com/files/public/6a0a6a5d4d043b0e41a16d90/5656a8cdf_Dave_Banner.html"
-        className="absolute inset-0 w-full h-full opacity-[0.15] pointer-events-none border-none"
-        style={{
-          maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
-          WebkitMaskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
-        }}
+        className="absolute inset-0 w-full h-full opacity-[0.6] pointer-events-none border-none"
         aria-hidden
         title="Mechanism Background Animation"
       />
