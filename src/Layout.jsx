@@ -9,9 +9,10 @@ import {
   ChevronDown, GitBranch, Globe2, FlaskConical, ShieldCheck,
   Package, Wallet, Building2, CalendarDays, AlertOctagon, Banknote,
   Target, FlaskConical as FlaskIcon, ClipboardCheck, TrendingUp, Smartphone,
-  ShieldAlert, Waves, Camera, Filter, Edit3, Rocket, Layout as LayoutIcon
+  ShieldAlert, Waves, Camera, Filter, Edit3, Rocket, Layout as LayoutIcon, LogOut
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { base44 } from '@/api/base44Client';
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
 import MobileBottomNav from '@/components/mobile/MobileBottomNav';
 import MobileHeader from '@/components/mobile/MobileHeader';
@@ -220,14 +221,21 @@ export default function Layout({ children, currentPageName }) {
           ))}
         </nav>
 
-        {/* Collapse toggle */}
-        <div className="p-2 border-t border-slate-100/60">
+        {/* Collapse toggle and Logout */}
+        <div className="p-2 border-t border-slate-100/60 flex flex-col gap-1">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-colors"
           >
             <Menu className="w-4 h-4" />
             {sidebarOpen && <span className="text-xs font-medium">Collapse</span>}
+          </button>
+          <button
+            onClick={() => base44.auth.logout()}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-rose-500 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            {sidebarOpen && <span className="text-xs font-medium">Log out</span>}
           </button>
         </div>
       </motion.aside>
@@ -259,32 +267,44 @@ export default function Layout({ children, currentPageName }) {
             className="lg:hidden fixed inset-0 z-40 bg-white"
             style={{ paddingTop: 'calc(52px + env(safe-area-inset-top, 0px))' }}
           >
-            <nav className="p-3 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 52px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 70px)', paddingBottom: '16px' }}>
-              {navSections.map((section, sIdx) => (
-                <div key={sIdx}>
-                  {section.label && (
-                    <p className="px-3 pt-4 pb-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{section.label}</p>
-                  )}
-                  {section.items.map((item) => {
-                    const isActive = currentPageName === item.page;
-                    const Icon = item.icon;
-                    return (
-                      <Link
-                        key={item.page}
-                        to={createPageUrl(item.page)}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-                          isActive ? 'bg-indigo-50 text-indigo-600' : 'text-slate-600 active:bg-slate-50'
-                        }`}
-                      >
-                        <Icon className={`w-[18px] h-[18px] ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
-                        <span className="font-medium text-sm">{item.name}</span>
-                        {isActive && <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 ml-auto" />}
-                      </Link>
-                    );
-                  })}
-                </div>
-              ))}
+            <nav className="p-3 overflow-y-auto flex flex-col gap-4" style={{ maxHeight: 'calc(100vh - 52px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 70px)', paddingBottom: '16px' }}>
+              <div>
+                {navSections.map((section, sIdx) => (
+                  <div key={sIdx}>
+                    {section.label && (
+                      <p className="px-3 pt-4 pb-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{section.label}</p>
+                    )}
+                    {section.items.map((item) => {
+                      const isActive = currentPageName === item.page;
+                      const Icon = item.icon;
+                      return (
+                        <Link
+                          key={item.page}
+                          to={createPageUrl(item.page)}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                            isActive ? 'bg-indigo-50 text-indigo-600' : 'text-slate-600 active:bg-slate-50'
+                          }`}
+                        >
+                          <Icon className={`w-[18px] h-[18px] ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
+                          <span className="font-medium text-sm">{item.name}</span>
+                          {isActive && <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 ml-auto" />}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+              
+              <div className="pt-4 border-t border-slate-100">
+                <button
+                  onClick={() => base44.auth.logout()}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-rose-600 hover:bg-rose-50"
+                >
+                  <LogOut className="w-[18px] h-[18px]" />
+                  <span className="font-medium text-sm">Log out</span>
+                </button>
+              </div>
             </nav>
           </motion.div>
         )}
