@@ -22,7 +22,7 @@ const INDUSTRIES = [
   },
   {
     id: 'rail', icon: Train, name: 'Transport & Infrastructure',
-    img: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/f17458437_train-passing-through-tunnel-2026-03-25-08-21-26-utc.jpg',
+    img: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/26a4a5ec7_Trasnsport.jpg',
     headline: 'Networks, intersections, signals.',
     sub: 'Transport operators manage critical infrastructure such as rail networks, road systems and intersections where failure can have significant operational impact. AssetStack provides real-time monitoring and predictive maintenance across transport infrastructure.',
     capabilities: ['Network globe', 'Digital twin', 'Remote inspection'],
