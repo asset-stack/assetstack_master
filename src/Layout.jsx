@@ -50,12 +50,6 @@ const navSections = [
     ]
   },
   {
-    label: 'Delivery',
-    items: [
-      { name: 'Projects', icon: Rocket, page: 'Projects' },
-    ]
-  },
-  {
     label: 'Operations',
     items: [
       { name: 'Maintenance', icon: Wrench, page: 'Maintenance' },
@@ -78,6 +72,7 @@ const navSections = [
       { name: 'Scenario Modeller', icon: FlaskIcon, page: 'ScenarioModeller' },
       { name: 'Cost Center', icon: Wallet, page: 'CostCenter' },
       { name: 'Capital Plan', icon: CalendarDays, page: 'CapitalPlan' },
+      { name: 'Projects', icon: Rocket, page: 'Projects' },
     ]
   },
   {
