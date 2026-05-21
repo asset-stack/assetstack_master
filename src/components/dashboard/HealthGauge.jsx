@@ -56,7 +56,7 @@ export default function HealthGauge({ score = 0, size = 80, label = '' }) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.15 }}
         >
-          {score}
+          {Math.round(score)}
         </motion.span>
       </div>
     </div>
