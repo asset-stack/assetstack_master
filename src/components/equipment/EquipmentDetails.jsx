@@ -14,6 +14,7 @@ import { base44 } from '@/api/base44Client';
 import HealthGauge from '../dashboard/HealthGauge';
 import SensorReadingsChart from './SensorReadingsChart';
 import TaskDetailsDialog from '../maintenance/TaskDetailsDialog';
+import MatterportEmbed from '../dashboard/MatterportEmbed';
 
 export default function EquipmentDetails({ equipment, readings, onClose, onEdit, onDelete }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -157,6 +158,7 @@ export default function EquipmentDetails({ equipment, readings, onClose, onEdit,
               <TabsTrigger value="sensors" className="data-[state=active]:bg-blue-600">Sensor Data</TabsTrigger>
               <TabsTrigger value="details" className="data-[state=active]:bg-blue-600">Details</TabsTrigger>
               <TabsTrigger value="history" className="data-[state=active]:bg-blue-600">Maintenance History</TabsTrigger>
+              <TabsTrigger value="location" className="data-[state=active]:bg-blue-600">Location</TabsTrigger>
             </TabsList>
 
             <TabsContent value="sensors" className="mt-4 space-y-4">
@@ -231,6 +233,25 @@ export default function EquipmentDetails({ equipment, readings, onClose, onEdit,
                       </span>
                     </div>
                   </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="location" className="mt-4">
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50">
+                <div className="mb-4">
+                  <h4 className="text-sm font-medium text-white mb-1">Equipment Location</h4>
+                  <p className="text-xs text-slate-400">
+                    <MapPin className="w-3 h-3 inline-block mr-1 mb-0.5" />
+                    Pinned inside <strong>R16 - Plant Room</strong> (center of the room).
+                  </p>
+                </div>
+                <div className="rounded-xl overflow-hidden shadow-2xl border border-slate-700">
+                  <MatterportEmbed 
+                    title={equipment.name}
+                    subtitle={`R16 - Plant Room • ${equipment.location || 'South West Sports Centre'}`}
+                    height={450}
+                  />
                 </div>
               </div>
             </TabsContent>
