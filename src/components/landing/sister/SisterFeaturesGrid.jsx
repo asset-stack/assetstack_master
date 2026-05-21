@@ -10,7 +10,7 @@ import DashboardPreview from '@/components/landing/industries/previews/Dashboard
 import AssetMindPreview from '@/components/landing/industries/previews/AssetMindPreview';
 
 const features = [
-  { icon: Box, title: 'Digital Twin Infrastructure', description: 'Visualise infrastructure networks in 3D using LiDAR and geospatial modelling.', preview: AssetTreePreview },
+  { icon: Box, title: 'Digital Twin Infrastructure', description: 'Visualise infrastructure networks in 3D using LiDAR and geospatial modelling.', videoUrl: 'https://media.base44.com/videos/public/6a0a6a5d4d043b0e41a16d90/13454d771_DigitalTwin.mp4' },
   { icon: Eye, title: 'Predictive Maintenance', description: 'AI models detect anomalies and forecast equipment failures before they occur.', preview: PredictionsPreview },
   { icon: ClipboardCheck, title: 'Inspection Workflows', description: 'Capture structured inspection data using mobile workflows and automated tagging.', preview: WorkOrdersPreview },
   { icon: Wifi, title: 'IoT Sensor Integration', description: 'Connect sensor networks and operational systems to monitor asset health.', preview: SensorsPreview },
@@ -109,7 +109,18 @@ export default function SisterFeaturesGrid() {
                 transition={{ duration: 0.3 }}
                 className="w-full h-full relative"
               >
-                <active.preview />
+                {active.videoUrl ? (
+                  <video 
+                    src={active.videoUrl} 
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline 
+                    className="w-full h-full object-cover" 
+                  />
+                ) : active.preview ? (
+                  <active.preview />
+                ) : null}
               </motion.div>
             </AnimatePresence>
           </div>
