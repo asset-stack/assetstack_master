@@ -46,8 +46,8 @@ export default function SavingsProof() {
             Every avoided breakdown,{' '}
             <span className="font-serif italic font-medium text-primary">on the record.</span>
           </h2>
-          <p className="mt-4 text-[17px] text-slate-600 leading-[1.55] text-pretty">
-            The Verified Savings Ledger ties each AI prediction to an intervention, attached evidence, and a verified outcome — with a full audit trail your CFO and your auditor can read end-to-end.
+          <p className="mt-4 text-[17px] text-slate-600 leading-[1.55] text-pretty">The Verified Savings Ledger ties each AI prediction to an intervention, attached evidence, and a verified outcome, with a full audit trail your CFO and your auditor can read end-to-end.
+
           </p>
         </div>
 
