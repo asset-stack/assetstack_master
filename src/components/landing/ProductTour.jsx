@@ -37,8 +37,8 @@ export default function ProductTour() {
             From one photo to{' '}
             <span className="font-serif italic font-medium text-primary">verified savings.</span>
           </h2>
-          <p className="mt-4 text-[17px] text-slate-600 leading-[1.55] text-pretty">
-            Watch the entire AssetStack workflow in under a minute — the same loop that runs daily across construction, mining, fleet, and rail.
+          <p className="mt-4 text-[17px] text-slate-600 leading-[1.55] text-pretty">Watch the entire AssetStack workflow in under a minute. The same loop that runs daily across construction, mining, fleet, and rail.
+
           </p>
         </div>
 
