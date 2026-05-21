@@ -63,6 +63,19 @@ const navSections = [
     ]
   },
   {
+    label: 'Intelligence',
+    items: [
+      { name: 'Analytics', icon: BarChart3, page: 'Analytics' },
+      { name: 'Reports', icon: FileText, page: 'Reports' },
+      { name: 'ML Models', icon: Brain, page: 'MLModels' },
+      { name: 'Defect Cascade', icon: GitBranch, page: 'DefectCascade' },
+      { name: 'Portfolio Insights', icon: Brain, page: 'PortfolioInsights' },
+      { name: 'Data Quality', icon: ShieldAlert, page: 'DataQuality' },
+      { name: 'Cohort Performance', icon: TrendingUp, page: 'CohortPerformance' },
+      { name: 'Climate Risk', icon: Waves, page: 'ClimateRisk' },
+    ]
+  },
+  {
     label: 'Finance',
     items: [
       { name: 'Finance Hub', icon: Banknote, page: 'Finance' },
@@ -91,19 +104,6 @@ const navSections = [
     label: 'Field Ops Add-ons',
     items: [
       { name: 'Smart Filters', icon: Filter, page: 'SavedViews' },
-    ]
-  },
-  {
-    label: 'Intelligence',
-    items: [
-      { name: 'Portfolio Insights', icon: Brain, page: 'PortfolioInsights' },
-      { name: 'Cohort Performance', icon: TrendingUp, page: 'CohortPerformance' },
-      { name: 'Defect Cascade', icon: GitBranch, page: 'DefectCascade' },
-      { name: 'Climate Risk', icon: Waves, page: 'ClimateRisk' },
-      { name: 'Data Quality', icon: ShieldAlert, page: 'DataQuality' },
-      { name: 'Analytics', icon: BarChart3, page: 'Analytics' },
-      { name: 'Reports', icon: FileText, page: 'Reports' },
-      { name: 'ML Models', icon: Brain, page: 'MLModels' },
     ]
   },
   {
