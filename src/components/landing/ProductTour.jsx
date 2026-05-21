@@ -32,7 +32,7 @@ export default function ProductTour() {
     <section id="tour" className="py-20 md:py-32 bg-slate-50/40 border-y border-slate-100">
       <div className="max-w-[1280px] mx-auto px-5 md:px-8">
         <div className="max-w-2xl mb-12 md:mb-16">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary hidden">The 60-second product tour</span>
+          
           <h2 className="mt-3 text-4xl md:text-6xl font-semibold tracking-[-0.03em] leading-[1.02] text-slate-900 text-balance">
             From one photo to{' '}
             <span className="font-serif italic font-medium text-primary">verified savings.</span>
