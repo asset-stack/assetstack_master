@@ -27,8 +27,8 @@ export default function TourFrameScan() {
         {/* Image with bboxes */}
         <div className="relative bg-slate-100 overflow-hidden min-h-[300px]">
           <img
-            src="https://media.base44.com/images/public/6970c68cc08dbe7897c72f22/05fadbcb2_generated_image.png"
-            alt="Corroded industrial water pump under AI inspection"
+            src="https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/4e24d416b_old-rusty-steel-rope-of-bridge-closeup-2026-01-11-08-36-08-utc.jpg"
+            alt="Field Scan"
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-slate-900/10" />
