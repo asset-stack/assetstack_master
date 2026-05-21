@@ -231,13 +231,6 @@ export default function MaintenancePlanning() {
           </div>
 
           <TabsContent value="plans" className="mt-0 space-y-6">
-            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-              <MaintenancePlanManager 
-                equipment={equipment}
-                technicians={technicians}
-              />
-            </div>
-
             {pendingTasks.length > 0 && (
               <div className="bg-white rounded-xl border border-amber-200 shadow-sm overflow-hidden">
                 <div className="bg-amber-50 px-6 py-4 border-b border-amber-200 flex justify-between items-center">
@@ -286,6 +279,13 @@ export default function MaintenancePlanning() {
                 </div>
               </div>
             )}
+
+            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+              <MaintenancePlanManager 
+                equipment={equipment}
+                technicians={technicians}
+              />
+            </div>
           </TabsContent>
 
           <TabsContent value="templates" className="mt-0">
