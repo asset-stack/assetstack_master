@@ -16,7 +16,7 @@ export default function SisterFeaturesGrid() {
   const active = features[activeIndex];
 
   return (
-    <section className="py-20 lg:py-28" style={{ background: '#F2EFE9' }}>
+    <section className="py-20 lg:py-28 bg-primary">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -26,14 +26,13 @@ export default function SisterFeaturesGrid() {
           className="max-w-4xl mx-auto text-center mb-12 lg:mb-16"
         >
           <span
-            className="inline-block px-0 pb-3 text-xs font-bold tracking-widest uppercase mb-4 border-b-2"
-            style={{ color: '#2200FF', borderColor: '#2200FF' }}
+            className="inline-block px-0 pb-3 text-xs font-bold tracking-widest uppercase mb-4 border-b-2 border-white/30 text-white"
           >
             Core Capabilities
           </span>
           <h2
-            className="font-black leading-tight tracking-tight"
-            style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', color: '#2200FF', letterSpacing: '-0.02em' }}
+            className="font-black font-sans leading-tight tracking-tight text-white"
+            style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '-0.02em' }}
           >
             Built for Complex Assets. Engineered for Scale.
           </h2>
@@ -49,12 +48,7 @@ export default function SisterFeaturesGrid() {
                   key={feature.title}
                   onMouseEnter={() => setActiveIndex(i)}
                   onClick={() => setActiveIndex(i)}
-                  className="rounded-2xl border cursor-pointer overflow-hidden transition-colors duration-200"
-                  style={{
-                    background: isActive ? '#ffffff' : 'rgba(255,255,255,0.45)',
-                    borderColor: isActive ? 'rgba(34,0,255,0.2)' : 'rgba(34,0,255,0.07)',
-                    boxShadow: isActive ? '0 4px 20px rgba(34,0,255,0.08)' : 'none',
-                  }}
+                  className={`rounded-2xl border cursor-pointer overflow-hidden transition-colors duration-200 ${isActive ? 'bg-white border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.2)]' : 'bg-white/10 border-transparent hover:bg-white/20'}`}
                   layout
                   transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 >
@@ -66,14 +60,13 @@ export default function SisterFeaturesGrid() {
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.7 }}
                           transition={{ duration: 0.2 }}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                          style={{ background: 'rgba(34,0,255,0.07)' }}
+                          className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-primary/10"
                         >
-                          <Icon className="w-4 h-4" style={{ color: '#2200FF' }} />
+                          <Icon className="w-4 h-4 text-primary" />
                         </motion.div>
                       )}
                     </AnimatePresence>
-                    <span className="font-semibold text-sm" style={{ color: isActive ? '#2200FF' : 'rgba(34,0,255,0.6)' }}>
+                    <span className={`font-semibold text-sm ${isActive ? 'text-primary' : 'text-white/80'}`}>
                       {feature.title}
                     </span>
                   </div>
@@ -86,7 +79,7 @@ export default function SisterFeaturesGrid() {
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                         style={{ overflow: 'hidden' }}
                       >
-                        <p className="px-5 pb-4 text-xs leading-relaxed" style={{ color: 'rgba(34,0,255,0.55)' }}>
+                        <p className="px-5 pb-4 text-xs leading-relaxed text-slate-600">
                           {feature.description}
                         </p>
                       </motion.div>
