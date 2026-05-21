@@ -50,12 +50,12 @@ export default function MechanismSection() {
       {/* background animation */}
       <iframe
         src="https://media.base44.com/files/public/6a0a6a5d4d043b0e41a16d90/5656a8cdf_Dave_Banner.html"
-        className="absolute inset-0 w-full h-full opacity-[0.6] pointer-events-none border-none"
+        className="absolute inset-0 w-full h-full pointer-events-none border-none z-0"
         aria-hidden
         title="Mechanism Background Animation"
       />
 
-      <div className="relative max-w-[1280px] mx-auto px-5 md:px-8">
+      <div className="relative z-10 max-w-[1280px] mx-auto px-5 md:px-8">
         <div className="text-center mb-12">
           <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary/90">The mechanism</span>
           <h2 className="mt-3 text-3xl md:text-5xl font-semibold tracking-[-0.03em] leading-[1.05] text-balance">
