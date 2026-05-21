@@ -40,7 +40,8 @@
         "concrete_integrity",
         "settlement",
         "water_level",
-        "chloride_content"
+        "chloride_content",
+        "ph_level"
       ],
       "description": "Type of sensor"
     },

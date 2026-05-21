@@ -33,7 +33,7 @@ const SENSOR_TYPES = [
   'crack_width', 'tilt', 'acceleration', 'corrosion', 'moisture', 'wind_speed',
   'seismic_activity', 'structural_load', 'deflection', 'acoustic_emission',
   'rail_profile', 'track_geometry', 'concrete_integrity', 'settlement',
-  'water_level', 'chloride_content'
+  'water_level', 'chloride_content', 'ph_level'
 ];
 
 export default function SensorIntegration() {
