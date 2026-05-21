@@ -47,16 +47,16 @@ export default function MechanismSection() {
 
   return (
     <section id="mechanism" className="py-20 md:py-28 bg-slate-950 text-white relative overflow-hidden">
-      {/* subtle grid */}
-      <div
-        aria-hidden
-        className="absolute inset-0 opacity-[0.07]"
+      {/* background animation */}
+      <iframe
+        src="https://media.base44.com/files/public/6a0a6a5d4d043b0e41a16d90/5656a8cdf_Dave_Banner.html"
+        className="absolute inset-0 w-full h-full opacity-[0.15] pointer-events-none border-none"
         style={{
-          backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)',
-          backgroundSize: '48px 48px',
           maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
           WebkitMaskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
         }}
+        aria-hidden
+        title="Mechanism Background Animation"
       />
 
       <div className="relative max-w-[1280px] mx-auto px-5 md:px-8">
