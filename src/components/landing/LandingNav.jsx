@@ -38,7 +38,7 @@ export default function LandingNav() {
   ];
 
   const handleSignIn = () => {
-    window.location.href = '/CommandCenter';
+    base44.auth.redirectToLogin('/CommandCenter');
   };
 
   return (
