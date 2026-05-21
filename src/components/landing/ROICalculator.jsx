@@ -38,7 +38,7 @@ export default function ROICalculator() {
             What's hiding in <span className="font-serif italic font-medium text-primary">your portfolio?</span>
           </h2>
           <p className="mt-3 text-[15px] md:text-base text-slate-600 max-w-xl mx-auto">
-            Slide your numbers — we'll show the value AssetStack can unlock in year one.
+            Slide your numbers we'll show the value AssetStack can unlock in year one.
           </p>
         </div>
 
