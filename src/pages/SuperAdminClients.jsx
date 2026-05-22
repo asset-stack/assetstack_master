@@ -103,7 +103,12 @@ export default function SuperAdminClients() {
         )}
 
         {clients.map(client => {
-          const clientLocations = locations.filter(l => l.client_account_id === client.id || l.client_name === client.business_name);
+          const clientLocations = locations.filter(l => 
+            l.client_account_id === client.id || 
+            l.client_name === client.business_name ||
+            // Fallback: Assign legacy locations without a specific client to Bunbury Council
+            (client.business_name === 'Bunbury Council' && !l.client_account_id && !l.client_name)
+          );
           const locCount = clientLocations.length;
           const isExpanded = expandedClients[client.id];
           
