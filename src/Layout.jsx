@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { base44 } from '@/api/base44Client';
+import { useClient } from '@/lib/ClientContext';
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
 import MobileBottomNav from '@/components/mobile/MobileBottomNav';
 import MobileHeader from '@/components/mobile/MobileHeader';
@@ -142,6 +143,7 @@ const allNavItems = navSections.flatMap(s => s.items);
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { currentClient, clients, setClient } = useClient();
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
@@ -168,6 +170,18 @@ export default function Layout({ children, currentPageName }) {
               )}
             </AnimatePresence>
           </div>
+          {sidebarOpen && clients?.length > 1 && (
+            <div className="mt-4">
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Active Account</p>
+              <select 
+                className="w-full bg-slate-50 border border-slate-200 text-xs rounded-md p-1.5 text-slate-700 font-medium focus:ring-indigo-500 focus:border-indigo-500 outline-none cursor-pointer"
+                value={currentClient?.id || ''}
+                onChange={(e) => setClient(clients.find(c => c.id === e.target.value))}
+              >
+                {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
+              </select>
+            </div>
+          )}
         </div>
 
         {/* Nav */}

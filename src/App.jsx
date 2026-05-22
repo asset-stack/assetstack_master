@@ -6,6 +6,7 @@ import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
+import { ClientProvider } from '@/lib/ClientContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AIAssistant from './pages/AIAssistant';
 import Locations from './pages/Locations';
@@ -353,7 +354,9 @@ function App() {
       <QueryClientProvider client={queryClientInstance}>
         <Router>
           <NavigationTracker />
-          <AuthenticatedApp />
+          <ClientProvider>
+            <AuthenticatedApp />
+          </ClientProvider>
         </Router>
         <Toaster />
       </QueryClientProvider>

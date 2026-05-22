@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { useClient } from '@/lib/ClientContext';
 import { MapPin, Plus, Search, Cpu, CheckCircle2, AlertTriangle, Box } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +13,7 @@ import PullToRefresh from '@/components/mobile/PullToRefresh';
 const UNFIXED_STATUSES = new Set(['pending', 'approved']);
 
 export default function Locations() {
+  const { currentClient } = useClient();
   const [search, setSearch] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -19,20 +21,36 @@ export default function Locations() {
   const queryClient = useQueryClient();
 
   const { data: locations = [] } = useQuery({
-    queryKey: ['locations'],
-    queryFn: () => base44.entities.Location.list('-created_date', 100),
+    queryKey: ['locations', currentClient?.id],
+    queryFn: async () => {
+      if (!currentClient) return [];
+      const all = await base44.entities.Location.list('-created_date', 100);
+      return currentClient.business_name === 'Bunbury Council' ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id) : all.filter(e => e.client_account_id === currentClient.id);
+    }
   });
   const { data: equipment = [] } = useQuery({
-    queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 500),
+    queryKey: ['equipment', currentClient?.id],
+    queryFn: async () => {
+      if (!currentClient) return [];
+      const all = await base44.entities.Equipment.list('-created_date', 500);
+      return currentClient.business_name === 'Bunbury Council' ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id) : all.filter(e => e.client_account_id === currentClient.id);
+    }
   });
   const { data: scans = [] } = useQuery({
-    queryKey: ['scans-all'],
-    queryFn: () => base44.entities.DigitalTwinModel.list('-scan_date', 200),
+    queryKey: ['scans-all', currentClient?.id],
+    queryFn: async () => {
+      if (!currentClient) return [];
+      const all = await base44.entities.DigitalTwinModel.list('-scan_date', 200);
+      return currentClient.business_name === 'Bunbury Council' ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id) : all.filter(e => e.client_account_id === currentClient.id);
+    }
   });
   const { data: conditionReports = [] } = useQuery({
-    queryKey: ['cr-all'],
-    queryFn: () => base44.entities.ConditionReport.list('-created_date', 500),
+    queryKey: ['cr-all', currentClient?.id],
+    queryFn: async () => {
+      if (!currentClient) return [];
+      const all = await base44.entities.ConditionReport.list('-created_date', 500);
+      return currentClient.business_name === 'Bunbury Council' ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id) : all.filter(e => e.client_account_id === currentClient.id);
+    }
   });
 
   const deleteMutation = useMutation({

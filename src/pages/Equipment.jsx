@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { useClient } from '@/lib/ClientContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, Search, Filter, Grid3X3, List, Layers,
@@ -35,6 +36,7 @@ const EQUIPMENT_TYPES = [
 ];
 
 export default function Equipment() {
+  const { currentClient } = useClient();
   const [viewMode, setViewMode] = useState('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('all');
@@ -60,9 +62,9 @@ export default function Equipment() {
   }, [locationFromUrl]);
 
   const { data: equipment = [], isLoading } = useQuery({
-    queryKey: ['equipment'],
+    queryKey: ['equipment', currentClient?.id],
     queryFn: async () => {
-      // Page through ALL equipment (handles 2,500+ asset registers)
+      if (!currentClient) return [];
       const pageSize = 500;
       const all = [];
       for (let page = 0; page < 20; page++) {
@@ -71,13 +73,21 @@ export default function Equipment() {
         all.push(...batch);
         if (batch.length < pageSize) break;
       }
-      return all;
+      return currentClient.business_name === 'Bunbury Council' 
+        ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id)
+        : all.filter(e => e.client_account_id === currentClient.id);
     },
   });
 
   const { data: locations = [] } = useQuery({
-    queryKey: ['locations'],
-    queryFn: () => base44.entities.Location.list('-created_date', 500),
+    queryKey: ['locations', currentClient?.id],
+    queryFn: async () => {
+      if (!currentClient) return [];
+      const all = await base44.entities.Location.list('-created_date', 500);
+      return currentClient.business_name === 'Bunbury Council' 
+        ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id)
+        : all.filter(e => e.client_account_id === currentClient.id);
+    }
   });
 
   // Auto-select equipment from URL param
@@ -172,10 +182,11 @@ export default function Equipment() {
   });
 
   const handleSaveEquipment = (data) => {
+    const payload = { ...data, client_account_id: currentClient?.id };
     if (editingEquipment?.id) {
-      updateMutation.mutate({ id: editingEquipment.id, data });
+      updateMutation.mutate({ id: editingEquipment.id, data: payload });
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(payload);
     }
   };
 

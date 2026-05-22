@@ -6,6 +6,10 @@
       "type": "string",
       "description": "Reference to equipment"
     },
+    "client_account_id": {
+      "type": "string",
+      "description": "Reference to ClientAccount for multi-tenancy"
+    },
     "title": {
       "type": "string",
       "description": "Task title"

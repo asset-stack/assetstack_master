@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { useClient } from '@/lib/ClientContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
@@ -23,6 +24,7 @@ import MatterportEmbed from '@/components/dashboard/MatterportEmbed';
 import PullToRefresh from '@/components/mobile/PullToRefresh';
 
 export default function Dashboard() {
+  const { currentClient } = useClient();
   const [selectedEquipment, setSelectedEquipment] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [liveUpdates, setLiveUpdates] = useState({ equipment: [], alerts: [] });
@@ -30,18 +32,36 @@ export default function Dashboard() {
   const queryClient = useQueryClient();
 
   const { data: equipment = [], isLoading: loadingEquipment } = useQuery({
-    queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 1000),
+    queryKey: ['equipment', currentClient?.id],
+    queryFn: async () => {
+      if (!currentClient) return [];
+      const all = await base44.entities.Equipment.list('-created_date', 1000);
+      return currentClient.business_name === 'Bunbury Council' 
+        ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id)
+        : all.filter(e => e.client_account_id === currentClient.id);
+    }
   });
 
   const { data: locations = [] } = useQuery({
-    queryKey: ['locations'],
-    queryFn: () => base44.entities.Location.list('-created_date', 200),
+    queryKey: ['locations', currentClient?.id],
+    queryFn: async () => {
+      if (!currentClient) return [];
+      const all = await base44.entities.Location.list('-created_date', 200);
+      return currentClient.business_name === 'Bunbury Council'
+        ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id)
+        : all.filter(e => e.client_account_id === currentClient.id);
+    }
   });
 
   const { data: alerts = [], isLoading: loadingAlerts } = useQuery({
-    queryKey: ['alerts'],
-    queryFn: () => base44.entities.Alert.list('-created_date', 50),
+    queryKey: ['alerts', currentClient?.id],
+    queryFn: async () => {
+      if (!currentClient) return [];
+      const all = await base44.entities.Alert.list('-created_date', 50);
+      return currentClient.business_name === 'Bunbury Council'
+        ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id)
+        : all.filter(e => e.client_account_id === currentClient.id);
+    }
   });
 
   // Real-time subscriptions
@@ -69,8 +89,14 @@ export default function Dashboard() {
   }, [queryClient]);
 
   const { data: tasks = [] } = useQuery({
-    queryKey: ['tasks'],
-    queryFn: () => base44.entities.MaintenanceTask.list('-created_date', 50),
+    queryKey: ['tasks', currentClient?.id],
+    queryFn: async () => {
+      if (!currentClient) return [];
+      const all = await base44.entities.MaintenanceTask.list('-created_date', 50);
+      return currentClient.business_name === 'Bunbury Council'
+        ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id)
+        : all.filter(e => e.client_account_id === currentClient.id);
+    }
   });
 
   const { data: sensorReadings = [] } = useQuery({
@@ -143,7 +169,7 @@ export default function Dashboard() {
               <div className="min-w-0">
                 <h1 className="text-xl font-bold text-slate-900 truncate">Dashboard</h1>
                 <div className="flex items-center gap-2">
-                  <p className="text-xs text-slate-500">Bunbury Council</p>
+                  <p className="text-xs text-slate-500">{currentClient?.business_name || 'Loading...'}</p>
                   <span className="text-xs text-slate-300">•</span>
                   <p className="text-xs text-indigo-600 font-medium">
                     {locations.length > 0 ? `${locations.length} locations` : 'All locations'} · {totalEquipment} assets
