@@ -42,6 +42,13 @@
         "cancelled"
       ],
       "default": "active"
+    },
+    "allowed_users": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Emails of users allowed to access this account"
     }
   },
   "required": [

@@ -1,16 +1,20 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { useAuth } from '@/lib/AuthContext';
 import { Building2, Database, DollarSign, Activity, Search, ShieldCheck } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function SuperAdminClients() {
-  const { data: clients = [], isLoading } = useQuery({
+  const { user } = useAuth();
+  const { data: rawClients = [], isLoading } = useQuery({
     queryKey: ['adminClients'],
     queryFn: () => base44.entities.ClientAccount.list('-created_date', 100),
   });
+
+  const clients = rawClients.filter(c => !c.allowed_users?.length || c.allowed_users.includes(user?.email));
 
   const { data: locations = [] } = useQuery({
     queryKey: ['adminLocations'],

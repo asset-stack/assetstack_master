@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { useAuth } from '@/lib/AuthContext';
 import { Building2, MapPin, CreditCard, Plus, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,21 +9,25 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 export default function CompanyProfile() {
+  const { user } = useAuth();
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({});
+  const [selectedAccountId, setSelectedAccountId] = useState(null);
 
-  const { data: accounts = [], isLoading: isLoadingAccounts } = useQuery({
+  const { data: rawAccounts = [], isLoading: isLoadingAccounts } = useQuery({
     queryKey: ['clientAccount'],
-    queryFn: () => base44.entities.ClientAccount.list('-created_date', 1),
+    queryFn: () => base44.entities.ClientAccount.list('-created_date', 100),
   });
+  
+  const accounts = rawAccounts.filter(a => !a.allowed_users?.length || a.allowed_users.includes(user?.email));
   
   const { data: locations = [], isLoading: isLoadingLocs } = useQuery({
     queryKey: ['clientLocations'],
     queryFn: () => base44.entities.Location.list('-created_date', 100),
   });
 
-  const account = accounts[0];
+  const account = selectedAccountId ? accounts.find(a => a.id === selectedAccountId) : accounts[0];
 
   const updateMutation = useMutation({
     mutationFn: (data) => {
@@ -64,6 +69,20 @@ export default function CompanyProfile() {
           </h1>
           <p className="text-sm text-slate-500 mt-1">Manage your business account, locations, and subscription.</p>
         </div>
+        {accounts.length > 1 && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-slate-500 font-medium">Select Account:</span>
+            <select 
+              className="bg-white border border-slate-200 rounded-md text-sm p-2 text-slate-900"
+              value={account?.id || ''}
+              onChange={(e) => setSelectedAccountId(e.target.value)}
+            >
+              {accounts.map(acc => (
+                <option key={acc.id} value={acc.id}>{acc.business_name}</option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
