@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
-import { Building2, Database, DollarSign, Activity, Search, ShieldCheck } from 'lucide-react';
+import { Building2, Database, DollarSign, Activity, Search, ShieldCheck, ChevronDown, ChevronRight, MapPin } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function SuperAdminClients() {
   const { user } = useAuth();
+  const [expandedClients, setExpandedClients] = useState({});
+
+  const toggleClient = (id) => {
+    setExpandedClients(prev => ({ ...prev, [id]: !prev[id] }));
+  };
   const { data: rawClients = [], isLoading } = useQuery({
     queryKey: ['adminClients'],
     queryFn: () => base44.entities.ClientAccount.list('-created_date', 100),
@@ -86,63 +91,104 @@ export default function SuperAdminClients() {
         </Card>
       </div>
 
-      {/* Clients Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Tenant Accounts</CardTitle>
-        </CardHeader>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead className="bg-slate-50 text-slate-500 uppercase text-[10px] tracking-wider">
-              <tr>
-                <th className="px-4 py-3 font-medium rounded-tl-lg">Client Name</th>
-                <th className="px-4 py-3 font-medium">Plan</th>
-                <th className="px-4 py-3 font-medium">Locations</th>
-                <th className="px-4 py-3 font-medium">Total Assets</th>
-                <th className="px-4 py-3 font-medium">Est. Monthly Invoice</th>
-                <th className="px-4 py-3 font-medium rounded-tr-lg">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {/* Fallback to show Bunbury if no clients exist yet */}
-              {clients.length === 0 && (
-                <tr className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-4">
-                    <div className="font-medium text-slate-900">Bunbury Council</div>
-                    <div className="text-xs text-slate-500">info@bunbury.wa.gov.au</div>
-                  </td>
-                  <td className="px-4 py-4"><Badge variant="outline" className="bg-indigo-50 text-indigo-700">Enterprise</Badge></td>
-                  <td className="px-4 py-4 font-medium text-slate-700">{locations.length || 9}</td>
-                  <td className="px-4 py-4 text-slate-600">{totalAssets.toLocaleString()}</td>
-                  <td className="px-4 py-4 font-medium text-slate-900">${((locations.length || 9) * 150).toLocaleString()}</td>
-                  <td className="px-4 py-4"><Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">Active</Badge></td>
-                </tr>
+      {/* Client Modules with Dropdowns */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold text-slate-900">Tenant Accounts</h2>
+        
+        {clients.length === 0 && (
+          <div className="text-center py-12 bg-white rounded-xl border border-slate-200">
+            <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+            <p className="text-slate-500">No client accounts found.</p>
+          </div>
+        )}
+
+        {clients.map(client => {
+          const clientLocations = locations.filter(l => l.client_account_id === client.id || l.client_name === client.business_name);
+          const locCount = clientLocations.length;
+          const isExpanded = expandedClients[client.id];
+          
+          return (
+            <Card key={client.id} className="overflow-hidden">
+              <div 
+                className="p-4 bg-white hover:bg-slate-50 transition-colors cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                onClick={() => toggleClient(client.id)}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg shrink-0">
+                    <Building2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-900">{client.business_name}</h3>
+                    <p className="text-xs text-slate-500">{client.contact_email || 'No email'}</p>
+                  </div>
+                </div>
+                
+                <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-sm">
+                  <div className="flex flex-col">
+                    <span className="text-xs text-slate-400 uppercase tracking-wider">Plan</span>
+                    <Badge variant="outline" className="capitalize bg-indigo-50 text-indigo-700 mt-1">{client.subscription_level || 'Professional'}</Badge>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="text-xs text-slate-400 uppercase tracking-wider">Locations</span>
+                    <span className="font-medium text-slate-700 mt-1">{locCount}</span>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-xs text-slate-400 uppercase tracking-wider">Est. Invoice</span>
+                    <span className="font-medium text-slate-900 mt-1">${(locCount * 150).toLocaleString()}/mo</span>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-xs text-slate-400 uppercase tracking-wider">Status</span>
+                    <Badge className={`mt-1 ${client.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
+                      {client.status || 'Active'}
+                    </Badge>
+                  </div>
+                  <div className="ml-2 text-slate-400">
+                    {isExpanded ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                  </div>
+                </div>
+              </div>
+
+              {isExpanded && (
+                <div className="bg-slate-50 border-t border-slate-100 p-4">
+                  <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Locations ({locCount})</h4>
+                  
+                  {locCount === 0 ? (
+                    <div className="text-sm text-slate-400 bg-white p-3 rounded-lg border border-slate-200 text-center">
+                      No locations assigned to this client yet.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {clientLocations.map((loc) => {
+                        // Calculate assets per location if possible
+                        const locAssets = equipment.filter(e => e.location === loc.name || e.location_id === loc.id).length;
+                        return (
+                          <div key={loc.id} className="bg-white p-3 rounded-lg border border-slate-200 flex items-start gap-3 hover:border-indigo-200 transition-colors">
+                            <div className="mt-0.5 text-indigo-500">
+                              <MapPin className="w-4 h-4" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-slate-900">{loc.name}</p>
+                              <p className="text-xs text-slate-500">{loc.city || 'No city specified'}</p>
+                              <div className="mt-2 flex items-center gap-2">
+                                <Badge variant="outline" className="text-[10px] font-normal text-slate-600 bg-slate-50">
+                                  {locAssets} Assets
+                                </Badge>
+                                <Badge variant="outline" className="text-[10px] font-normal text-emerald-600 bg-emerald-50 border-emerald-100">
+                                  {loc.status || 'Active'}
+                                </Badge>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               )}
-              {clients.map(client => {
-                const clientLocations = locations.filter(l => l.client_account_id === client.id || l.client_name === client.business_name);
-                const locCount = clientLocations.length;
-                return (
-                  <tr key={client.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-4 py-4">
-                      <div className="font-medium text-slate-900">{client.business_name}</div>
-                      <div className="text-xs text-slate-500">{client.contact_email || 'No email'}</div>
-                    </td>
-                    <td className="px-4 py-4"><Badge variant="outline" className="capitalize bg-indigo-50 text-indigo-700">{client.subscription_level || 'Professional'}</Badge></td>
-                    <td className="px-4 py-4 font-medium text-slate-700">{locCount}</td>
-                    <td className="px-4 py-4 text-slate-600">-</td>
-                    <td className="px-4 py-4 font-medium text-slate-900">${(locCount * 150).toLocaleString()}</td>
-                    <td className="px-4 py-4">
-                      <Badge className={client.status === 'active' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100' : 'bg-rose-100 text-rose-700 hover:bg-rose-100'}>
-                        {client.status || 'Active'}
-                      </Badge>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </Card>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 }
