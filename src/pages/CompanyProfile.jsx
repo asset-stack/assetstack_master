@@ -22,12 +22,19 @@ export default function CompanyProfile() {
   
   const accounts = rawAccounts.filter(a => !a.allowed_users?.length || a.allowed_users.includes(user?.email));
   
-  const { data: locations = [], isLoading: isLoadingLocs } = useQuery({
+  const { data: allLocations = [], isLoading: isLoadingLocs } = useQuery({
     queryKey: ['clientLocations'],
     queryFn: () => base44.entities.Location.list('-created_date', 100),
   });
 
   const account = selectedAccountId ? accounts.find(a => a.id === selectedAccountId) : accounts[0];
+
+  // Filter locations strictly to this account, including legacy unassigned logic to Bunbury Council
+  const locations = allLocations.filter(l => 
+    l.client_account_id === account?.id || 
+    l.client_name === account?.business_name ||
+    (account?.business_name === 'Bunbury Council' && !l.client_account_id && !l.client_name)
+  );
 
   const updateMutation = useMutation({
     mutationFn: (data) => {
