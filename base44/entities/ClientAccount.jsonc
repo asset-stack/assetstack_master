@@ -1,0 +1,50 @@
+{
+  "name": "ClientAccount",
+  "type": "object",
+  "properties": {
+    "business_name": {
+      "type": "string",
+      "description": "Business or council name"
+    },
+    "abn": {
+      "type": "string",
+      "description": "Australian Business Number (or equivalent)"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Primary contact person"
+    },
+    "contact_phone": {
+      "type": "string",
+      "description": "Primary contact phone"
+    },
+    "contact_email": {
+      "type": "string",
+      "description": "Primary contact email"
+    },
+    "website": {
+      "type": "string"
+    },
+    "subscription_level": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "professional",
+        "enterprise"
+      ],
+      "default": "professional"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "suspended",
+        "cancelled"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "business_name"
+  ]
+}

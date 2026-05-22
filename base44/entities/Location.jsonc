@@ -49,6 +49,10 @@
       "type": "string",
       "description": "Client or council name this location belongs to"
     },
+    "client_account_id": {
+      "type": "string",
+      "description": "Reference to the ClientAccount entity"
+    },
     "contact_name": {
       "type": "string",
       "description": "Primary contact person"

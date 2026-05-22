@@ -55,6 +55,8 @@ import LandingEditor from './pages/LandingEditor';
 import ConditionInspector from './pages/ConditionInspector';
 import VerifyReports from './pages/VerifyReports';
 import SWSCAudit from './pages/SWSCAudit.jsx';
+import CompanyProfile from './pages/CompanyProfile.jsx';
+import SuperAdminClients from './pages/SuperAdminClients.jsx';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -316,6 +318,16 @@ const AuthenticatedApp = () => {
       <Route path="/SWSCAudit" element={
             <LayoutWrapper currentPageName="SWSCAudit">
               <SWSCAudit />
+            </LayoutWrapper>
+          } />
+      <Route path="/CompanyProfile" element={
+            <LayoutWrapper currentPageName="CompanyProfile">
+              <CompanyProfile />
+            </LayoutWrapper>
+          } />
+      <Route path="/SuperAdminClients" element={
+            <LayoutWrapper currentPageName="SuperAdminClients">
+              <SuperAdminClients />
             </LayoutWrapper>
           } />
       <Route path="/Projects" element={

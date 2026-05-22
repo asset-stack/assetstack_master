@@ -33,6 +33,7 @@ const navSections = [
     label: 'People',
     items: [
       { name: 'My Profile', icon: UserCircle, page: 'MyProfile' },
+      { name: 'Company Profile', icon: Building2, page: 'CompanyProfile' },
       { name: 'Manager View', icon: Shield, page: 'ManagerDashboard' },
       { name: 'Team', icon: Users, page: 'TeamDirectory' },
     ]
@@ -122,6 +123,7 @@ const navSections = [
   {
     label: 'Admin',
     items: [
+      { name: 'Client Accounts', icon: Users, page: 'SuperAdminClients' },
       { name: 'Security Center', icon: ShieldCheck, page: 'SecurityCenter' },
       { name: 'SWSC Audit', icon: FileText, page: 'SWSCAudit' },
       { name: 'Landing Editor', icon: LayoutIcon, page: 'LandingEditor' },
