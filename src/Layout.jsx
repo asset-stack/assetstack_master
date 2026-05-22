@@ -170,16 +170,32 @@ export default function Layout({ children, currentPageName }) {
               )}
             </AnimatePresence>
           </div>
-          {sidebarOpen && clients?.length > 1 && (
+          {sidebarOpen && (
             <div className="mt-4">
-              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Active Account</p>
-              <select 
-                className="w-full bg-slate-50 border border-slate-200 text-xs rounded-md p-1.5 text-slate-700 font-medium focus:ring-indigo-500 focus:border-indigo-500 outline-none cursor-pointer"
-                value={currentClient?.id || ''}
-                onChange={(e) => setClient(clients.find(c => c.id === e.target.value))}
-              >
-                {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
-              </select>
+              {clients?.length > 1 ? (
+                <>
+                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Active Account</p>
+                  <select 
+                    className="w-full bg-slate-50 border border-slate-200 text-xs rounded-md p-1.5 text-slate-700 font-medium focus:ring-indigo-500 focus:border-indigo-500 outline-none cursor-pointer"
+                    value={currentClient?.id || ''}
+                    onChange={(e) => setClient(clients.find(c => c.id === e.target.value))}
+                  >
+                    {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
+                  </select>
+                </>
+              ) : (
+                <div className="flex items-center gap-3 p-2 bg-slate-50 rounded-xl border border-slate-100">
+                  <img 
+                    src={currentClient?.business_name === 'Bunbury Council' ? 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/5899e3e31_logo1.png' : `https://ui-avatars.com/api/?name=${encodeURIComponent(currentClient?.business_name || 'Client')}&background=e0e7ff&color=4f46e5`}
+                    alt="Client Logo" 
+                    className="w-8 h-8 rounded-lg object-contain bg-white"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">Client Portal</p>
+                    <p className="text-sm font-semibold text-slate-800 truncate">{currentClient?.business_name || 'Loading...'}</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
