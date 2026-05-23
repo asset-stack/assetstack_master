@@ -13,7 +13,7 @@ export default function DownloadBrochureButton({
 }) {
   return (
     <Button asChild variant={variant} size="sm" className={className}>
-      <Link to="/Presentation">
+      <Link to="/PrintLanding">
         <PresentationIcon className="w-3.5 h-3.5 mr-1.5" />
         {label}
       </Link>
