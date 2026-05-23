@@ -58,6 +58,7 @@ import VerifyReports from './pages/VerifyReports';
 import SWSCAudit from './pages/SWSCAudit.jsx';
 import CompanyProfile from './pages/CompanyProfile.jsx';
 import SuperAdminClients from './pages/SuperAdminClients.jsx';
+import Brochure from './pages/Brochure.jsx';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -301,6 +302,7 @@ const AuthenticatedApp = () => {
           } />
       <Route path="/Presentation" element={<Presentation />} />
       <Route path="/PrintLanding" element={<PrintLanding />} />
+      <Route path="/Brochure" element={<Brochure />} />
       <Route path="/LandingEditor" element={
             <LayoutWrapper currentPageName="LandingEditor">
               <LandingEditor />
