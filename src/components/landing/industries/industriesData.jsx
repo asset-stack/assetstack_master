@@ -40,7 +40,7 @@ export const INDUSTRIES = [
     title: 'Healthcare & Aged Care',
     shortLabel: 'Healthcare',
     icon: Heart,
-    image: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1200&auto=format&fit=crop&q=70',
+    image: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/98eb78b31_Hospital.jpg',
     description:
       'Healthcare and aged care providers operate multiple facilities with complex infrastructure requirements. AssetStack enables organisations to monitor building systems, maintain compliance and optimise maintenance across facility networks.',
     useCases: [
@@ -66,7 +66,7 @@ export const INDUSTRIES = [
     title: 'Transport & Infrastructure',
     shortLabel: 'Transport',
     icon: Train,
-    image: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=1200&auto=format&fit=crop&q=70',
+    image: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/d2262589e_Trasnsport.jpg',
     description:
       'Transport operators manage critical infrastructure such as rail networks, road systems and intersections where failure can have significant operational impact. AssetStack provides real-time monitoring and predictive maintenance across transport infrastructure.',
     useCases: [
@@ -92,7 +92,7 @@ export const INDUSTRIES = [
     title: 'Utilities, Energy & Resources',
     shortLabel: 'Utilities',
     icon: Zap,
-    image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1200&auto=format&fit=crop&q=70',
+    image: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/54c8e8f7c_Utilities.jpg',
     description:
       'Utilities, energy providers and resource operators manage distributed infrastructure across large geographic areas. AssetStack provides real-time monitoring and predictive insights across critical infrastructure systems.',
     useCases: [
@@ -114,11 +114,11 @@ export const INDUSTRIES = [
   },
   {
     slug: 'property',
-    eyebrow: 'Property & Asset Portfolio Managers',
-    title: 'Property & Asset Portfolio Managers',
+    eyebrow: 'Property',
+    title: 'Property',
     shortLabel: 'Property',
     icon: Building,
-    image: 'https://images.unsplash.com/photo-1565043666747-69f6646db940?w=1200&auto=format&fit=crop&q=70',
+    image: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/f021b36db_Property.jpg',
     description:
       'Property groups and asset managers oversee large portfolios of buildings and infrastructure assets. AssetStack provides visibility across entire portfolios, enabling proactive maintenance and long-term asset planning.',
     useCases: [
@@ -144,7 +144,7 @@ export const INDUSTRIES = [
     title: 'Education & Campus Infrastructure',
     shortLabel: 'Education',
     icon: GraduationCap,
-    image: 'https://images.unsplash.com/photo-1562774053-701939374585?w=1200&auto=format&fit=crop&q=70',
+    image: 'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/5b6dc5294_Education.jpg',
     description:
       'Educational institutions manage extensive campus environments with diverse infrastructure assets. AssetStack enables institutions to monitor facilities, maintain infrastructure and optimise maintenance operations across campuses.',
     useCases: [
