@@ -12,8 +12,6 @@ export default function MechanismBackground() {
         className="absolute inset-0 w-full h-full object-cover"
         aria-hidden="true"
       />
-      {/* Soft fade so foreground text stays legible */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#1925aa]/40 via-[#1925aa]/30 to-[#1925aa]/70" />
     </div>
   );
 }
