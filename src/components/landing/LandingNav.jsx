@@ -32,9 +32,7 @@ export default function LandingNav() {
     { href: '/Product', label: 'Product', isRoute: true },
     { href: '/Solutions', label: 'Solutions', isRoute: true },
     { href: '/Industries', label: 'Industries', isRoute: true },
-    { href: '/CaseStudies', label: 'Case studies', isRoute: true },
-    { href: '/Landing#pricing', label: 'Pricing' },
-    { href: '/Landing#security', label: 'Security' },
+    { href: '/LandingCompliance', label: 'Compliance', isRoute: true },
   ];
 
   const handleSignIn = () => {

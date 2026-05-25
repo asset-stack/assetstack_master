@@ -24,8 +24,8 @@ import BetaFeatures from './pages/BetaFeatures';
 import SavingsLedger from './pages/SavingsLedger';
 import SecurityCenter from './pages/SecurityCenter';
 import Landing from './pages/Landing';
-import CaseStudies from './pages/CaseStudies';
 import Industries from './pages/Industries';
+import LandingCompliance from './pages/LandingCompliance.jsx';
 import SpareParts from './pages/SpareParts';
 import Compliance from './pages/Compliance';
 import CostCenter from './pages/CostCenter';
@@ -101,8 +101,8 @@ const AuthenticatedApp = () => {
       <Route path="/Landing" element={<Landing />} />
       <Route path="/Product" element={<Product />} />
       <Route path="/Solutions" element={<Solutions />} />
-      <Route path="/CaseStudies" element={<CaseStudies />} />
       <Route path="/Industries" element={<Industries />} />
+      <Route path="/LandingCompliance" element={<LandingCompliance />} />
       <Route path="/CommandCenter" element={
         <LayoutWrapper currentPageName="CommandCenter">
           <CommandCenter />
