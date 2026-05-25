@@ -29,7 +29,7 @@ export default function LandingNav() {
   }, []);
 
   const links = [
-    { href: '/Landing#tour', label: 'Product' },
+    { href: '/Product', label: 'Product', isRoute: true },
     { href: '/Landing#proof', label: 'Proof' },
     { href: '/Industries', label: 'Industries', isRoute: true },
     { href: '/CaseStudies', label: 'Case studies', isRoute: true },

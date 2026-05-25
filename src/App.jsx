@@ -59,6 +59,7 @@ import SWSCAudit from './pages/SWSCAudit.jsx';
 import CompanyProfile from './pages/CompanyProfile.jsx';
 import SuperAdminClients from './pages/SuperAdminClients.jsx';
 import Brochure from './pages/Brochure.jsx';
+import Product from './pages/Product.jsx';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -97,6 +98,7 @@ const AuthenticatedApp = () => {
       {/* Public landing page — no sidebar/layout wrapper */}
       <Route path="/" element={<Landing />} />
       <Route path="/Landing" element={<Landing />} />
+      <Route path="/Product" element={<Product />} />
       <Route path="/CaseStudies" element={<CaseStudies />} />
       <Route path="/Industries" element={<Industries />} />
       <Route path="/CommandCenter" element={
