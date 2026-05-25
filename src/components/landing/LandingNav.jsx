@@ -8,14 +8,12 @@ import { Link as RouterLink } from 'react-router-dom';
 import BrandLogo from './BrandLogo';
 
 export default function LandingNav() {
-  const [scrolled, setScrolled] = useState(false);
   const [pastHero, setPastHero] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 12);
-      // Hero is 100vh — swap logo once user scrolls past it
+      // Hero is 100vh — swap nav styling once user scrolls past it
       setPastHero(window.scrollY > window.innerHeight - 80);
     };
     onScroll();
@@ -43,7 +41,7 @@ export default function LandingNav() {
       initial={{ y: -16, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/85 backdrop-blur-xl border-b border-slate-200/70' : 'bg-transparent'
+        pastHero ? 'bg-white/85 backdrop-blur-xl border-b border-slate-200/70' : 'bg-transparent'
       }`}
     >
       <div className="max-w-[1280px] mx-auto px-5 md:px-8 flex items-center justify-between h-16">
@@ -68,7 +66,7 @@ export default function LandingNav() {
                 className={`px-3 py-2 text-[13px] font-medium transition-colors ${
                   pastHero
                     ? 'text-slate-600 hover:text-slate-900'
-                    : 'text-white/85 hover:text-white'
+                    : 'text-white hover:text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]'
                 }`}
               >
                 {l.label}
@@ -80,7 +78,7 @@ export default function LandingNav() {
                 className={`px-3 py-2 text-[13px] font-medium transition-colors ${
                   pastHero
                     ? 'text-slate-600 hover:text-slate-900'
-                    : 'text-white/85 hover:text-white'
+                    : 'text-white hover:text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]'
                 }`}
               >
                 {l.label}
