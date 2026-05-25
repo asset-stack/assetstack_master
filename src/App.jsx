@@ -60,6 +60,7 @@ import SuperAdminClients from './pages/SuperAdminClients.jsx';
 import Brochure from './pages/Brochure.jsx';
 import Product from './pages/Product.jsx';
 import Solutions from './pages/Solutions.jsx';
+import Contact from './pages/Contact.jsx';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -102,6 +103,7 @@ const AuthenticatedApp = () => {
       <Route path="/Solutions" element={<Solutions />} />
       <Route path="/Industries" element={<Industries />} />
       <Route path="/LandingCompliance" element={<LandingCompliance />} />
+      <Route path="/Contact" element={<Contact />} />
       <Route path="/CommandCenter" element={
         <LayoutWrapper currentPageName="CommandCenter">
           <CommandCenter />

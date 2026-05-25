@@ -30,6 +30,7 @@ export default function LandingNav() {
     { href: '/Solutions', label: 'Solutions', isRoute: true },
     { href: '/Industries', label: 'Industries', isRoute: true },
     { href: '/LandingCompliance', label: 'Compliance', isRoute: true },
+    { href: '/Contact', label: 'Contact', isRoute: true },
   ];
 
   const handleSignIn = () => {
