@@ -2,6 +2,10 @@ import React from 'react';
 import { Recycle, Radio, ClipboardCheck, Brain } from 'lucide-react';
 import SolutionsSolutionBlock from './SolutionsSolutionBlock';
 import ProductModulePreview from '../product/ProductModulePreview';
+import AssetTreePreview from '../industries/previews/AssetTreePreview';
+import SensorsPreview from '../industries/previews/SensorsPreview';
+import InspectionWorkflowPreview from '../product/InspectionWorkflowPreview';
+import MaintenanceWorkflowPreview from '../product/MaintenanceWorkflowPreview';
 
 const SOLUTIONS = [
   {
@@ -12,6 +16,7 @@ const SOLUTIONS = [
     benefits: ['Improve capital planning', 'Reduce lifecycle costs', 'Increase asset reliability'],
     tone: 'blue',
     icon: Recycle,
+    Preview: AssetTreePreview,
   },
   {
     title: 'Real-time monitoring across infrastructure networks.',
@@ -21,6 +26,7 @@ const SOLUTIONS = [
     benefits: ['Detect early signs of failure', 'Increase operational visibility', 'Reduce emergency maintenance'],
     tone: 'violet',
     icon: Radio,
+    Preview: SensorsPreview,
   },
   {
     title: 'Digitise infrastructure inspections.',
@@ -30,6 +36,7 @@ const SOLUTIONS = [
     benefits: ['Standardise inspection processes', 'Improve inspection data quality', 'Enable predictive insights'],
     tone: 'emerald',
     icon: ClipboardCheck,
+    Preview: InspectionWorkflowPreview,
   },
   {
     title: 'Optimise maintenance planning.',
@@ -39,6 +46,7 @@ const SOLUTIONS = [
     benefits: ['Reduce maintenance costs', 'Improve workforce allocation', 'Prevent unexpected failures'],
     tone: 'amber',
     icon: Brain,
+    Preview: MaintenanceWorkflowPreview,
   },
 ];
 
@@ -106,29 +114,36 @@ export default function SolutionsBlocks() {
         </div>
       </div>
 
-      {SOLUTIONS.map((s, i) => (
-        <SolutionsSolutionBlock
-          key={s.title}
-          index={i + 1}
-          title={s.title}
-          intro={s.intro}
-          capabilities={s.capabilities}
-          benefits={s.benefits}
-          reverse={i % 2 === 1}
-          preview={
-            <ProductModulePreview tone={s.tone}>
-              {({ accent, soft }) => (
-                <PreviewIllustration
-                  Icon={s.icon}
-                  label={s.title.split(' ').slice(0, 2).join(' ')}
-                  accent={accent}
-                  soft={soft}
-                />
-              )}
-            </ProductModulePreview>
-          }
-        />
-      ))}
+      {SOLUTIONS.map((s, i) => {
+        const Preview = s.Preview;
+        return (
+          <SolutionsSolutionBlock
+            key={s.title}
+            index={i + 1}
+            title={s.title}
+            intro={s.intro}
+            capabilities={s.capabilities}
+            benefits={s.benefits}
+            reverse={i % 2 === 1}
+            preview={
+              Preview ? (
+                <Preview />
+              ) : (
+                <ProductModulePreview tone={s.tone}>
+                  {({ accent, soft }) => (
+                    <PreviewIllustration
+                      Icon={s.icon}
+                      label={s.title.split(' ').slice(0, 2).join(' ')}
+                      accent={accent}
+                      soft={soft}
+                    />
+                  )}
+                </ProductModulePreview>
+              )
+            }
+          />
+        );
+      })}
     </section>
   );
 }
