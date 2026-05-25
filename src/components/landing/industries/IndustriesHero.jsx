@@ -1,72 +1,102 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
+import HeroDitherCanvas from '@/components/landing/HeroDitherCanvas';
+
+const HERO_IMG =
+  'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/4f0578003_goodwill-bridge-in-brisbane-australia-2026-03-19-22-08-30-utc.jpg';
 
 export default function IndustriesHero() {
+  const titleRef = useRef(null);
+  const taglineRef = useRef(null);
+
+  useEffect(() => {
+    gsap.set(titleRef.current, { y: '110%' });
+    gsap.set(taglineRef.current, { opacity: 0, y: 14 });
+
+    const tl = gsap.timeline({ delay: 0.2 });
+    tl.to(titleRef.current, { y: '0%', duration: 1.05, ease: 'expo.out' }).to(
+      taglineRef.current,
+      { opacity: 1, y: 0, duration: 0.75, ease: 'power2.out' },
+      '-=0.45'
+    );
+
+    return () => tl.kill();
+  }, []);
+
   return (
-    <section className="relative pt-32 pb-16 md:pt-40 md:pb-20 overflow-hidden bg-white">
-      {/* Subtle dotted backdrop */}
+    <section
+      id="hero"
+      className="relative w-full overflow-hidden flex flex-col justify-end"
+      style={{ background: '#1925aa', height: '100vh', minHeight: 640 }}
+      aria-labelledby="industries-hero-heading"
+    >
+      {/* WebGL dither canvas — same duotone effect as the landing hero */}
+      <HeroDitherCanvas imageUrl={HERO_IMG} />
+
+      {/* Bottom fade for legibility */}
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 opacity-[0.4]"
+        className="absolute inset-0 z-[2] pointer-events-none"
         style={{
-          backgroundImage: 'radial-gradient(hsl(220 14% 80%) 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
-          maskImage: 'radial-gradient(ellipse at 50% 30%, black 30%, transparent 70%)',
-          WebkitMaskImage: 'radial-gradient(ellipse at 50% 30%, black 30%, transparent 70%)',
+          background:
+            'linear-gradient(to bottom, transparent 55%, rgba(10,15,100,0.45) 100%)',
         }}
       />
-      <div aria-hidden className="absolute -top-32 left-1/2 -translate-x-1/2 -z-10 w-[1100px] h-[600px] bg-gradient-to-b from-primary/10 via-blue-200/20 to-transparent blur-3xl rounded-full" />
 
-      <div className="max-w-[1280px] mx-auto px-5 md:px-8 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 bg-white/70 backdrop-blur-sm mb-7"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-subtle" />
-          <span className="text-[11px] font-medium text-slate-700">Asset Owners & Infrastructure Operators</span>
-        </motion.div>
+      {/* Hero content — bottom-aligned editorial layout */}
+      <div className="relative z-[4] px-5 md:px-10 pb-12 md:pb-20 max-w-[1480px] w-full mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-[0.9375rem] lg:items-end">
+          {/* Title */}
+          <div className="lg:col-span-9 overflow-hidden lg:self-end lg:-mb-[0.18em] lg:translate-y-24">
+            <h1
+              id="industries-hero-heading"
+              ref={titleRef}
+              className="text-white font-normal leading-[0.92] tracking-[-0.01em] block pt-1 text-sm"
+              style={{
+                fontFamily: "Georgia, 'Times New Roman', serif",
+                fontSize: 'clamp(2.4rem, 10.4vw, 8rem)',
+              }}
+            >
+              Built for Critical<br />Infrastructure.
+            </h1>
+          </div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[40px] sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-[-0.04em] leading-[1.0] text-slate-900 text-balance max-w-4xl mx-auto"
-        >
-          Built for Asset Owners &{' '}
-          <span className="font-serif italic font-medium text-primary">Infrastructure Operators.</span>
-        </motion.h1>
+          {/* Tagline + CTAs */}
+          <div
+            ref={taglineRef}
+            className="lg:col-span-4 lg:col-start-9 lg:self-end mt-6 lg:mt-0"
+          >
+            <p
+              className="text-white/85"
+              style={{
+                fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif",
+                fontSize: 'clamp(0.75rem, 1.2vw, 1rem)',
+                lineHeight: 1.5,
+              }}
+            >
+              AssetStack is designed for organisations managing large portfolios of physical assets across complex infrastructure environments — delivering real-time visibility, predictive intelligence and optimised maintenance.
+            </p>
 
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.15 }}
-          className="mt-6 text-[17px] md:text-xl text-slate-600 max-w-2xl mx-auto leading-[1.55] text-pretty"
-        >
-          AssetStack is designed for organisations managing large portfolios of physical assets across complex infrastructure environments — delivering real-time visibility, predictive intelligence and optimised maintenance.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-9 flex flex-col sm:flex-row gap-2.5 justify-center"
-        >
-          <Link to="/CommandCenter">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white elevation-2 h-11 px-6 text-[14px] font-semibold rounded-lg">
-              Book a demo <ArrowRight className="w-4 h-4 ml-1.5" />
-            </Button>
-          </Link>
-          <Link to="/Landing#tour">
-            <Button size="lg" variant="outline" className="h-11 px-6 text-[14px] font-semibold border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300 rounded-lg">
-              Explore the Platform
-            </Button>
-          </Link>
-        </motion.div>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="/Product">
+                <Button
+                  size="lg"
+                  className="bg-white hover:bg-white/90 text-[#1925aa] h-11 px-6 text-[14px] font-semibold rounded-md"
+                >
+                  Explore the platform <ArrowRight className="w-4 h-4 ml-1.5" />
+                </Button>
+              </a>
+              <a
+                href="/Contact"
+                className="inline-flex items-center gap-1.5 text-white/85 hover:text-white text-[13px] font-medium px-3 h-11 border border-white/40 hover:border-white/80 rounded-md transition-colors"
+              >
+                <Play className="w-3.5 h-3.5" /> Book a demo
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
