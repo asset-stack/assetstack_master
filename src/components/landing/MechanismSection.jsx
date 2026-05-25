@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Radio, Brain, MessageSquare, ShieldCheck, ArrowRight } from 'lucide-react';
+import MechanismBackground from './MechanismBackground';
 
 const STEPS = [
   {
@@ -46,9 +47,8 @@ export default function MechanismSection() {
   const ActiveIcon = active.icon;
 
   return (
-    <section id="mechanism" className="py-20 md:py-28 bg-slate-950 text-white relative overflow-hidden">
-      {/* background animation removed to prevent auto-downloads */}
-      <div className="absolute inset-0 w-full h-full z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/20 via-background to-background opacity-50 pointer-events-none" />
+    <section id="mechanism" className="py-20 md:py-28 bg-[#1925aa] text-white relative overflow-hidden">
+      <MechanismBackground />
 
       <div className="relative z-10 max-w-[1280px] mx-auto px-5 md:px-8">
         <div className="text-center mb-12">
