@@ -6,10 +6,36 @@ import BrandLogo from './BrandLogo';
 import DownloadBrochureButton from './DownloadBrochureButton';
 
 const COLS = [
-  { title: 'Product', links: ['Features', 'Live demo', 'Pricing', 'Security', 'Roadmap', 'Changelog'] },
-  { title: 'Industries', links: ['Construction', 'Mining', 'Fleet', 'Manufacturing', 'Rail', 'Energy'] },
-  { title: 'Company', links: ['About', 'Customers', 'Careers', 'Press', 'Contact'] },
-  { title: 'Resources', links: ['Docs', 'API', 'Blog', 'Help center', 'Status'] },
+  { title: 'Product', links: [
+    { label: 'Features', href: '#' },
+    { label: 'Live demo', href: '#' },
+    { label: 'Pricing', href: '#' },
+    { label: 'Security', href: '#' },
+    { label: 'Roadmap', href: '#' },
+    { label: 'Changelog', href: '#' },
+  ]},
+  { title: 'Industries', links: [
+    { label: 'Construction', href: '#' },
+    { label: 'Mining', href: '#' },
+    { label: 'Fleet', href: '#' },
+    { label: 'Manufacturing', href: '#' },
+    { label: 'Rail', href: '#' },
+    { label: 'Energy', href: '#' },
+  ]},
+  { title: 'Company', links: [
+    { label: 'About', href: '/About' },
+    { label: 'Customers', href: '/Customers' },
+    { label: 'Careers', href: '#' },
+    { label: 'Press', href: '#' },
+    { label: 'Contact', href: '/Contact' },
+  ]},
+  { title: 'Resources', links: [
+    { label: 'Docs', href: '#' },
+    { label: 'API', href: '#' },
+    { label: 'Blog', href: '#' },
+    { label: 'Help center', href: '#' },
+    { label: 'Status', href: '#' },
+  ]},
 ];
 
 export default function LandingFooter() {
@@ -38,8 +64,8 @@ export default function LandingFooter() {
               <h4 className="font-semibold text-[12px] text-slate-900 mb-3 uppercase tracking-[0.12em]">{col.title}</h4>
               <ul className="space-y-2.5">
                 {col.links.map((l) => (
-                  <li key={l}>
-                    <a href="#" className="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">{l}</a>
+                  <li key={l.label}>
+                    <a href={l.href} className="text-[13px] text-slate-500 hover:text-slate-900 transition-colors">{l.label}</a>
                   </li>
                 ))}
               </ul>

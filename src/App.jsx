@@ -61,6 +61,8 @@ import Brochure from './pages/Brochure.jsx';
 import Product from './pages/Product.jsx';
 import Solutions from './pages/Solutions.jsx';
 import Contact from './pages/Contact.jsx';
+import About from './pages/About.jsx';
+import Customers from './pages/Customers.jsx';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -104,6 +106,8 @@ const AuthenticatedApp = () => {
       <Route path="/Industries" element={<Industries />} />
       <Route path="/LandingCompliance" element={<LandingCompliance />} />
       <Route path="/Contact" element={<Contact />} />
+      <Route path="/About" element={<About />} />
+      <Route path="/Customers" element={<Customers />} />
       <Route path="/CommandCenter" element={
         <LayoutWrapper currentPageName="CommandCenter">
           <CommandCenter />
