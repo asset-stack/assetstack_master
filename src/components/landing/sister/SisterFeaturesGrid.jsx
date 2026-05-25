@@ -39,7 +39,7 @@ export default function SisterFeaturesGrid() {
           </span>
           <h2
             className="font-sans leading-tight tracking-tight text-white"
-            style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '-0.02em', fontWeight: 800 }}
+            style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '-0.02em', fontWeight: 600 }}
           >
             Built for Complex Assets.{' '}
             <span
