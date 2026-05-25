@@ -71,7 +71,16 @@ export default function LandingFooter() {
           ))}
         </div>
 
-        <div className="mt-14 pt-6 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-14 pt-6 border-t border-slate-100 space-y-4">
+          <div className="text-center md:text-left max-w-3xl">
+            <p className="text-[12px] font-semibold text-slate-900 uppercase tracking-[0.12em]">Australian Owned &amp; Operated</p>
+            <p className="mt-2 text-[12px] text-slate-500 leading-relaxed">
+              We acknowledge the Traditional Owners of country throughout Australia and pay our respects to Elders past, present, and emerging.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 pt-6 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex flex-wrap items-center gap-2">
             <RouterLink to="/PrintLanding">
               <Button variant="outline" size="sm" className="text-[12px] font-semibold gap-1.5">
