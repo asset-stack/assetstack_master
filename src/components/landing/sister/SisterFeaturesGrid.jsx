@@ -32,6 +32,10 @@ export default function SisterFeaturesGrid() {
           backgroundSize: '100% 100%',
         }}
       />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none bg-slate-950/55"
+      />
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
