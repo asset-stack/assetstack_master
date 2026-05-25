@@ -27,7 +27,6 @@ import Landing from './pages/Landing';
 import Industries from './pages/Industries';
 import LandingCompliance from './pages/LandingCompliance.jsx';
 import SpareParts from './pages/SpareParts';
-import Compliance from './pages/Compliance';
 import CostCenter from './pages/CostCenter';
 import Suppliers from './pages/Suppliers';
 import CapitalPlan from './pages/CapitalPlan';
@@ -197,11 +196,6 @@ const AuthenticatedApp = () => {
       <Route path="/SpareParts" element={
             <LayoutWrapper currentPageName="SpareParts">
               <SpareParts />
-            </LayoutWrapper>
-          } />
-      <Route path="/Compliance" element={
-            <LayoutWrapper currentPageName="Compliance">
-              <Compliance />
             </LayoutWrapper>
           } />
       <Route path="/CostCenter" element={
