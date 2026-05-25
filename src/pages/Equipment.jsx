@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { useClient } from '@/lib/ClientContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -68,26 +69,18 @@ export default function Equipment() {
       const pageSize = 500;
       const all = [];
       for (let page = 0; page < 20; page++) {
-        const batch = await base44.entities.Equipment.list('-created_date', pageSize, page * pageSize);
+        const batch = await secureEntity('Equipment').list('-created_date', pageSize, page * pageSize);
         if (!batch?.length) break;
         all.push(...batch);
         if (batch.length < pageSize) break;
       }
-      return currentClient.business_name === 'Bunbury Council' 
-        ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id)
-        : all.filter(e => e.client_account_id === currentClient.id);
+      return all;
     },
   });
 
   const { data: locations = [] } = useQuery({
     queryKey: ['locations', currentClient?.id],
-    queryFn: async () => {
-      if (!currentClient) return [];
-      const all = await base44.entities.Location.list('-created_date', 500);
-      return currentClient.business_name === 'Bunbury Council' 
-        ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id)
-        : all.filter(e => e.client_account_id === currentClient.id);
-    }
+    queryFn: () => secureEntity('Location').list('-created_date', 500),
   });
 
   // Auto-select equipment from URL param
@@ -121,13 +114,13 @@ export default function Equipment() {
   const { data: sensorReadings = [] } = useQuery({
     queryKey: ['sensorReadings', selectedEquipment?.id],
     queryFn: () => selectedEquipment 
-      ? base44.entities.SensorReading.filter({ equipment_id: selectedEquipment.id }, '-created_date', 100)
+      ? secureEntity('SensorReading').filter({ equipment_id: selectedEquipment.id }, '-created_date', 100)
       : [],
     enabled: !!selectedEquipment,
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Equipment.create(data),
+    mutationFn: (data) => secureEntity('Equipment').create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['equipment']);
       setIsFormOpen(false);
@@ -136,7 +129,7 @@ export default function Equipment() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Equipment.update(id, data),
+    mutationFn: ({ id, data }) => secureEntity('Equipment').update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['equipment']);
       setIsFormOpen(false);
@@ -146,7 +139,7 @@ export default function Equipment() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Equipment.delete(id),
+    mutationFn: (id) => secureEntity('Equipment').delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries(['equipment']);
       setSelectedEquipment(null);

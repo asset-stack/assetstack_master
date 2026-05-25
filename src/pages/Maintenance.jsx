@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, Search, Filter, Calendar, Clock, Wrench, FileText,
@@ -52,22 +53,22 @@ export default function Maintenance() {
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ['tasks'],
-    queryFn: () => base44.entities.MaintenanceTask.list('-created_date', 200),
+    queryFn: () => secureEntity('MaintenanceTask').list('-created_date', 200),
   });
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+    queryFn: () => secureEntity('Equipment').list('-created_date', 200),
   });
 
   const { data: workOrders = [] } = useQuery({
     queryKey: ['workOrders'],
-    queryFn: () => base44.entities.WorkOrder.list('-created_date', 200),
+    queryFn: () => secureEntity('WorkOrder').list('-created_date', 200),
   });
 
   const { data: alerts = [] } = useQuery({
     queryKey: ['alerts'],
-    queryFn: () => base44.entities.Alert.list('-created_date', 100),
+    queryFn: () => secureEntity('Alert').list('-created_date', 100),
   });
 
   const { data: technicians = [] } = useQuery({
@@ -76,7 +77,7 @@ export default function Maintenance() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.MaintenanceTask.create(data),
+    mutationFn: (data) => secureEntity('MaintenanceTask').create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['tasks']);
       setIsAddDialogOpen(false);
@@ -95,17 +96,17 @@ export default function Maintenance() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.MaintenanceTask.update(id, data),
+    mutationFn: ({ id, data }) => secureEntity('MaintenanceTask').update(id, data),
     onSuccess: () => queryClient.invalidateQueries(['tasks']),
   });
 
   const createWorkOrderMutation = useMutation({
-    mutationFn: (data) => base44.entities.WorkOrder.create(data),
+    mutationFn: (data) => secureEntity('WorkOrder').create(data),
     onSuccess: () => queryClient.invalidateQueries(['workOrders']),
   });
 
   const updateWorkOrderMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.WorkOrder.update(id, data),
+    mutationFn: ({ id, data }) => secureEntity('WorkOrder').update(id, data),
     onSuccess: () => queryClient.invalidateQueries(['workOrders']),
   });
 
@@ -140,7 +141,7 @@ export default function Maintenance() {
   };
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.MaintenanceTask.delete(id),
+    mutationFn: (id) => secureEntity('MaintenanceTask').delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries(['tasks']);
       setShowTaskDetails(false);

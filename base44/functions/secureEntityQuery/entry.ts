@@ -83,6 +83,7 @@ Deno.serve(async (req) => {
       filters = {},
       sort = '-created_date',
       limit = 100,
+      skip = 0,
       id,
       data,
       requestedClientId,            // optional: privileged users selecting a tenant
@@ -111,7 +112,7 @@ Deno.serve(async (req) => {
     switch (operation) {
       case 'list':
       case 'filter': {
-        const results = await entity.filter(scopedFilters, sort, limit);
+        const results = await entity.filter(scopedFilters, sort, limit, skip);
         return Response.json({ data: results, tenantId });
       }
       case 'get': {

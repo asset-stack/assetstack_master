@@ -27,10 +27,10 @@ function getActiveClientId() {
 export function secureEntity(entityName) {
   const requestedClientId = getActiveClientId();
   return {
-    list: (sort = '-created_date', limit = 100) =>
-      invoke({ entityName, operation: 'list', filters: {}, sort, limit, requestedClientId }),
-    filter: (filters = {}, sort = '-created_date', limit = 100) =>
-      invoke({ entityName, operation: 'filter', filters, sort, limit, requestedClientId }),
+    list: (sort = '-created_date', limit = 100, skip = 0) =>
+      invoke({ entityName, operation: 'list', filters: {}, sort, limit, skip, requestedClientId }),
+    filter: (filters = {}, sort = '-created_date', limit = 100, skip = 0) =>
+      invoke({ entityName, operation: 'filter', filters, sort, limit, skip, requestedClientId }),
     get: (id) => invoke({ entityName, operation: 'get', id, requestedClientId }),
     create: (data) => invoke({ entityName, operation: 'create', data, requestedClientId }),
     update: (id, data) => invoke({ entityName, operation: 'update', id, data, requestedClientId }),

@@ -67,7 +67,7 @@ export default function ConditionInspector() {
     let page = 0;
     while (true) {
       const filter = locName ? { location: locName } : {};
-      const batch = await secureEntity('Equipment').filter(filter, '-created_date', 200);
+      const batch = await secureEntity('Equipment').filter(filter, '-created_date', 200, page * 200);
       all.push(...batch);
       if (batch.length < 200) break;
       page++;

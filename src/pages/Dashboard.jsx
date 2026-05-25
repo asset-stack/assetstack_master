@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { useClient } from '@/lib/ClientContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -33,35 +34,17 @@ export default function Dashboard() {
 
   const { data: equipment = [], isLoading: loadingEquipment } = useQuery({
     queryKey: ['equipment', currentClient?.id],
-    queryFn: async () => {
-      if (!currentClient) return [];
-      const all = await base44.entities.Equipment.list('-created_date', 1000);
-      return currentClient.business_name === 'Bunbury Council' 
-        ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id)
-        : all.filter(e => e.client_account_id === currentClient.id);
-    }
+    queryFn: () => secureEntity('Equipment').list('-created_date', 1000),
   });
 
   const { data: locations = [] } = useQuery({
     queryKey: ['locations', currentClient?.id],
-    queryFn: async () => {
-      if (!currentClient) return [];
-      const all = await base44.entities.Location.list('-created_date', 200);
-      return currentClient.business_name === 'Bunbury Council'
-        ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id)
-        : all.filter(e => e.client_account_id === currentClient.id);
-    }
+    queryFn: () => secureEntity('Location').list('-created_date', 200),
   });
 
   const { data: alerts = [], isLoading: loadingAlerts } = useQuery({
     queryKey: ['alerts', currentClient?.id],
-    queryFn: async () => {
-      if (!currentClient) return [];
-      const all = await base44.entities.Alert.list('-created_date', 50);
-      return currentClient.business_name === 'Bunbury Council'
-        ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id)
-        : all.filter(e => e.client_account_id === currentClient.id);
-    }
+    queryFn: () => secureEntity('Alert').list('-created_date', 50),
   });
 
   // Real-time subscriptions
@@ -90,25 +73,19 @@ export default function Dashboard() {
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks', currentClient?.id],
-    queryFn: async () => {
-      if (!currentClient) return [];
-      const all = await base44.entities.MaintenanceTask.list('-created_date', 50);
-      return currentClient.business_name === 'Bunbury Council'
-        ? all.filter(e => e.client_account_id === currentClient.id || !e.client_account_id)
-        : all.filter(e => e.client_account_id === currentClient.id);
-    }
+    queryFn: () => secureEntity('MaintenanceTask').list('-created_date', 50),
   });
 
   const { data: sensorReadings = [] } = useQuery({
     queryKey: ['sensorReadings', selectedEquipment?.id],
     queryFn: () => selectedEquipment 
-      ? base44.entities.SensorReading.filter({ equipment_id: selectedEquipment.id }, '-created_date', 100)
+      ? secureEntity('SensorReading').filter({ equipment_id: selectedEquipment.id }, '-created_date', 100)
       : [],
     enabled: !!selectedEquipment,
   });
 
   const updateAlertMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Alert.update(id, data),
+    mutationFn: ({ id, data }) => secureEntity('Alert').update(id, data),
     onSuccess: () => queryClient.invalidateQueries(['alerts']),
   });
 
