@@ -41,7 +41,13 @@ export default function SisterFeaturesGrid() {
             className="font-black font-sans leading-tight tracking-tight text-white"
             style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '-0.02em' }}
           >
-            Built for Complex Assets. Engineered for Scale.
+            Built for Complex Assets.{' '}
+            <span
+              className="font-medium italic text-white/90"
+              style={{ fontFamily: 'Fraunces, Georgia, serif', letterSpacing: '-0.01em' }}
+            >
+              Engineered for Scale.
+            </span>
           </h2>
         </motion.div>
 
