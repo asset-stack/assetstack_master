@@ -30,7 +30,7 @@ export default function LandingNav() {
 
   const links = [
     { href: '/Product', label: 'Product', isRoute: true },
-    { href: '/Landing#proof', label: 'Proof' },
+    { href: '/Solutions', label: 'Solutions', isRoute: true },
     { href: '/Industries', label: 'Industries', isRoute: true },
     { href: '/CaseStudies', label: 'Case studies', isRoute: true },
     { href: '/Landing#pricing', label: 'Pricing' },

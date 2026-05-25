@@ -60,6 +60,7 @@ import CompanyProfile from './pages/CompanyProfile.jsx';
 import SuperAdminClients from './pages/SuperAdminClients.jsx';
 import Brochure from './pages/Brochure.jsx';
 import Product from './pages/Product.jsx';
+import Solutions from './pages/Solutions.jsx';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -99,6 +100,7 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Landing />} />
       <Route path="/Landing" element={<Landing />} />
       <Route path="/Product" element={<Product />} />
+      <Route path="/Solutions" element={<Solutions />} />
       <Route path="/CaseStudies" element={<CaseStudies />} />
       <Route path="/Industries" element={<Industries />} />
       <Route path="/CommandCenter" element={
