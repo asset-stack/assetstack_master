@@ -4,6 +4,17 @@ import {
 } from 'lucide-react';
 import ProductModule from './ProductModule';
 import ProductModulePreview from './ProductModulePreview';
+import AssetTreePreview from '../industries/previews/AssetTreePreview';
+import SensorsPreview from '../industries/previews/SensorsPreview';
+import DigitalTwinVideoPreview from './DigitalTwinVideoPreview';
+import InspectionWorkflowPreview from './InspectionWorkflowPreview';
+
+const CUSTOM_PREVIEWS = {
+  'Asset Registry': AssetTreePreview,
+  'Digital Twin': DigitalTwinVideoPreview,
+  'IoT Sensor Integration': SensorsPreview,
+  'Inspection Workflows': InspectionWorkflowPreview,
+};
 
 const MODULES = [
   {
@@ -229,31 +240,38 @@ export default function ProductModules() {
         </div>
       </div>
 
-      {MODULES.map((m, i) => (
-        <ProductModule
-          key={m.title}
-          index={i + 1}
-          badge={m.badge}
-          title={m.title}
-          intro={m.intro}
-          body={m.body}
-          capabilities={m.capabilities}
-          outcome={m.outcome}
-          reverse={i % 2 === 1}
-          preview={
-            <ProductModulePreview tone={m.tone}>
-              {({ accent, soft }) => (
-                <PreviewIllustration
-                  Icon={m.icon}
-                  label={m.title}
-                  accent={accent}
-                  soft={soft}
-                />
-              )}
-            </ProductModulePreview>
-          }
-        />
-      ))}
+      {MODULES.map((m, i) => {
+        const CustomPreview = CUSTOM_PREVIEWS[m.title];
+        return (
+          <ProductModule
+            key={m.title}
+            index={i + 1}
+            badge={m.badge}
+            title={m.title}
+            intro={m.intro}
+            body={m.body}
+            capabilities={m.capabilities}
+            outcome={m.outcome}
+            reverse={i % 2 === 1}
+            preview={
+              CustomPreview ? (
+                <CustomPreview />
+              ) : (
+                <ProductModulePreview tone={m.tone}>
+                  {({ accent, soft }) => (
+                    <PreviewIllustration
+                      Icon={m.icon}
+                      label={m.title}
+                      accent={accent}
+                      soft={soft}
+                    />
+                  )}
+                </ProductModulePreview>
+              )
+            }
+          />
+        );
+      })}
     </section>
   );
 }
