@@ -23,8 +23,14 @@ export default function SisterFeaturesGrid() {
   const active = features[activeIndex];
 
   return (
-    <section className="py-20 lg:py-28 bg-primary">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <section className="relative py-20 lg:py-28 bg-primary overflow-hidden">
+      <img
+        src="https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/68f92e2fb_Screenshot2026-05-25at124049PM.png"
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+      />
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
