@@ -1,44 +1,53 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Radio, Brain, MessageSquare, ShieldCheck, ArrowRight } from 'lucide-react';
+import { ScanLine, ListTree, Wrench, CalendarClock, Banknote, ArrowRight } from 'lucide-react';
 import MechanismBackground from './MechanismBackground';
 
 const STEPS = [
   {
-    id: 'sense',
-    icon: Radio,
-    label: 'Sense',
-    title: 'Capture condition from every signal',
-    detail: 'Sensors, photos, scans and inspection rounds feed AssetStack continuously. Every reading is timestamped, signed and tied to an asset record.',
-    sources: ['IoT sensors (24/7 streams)', 'Photo & LiDAR scans', 'Field inspection rounds', 'CSV / Excel imports'],
-    component: 'sensorConditionLink + analyzeScanCondition',
+    id: 'scan',
+    icon: ScanLine,
+    label: 'Scan',
+    title: 'Your asset and create its digital twin',
+    detail: 'Capture every asset with LiDAR scans, photos and field inspections. AssetStack builds a high-fidelity digital twin tied to a single asset record.',
+    sources: ['LiDAR & photogrammetry scans', 'Field inspection rounds', 'Photo & condition capture', 'IoT sensor streams'],
+    component: 'analyzeScanCondition + sensorConditionLink',
   },
   {
-    id: 'predict',
-    icon: Brain,
-    label: 'Predict',
-    title: 'Score risk and remaining life',
-    detail: 'Ensemble ML models — anomaly detection, RUL regression, failure classification — produce a transparent risk score with confidence bounds for every asset.',
-    sources: ['Anomaly detection (Isolation Forest)', 'RUL regression (LSTM autoencoder)', 'Failure classification', 'Climate-adjusted lifespan'],
-    component: 'predictAssetFailures + advancedPrediction',
+    id: 'create',
+    icon: ListTree,
+    label: 'Create',
+    title: 'Your asset register',
+    detail: 'Every scanned and inspected asset is structured into a clean, hierarchical register — by location, type, criticality — ready for audit and reporting.',
+    sources: ['Hierarchical asset tree', 'Location & site mapping', 'Bulk CSV / Excel imports', 'Asset attribute enrichment'],
+    component: 'importAssetsToLocation + assetMindAggregate',
   },
   {
-    id: 'decide',
-    icon: MessageSquare,
-    label: 'Decide',
-    title: 'AssetMind recommends the next move',
-    detail: 'AssetMind reasons over your full portfolio — funding constraints, climate risk, criticality — and proposes prioritised work orders, capex plans or compliance actions.',
-    sources: ['AssetMind portfolio reasoning', 'Funding optimiser', 'Cohort variance flags', 'Defect cascade prediction'],
-    component: 'assetMindAggregate + funding optimiser',
+    id: 'manage',
+    icon: Wrench,
+    label: 'Manage',
+    title: 'Your maintenance schedule and implementation',
+    detail: 'Preventive, predictive and corrective work orders are generated, assigned and tracked through to completion — with evidence captured at every step.',
+    sources: ['Auto-generated work orders', 'Preventive maintenance plans', 'Technician assignment & tracking', 'Mobile field execution'],
+    component: 'autoGenerateWorkOrder + aiScheduleMaintenance',
   },
   {
-    id: 'verify',
-    icon: ShieldCheck,
-    label: 'Verify',
-    title: 'Prove every avoided breakdown',
-    detail: 'Once action is taken, the Savings Ledger captures predicted-failure cost, intervention cost and verified savings — with evidence URLs and human sign-off.',
-    sources: ['Savings ledger entries', 'Audit log per action', 'Prediction accuracy tracker', 'Evidence pack export'],
-    component: 'SavingsLedgerEntry + writeAuditLog',
+    id: 'develop',
+    icon: CalendarClock,
+    label: 'Develop',
+    title: 'Your assets lifecycle works plan',
+    detail: 'Score risk, remaining life and renewal year for every asset, then sequence interventions into a multi-year lifecycle works plan.',
+    sources: ['RUL & failure prediction', 'Capital renewal forecasting', 'Defect cascade modelling', 'Multi-year works programming'],
+    component: 'predictAssetFailures + defectCascadePredict',
+  },
+  {
+    id: 'control',
+    icon: Banknote,
+    label: 'Control',
+    title: 'Your financial position, budget, finance modelling',
+    detail: 'Tie every asset to dollars — current valuation, depreciation, budget envelope and funding scenarios — to optimise capital spend with confidence.',
+    sources: ['Asset valuation & depreciation', 'Budget vs actuals tracking', 'Funding optimiser scenarios', 'Verified savings ledger'],
+    component: 'assetMindAggregate + writeAuditLog',
   },
 ];
 
@@ -62,7 +71,7 @@ export default function MechanismSection() {
         </div>
 
         {/* Step rail */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-8 md:mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-3 mb-8 md:mb-10">
           {STEPS.map((s, i) => {
             const SIcon = s.icon;
             const selected = active.id === s.id;
@@ -82,7 +91,7 @@ export default function MechanismSection() {
                   }`}>
                     <SIcon className="w-4 h-4" />
                   </div>
-                  <span className={`text-[11px] font-bold tabular-nums ${selected ? 'text-primary' : 'text-slate-500'}`}>0{i + 1}</span>
+                  <span className={`text-[11px] font-bold tabular-nums ${selected ? 'text-primary' : 'text-slate-500'}`}>{String(i + 1).padStart(2, '0')}</span>
                 </div>
                 <div className="text-[14px] font-bold">{s.label}</div>
                 <div className="text-[11px] text-slate-400 mt-0.5 line-clamp-1">{s.title}</div>
