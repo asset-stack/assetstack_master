@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -33,7 +34,7 @@ export default function SavingsEntryRow({ entry, onUpdated }) {
   const verify = async (newStatus) => {
     setVerifying(true);
     const me = await base44.auth.me();
-    await base44.entities.SavingsLedgerEntry.update(entry.id, {
+    await secureEntity('SavingsLedgerEntry').update(entry.id, {
       status: newStatus,
       verification_method: method,
       verification_notes: notes,

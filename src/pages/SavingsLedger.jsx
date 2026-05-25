@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -17,12 +17,12 @@ export default function SavingsLedger() {
 
   const { data: entries = [], isLoading } = useQuery({
     queryKey: ['savingsLedger'],
-    queryFn: () => base44.entities.SavingsLedgerEntry.list('-created_date', 200),
+    queryFn: () => secureEntity('SavingsLedgerEntry').list('-created_date', 200),
   });
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipmentForSavings'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+    queryFn: () => secureEntity('Equipment').list('-created_date', 200),
   });
 
   const filtered = useMemo(() => {

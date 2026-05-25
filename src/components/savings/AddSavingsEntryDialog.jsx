@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,7 +28,7 @@ export default function AddSavingsEntryDialog({ open, onClose, onCreated, equipm
     if (!form.title || !form.predicted_failure_cost || !form.intervention_cost) return;
     setSaving(true);
     const eq = equipment.find((e) => e.id === form.equipment_id);
-    await base44.entities.SavingsLedgerEntry.create({
+    await secureEntity('SavingsLedgerEntry').create({
       title: form.title,
       equipment_id: form.equipment_id || undefined,
       equipment_name: eq?.name,
