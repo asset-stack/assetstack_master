@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Database, Box, Radio, ClipboardCheck, Wrench, Brain, BarChart3, ShieldCheck,
+  Database, Box, Radio, ClipboardCheck, Wrench, Brain, BarChart3, Banknote,
 } from 'lucide-react';
 import ProductModule from './ProductModule';
 import ProductModulePreview from './ProductModulePreview';
@@ -8,12 +8,20 @@ import AssetTreePreview from '../industries/previews/AssetTreePreview';
 import SensorsPreview from '../industries/previews/SensorsPreview';
 import DigitalTwinVideoPreview from './DigitalTwinVideoPreview';
 import InspectionWorkflowPreview from './InspectionWorkflowPreview';
+import MaintenanceWorkflowPreview from './MaintenanceWorkflowPreview';
+import PredictiveAnalyticsPreview from './PredictiveAnalyticsPreview';
+import ExecutiveReportingPreview from './ExecutiveReportingPreview';
+import FinanceHubPreview from './FinanceHubPreview';
 
 const CUSTOM_PREVIEWS = {
   'Asset Registry': AssetTreePreview,
   'Digital Twin': DigitalTwinVideoPreview,
   'IoT Sensor Integration': SensorsPreview,
   'Inspection Workflows': InspectionWorkflowPreview,
+  'Maintenance Management': MaintenanceWorkflowPreview,
+  'AI & Predictive Analytics': PredictiveAnalyticsPreview,
+  'Executive Reporting': ExecutiveReportingPreview,
+  'Finance Hub & Funding Optimiser': FinanceHubPreview,
 };
 
 const MODULES = [
@@ -152,22 +160,22 @@ const MODULES = [
   },
   {
     badge: 'Module',
-    title: 'Security & Governance',
+    title: 'Finance Hub & Funding Optimiser',
     intro:
-      'Enterprise-grade security and governance controls designed for critical infrastructure and public-sector environments.',
+      'A finance-grade view of your asset portfolio with an AI-driven optimiser that allocates capital where it reduces the most risk per dollar.',
     body:
-      'Granular permissions, full audit trails and Australian data residency keep your operations secure and compliant.',
+      'AssetStack connects condition, risk and replacement cost data into a single financial layer, then runs scenario optimisation to maximise outcomes within constrained budgets.',
     capabilities: [
-      'Role-based access control and SSO',
-      'End-to-end encryption in transit and at rest',
-      'Comprehensive audit logging',
-      'Configurable approval workflows',
-      'Australian-hosted data and compliance support',
+      'Portfolio valuation and depreciation tracking',
+      'Capital plan and replacement forecasts',
+      'Funding optimiser across asset classes and scenarios',
+      'Risk-adjusted ROI on every dollar of maintenance spend',
+      'Board-ready financial reporting and scenario comparison',
     ],
     outcome:
-      'Confidence that critical asset data is protected and traceable.',
-    tone: 'rose',
-    icon: ShieldCheck,
+      'Defensible investment decisions that deliver more reliability per dollar.',
+    tone: 'emerald',
+    icon: Banknote,
   },
 ];
 
