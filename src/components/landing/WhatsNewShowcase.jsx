@@ -11,63 +11,63 @@ const features = [
   title: 'Funding Optimiser',
   desc: 'Knapsack-style solver picks the renewal mix that maximises risk reduction per dollar — under any budget cap.',
   badge: 'Capital planning',
-  accent: 'from-indigo-500 to-blue-500'
+  accent: 'from-sky-300 to-sky-400'
 },
 {
   icon: FlaskConical,
   title: 'Scenario Modeller',
   desc: 'What-if sliders for budget, inflation, deferral and climate stress — see backlog projections rebuild live.',
   badge: 'Strategy',
-  accent: 'from-violet-500 to-purple-500'
+  accent: 'from-sky-400 to-sky-500'
 },
 {
   icon: MessageSquare,
   title: 'AssetMind Aggregation',
   desc: 'Ask portfolio-level questions in plain English. The LLM aggregates across every asset, location and ledger entry.',
   badge: 'AI assistant',
-  accent: 'from-fuchsia-500 to-pink-500'
+  accent: 'from-sky-500 to-blue-500'
 },
 {
   icon: ClipboardCheck,
   title: 'Inspection Cycles',
   desc: 'Auto-derived inspection cadence per asset class with overdue/at-risk surfacing — never miss a regulatory window.',
   badge: 'Field ops',
-  accent: 'from-emerald-500 to-teal-500'
+  accent: 'from-blue-400 to-blue-500'
 },
 {
   icon: TrendingUp,
   title: 'Cohort Performance',
   desc: 'Spot systemic reliability issues — actual vs expected wear across like-for-like asset cohorts.',
   badge: 'Intelligence',
-  accent: 'from-cyan-500 to-sky-500'
+  accent: 'from-blue-500 to-blue-600'
 },
 {
   icon: Waves,
   title: 'Climate Risk Overlay',
   desc: 'Coastal salt-spray and exposure zones recalculate useful-life and replacement value at risk for every asset.',
   badge: 'Climate',
-  accent: 'from-blue-500 to-cyan-500'
+  accent: 'from-blue-600 to-indigo-600'
 },
 {
   icon: Camera,
   title: 'Photo-Diff Inspector',
   desc: 'AI compares before/after photos of heritage and critical assets — flagging drift, damage and degradation.',
   badge: 'Heritage',
-  accent: 'from-orange-500 to-amber-500'
+  accent: 'from-indigo-500 to-indigo-600'
 },
 {
   icon: Edit3,
   title: 'Bulk Condition Update',
   desc: 'Field teams update hundreds of conditions in a single sweep — fully audited and offline-friendly.',
   badge: 'Field ops',
-  accent: 'from-rose-500 to-red-500'
+  accent: 'from-indigo-600 to-indigo-700'
 },
 {
   icon: ShieldAlert,
   title: 'Data Quality Engine',
   desc: 'Detects duplicates, anomalies and missing fields — keeps the register audit-ready at all times.',
   badge: 'Hygiene',
-  accent: 'from-amber-500 to-yellow-500'
+  accent: 'from-indigo-700 to-indigo-900'
 }];
 
 
