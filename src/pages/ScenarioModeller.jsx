@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Card } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
 import { Loader2, FlaskConical } from 'lucide-react';
@@ -23,7 +23,7 @@ export default function ScenarioModeller() {
       const all = [];
       let page = 0;
       while (true) {
-        const batch = await base44.entities.Equipment.list('-created_date', 200, page * 200);
+        const batch = await secureEntity('Equipment').list('-created_date', 200, page * 200);
         all.push(...batch);
         if (batch.length < 200) break;
         page++;

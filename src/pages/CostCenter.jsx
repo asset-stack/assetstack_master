@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Wallet, Download } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import BudgetStats from '@/components/cost-center/BudgetStats';
 import BudgetTable from '@/components/cost-center/BudgetTable';
 import CostBreakdownChart from '@/components/cost-center/CostBreakdownChart';
@@ -21,8 +21,8 @@ export default function CostCenterPage() {
   const load = async () => {
     setLoading(true);
     const [b, w] = await Promise.all([
-      base44.entities.Budget.list('-created_date', 100),
-      base44.entities.WorkOrder.list('-actual_end', 200),
+      secureEntity('Budget').list('-created_date', 100),
+      secureEntity('WorkOrder').list('-actual_end', 200),
     ]);
     setBudgets(b);
     setWorkOrders(w);

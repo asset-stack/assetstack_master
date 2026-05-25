@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { useAuth } from '@/lib/AuthContext';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -27,19 +28,19 @@ export default function CommandCenter() {
   // Core data
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-updated_date', 200),
+    queryFn: () => secureEntity('Equipment').list('-updated_date', 200),
   });
   const { data: alerts = [] } = useQuery({
     queryKey: ['alerts'],
-    queryFn: () => base44.entities.Alert.list('-created_date', 50),
+    queryFn: () => secureEntity('Alert').list('-created_date', 50),
   });
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks'],
-    queryFn: () => base44.entities.MaintenanceTask.list('-updated_date', 50),
+    queryFn: () => secureEntity('MaintenanceTask').list('-updated_date', 50),
   });
   const { data: workOrders = [] } = useQuery({
     queryKey: ['workOrders'],
-    queryFn: () => base44.entities.WorkOrder.list('-updated_date', 50),
+    queryFn: () => secureEntity('WorkOrder').list('-updated_date', 50),
   });
 
   const loadBriefing = async () => {

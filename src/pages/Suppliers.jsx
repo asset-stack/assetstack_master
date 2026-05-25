@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Building2, Search } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import SupplierStats from '@/components/suppliers/SupplierStats';
 import SupplierCard from '@/components/suppliers/SupplierCard';
 import SupplierFormDialog from '@/components/suppliers/SupplierFormDialog';
@@ -17,7 +17,7 @@ export default function SuppliersPage() {
 
   const load = async () => {
     setLoading(true);
-    const data = await base44.entities.Supplier.list('-rating', 200);
+    const data = await secureEntity('Supplier').list('-rating', 200);
     setSuppliers(data);
     setLoading(false);
   };

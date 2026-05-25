@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Wallet, RefreshCw, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -17,7 +18,7 @@ export default function Valuation() {
     queryFn: async () => {
       const all = [];
       for (let page = 0; page < 20; page++) {
-        const batch = await base44.entities.Equipment.list('-created_date', 500, page * 500);
+        const batch = await secureEntity('Equipment').list('-created_date', 500, page * 500);
         if (!batch?.length) break;
         all.push(...batch);
         if (batch.length < 500) break;

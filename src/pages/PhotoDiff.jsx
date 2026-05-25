@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,8 +21,8 @@ export default function PhotoDiff() {
   useEffect(() => {
     (async () => {
       const [eq, photos] = await Promise.all([
-        base44.entities.Equipment.list('-created_date', 100),
-        base44.entities.AssetPhoto.list('-captured_date', 200),
+        secureEntity('Equipment').list('-created_date', 100),
+        secureEntity('AssetPhoto').list('-captured_date', 200),
       ]);
       setEquipmentList(eq);
       setPhotos(photos);

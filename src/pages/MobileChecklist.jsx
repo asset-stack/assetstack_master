@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   CheckCircle2, Circle, ChevronLeft, ChevronRight, Camera, 
@@ -61,7 +62,7 @@ export default function MobileChecklist() {
         if (cached) return cached;
         throw new Error('Offline and no cache');
       }
-      const orders = await base44.entities.WorkOrder.filter({ id: workOrderId });
+      const orders = await secureEntity('WorkOrder').filter({ id: workOrderId });
       const wo = orders[0];
       if (wo) offlineStore.cacheWorkOrder(wo); // cache for offline
       return wo;
@@ -74,7 +75,7 @@ export default function MobileChecklist() {
   const { data: equipment } = useQuery({
     queryKey: ['equipment', workOrder?.equipment_id],
     queryFn: async () => {
-      const items = await base44.entities.Equipment.filter({ id: workOrder.equipment_id });
+      const items = await secureEntity('Equipment').filter({ id: workOrder.equipment_id });
       return items[0];
     },
     enabled: !!workOrder?.equipment_id && !isOffline
@@ -109,7 +110,7 @@ export default function MobileChecklist() {
 
   const updateMutation = useMutation({
     mutationFn: async (data) => {
-      await base44.entities.WorkOrder.update(workOrderId, data);
+      await secureEntity('WorkOrder').update(workOrderId, data);
     },
     onSuccess: () => queryClient.invalidateQueries(['workOrder', workOrderId]),
   });
@@ -155,7 +156,7 @@ export default function MobileChecklist() {
 
     if (navigator.onLine) {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      await base44.entities.WorkOrderMedia.create({
+      await secureEntity('WorkOrderMedia').create({
         work_order_id: workOrderId,
         file_url,
         file_type: file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'video' : 'document',

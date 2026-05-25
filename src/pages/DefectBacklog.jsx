@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { AlertOctagon, Search, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -23,7 +23,7 @@ export default function DefectBacklog() {
     queryFn: async () => {
       const all = [];
       for (let page = 0; page < 20; page++) {
-        const batch = await base44.entities.Equipment.list('-created_date', 500, page * 500);
+        const batch = await secureEntity('Equipment').list('-created_date', 500, page * 500);
         if (!batch?.length) break;
         all.push(...batch);
         if (batch.length < 500) break;

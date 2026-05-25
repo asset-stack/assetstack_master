@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useCallback } from 'react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -39,13 +39,13 @@ export default function NetworkGlobePage() {
   // Load user's networks
   const { data: userNetworks = [] } = useQuery({
     queryKey: ['asset-networks'],
-    queryFn: () => base44.entities.AssetNetwork.filter({ status: 'active' }, '-created_date'),
+    queryFn: () => secureEntity('AssetNetwork').filter({ status: 'active' }, '-created_date'),
   });
 
   // Load nodes for the active user network
   const { data: activeNodes = [] } = useQuery({
     queryKey: ['network-nodes', activeNetwork?.id],
-    queryFn: () => base44.entities.NetworkNode.filter({ network_id: activeNetwork.id }, 'order_index'),
+    queryFn: () => secureEntity('NetworkNode').filter({ network_id: activeNetwork.id }, 'order_index'),
     enabled: !!activeNetwork && mode === 'user',
   });
 

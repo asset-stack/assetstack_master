@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Radio, Wifi, Upload, Settings, Plus, Activity, AlertTriangle,
@@ -45,26 +46,26 @@ export default function SensorIntegration() {
 
   const { data: sensorConfigs = [], isLoading: loadingConfigs } = useQuery({
     queryKey: ['sensorConfigs'],
-    queryFn: () => base44.entities.SensorConfiguration.list('-created_date', 200),
+    queryFn: () => secureEntity('SensorConfiguration').list('-created_date', 200),
   });
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+    queryFn: () => secureEntity('Equipment').list('-created_date', 200),
   });
 
   const { data: recentReadings = [] } = useQuery({
     queryKey: ['recentReadings'],
-    queryFn: () => base44.entities.SensorReading.list('-created_date', 100),
+    queryFn: () => secureEntity('SensorReading').list('-created_date', 100),
   });
 
   const { data: ingestionLogs = [] } = useQuery({
     queryKey: ['ingestionLogs'],
-    queryFn: () => base44.entities.DataIngestionLog.list('-created_date', 50),
+    queryFn: () => secureEntity('DataIngestionLog').list('-created_date', 50),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.SensorConfiguration.delete(id),
+    mutationFn: (id) => secureEntity('SensorConfiguration').delete(id),
     onSuccess: () => queryClient.invalidateQueries(['sensorConfigs']),
   });
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,14 +14,14 @@ export default function LocationDetail() {
 
   const { data: location, isLoading } = useQuery({
     queryKey: ['location', locationId],
-    queryFn: () => base44.entities.Location.get(locationId),
+    queryFn: () => secureEntity('Location').get(locationId),
     enabled: !!locationId,
   });
 
   const { data: assetCount = 0 } = useQuery({
     queryKey: ['location-asset-count', location?.name],
     queryFn: async () => {
-      const list = await base44.entities.Equipment.filter({ location: location.name }, '-created_date', 200);
+      const list = await secureEntity('Equipment').filter({ location: location.name }, '-created_date', 200);
       return list.length;
     },
     enabled: !!location?.name,

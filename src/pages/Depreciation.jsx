@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,21 +31,21 @@ export default function Depreciation() {
   
   const { data: depreciationRecords = [], isLoading: loadingRecords } = useQuery({
     queryKey: ['depreciation'],
-    queryFn: () => base44.entities.AssetDepreciation.list()
+    queryFn: () => secureEntity('AssetDepreciation').list()
   });
   
   const { data: equipment = [], isLoading: loadingEquipment } = useQuery({
     queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list()
+    queryFn: () => secureEntity('Equipment').list()
   });
   
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.AssetDepreciation.create(data),
+    mutationFn: (data) => secureEntity('AssetDepreciation').create(data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['depreciation'] })
   });
   
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.AssetDepreciation.update(id, data),
+    mutationFn: ({ id, data }) => secureEntity('AssetDepreciation').update(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['depreciation'] })
   });
   

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Waves, Loader2 } from 'lucide-react';
@@ -25,12 +25,12 @@ export default function ClimateRisk() {
         (async () => {
           const out = []; let p = 0;
           while (true) {
-            const b = await base44.entities.Equipment.list('-created_date', 200, p * 200);
+            const b = await secureEntity('Equipment').list('-created_date', 200, p * 200);
             out.push(...b); if (b.length < 200) break; p++; if (p > 20) break;
           }
           return out;
         })(),
-        base44.entities.Location.list('-created_date', 100),
+        secureEntity('Location').list('-created_date', 100),
       ]);
       setEquipment(allEq);
       setLocations(allLoc);

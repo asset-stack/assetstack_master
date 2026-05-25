@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Brain, Cpu, Activity, AlertTriangle, Clock, TrendingDown, 
@@ -24,25 +25,25 @@ export default function Predictions() {
 
   const { data: equipment = [], isLoading } = useQuery({
     queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+    queryFn: () => secureEntity('Equipment').list('-created_date', 200),
   });
 
   const { data: sensorReadings = [] } = useQuery({
     queryKey: ['sensorReadings', selectedEquipment?.id],
     queryFn: () => selectedEquipment 
-      ? base44.entities.SensorReading.filter({ equipment_id: selectedEquipment.id }, '-created_date', 200)
+      ? secureEntity('SensorReading').filter({ equipment_id: selectedEquipment.id }, '-created_date', 200)
       : [],
     enabled: !!selectedEquipment,
   });
 
   const { data: predictions = [] } = useQuery({
     queryKey: ['predictions'],
-    queryFn: () => base44.entities.PredictionLog.list('-created_date', 100),
+    queryFn: () => secureEntity('PredictionLog').list('-created_date', 100),
   });
 
   const handlePredictionComplete = async (result) => {
     if (selectedEquipment) {
-      await base44.entities.Equipment.update(selectedEquipment.id, {
+      await secureEntity('Equipment').update(selectedEquipment.id, {
         health_score: Math.max(0, 100 - result.failure_probability),
         risk_level: result.risk_level,
         failure_probability: result.failure_probability,

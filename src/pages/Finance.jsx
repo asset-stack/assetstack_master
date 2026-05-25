@@ -5,7 +5,7 @@ import {
   Banknote, AlertOctagon, Target, FlaskConical, Wallet, CalendarDays,
   TrendingUp, ArrowRight, Loader2, Sparkles
 } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import FinanceNav from '@/components/finance/FinanceNav';
 import FinanceHeader from '@/components/finance/FinanceHeader';
 import CFORatiosBar from '@/components/finance/CFORatiosBar';
@@ -20,7 +20,7 @@ export default function Finance() {
     queryFn: async () => {
       const all = [];
       for (let p = 0; p < 20; p++) {
-        const batch = await base44.entities.Equipment.list('-created_date', 500, p * 500);
+        const batch = await secureEntity('Equipment').list('-created_date', 500, p * 500);
         if (!batch?.length) break;
         all.push(...batch);
         if (batch.length < 500) break;
@@ -31,12 +31,12 @@ export default function Finance() {
 
   const { data: budgets = [] } = useQuery({
     queryKey: ['budgets-finance-summary'],
-    queryFn: () => base44.entities.Budget.list('-created_date', 100),
+    queryFn: () => secureEntity('Budget').list('-created_date', 100),
   });
 
   const { data: capitalItems = [] } = useQuery({
     queryKey: ['capital-finance-summary'],
-    queryFn: () => base44.entities.CapitalPlanItem.list('replacement_year', 200),
+    queryFn: () => secureEntity('CapitalPlanItem').list('replacement_year', 200),
   });
 
   const totals = useMemo(() => {

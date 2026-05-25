@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus, Calendar, Download } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import CapitalPlanStats from '@/components/capital-plan/CapitalPlanStats';
 import SpendByYearChart from '@/components/capital-plan/SpendByYearChart';
 import RiskMatrix from '@/components/capital-plan/RiskMatrix';
@@ -20,7 +20,7 @@ export default function CapitalPlanPage() {
 
   const load = async () => {
     setLoading(true);
-    const data = await base44.entities.CapitalPlanItem.list('replacement_year', 200);
+    const data = await secureEntity('CapitalPlanItem').list('replacement_year', 200);
     setItems(data);
     setLoading(false);
   };

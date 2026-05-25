@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { motion } from 'framer-motion';
 import { 
   FileText, Download, Calendar, Clock, BarChart3, 
@@ -22,22 +23,22 @@ export default function Reports() {
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+    queryFn: () => secureEntity('Equipment').list('-created_date', 200),
   });
 
   const { data: alerts = [] } = useQuery({
     queryKey: ['alerts'],
-    queryFn: () => base44.entities.Alert.list('-created_date', 500),
+    queryFn: () => secureEntity('Alert').list('-created_date', 500),
   });
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks'],
-    queryFn: () => base44.entities.MaintenanceTask.list('-created_date', 500),
+    queryFn: () => secureEntity('MaintenanceTask').list('-created_date', 500),
   });
 
   const { data: workOrders = [] } = useQuery({
     queryKey: ['workOrders'],
-    queryFn: () => base44.entities.WorkOrder.list('-created_date', 200),
+    queryFn: () => secureEntity('WorkOrder').list('-created_date', 200),
   });
 
   const reportTypes = [

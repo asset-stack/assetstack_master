@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -93,22 +94,22 @@ export default function Onboarding() {
 
   const { data: progress = [], isLoading } = useQuery({
     queryKey: ['onboardingProgress'],
-    queryFn: () => base44.entities.OnboardingProgress.list('-created_date', 1),
+    queryFn: () => secureEntity('OnboardingProgress').list('-created_date', 1),
   });
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 1),
+    queryFn: () => secureEntity('Equipment').list('-created_date', 1),
   });
 
   const { data: sensorConfigs = [] } = useQuery({
     queryKey: ['sensorConfigs'],
-    queryFn: () => base44.entities.SensorConfiguration.list('-created_date', 1),
+    queryFn: () => secureEntity('SensorConfiguration').list('-created_date', 1),
   });
 
   const { data: readings = [] } = useQuery({
     queryKey: ['readings'],
-    queryFn: () => base44.entities.SensorReading.list('-created_date', 1),
+    queryFn: () => secureEntity('SensorReading').list('-created_date', 1),
   });
 
   const { data: technicians = [] } = useQuery({
@@ -118,26 +119,26 @@ export default function Onboarding() {
 
   const { data: spareParts = [] } = useQuery({
     queryKey: ['spareParts'],
-    queryFn: () => base44.entities.SparePart.list('-created_date', 1),
+    queryFn: () => secureEntity('SparePart').list('-created_date', 1),
   });
 
   const { data: predictions = [] } = useQuery({
     queryKey: ['predictions'],
-    queryFn: () => base44.entities.PredictionLog.list('-created_date', 1),
+    queryFn: () => secureEntity('PredictionLog').list('-created_date', 1),
   });
 
   const createProgressMutation = useMutation({
-    mutationFn: (data) => base44.entities.OnboardingProgress.create(data),
+    mutationFn: (data) => secureEntity('OnboardingProgress').create(data),
     onSuccess: () => queryClient.invalidateQueries(['onboardingProgress']),
   });
 
   const updateProgressMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.OnboardingProgress.update(id, data),
+    mutationFn: ({ id, data }) => secureEntity('OnboardingProgress').update(id, data),
     onSuccess: () => queryClient.invalidateQueries(['onboardingProgress']),
   });
 
   const createEquipmentMutation = useMutation({
-    mutationFn: (data) => base44.entities.Equipment.create(data),
+    mutationFn: (data) => secureEntity('Equipment').create(data),
     onSuccess: () => queryClient.invalidateQueries(['equipment']),
   });
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { motion } from 'framer-motion';
 import { 
   CalendarClock, FileText, Sparkles, Play, Loader2, RefreshCw, 
@@ -20,7 +21,7 @@ export default function MaintenancePlanning() {
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+    queryFn: () => secureEntity('Equipment').list('-created_date', 200),
   });
 
   const { data: technicians = [] } = useQuery({
@@ -30,33 +31,33 @@ export default function MaintenancePlanning() {
 
   const { data: plans = [] } = useQuery({
     queryKey: ['maintenancePlans'],
-    queryFn: () => base44.entities.MaintenancePlan.list('-created_date', 100),
+    queryFn: () => secureEntity('MaintenancePlan').list('-created_date', 100),
   });
 
   const { data: triggers = [], refetch: refetchTriggers } = useQuery({
     queryKey: ['triggers'],
-    queryFn: () => base44.entities.MaintenanceTrigger.list('-created_date', 50),
+    queryFn: () => secureEntity('MaintenanceTrigger').list('-created_date', 50),
   });
 
   const { data: pendingTasks = [], refetch: refetchPendingTasks } = useQuery({
     queryKey: ['pendingTasks'],
-    queryFn: () => base44.entities.MaintenanceTask.filter({ status: 'pending_approval' }),
+    queryFn: () => secureEntity('MaintenanceTask').filter({ status: 'pending_approval' }),
   });
 
   const approveTask = async (id) => {
-    await base44.entities.MaintenanceTask.update(id, { status: 'scheduled' });
+    await secureEntity('MaintenanceTask').update(id, { status: 'scheduled' });
     queryClient.invalidateQueries(['pendingTasks']);
     queryClient.invalidateQueries(['tasks']);
   };
 
   const rejectTask = async (id) => {
-    await base44.entities.MaintenanceTask.delete(id);
+    await secureEntity('MaintenanceTask').delete(id);
     queryClient.invalidateQueries(['pendingTasks']);
   };
 
   const approveAll = async () => {
     for (const task of pendingTasks) {
-      await base44.entities.MaintenanceTask.update(task.id, { status: 'scheduled' });
+      await secureEntity('MaintenanceTask').update(task.id, { status: 'scheduled' });
     }
     queryClient.invalidateQueries(['pendingTasks']);
     queryClient.invalidateQueries(['tasks']);

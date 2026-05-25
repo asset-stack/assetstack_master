@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Filter } from 'lucide-react';
@@ -17,7 +17,7 @@ export default function SavedViews() {
       const all = [];
       let page = 0;
       while (true) {
-        const batch = await base44.entities.Equipment.list('-created_date', 200, page * 200);
+        const batch = await secureEntity('Equipment').list('-created_date', 200, page * 200);
         all.push(...batch);
         if (batch.length < 200) break;
         page++;

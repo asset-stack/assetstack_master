@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Plus, Search, Package, ShoppingCart } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import InventoryStats from '@/components/inventory/InventoryStats';
 import SparePartRow from '@/components/inventory/SparePartRow';
 import SparePartFormDialog from '@/components/inventory/SparePartFormDialog';
@@ -20,8 +20,8 @@ export default function SparePartsPage() {
   const load = async () => {
     setLoading(true);
     const [p, o] = await Promise.all([
-      base44.entities.SparePart.list('-updated_date', 200),
-      base44.entities.PurchaseOrder.list('-created_date', 20),
+      secureEntity('SparePart').list('-updated_date', 200),
+      secureEntity('PurchaseOrder').list('-created_date', 20),
     ]);
     setParts(p);
     setOrders(o);
@@ -41,7 +41,7 @@ export default function SparePartsPage() {
   const reorder = async (part) => {
     const qty = part.reorder_quantity || (part.minimum_stock_level || 1) * 2;
     const total = qty * (part.unit_cost || 0);
-    await base44.entities.PurchaseOrder.create({
+    await secureEntity('PurchaseOrder').create({
       po_number: `PO-${Date.now().toString().slice(-6)}`,
       supplier_name: part.supplier || 'Unspecified supplier',
       trigger_source: 'auto_reorder',

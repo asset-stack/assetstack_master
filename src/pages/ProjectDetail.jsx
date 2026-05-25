@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -45,7 +46,7 @@ export default function ProjectDetail() {
 
   const { data: project, isLoading } = useQuery({
     queryKey: ['project', projectId],
-    queryFn: () => base44.entities.Project.get(projectId),
+    queryFn: () => secureEntity('Project').get(projectId),
     enabled: !!projectId
   });
 
@@ -67,7 +68,7 @@ export default function ProjectDetail() {
 
   const handleDelete = async () => {
     if (!confirm('Delete this project? This cannot be undone.')) return;
-    await base44.entities.Project.delete(projectId);
+    await secureEntity('Project').delete(projectId);
     navigate('/Projects');
   };
 

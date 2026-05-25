@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Card } from '@/components/ui/card';
 import { TrendingUp, Loader2 } from 'lucide-react';
 import { ResponsiveContainer, BarChart, XAxis, YAxis, Tooltip, Bar, CartesianGrid, Cell, ReferenceLine } from 'recharts';
@@ -13,7 +13,7 @@ export default function CohortPerformance() {
       const all = [];
       let page = 0;
       while (true) {
-        const batch = await base44.entities.Equipment.list('-created_date', 200, page * 200);
+        const batch = await secureEntity('Equipment').list('-created_date', 200, page * 200);
         all.push(...batch);
         if (batch.length < 200) break;
         page++;

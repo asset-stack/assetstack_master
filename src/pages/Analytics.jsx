@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { secureEntity } from '@/lib/secureEntities';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
@@ -65,37 +66,37 @@ export default function Analytics() {
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+    queryFn: () => secureEntity('Equipment').list('-created_date', 200),
   });
 
   const { data: alerts = [] } = useQuery({
     queryKey: ['alerts'],
-    queryFn: () => base44.entities.Alert.list('-created_date', 500),
+    queryFn: () => secureEntity('Alert').list('-created_date', 500),
   });
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks'],
-    queryFn: () => base44.entities.MaintenanceTask.list('-created_date', 500),
+    queryFn: () => secureEntity('MaintenanceTask').list('-created_date', 500),
   });
 
   const { data: predictions = [] } = useQuery({
     queryKey: ['predictions'],
-    queryFn: () => base44.entities.PredictionLog.list('-created_date', 200),
+    queryFn: () => secureEntity('PredictionLog').list('-created_date', 200),
   });
 
   const { data: workOrders = [] } = useQuery({
     queryKey: ['workOrders'],
-    queryFn: () => base44.entities.WorkOrder.list('-created_date', 200),
+    queryFn: () => secureEntity('WorkOrder').list('-created_date', 200),
   });
 
   const { data: triggers = [], refetch: refetchTriggers } = useQuery({
     queryKey: ['triggers'],
-    queryFn: () => base44.entities.MaintenanceTrigger.list('-created_date', 50),
+    queryFn: () => secureEntity('MaintenanceTrigger').list('-created_date', 50),
   });
 
   const { data: suggestedTasks = [], refetch: refetchSuggestions } = useQuery({
     queryKey: ['suggestedTasks'],
-    queryFn: () => base44.entities.SuggestedTask.list('-created_date', 100),
+    queryFn: () => secureEntity('SuggestedTask').list('-created_date', 100),
   });
 
   const { data: technicians = [] } = useQuery({

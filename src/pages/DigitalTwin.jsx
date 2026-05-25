@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Box, Upload, FileUp, Scan, AlertTriangle, Layers,
@@ -399,20 +400,20 @@ export default function DigitalTwin() {
 
   const { data: scans = [], isLoading: scansLoading } = useQuery({
     queryKey: ['lidarScans'],
-    queryFn: () => base44.entities.LiDARScan.list('-created_date', 50),
+    queryFn: () => secureEntity('LiDARScan').list('-created_date', 50),
   });
 
 
 
   const createScanMutation = useMutation({
-    mutationFn: (data) => base44.entities.LiDARScan.create(data),
+    mutationFn: (data) => secureEntity('LiDARScan').create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lidarScans'] });
     },
   });
 
   const updateScanMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.LiDARScan.update(id, data),
+    mutationFn: ({ id, data }) => secureEntity('LiDARScan').update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lidarScans'] });
     },

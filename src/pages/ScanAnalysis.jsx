@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -55,7 +56,7 @@ export default function ScanAnalysisPage() {
 
   const { data: scans = [], isLoading } = useQuery({
     queryKey: ['digitalTwinScans'],
-    queryFn: () => base44.entities.DigitalTwinModel.list('-created_date', 50),
+    queryFn: () => secureEntity('DigitalTwinModel').list('-created_date', 50),
   });
 
   const selectedScan = useMemo(
@@ -65,19 +66,19 @@ export default function ScanAnalysisPage() {
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipmentList'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+    queryFn: () => secureEntity('Equipment').list('-created_date', 200),
   });
 
   const { data: locations = [] } = useQuery({
     queryKey: ['locationsList'],
-    queryFn: () => base44.entities.Location.list('-created_date', 100),
+    queryFn: () => secureEntity('Location').list('-created_date', 100),
   });
 
   const { data: reports = [] } = useQuery({
     queryKey: ['conditionReports', selectedScan?.id],
     queryFn: async () => {
       if (!selectedScan?.id) return [];
-      return base44.entities.ConditionReport.filter({ digital_twin_model_id: selectedScan.id }, '-created_date', 100);
+      return secureEntity('ConditionReport').filter({ digital_twin_model_id: selectedScan.id }, '-created_date', 100);
     },
     enabled: !!selectedScan?.id,
   });
@@ -86,7 +87,7 @@ export default function ScanAnalysisPage() {
     queryKey: ['scanFrames', selectedScan?.id],
     queryFn: async () => {
       if (!selectedScan?.id) return [];
-      return base44.entities.ScanFrame.filter({ digital_twin_model_id: selectedScan.id }, 'frame_index', 50);
+      return secureEntity('ScanFrame').filter({ digital_twin_model_id: selectedScan.id }, 'frame_index', 50);
     },
     enabled: !!selectedScan?.id,
     refetchInterval: extracting ? 2000 : false,

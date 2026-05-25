@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Brain, TrendingUp, Target, CheckCircle2, Zap, Activity,
@@ -33,17 +33,17 @@ export default function MLModels() {
 
   const { data: models = [], isLoading, refetch } = useQuery({
     queryKey: ['mlmodels'],
-    queryFn: () => base44.entities.MLModel.list('-created_date', 100),
+    queryFn: () => secureEntity('MLModel').list('-created_date', 100),
   });
 
   const { data: predictions = [] } = useQuery({
     queryKey: ['predictions'],
-    queryFn: () => base44.entities.PredictionLog.list('-created_date', 500),
+    queryFn: () => secureEntity('PredictionLog').list('-created_date', 500),
   });
 
   const { data: featureVectors = [] } = useQuery({
     queryKey: ['featureVectors'],
-    queryFn: () => base44.entities.FeatureVector.list('-created_date', 100),
+    queryFn: () => secureEntity('FeatureVector').list('-created_date', 100),
   });
 
   // Filter models
