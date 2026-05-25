@@ -38,8 +38,8 @@ export default function SisterFeaturesGrid() {
             Core Capabilities
           </span>
           <h2
-            className="font-black font-sans leading-tight tracking-tight text-white"
-            style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '-0.02em' }}
+            className="font-sans leading-tight tracking-tight text-white"
+            style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', letterSpacing: '-0.02em', fontWeight: 800 }}
           >
             Built for Complex Assets.{' '}
             <span
