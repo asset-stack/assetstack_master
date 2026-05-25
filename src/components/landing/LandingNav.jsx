@@ -6,7 +6,6 @@ import { ArrowRight, Menu, X } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Link as RouterLink } from 'react-router-dom';
 import BrandLogo from './BrandLogo';
-import DownloadBrochureButton from './DownloadBrochureButton';
 
 export default function LandingNav() {
   const [scrolled, setScrolled] = useState(false);
@@ -91,28 +90,6 @@ export default function LandingNav() {
         </div>
 
         <div className="hidden lg:flex items-center gap-1.5">
-          <RouterLink to="/PrintLanding">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={`text-[13px] font-semibold ${
-                pastHero
-                  ? 'text-slate-700 hover:bg-slate-100'
-                  : 'text-white hover:bg-white/10 hover:text-white'
-              }`}
-            >
-              Export PDF
-            </Button>
-          </RouterLink>
-          <DownloadBrochureButton
-            variant="ghost"
-            className={`text-[13px] font-semibold ${
-              pastHero
-                ? 'text-slate-700 hover:bg-slate-100'
-                : 'text-white hover:bg-white/10 hover:text-white'
-            }`}
-            label="Brochure"
-          />
           <Button
             onClick={handleSignIn}
             variant="outline"
@@ -160,9 +137,6 @@ export default function LandingNav() {
               </a>
             )
           )}
-          <div className="pt-2">
-            <DownloadBrochureButton variant="outline" className="w-full" label="Download brochure" />
-          </div>
           <Button onClick={handleSignIn} variant="outline" className="w-full mt-2">
             Sign in
           </Button>
