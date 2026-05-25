@@ -7,12 +7,10 @@ import DownloadBrochureButton from './DownloadBrochureButton';
 
 const COLS = [
   { title: 'Product', links: [
-    { label: 'Features', href: '#' },
-    { label: 'Live demo', href: '#' },
-    { label: 'Pricing', href: '#' },
-    { label: 'Security', href: '#' },
-    { label: 'Roadmap', href: '#' },
-    { label: 'Changelog', href: '#' },
+    { label: 'Features', href: '/Product' },
+    { label: 'Live demo', href: '/Contact#contact' },
+    { label: 'Pricing', href: '/Contact' },
+    { label: 'Security', href: '/LandingCompliance' },
   ]},
   { title: 'Industries', links: [
     { label: 'Construction', href: '/Industries' },
