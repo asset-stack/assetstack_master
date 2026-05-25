@@ -5,7 +5,7 @@ import { ArrowRight, Play } from 'lucide-react';
 import HeroDitherCanvas from '@/components/landing/HeroDitherCanvas';
 
 const HERO_IMG =
-  'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/2dbd8e929_modern-house-in-minimal-style-with-light-and-shado-2026-03-24-06-17-21-utc.jpg';
+  'https://media.base44.com/images/public/6a0a6a5d4d043b0e41a16d90/a78c9f331_yerevan-cascade-complex-in-armenia-black-and-whit-2026-03-17-04-06-22-utc.jpg';
 
 export default function AboutHero() {
   const titleRef = useRef(null);
