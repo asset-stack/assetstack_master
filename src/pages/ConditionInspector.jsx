@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Sparkles, Loader2, ArrowLeft, Route, Zap } from 'lucide-react';
@@ -45,7 +46,7 @@ export default function ConditionInspector() {
     (async () => {
       setLoading(true);
       const [locs, allAssets] = await Promise.all([
-        base44.entities.Location.list('-created_date', 200),
+        secureEntity('Location').list('-created_date', 200),
         fetchAllAssets(),
       ]);
       const counts = {};
@@ -66,7 +67,7 @@ export default function ConditionInspector() {
     let page = 0;
     while (true) {
       const filter = locName ? { location: locName } : {};
-      const batch = await base44.entities.Equipment.filter(filter, '-created_date', 200, page * 200);
+      const batch = await secureEntity('Equipment').filter(filter, '-created_date', 200);
       all.push(...batch);
       if (batch.length < 200) break;
       page++;
@@ -86,7 +87,7 @@ export default function ConditionInspector() {
           updates: item.updates,
         });
         if (item.photo) {
-          await base44.entities.AssetPhoto.create(item.photo);
+          await secureEntity('AssetPhoto').create(item.photo);
         }
         removeFromQueue(item.id);
       } catch (err) {
@@ -147,7 +148,7 @@ export default function ConditionInspector() {
           equipment_ids: [asset.id],
           updates,
         });
-        if (photoRecord) await base44.entities.AssetPhoto.create(photoRecord);
+        if (photoRecord) await secureEntity('AssetPhoto').create(photoRecord);
         toast.success(`${asset.name} → C${grade}`);
       } catch (err) {
         // Fall back to queue on failure

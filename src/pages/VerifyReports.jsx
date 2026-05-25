@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -29,7 +30,7 @@ export default function VerifyReports() {
 
   const loadReports = useCallback(async () => {
     setLoading(true);
-    const data = await base44.entities.ConditionReport.filter({ review_status: 'pending' }, '-created_date', 200);
+    const data = await secureEntity('ConditionReport').filter({ review_status: 'pending' }, '-created_date', 200);
     setReports(data);
     setIndex(0);
     setLoading(false);
@@ -75,7 +76,7 @@ export default function VerifyReports() {
         updates.severity = correctedSeverity;
         updates.condition_score = scoreForSeverity(correctedSeverity);
       }
-      await base44.entities.ConditionReport.update(current.id, updates);
+      await secureEntity('ConditionReport').update(current.id, updates);
 
       setStats((s) => ({ ...s, [status === 'approved' ? 'approved' : status === 'corrected' ? 'corrected' : 'rejected']: s[status === 'approved' ? 'approved' : status === 'corrected' ? 'corrected' : 'rejected'] + 1 }));
 

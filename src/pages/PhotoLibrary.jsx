@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -30,17 +30,17 @@ export default function PhotoLibrary() {
 
   const { data: photos = [], isLoading } = useQuery({
     queryKey: ['assetPhotos'],
-    queryFn: () => base44.entities.AssetPhoto.list('-created_date', 500),
+    queryFn: () => secureEntity('AssetPhoto').list('-created_date', 500),
   });
 
   const { data: equipment = [] } = useQuery({
     queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 500),
+    queryFn: () => secureEntity('Equipment').list('-created_date', 500),
   });
 
   const { data: locations = [] } = useQuery({
     queryKey: ['locations'],
-    queryFn: () => base44.entities.Location.list('-created_date', 200),
+    queryFn: () => secureEntity('Location').list('-created_date', 200),
   });
 
   const filtered = useMemo(() => {
