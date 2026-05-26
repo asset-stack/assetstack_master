@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import LibraryRoomView2D from './LibraryRoomView2D';
+import React from 'react';
 import DigitalTwinModelViewer from './DigitalTwinModelViewer';
+import MatterportWalkthrough from '@/components/digital-twin/MatterportWalkthrough';
 
-export default function ScanViewer3D({ modelUrl, modelType = 'demo', overlays = [], onAssetClick }) {
-  const [hoveredAsset, setHoveredAsset] = useState(null);
+export default function ScanViewer3D({ modelUrl, modelType = 'demo' }) {
   const canRenderModel = !!modelUrl && ['obj', 'gltf', 'glb'].includes(modelType);
 
   return (
@@ -11,12 +10,7 @@ export default function ScanViewer3D({ modelUrl, modelType = 'demo', overlays = 
       {canRenderModel ? (
         <DigitalTwinModelViewer modelUrl={modelUrl} modelType={modelType} />
       ) : (
-        <LibraryRoomView2D
-          overlays={overlays}
-          hoveredAsset={hoveredAsset}
-          setHoveredAsset={setHoveredAsset}
-          onAssetClick={onAssetClick}
-        />
+        <MatterportWalkthrough />
       )}
     </div>
   );
