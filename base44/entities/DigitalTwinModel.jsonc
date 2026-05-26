@@ -9,6 +9,10 @@
     "description": {
       "type": "string"
     },
+    "client_account_id": {
+      "type": "string",
+      "description": "Reference to ClientAccount for multi-tenancy"
+    },
     "location_id": {
       "type": "string",
       "description": "Reference to Location entity"
