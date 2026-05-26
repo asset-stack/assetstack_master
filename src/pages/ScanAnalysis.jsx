@@ -142,9 +142,9 @@ export default function ScanAnalysisPage() {
   const runAIAnalysis = async () => {
     if (!selectedScan) return;
 
-    const analyzableFrames = frames.filter((f) => f.image_url);
-    const hasPreview = !!selectedScan.preview_image_url;
-    const totalImages = (hasPreview ? 1 : 0) + analyzableFrames.length;
+    const unfinishedFrames = frames.filter((f) => f.image_url && f.analysis_status !== 'completed');
+    const hasPreview = !!selectedScan.preview_image_url && reports.length === 0;
+    const totalImages = (hasPreview ? 1 : 0) + unfinishedFrames.length;
 
     if (totalImages === 0) {
       toast?.error?.('This scan needs at least one preview image or scan frame to analyze.');
@@ -174,29 +174,17 @@ export default function ScanAnalysisPage() {
         setAnalysisProgress({ current: completed, total: totalImages });
       }
 
-      // Frames/photos: scan every available frame so the whole workflow is covered.
-      const batchSize = 3;
-      for (let i = 0; i < analyzableFrames.length; i += batchSize) {
-        const batch = analyzableFrames.slice(i, i + batchSize);
-        const results = await Promise.allSettled(
-          batch.map((frame) =>
-            base44.functions.invoke('analyzeScanCondition', {
-              image_url: frame.image_url,
-              digital_twin_model_id: selectedScan.id,
-              digital_twin_model_name: `${selectedScan.name} — ${frame.angle_label}`,
-              frame_id: frame.id,
-            })
-          )
-        );
-        for (const r of results) {
-          completed++;
-          if (r.status === 'fulfilled') {
-            totalFindings += r.value?.data?.findings_count || 0;
-            totalDupes += r.value?.data?.duplicates_skipped || 0;
-          } else if (!firstError) {
-            firstError = r.reason?.message || 'A frame failed to analyze';
-          }
-        }
+      // Frames/photos: resume unfinished walkthrough frames one at a time to avoid rate limits.
+      for (const frame of unfinishedFrames) {
+        const result = await base44.functions.invoke('analyzeScanCondition', {
+          image_url: frame.image_url,
+          digital_twin_model_id: selectedScan.id,
+          digital_twin_model_name: `${selectedScan.name} — ${frame.angle_label}`,
+          frame_id: frame.id,
+        });
+        completed++;
+        totalFindings += result?.data?.findings_count || 0;
+        totalDupes += result?.data?.duplicates_skipped || 0;
         setAnalysisProgress({ current: completed, total: totalImages });
       }
 
@@ -257,7 +245,7 @@ export default function ScanAnalysisPage() {
         pendingCount={stats.pending}
         analyzing={analyzing}
         analysisProgress={analysisProgress}
-        canRunAI={!!selectedScan && (!!selectedScan.preview_image_url || frames.some((f) => f.image_url))}
+        canRunAI={!!selectedScan && (!!selectedScan.preview_image_url || frames.some((f) => f.image_url && f.analysis_status !== 'completed'))}
         onUploadScan={() => swscWalkthroughScan ? setSelectedScanId(swscWalkthroughScan.id) : setUploadOpen(true)}
         onAddPhotos={() => setBulkPhotoOpen(true)}
         onAnalyzeImage={() => setQuickAnalyzeOpen(true)}
@@ -316,7 +304,7 @@ export default function ScanAnalysisPage() {
                   />
                   <Button
                     onClick={runAIAnalysis}
-                    disabled={analyzing || (!selectedScan.preview_image_url && !frames.some((f) => f.image_url))}
+                    disabled={analyzing || (!selectedScan.preview_image_url && !frames.some((f) => f.image_url && f.analysis_status !== 'completed'))}
                     className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
                   >
                     {analyzing ? (
