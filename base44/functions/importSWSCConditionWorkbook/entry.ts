@@ -114,6 +114,10 @@ async function upsertOne(entityApi, filter, data) {
   return await entityApi.create(data);
 }
 
+function hasMeaningfulChanges(existing, record) {
+  return Object.keys(record).some((key) => JSON.stringify(existing?.[key] ?? null) !== JSON.stringify(record[key] ?? null));
+}
+
 async function bulkCreateOrUpdate(entityApi, records, keyField, clientPrefix) {
   const existingRows = await entityApi.list('-created_date', 5000);
   const existingByKey = new Map();
@@ -126,11 +130,16 @@ async function bulkCreateOrUpdate(entityApi, records, keyField, clientPrefix) {
 
   const toCreate = [];
   let updated = 0;
+  let unchanged = 0;
   for (const record of records) {
     const existing = existingByKey.get(record[keyField]);
     if (existing?.id) {
-      await entityApi.update(existing.id, record);
-      updated++;
+      if (hasMeaningfulChanges(existing, record)) {
+        await entityApi.update(existing.id, record);
+        updated++;
+      } else {
+        unchanged++;
+      }
     } else {
       toCreate.push(record);
     }
@@ -144,7 +153,7 @@ async function bulkCreateOrUpdate(entityApi, records, keyField, clientPrefix) {
       created += chunk.length;
     }
   }
-  return { created, updated };
+  return { created, updated, unchanged };
 }
 
 Deno.serve(async (req) => {
