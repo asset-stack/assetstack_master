@@ -16,11 +16,14 @@ export function ClientProvider({ children }) {
 
   const clients = rawClients.filter(c => !c.allowed_users?.length || c.allowed_users.includes(user?.email));
 
+  const isDemoClient = (client) => /demo|council|bunbury/i.test(client?.business_name || '');
+
   useEffect(() => {
     if (clients.length > 0 && !currentClient) {
       const saved = localStorage.getItem('assetstack_client_id');
-      const found = saved ? clients.find(c => c.id === saved) : null;
-      setCurrentClient(found || clients[0]);
+      const found = saved ? clients.find(c => c.id === saved && !isDemoClient(c)) : null;
+      const mainAccount = clients.find(c => !isDemoClient(c));
+      setCurrentClient(found || mainAccount || clients[0]);
     }
   }, [clients, currentClient]);
 
