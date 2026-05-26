@@ -76,6 +76,20 @@
     },
     "notes": {
       "type": "string"
+    },
+    "spreadsheet_fields": {
+      "type": "object",
+      "description": "Original spreadsheet row fields preserved for audit and reporting"
+    },
+    "source_sheet": {
+      "type": "string"
+    },
+    "source_row_number": {
+      "type": "number"
+    },
+    "import_key": {
+      "type": "string",
+      "description": "Stable key used for match-and-update imports"
     }
   },
   "required": [

@@ -35,6 +35,21 @@
         }
       }
     },
+    "equipment_id": {
+      "type": "string"
+    },
+    "equipment_name": {
+      "type": "string"
+    },
+    "room_code": {
+      "type": "string"
+    },
+    "room_name": {
+      "type": "string"
+    },
+    "component_type": {
+      "type": "string"
+    },
     "analysis_status": {
       "type": "string",
       "enum": [
@@ -48,6 +63,20 @@
     "findings_count": {
       "type": "number",
       "default": 0
+    },
+    "spreadsheet_fields": {
+      "type": "object",
+      "description": "Original spreadsheet row fields preserved for audit and reporting"
+    },
+    "source_sheet": {
+      "type": "string"
+    },
+    "source_row_number": {
+      "type": "number"
+    },
+    "import_key": {
+      "type": "string",
+      "description": "Stable key used for match-and-update imports"
     }
   },
   "required": [
