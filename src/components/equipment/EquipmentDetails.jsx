@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import HealthGauge from '../dashboard/HealthGauge';
 import SensorReadingsChart from './SensorReadingsChart';
 import TaskDetailsDialog from '../maintenance/TaskDetailsDialog';
@@ -22,7 +22,7 @@ export default function EquipmentDetails({ equipment, readings, onClose, onEdit,
 
   const { data: maintenanceTasks = [] } = useQuery({
     queryKey: ['maintenanceHistory', equipment.id],
-    queryFn: () => base44.entities.MaintenanceTask.filter({ equipment_id: equipment.id }, '-completed_date', 50),
+    queryFn: () => secureEntity('MaintenanceTask').filter({ equipment_id: equipment.id }, '-completed_date', 50),
     enabled: !!equipment.id,
   });
 

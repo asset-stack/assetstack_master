@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, Loader2, Pin, Mic, Image, Paperclip } from 'lucide-react';
@@ -15,7 +16,7 @@ export default function WorkOrderChat({ workOrderId }) {
 
   const { data: messages = [], isLoading } = useQuery({
     queryKey: ['wo-messages', workOrderId],
-    queryFn: () => base44.entities.WorkOrderMessage.filter({ work_order_id: workOrderId }, '-created_date', 100),
+    queryFn: () => secureEntity('WorkOrderMessage').filter({ work_order_id: workOrderId }, '-created_date', 100),
     enabled: !!workOrderId,
     refetchInterval: 5000,
   });
@@ -26,7 +27,7 @@ export default function WorkOrderChat({ workOrderId }) {
   });
 
   const sendMutation = useMutation({
-    mutationFn: (data) => base44.entities.WorkOrderMessage.create(data),
+    mutationFn: (data) => secureEntity('WorkOrderMessage').create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['wo-messages', workOrderId] });
       setMessage('');

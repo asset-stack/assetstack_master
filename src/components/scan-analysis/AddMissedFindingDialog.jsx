@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -53,7 +54,7 @@ export default function AddMissedFindingDialog({ open, onClose, scan, imageUrl, 
       const user = await base44.auth.me();
       const reviewer = user?.full_name || user?.email || 'manual';
 
-      const report = await base44.entities.ConditionReport.create({
+      const report = await secureEntity('ConditionReport').create({
         digital_twin_model_id: scan.id,
         digital_twin_model_name: scan.name,
         equipment_id: eq?.id || null,

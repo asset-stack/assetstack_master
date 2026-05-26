@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Sparkles, Check, X, Clock, AlertTriangle, User, 
@@ -30,7 +31,7 @@ export default function SuggestedTasksPanel({ suggestions, technicians, onRefres
   const pendingSuggestions = suggestions.filter(s => s.status === 'pending');
 
   const updateSuggestionMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.SuggestedTask.update(id, data),
+    mutationFn: ({ id, data }) => secureEntity('SuggestedTask').update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['suggestedTasks']);
       onRefresh?.();
@@ -38,7 +39,7 @@ export default function SuggestedTasksPanel({ suggestions, technicians, onRefres
   });
 
   const createTaskMutation = useMutation({
-    mutationFn: (data) => base44.entities.MaintenanceTask.create(data),
+    mutationFn: (data) => secureEntity('MaintenanceTask').create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['maintenanceTasks']);
     },

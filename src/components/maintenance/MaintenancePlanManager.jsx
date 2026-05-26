@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   CalendarClock, Plus, Settings, Trash2, ToggleLeft, ToggleRight, 
@@ -39,16 +39,16 @@ export default function MaintenancePlanManager({ equipment = [], technicians = [
 
   const { data: plans = [] } = useQuery({
     queryKey: ['maintenancePlans'],
-    queryFn: () => base44.entities.MaintenancePlan.list('-created_date', 100),
+    queryFn: () => secureEntity('MaintenancePlan').list('-created_date', 100),
   });
 
   const { data: templates = [] } = useQuery({
     queryKey: ['maintenanceTemplates'],
-    queryFn: () => base44.entities.MaintenanceTemplate.list('-created_date', 100),
+    queryFn: () => secureEntity('MaintenanceTemplate').list('-created_date', 100),
   });
 
   const createPlanMutation = useMutation({
-    mutationFn: (data) => base44.entities.MaintenancePlan.create(data),
+    mutationFn: (data) => secureEntity('MaintenancePlan').create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['maintenancePlans']);
       setShowAddDialog(false);
@@ -56,7 +56,7 @@ export default function MaintenancePlanManager({ equipment = [], technicians = [
   });
 
   const updatePlanMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.MaintenancePlan.update(id, data),
+    mutationFn: ({ id, data }) => secureEntity('MaintenancePlan').update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['maintenancePlans']);
       setEditingPlan(null);
@@ -64,7 +64,7 @@ export default function MaintenancePlanManager({ equipment = [], technicians = [
   });
 
   const deletePlanMutation = useMutation({
-    mutationFn: (id) => base44.entities.MaintenancePlan.delete(id),
+    mutationFn: (id) => secureEntity('MaintenancePlan').delete(id),
     onSuccess: () => queryClient.invalidateQueries(['maintenancePlans']),
   });
 

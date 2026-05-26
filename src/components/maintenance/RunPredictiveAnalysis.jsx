@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { motion } from 'framer-motion';
 import { Brain, Play, Loader2, CheckCircle2, Sparkles, AlertTriangle, Zap } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,7 @@ export default function RunPredictiveAnalysis({ equipment = [], predictions = []
   const queryClient = useQueryClient();
 
   const createSuggestionMutation = useMutation({
-    mutationFn: (data) => base44.entities.SuggestedTask.create(data),
+    mutationFn: (data) => secureEntity('SuggestedTask').create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['suggestedTasks']);
     },

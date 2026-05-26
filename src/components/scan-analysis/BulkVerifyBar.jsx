@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Button } from '@/components/ui/button';
 import { Check, X, Loader2, CheckCheck } from 'lucide-react';
 
@@ -26,7 +27,7 @@ export default function BulkVerifyBar({ reports = [], onDone, threshold = 90 }) 
       const batch = highConfPending.slice(i, i + batchSize);
       await Promise.all(
         batch.map((r) =>
-          base44.entities.ConditionReport.update(r.id, {
+          secureEntity('ConditionReport').update(r.id, {
             review_status: 'approved',
             reviewed_by: reviewer,
             reviewed_at: ts,

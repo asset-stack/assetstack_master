@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 
 const PRIORITY = ['low', 'medium', 'high', 'urgent'];
 const CONSEQUENCE = ['minor', 'moderate', 'major', 'catastrophic'];
@@ -27,8 +27,8 @@ export default function CapitalPlanFormDialog({ open, onOpenChange, item, onSave
       replacement_year: Number(form.replacement_year) || new Date().getFullYear() + 1,
       replacement_cost: Number(form.replacement_cost) || 0,
     };
-    if (form.id) await base44.entities.CapitalPlanItem.update(form.id, data);
-    else await base44.entities.CapitalPlanItem.create(data);
+    if (form.id) await secureEntity('CapitalPlanItem').update(form.id, data);
+    else await secureEntity('CapitalPlanItem').create(data);
     setSaving(false);
     onSaved?.();
     onOpenChange(false);

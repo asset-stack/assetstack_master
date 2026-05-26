@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import {
   Dialog,
   DialogContent,
@@ -50,9 +50,9 @@ export default function ProjectFormDialog({ open, onOpenChange, project, onSaved
     try {
       let saved;
       if (project?.id) {
-        saved = await base44.entities.Project.update(project.id, form);
+        saved = await secureEntity('Project').update(project.id, form);
       } else {
-        saved = await base44.entities.Project.create({
+        saved = await secureEntity('Project').create({
           ...form,
           code: form.code || `PRJ-${Date.now().toString().slice(-6)}`
         });

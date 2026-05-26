@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -33,12 +34,12 @@ export default function WorkOrderMediaPanel({ workOrderId }) {
 
   const { data: media = [], isLoading } = useQuery({
     queryKey: ['wo-media', workOrderId],
-    queryFn: () => base44.entities.WorkOrderMedia.filter({ work_order_id: workOrderId }, '-created_date', 100),
+    queryFn: () => secureEntity('WorkOrderMedia').filter({ work_order_id: workOrderId }, '-created_date', 100),
     enabled: !!workOrderId,
   });
 
   const uploadMutation = useMutation({
-    mutationFn: (data) => base44.entities.WorkOrderMedia.create(data),
+    mutationFn: (data) => secureEntity('WorkOrderMedia').create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['wo-media', workOrderId] });
       setDescription('');
@@ -46,7 +47,7 @@ export default function WorkOrderMediaPanel({ workOrderId }) {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.WorkOrderMedia.delete(id),
+    mutationFn: (id) => secureEntity('WorkOrderMedia').delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['wo-media', workOrderId] }),
   });
 

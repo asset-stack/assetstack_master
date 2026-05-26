@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -45,7 +46,7 @@ export default function KeyboardReviewMode({ open, onClose, reports = [], onChan
     try {
       const user = await base44.auth.me();
       const reviewer = user?.full_name || user?.email || 'reviewer';
-      await base44.entities.ConditionReport.update(current.id, {
+      await secureEntity('ConditionReport').update(current.id, {
         review_status: status,
         reviewed_by: reviewer,
         reviewed_at: new Date().toISOString(),
@@ -55,7 +56,7 @@ export default function KeyboardReviewMode({ open, onClose, reports = [], onChan
       // Auto-draft WO for critical/major approvals
       if (opts.autoWO && current.equipment_id && (current.severity === 'critical' || current.severity === 'major')) {
         try {
-          await base44.entities.WorkOrder.create({
+          await secureEntity('WorkOrder').create({
             equipment_id: current.equipment_id,
             title: `[Scan] ${current.severity} ${current.anomaly_type?.replace(/_/g, ' ')} — ${current.equipment_name || 'asset'}`,
             description: `Auto-drafted from power-review.\n\nAI finding: ${current.ai_description || current.anomaly_type}\nSeverity: ${current.severity}\nAI confidence: ${Math.round(current.ai_confidence || 0)}%`,

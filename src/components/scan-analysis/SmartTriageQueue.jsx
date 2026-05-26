@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCheck, AlertTriangle, ShieldQuestion, Eye, Loader2, Keyboard, Zap } from 'lucide-react';
@@ -40,7 +41,7 @@ export default function SmartTriageQueue({ reports = [], onDone, onOpenKeyboardM
         const batch = items.slice(i, i + batchSize);
         await Promise.all(
           batch.map((r) =>
-            base44.entities.ConditionReport.update(r.id, {
+            secureEntity('ConditionReport').update(r.id, {
               review_status: 'approved',
               reviewed_by: reviewer,
               reviewed_at: ts,
@@ -56,7 +57,7 @@ export default function SmartTriageQueue({ reports = [], onDone, onOpenKeyboardM
         for (const r of items) {
           if (!r.equipment_id) continue;
           try {
-            await base44.entities.WorkOrder.create({
+            await secureEntity('WorkOrder').create({
               equipment_id: r.equipment_id,
               title: `[Scan] ${r.severity} ${r.anomaly_type?.replace(/_/g, ' ')} — ${r.equipment_name || 'asset'}`,
               description: `Auto-drafted from scan analysis.\n\nAI finding: ${r.ai_description || r.anomaly_type}\nSeverity: ${r.severity}\nAI confidence: ${Math.round(r.ai_confidence || 0)}%\nSource scan: ${r.digital_twin_model_name || ''}`,

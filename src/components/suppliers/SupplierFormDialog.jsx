@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 
 const CATEGORIES = ['parts', 'oem', 'service', 'consumables', 'calibration', 'consultancy', 'other'];
 const PAYMENT_TERMS = ['net_7', 'net_14', 'net_30', 'net_60', 'prepaid', 'on_delivery'];
@@ -20,8 +20,8 @@ export default function SupplierFormDialog({ open, onOpenChange, supplier, onSav
 
   const save = async () => {
     setSaving(true);
-    if (form.id) await base44.entities.Supplier.update(form.id, form);
-    else await base44.entities.Supplier.create(form);
+    if (form.id) await secureEntity('Supplier').update(form.id, form);
+    else await secureEntity('Supplier').create(form);
     setSaving(false);
     onSaved?.();
     onOpenChange(false);

@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 
 const CATEGORIES = ['bearing', 'seal', 'filter', 'belt', 'motor', 'sensor', 'valve', 'electrical', 'hydraulic', 'pneumatic', 'structural', 'consumable', 'other'];
 const CRITICALITY = ['low', 'medium', 'high', 'critical'];
@@ -19,8 +19,8 @@ export default function SparePartFormDialog({ open, onOpenChange, part, onSaved 
 
   const save = async () => {
     setSaving(true);
-    if (form.id) await base44.entities.SparePart.update(form.id, form);
-    else await base44.entities.SparePart.create(form);
+    if (form.id) await secureEntity('SparePart').update(form.id, form);
+    else await secureEntity('SparePart').create(form);
     setSaving(false);
     onSaved?.();
     onOpenChange(false);

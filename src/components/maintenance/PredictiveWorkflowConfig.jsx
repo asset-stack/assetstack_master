@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Zap, Plus, Settings, Trash2, ToggleLeft, ToggleRight, 
@@ -43,7 +43,7 @@ export default function PredictiveWorkflowConfig({ triggers = [], onRefresh }) {
   const queryClient = useQueryClient();
 
   const createTriggerMutation = useMutation({
-    mutationFn: (data) => base44.entities.MaintenanceTrigger.create(data),
+    mutationFn: (data) => secureEntity('MaintenanceTrigger').create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['triggers']);
       setShowAddDialog(false);
@@ -52,7 +52,7 @@ export default function PredictiveWorkflowConfig({ triggers = [], onRefresh }) {
   });
 
   const updateTriggerMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.MaintenanceTrigger.update(id, data),
+    mutationFn: ({ id, data }) => secureEntity('MaintenanceTrigger').update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['triggers']);
       setEditingTrigger(null);
@@ -61,7 +61,7 @@ export default function PredictiveWorkflowConfig({ triggers = [], onRefresh }) {
   });
 
   const deleteTriggerMutation = useMutation({
-    mutationFn: (id) => base44.entities.MaintenanceTrigger.delete(id),
+    mutationFn: (id) => secureEntity('MaintenanceTrigger').delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries(['triggers']);
       onRefresh?.();

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -126,7 +127,7 @@ export default function AddManualFindingDialog({ open, onClose, scan, frames = [
       const reviewer = user?.full_name || user?.email || 'manual';
 
       // 4. Create the ConditionReport — pre-verified, no AI confidence
-      const report = await base44.entities.ConditionReport.create({
+      const report = await secureEntity('ConditionReport').create({
         digital_twin_model_id: scan.id,
         digital_twin_model_name: scan.name,
         equipment_id: eq?.id || null,

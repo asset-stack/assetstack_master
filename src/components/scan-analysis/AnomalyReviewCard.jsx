@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
@@ -37,7 +38,7 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
   // Lightweight equipment list for re-assignment (cached across cards)
   const { data: equipmentList = [] } = useQuery({
     queryKey: ['equipmentMini'],
-    queryFn: () => base44.entities.Equipment.list('-created_date', 200),
+    queryFn: () => secureEntity('Equipment').list('-created_date', 200),
     staleTime: 60_000,
   });
 
@@ -46,7 +47,7 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
     setSavingAssign(true);
     try {
       const eq = equipmentList.find((e) => e.id === newEquipmentId);
-      await base44.entities.ConditionReport.update(report.id, {
+      await secureEntity('ConditionReport').update(report.id, {
         equipment_id: newEquipmentId || null,
         equipment_name: eq?.name || '',
       });
@@ -100,7 +101,7 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
         // Save the redrawn bbox if the reviewer changed it — this is the highest-value training signal
         if (correctedBbox) updates.bounding_box = correctedBbox;
       }
-      await base44.entities.ConditionReport.update(report.id, updates);
+      await secureEntity('ConditionReport').update(report.id, updates);
       toast?.success?.(
         status === 'approved' ? 'Verified as correct' :
         status === 'corrected' ? 'Saved correction — feeds back into model training' :

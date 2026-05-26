@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { MapPin, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -41,9 +41,9 @@ export default function LocationForm({ open, onOpenChange, location, onSaved }) 
     Object.keys(data).forEach(k => { if (data[k] === '') delete data[k]; });
 
     if (isEditing) {
-      await base44.entities.Location.update(location.id, data);
+      await secureEntity('Location').update(location.id, data);
     } else {
-      await base44.entities.Location.create(data);
+      await secureEntity('Location').create(data);
     }
     setSaving(false);
     onSaved();

@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 
 const SCOPE_TYPES = ['organisation', 'location', 'asset_class', 'department', 'work_type'];
 const CATEGORIES = ['preventive_maintenance', 'corrective_maintenance', 'capital_replacement', 'labor', 'parts', 'contractors', 'energy', 'operational', 'other'];
@@ -20,8 +20,8 @@ export default function BudgetFormDialog({ open, onOpenChange, budget, onSaved }
   const save = async () => {
     setSaving(true);
     const data = { ...form, allocated_amount: Number(form.allocated_amount) || 0 };
-    if (form.id) await base44.entities.Budget.update(form.id, data);
-    else await base44.entities.Budget.create(data);
+    if (form.id) await secureEntity('Budget').update(form.id, data);
+    else await secureEntity('Budget').create(data);
     setSaving(false);
     onSaved?.();
     onOpenChange(false);
