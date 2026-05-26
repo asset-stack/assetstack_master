@@ -5,7 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Upload, Sparkles, Loader2, Box, Brain, Filter, CheckCircle2, ImagePlus, Camera, ClipboardCheck, FileSpreadsheet } from 'lucide-react';
+import { Upload, Sparkles, Loader2, Box, Brain, Filter, CheckCircle2, ImagePlus, ClipboardCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import ScanViewer3D from '@/components/scan-analysis/ScanViewer3D';
@@ -23,8 +23,7 @@ import BulkPhotoUpload from '@/components/scan-analysis/BulkPhotoUpload';
 import AddManualFindingDialog from '@/components/scan-analysis/AddManualFindingDialog';
 import AddMissedFindingDialog from '@/components/scan-analysis/AddMissedFindingDialog';
 import ImportFindingsDialog from '@/components/scan-analysis/ImportFindingsDialog';
-import HowItWorks from '@/components/scan-analysis/HowItWorks';
-import RealPhotoWorkflowGuide from '@/components/scan-analysis/RealPhotoWorkflowGuide';
+import ScanWorkflowPanel from '@/components/scan-analysis/ScanWorkflowPanel';
 import AddPhotoFrames from '@/components/scan-analysis/AddPhotoFrames';
 import ScanProgressStrip from '@/components/scan-analysis/ScanProgressStrip';
 import PendingReviewSLA from '@/components/scan-analysis/PendingReviewSLA';
@@ -232,33 +231,25 @@ export default function ScanAnalysisPage() {
         <div className="flex gap-2 items-center flex-wrap">
           <KeyboardShortcutsHelp />
           {selectedScan && <ConditionReportExport scan={selectedScan} reports={reports} />}
-          <Button
-            onClick={() => setBulkPhotoOpen(true)}
-            className="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700"
-          >
-            <Camera className="w-4 h-4 mr-2" /> Bulk Photo Upload
-          </Button>
-          <Button
-            onClick={() => setQuickAnalyzeOpen(true)}
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-          >
-            <ImagePlus className="w-4 h-4 mr-2" /> Analyze Image
-          </Button>
-          <Button onClick={() => setImportFindingsOpen(true)} variant="outline">
-            <FileSpreadsheet className="w-4 h-4 mr-2" /> Import Findings (CSV/Excel)
-          </Button>
-          <Button onClick={() => setUploadOpen(true)} variant="outline">
-            <Upload className="w-4 h-4 mr-2" /> Upload 3D Scan
-          </Button>
         </div>
       </div>
 
       <PendingReviewSLA />
 
-      <RealPhotoWorkflowGuide />
-
-      {/* How it works */}
-      <HowItWorks />
+      <ScanWorkflowPanel
+        scan={selectedScan}
+        framesCount={frames.length}
+        reportsCount={reports.length}
+        pendingCount={stats.pending}
+        analyzing={analyzing}
+        analysisProgress={analysisProgress}
+        canRunAI={!!selectedScan?.preview_image_url}
+        onUploadScan={() => setUploadOpen(true)}
+        onAddPhotos={() => setBulkPhotoOpen(true)}
+        onAnalyzeImage={() => setQuickAnalyzeOpen(true)}
+        onImportFindings={() => setImportFindingsOpen(true)}
+        onRunAI={runAIAnalysis}
+      />
 
       {/* Scans gallery */}
       <div className="mb-6">
