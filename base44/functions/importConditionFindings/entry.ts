@@ -186,6 +186,9 @@ Respond with the 1-based index of the best photo, a confidence 0-100, and a shor
       const report = await base44.asServiceRole.entities.ConditionReport.create({
         digital_twin_model_id: scanId,
         digital_twin_model_name: scanName,
+        room_code: bestFrame.room_code || null,
+        room_name: bestFrame.room_name || null,
+        component_type: bestFrame.component_type || null,
         equipment_id: eq.id,
         equipment_name: eq.name,
         image_url: bestFrame.image_url,

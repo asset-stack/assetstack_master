@@ -60,6 +60,13 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Load tagged frame context so findings inherit room/component metadata.
+    let frameContext = null;
+    if (frame_id) {
+      const matchingFrames = await base44.asServiceRole.entities.ScanFrame.filter({ id: frame_id }, null, 1);
+      frameContext = matchingFrames?.[0] || null;
+    }
+
     // Load existing reports on this image (for IoU-based dedup against any status)
     const existing = await base44.asServiceRole.entities.ConditionReport.filter({
       digital_twin_model_id,
@@ -170,8 +177,11 @@ Return an array of findings. If no clear defect is visible, return an empty arra
       const report = await base44.asServiceRole.entities.ConditionReport.create({
         digital_twin_model_id,
         digital_twin_model_name,
-        equipment_id: equipment_id || null,
-        equipment_name,
+        room_code: frameContext?.room_code || null,
+        room_name: frameContext?.room_name || null,
+        component_type: frameContext?.component_type || null,
+        equipment_id: equipment_id || frameContext?.equipment_id || null,
+        equipment_name: equipment_name || frameContext?.equipment_name || null,
         image_url,
         anomaly_type: normalizedType,
         severity: normalizedSeverity,

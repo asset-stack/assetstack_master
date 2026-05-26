@@ -31,7 +31,7 @@ export default function ScanFramesGallery({ frames = [], selectedFrameId, onSele
               <img src={f.image_url} alt={f.angle_label} className="w-full aspect-[4/3] object-cover" />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-2 py-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-semibold text-white">{f.angle_label}</span>
+                  <span className="text-[10px] font-semibold text-white truncate">{f.room_code ? `${f.room_code} · ${f.room_name || f.angle_label}` : f.angle_label}</span>
                   {statusIcon(f.analysis_status)}
                 </div>
               </div>

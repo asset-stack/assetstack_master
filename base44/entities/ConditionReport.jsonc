@@ -9,6 +9,22 @@
     "digital_twin_model_name": {
       "type": "string"
     },
+    "assessment_id": {
+      "type": "string",
+      "description": "Optional linked ConditionAssessment"
+    },
+    "room_code": {
+      "type": "string",
+      "description": "Room code inherited from tagged ScanFrame or assessment room"
+    },
+    "room_name": {
+      "type": "string",
+      "description": "Room name inherited from tagged ScanFrame or assessment room"
+    },
+    "component_type": {
+      "type": "string",
+      "description": "Optional component type context from tagged frame or spreadsheet"
+    },
     "equipment_id": {
       "type": "string",
       "description": "Linked asset (optional)"

@@ -36,6 +36,7 @@ import SeverityHeatmapOverlay from '@/components/scan-analysis/SeverityHeatmapOv
 import ConditionTrendCompare from '@/components/scan-analysis/ConditionTrendCompare';
 import ConditionReportExport from '@/components/scan-analysis/ConditionReportExport';
 import KeyboardShortcutsHelp from '@/components/scan-analysis/KeyboardShortcutsHelp';
+import RoomTaggingPanel from '@/components/scan-analysis/RoomTaggingPanel';
 import { toast } from 'sonner';
 
 export default function ScanAnalysisPage() {
@@ -362,7 +363,18 @@ export default function ScanAnalysisPage() {
               ) : null
             )}
 
-            {/* Frames gallery */}
+            {/* Room tagging + frames gallery */}
+            {frames.length > 0 && (
+              <RoomTaggingPanel
+                scan={selectedScan}
+                frames={frames}
+                onUpdated={() => {
+                  qc.invalidateQueries({ queryKey: ['scanFrames', selectedScan.id] });
+                  qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
+                }}
+              />
+            )}
+
             {frames.length > 0 && (
               <ScanFramesGallery
                 frames={frames}
