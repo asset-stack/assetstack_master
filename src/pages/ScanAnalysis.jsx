@@ -59,9 +59,18 @@ export default function ScanAnalysisPage() {
     queryFn: () => secureEntity('DigitalTwinModel').list('-created_date', 50),
   });
 
+  const swscWalkthroughScan = useMemo(
+    () => scans.find((s) =>
+      s.file_url?.includes('my.matterport.com/show/?m=4xXzHXiFbDV') ||
+      s.name?.toLowerCase().includes('southwest sports centre') ||
+      s.name?.toLowerCase().includes('south west sports centre')
+    ),
+    [scans]
+  );
+
   const selectedScan = useMemo(
-    () => scans.find((s) => s.id === selectedScanId) || scans[0],
-    [scans, selectedScanId]
+    () => scans.find((s) => s.id === selectedScanId) || swscWalkthroughScan || scans[0],
+    [scans, selectedScanId, swscWalkthroughScan]
   );
 
   const { data: equipment = [] } = useQuery({
@@ -249,7 +258,7 @@ export default function ScanAnalysisPage() {
         analyzing={analyzing}
         analysisProgress={analysisProgress}
         canRunAI={!!selectedScan && (!!selectedScan.preview_image_url || frames.some((f) => f.image_url))}
-        onUploadScan={() => setUploadOpen(true)}
+        onUploadScan={() => swscWalkthroughScan ? setSelectedScanId(swscWalkthroughScan.id) : setUploadOpen(true)}
         onAddPhotos={() => setBulkPhotoOpen(true)}
         onAnalyzeImage={() => setQuickAnalyzeOpen(true)}
         onImportFindings={() => setImportFindingsOpen(true)}

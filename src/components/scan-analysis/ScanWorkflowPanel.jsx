@@ -6,8 +6,8 @@ import { Badge } from '@/components/ui/badge';
 const steps = [
   {
     number: '01',
-    title: 'Load the 3D scan',
-    description: 'Use the walkthrough or upload a 3D scan model as the source of truth.',
+    title: 'Use the loaded walkthrough',
+    description: 'Start from the existing South West Sports Centre Matterport walkthrough.',
     icon: Upload,
   },
   {
@@ -54,12 +54,12 @@ export default function ScanWorkflowPanel({
           </div>
           <h2 className="text-xl font-bold text-slate-900">3D scan → Excel match → verified report</h2>
           <p className="text-sm text-slate-600 mt-1 max-w-2xl">
-            Follow these steps in order: start with the walkthrough or model, add evidence frames, match the spreadsheet, then verify the outputs.
+            Follow these steps in order: use the existing walkthrough, add or capture evidence frames, match the spreadsheet, then verify the outputs.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button onClick={onUploadScan} variant="outline" className="bg-white">
-            <Upload className="w-4 h-4 mr-2" /> Upload 3D scan
+            <Upload className="w-4 h-4 mr-2" /> Use SWSC walkthrough
           </Button>
           <Button onClick={onAddPhotos} variant="outline" className="bg-white">
             <Camera className="w-4 h-4 mr-2" /> Add photos
