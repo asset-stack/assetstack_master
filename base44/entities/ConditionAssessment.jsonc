@@ -1,0 +1,136 @@
+{
+  "name": "ConditionAssessment",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Display title, e.g. 'Bunbury Aquatic Centre - 2025 Condition Assessment'"
+    },
+    "location_id": {
+      "type": "string",
+      "description": "Reference to Location entity"
+    },
+    "location_name": {
+      "type": "string",
+      "description": "Snapshot of location name at time of assessment"
+    },
+    "client_account_id": {
+      "type": "string",
+      "description": "Reference to ClientAccount for multi-tenancy"
+    },
+    "assessment_year": {
+      "type": "number",
+      "description": "Year of assessment, e.g. 2025"
+    },
+    "assessment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the assessment was conducted"
+    },
+    "assessor_name": {
+      "type": "string",
+      "description": "Name of assessor (e.g. Stuart Sutherland)"
+    },
+    "assessor_company": {
+      "type": "string",
+      "description": "Consultancy that conducted the assessment (e.g. Lycopodium)"
+    },
+    "building_type": {
+      "type": "string",
+      "description": "e.g. Aquatic Centre, Library, Town Hall"
+    },
+    "building_address": {
+      "type": "string"
+    },
+    "internal_area_sqm": {
+      "type": "number",
+      "description": "Internal floor area in m\u00b2"
+    },
+    "cover_image_url": {
+      "type": "string",
+      "description": "Hero photo for the cover page"
+    },
+    "partner_logo_url": {
+      "type": "string",
+      "description": "Optional co-branding logo (consultant)"
+    },
+    "client_logo_url": {
+      "type": "string",
+      "description": "Optional co-branding logo (client)"
+    },
+    "forecast_years": {
+      "type": "number",
+      "default": 20,
+      "description": "Number of years to forecast (default 20)"
+    },
+    "inflation_rate": {
+      "type": "number",
+      "default": 0.03,
+      "description": "Annual inflation factor applied to forward costs"
+    },
+    "matrix_balanced": {
+      "type": "array",
+      "description": "5x5 multiplier matrix for Balanced program. matrix[condition-1][criticality-1]",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      }
+    },
+    "matrix_must_do": {
+      "type": "array",
+      "description": "5x5 multiplier matrix for Must Do program",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      }
+    },
+    "matrix_premium": {
+      "type": "array",
+      "description": "5x5 multiplier matrix for Premium program",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      }
+    },
+    "totals_balanced": {
+      "type": "number",
+      "description": "Cached 20-yr total for Balanced program"
+    },
+    "totals_must_do": {
+      "type": "number",
+      "description": "Cached 20-yr total for Must Do program"
+    },
+    "totals_premium": {
+      "type": "number",
+      "description": "Cached 20-yr total for Premium program"
+    },
+    "last_calculated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in_review",
+        "published",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "location_id",
+    "assessment_year"
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "name": "AssessmentDefect",
+  "type": "object",
+  "properties": {
+    "assessment_id": {
+      "type": "string"
+    },
+    "room_id": {
+      "type": "string"
+    },
+    "room_code": {
+      "type": "string"
+    },
+    "room_name": {
+      "type": "string"
+    },
+    "component_id": {
+      "type": "string",
+      "description": "Optional link to AssessmentComponent"
+    },
+    "defect_id": {
+      "type": "string",
+      "description": "External-facing ID, e.g. COB-2785 (client prefix + sequential number)"
+    },
+    "description": {
+      "type": "string"
+    },
+    "recommended_action": {
+      "type": "string"
+    },
+    "photo_url": {
+      "type": "string"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rectification_cost": {
+      "type": "number"
+    },
+    "target_year_balanced": {
+      "type": "number"
+    },
+    "target_year_must_do": {
+      "type": "number"
+    },
+    "target_year_premium": {
+      "type": "number"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "minor",
+        "moderate",
+        "major",
+        "critical"
+      ],
+      "default": "moderate"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "scheduled",
+        "in_progress",
+        "closed",
+        "deferred"
+      ],
+      "default": "open"
+    },
+    "linked_work_order_id": {
+      "type": "string",
+      "description": "Reference to MaintenanceTask/WorkOrder if rectification has been raised"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "assessment_id",
+    "defect_id",
+    "description"
+  ]
+}

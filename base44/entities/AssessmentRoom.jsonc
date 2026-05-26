@@ -1,0 +1,44 @@
+{
+  "name": "AssessmentRoom",
+  "type": "object",
+  "properties": {
+    "assessment_id": {
+      "type": "string",
+      "description": "Reference to ConditionAssessment"
+    },
+    "room_code": {
+      "type": "string",
+      "description": "Short code, e.g. R01, R02"
+    },
+    "name": {
+      "type": "string",
+      "description": "Descriptive room name, e.g. '50M Pool', 'External New Section'"
+    },
+    "level_of_service": {
+      "type": "number",
+      "description": "1-4 LoS ranking \u2014 how critical this room is to operations"
+    },
+    "area_sqm": {
+      "type": "number"
+    },
+    "photo_url": {
+      "type": "string"
+    },
+    "average_condition": {
+      "type": "number",
+      "description": "Cached average condition score across components in this room"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "assessment_id",
+    "room_code",
+    "name"
+  ]
+}

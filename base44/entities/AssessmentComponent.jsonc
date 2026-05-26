@@ -1,0 +1,125 @@
+{
+  "name": "AssessmentComponent",
+  "type": "object",
+  "properties": {
+    "assessment_id": {
+      "type": "string",
+      "description": "Reference to ConditionAssessment"
+    },
+    "room_id": {
+      "type": "string",
+      "description": "Reference to AssessmentRoom"
+    },
+    "room_code": {
+      "type": "string",
+      "description": "Denormalized room code for fast filtering"
+    },
+    "room_name": {
+      "type": "string",
+      "description": "Denormalized room name"
+    },
+    "component_type": {
+      "type": "string",
+      "description": "Specific type, e.g. 'Metal Sheeting (Colour Steel)', 'Ducted Reverse Cycle (Large)'"
+    },
+    "group": {
+      "type": "string",
+      "enum": [
+        "Air Con",
+        "Bathroom",
+        "Ceiling",
+        "Door",
+        "Electrical",
+        "External",
+        "Floor",
+        "Garden",
+        "Hot Water",
+        "Internal",
+        "Kitchen",
+        "Laundry",
+        "Roof",
+        "Services",
+        "Window",
+        "Plumbing",
+        "Structural",
+        "Fire",
+        "Security",
+        "Other"
+      ],
+      "default": "Other"
+    },
+    "subtype": {
+      "type": "string"
+    },
+    "material": {
+      "type": "string"
+    },
+    "size": {
+      "type": "string",
+      "description": "Free-text dimensions, e.g. '2.4m x 1.2m'"
+    },
+    "quantity": {
+      "type": "number"
+    },
+    "unit": {
+      "type": "string",
+      "enum": [
+        "each",
+        "m\u00b2",
+        "lin.m",
+        "m\u00b3",
+        "kg",
+        "set",
+        "lot"
+      ],
+      "default": "each"
+    },
+    "base_replacement_cost": {
+      "type": "number",
+      "description": "Total replacement cost (rate \u00d7 quantity) in today's dollars"
+    },
+    "useful_life_years": {
+      "type": "number",
+      "description": "Expected useful life in years"
+    },
+    "year_installed": {
+      "type": "number",
+      "description": "Year the component was installed"
+    },
+    "condition_grade_baseline": {
+      "type": "number",
+      "description": "Historical baseline grade (e.g. 2017 grade), 1-5"
+    },
+    "baseline_year": {
+      "type": "number",
+      "description": "Year the baseline grade was captured"
+    },
+    "condition_grade_current": {
+      "type": "number",
+      "description": "Current assessed condition grade 1-5 (1=excellent, 5=failed)"
+    },
+    "criticality": {
+      "type": "number",
+      "description": "Component criticality 1-5 (1=trivial, 5=mission critical)"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Photo URLs"
+    },
+    "linked_equipment_id": {
+      "type": "string",
+      "description": "Optional link to live Equipment record (denormalized for integrity)"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "assessment_id",
+    "room_id",
+    "component_type"
+  ]
+}

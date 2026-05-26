@@ -1,0 +1,45 @@
+{
+  "name": "ProgramMatrix",
+  "type": "object",
+  "properties": {
+    "client_account_id": {
+      "type": "string",
+      "description": "Reference to ClientAccount. Null = global default."
+    },
+    "program_type": {
+      "type": "string",
+      "enum": [
+        "balanced",
+        "must_do",
+        "premium"
+      ],
+      "description": "Which funding strategy this matrix represents"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name, e.g. 'Balanced Program'"
+    },
+    "description": {
+      "type": "string"
+    },
+    "multipliers": {
+      "type": "array",
+      "description": "5x5 matrix. multipliers[condition-1][criticality-1] returns multiplier applied to base replacement cost.",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      }
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false,
+      "description": "Default matrix used when an assessment has no override"
+    }
+  },
+  "required": [
+    "program_type",
+    "multipliers"
+  ]
+}
