@@ -92,7 +92,7 @@ export default function ScanUploadDialog({ open, onClose, onCreated }) {
       return;
     }
     if (!modelFile && !previewFile) {
-      setError('Upload at least a preview image so AI can analyze the scan.');
+      setError('Upload the full digital twin model file or a preview image.');
       return;
     }
     setError('');
@@ -212,7 +212,7 @@ export default function ScanUploadDialog({ open, onClose, onCreated }) {
           </div>
           <div>
             <Label className="flex items-center gap-1.5">
-              <ImageIcon className="w-3.5 h-3.5" /> Preview Image (for AI condition analysis) <span className="text-red-500">*</span>
+              <ImageIcon className="w-3.5 h-3.5" /> Preview Image (optional fallback for AI image analysis)
             </Label>
             <Input
               ref={previewInputRef}
@@ -240,7 +240,7 @@ export default function ScanUploadDialog({ open, onClose, onCreated }) {
               </div>
             )}
             <p className="text-[11px] text-slate-500 mt-1">
-              Max {MAX_IMAGE_MB}MB. JPEG / PNG / WebP — required so the AI has something to analyze.
+              Max {MAX_IMAGE_MB}MB. Use this only if you also have a clear preview image; the full digital twin file can now be uploaded on its own.
             </p>
           </div>
 
