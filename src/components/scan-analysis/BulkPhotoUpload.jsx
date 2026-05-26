@@ -144,6 +144,9 @@ export default function BulkPhotoUpload({ open, onOpenChange, equipment = [], lo
         location_id: locationId || asset.location_id,
       });
       scanId = res?.data?.scan_id || null;
+      if (scanId && res?.data?.frames_created) {
+        toast.success(`${res.data.frames_created} scan frame(s) added for full workflow AI scanning.`);
+      }
     } catch (err) {
       toast.error(`Bulk record creation failed: ${err.message}`);
     }
@@ -270,7 +273,7 @@ export default function BulkPhotoUpload({ open, onOpenChange, equipment = [], lo
             <div className="flex items-center justify-between bg-slate-50 rounded-lg p-3">
               <div>
                 <div className="text-sm font-semibold text-slate-900">Group as a scan</div>
-                <p className="text-[11px] text-slate-500">Create a Digital Twin scan to view all photos together.</p>
+                <p className="text-[11px] text-slate-500">Create scan frames so AI can inspect the full workflow.</p>
               </div>
               <Switch checked={createScan} onCheckedChange={setCreateScan} />
             </div>

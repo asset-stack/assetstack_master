@@ -131,15 +131,18 @@ export default function ScanAnalysisPage() {
   }, [equipment, selectedScan]);
 
   const runAIAnalysis = async () => {
-    if (!selectedScan || !selectedScan.preview_image_url) {
-      toast?.error?.('This scan needs a preview image to analyze. Please upload one.');
+    if (!selectedScan) return;
+
+    const analyzableFrames = frames.filter((f) => f.image_url);
+    const hasPreview = !!selectedScan.preview_image_url;
+    const totalImages = (hasPreview ? 1 : 0) + analyzableFrames.length;
+
+    if (totalImages === 0) {
+      toast?.error?.('This scan needs at least one preview image or scan frame to analyze.');
       return;
     }
-    setAnalyzing(true);
 
-    // Build list of images to analyze: main preview + pending frames
-    const pendingFrames = frames.filter((f) => f.analysis_status !== 'completed' && f.image_url);
-    const totalImages = 1 + pendingFrames.length;
+    setAnalyzing(true);
     setAnalysisProgress({ current: 0, total: totalImages });
 
     let totalFindings = 0;
@@ -148,22 +151,24 @@ export default function ScanAnalysisPage() {
     let completed = 0;
 
     try {
-      // Main preview first (sequential to keep the lock contention low)
-      const mainRes = await base44.functions.invoke('analyzeScanCondition', {
-        image_url: selectedScan.preview_image_url,
-        digital_twin_model_id: selectedScan.id,
-        digital_twin_model_name: selectedScan.name,
-        replace_previous: true,
-      });
-      totalFindings += mainRes?.data?.findings_count || 0;
-      totalDupes += mainRes?.data?.duplicates_skipped || 0;
-      completed++;
-      setAnalysisProgress({ current: completed, total: totalImages });
+      // Main preview first when available.
+      if (hasPreview) {
+        const mainRes = await base44.functions.invoke('analyzeScanCondition', {
+          image_url: selectedScan.preview_image_url,
+          digital_twin_model_id: selectedScan.id,
+          digital_twin_model_name: selectedScan.name,
+          replace_previous: true,
+        });
+        totalFindings += mainRes?.data?.findings_count || 0;
+        totalDupes += mainRes?.data?.duplicates_skipped || 0;
+        completed++;
+        setAnalysisProgress({ current: completed, total: totalImages });
+      }
 
-      // Frames: throttle in batches of 3 to avoid rate limits but stay fast
+      // Frames/photos: scan every available frame so the whole workflow is covered.
       const batchSize = 3;
-      for (let i = 0; i < pendingFrames.length; i += batchSize) {
-        const batch = pendingFrames.slice(i, i + batchSize);
+      for (let i = 0; i < analyzableFrames.length; i += batchSize) {
+        const batch = analyzableFrames.slice(i, i + batchSize);
         const results = await Promise.allSettled(
           batch.map((frame) =>
             base44.functions.invoke('analyzeScanCondition', {
@@ -243,7 +248,7 @@ export default function ScanAnalysisPage() {
         pendingCount={stats.pending}
         analyzing={analyzing}
         analysisProgress={analysisProgress}
-        canRunAI={!!selectedScan?.preview_image_url}
+        canRunAI={!!selectedScan && (!!selectedScan.preview_image_url || frames.some((f) => f.image_url))}
         onUploadScan={() => setUploadOpen(true)}
         onAddPhotos={() => setBulkPhotoOpen(true)}
         onAnalyzeImage={() => setQuickAnalyzeOpen(true)}
@@ -302,7 +307,7 @@ export default function ScanAnalysisPage() {
                   />
                   <Button
                     onClick={runAIAnalysis}
-                    disabled={analyzing || !selectedScan.preview_image_url}
+                    disabled={analyzing || (!selectedScan.preview_image_url && !frames.some((f) => f.image_url))}
                     className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
                   >
                     {analyzing ? (

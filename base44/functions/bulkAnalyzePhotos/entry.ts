@@ -67,7 +67,32 @@ Deno.serve(async (req) => {
       });
     }
 
-    // 3. Bulk-create in chunks of 100 (SDK limit-friendly + safer for huge batches)
+    // 3. If grouped under a scan, create scan frames so Scan Analysis can inspect every photo.
+    let framesCreated = 0;
+    if (scanId) {
+      const existingFrames = await base44.asServiceRole.entities.ScanFrame.filter({ digital_twin_model_id: scanId }, 'frame_index', 500);
+      const frameOffset = existingFrames?.length || 0;
+      const frameRecords = photos
+        .filter((p) => p.file_url)
+        .map((p, index) => ({
+          digital_twin_model_id: scanId,
+          digital_twin_model_name: scanName,
+          frame_index: frameOffset + index,
+          angle_label: p.equipment_name ? `Photo — ${p.equipment_name}` : `Photo ${frameOffset + index + 1}`,
+          image_url: p.file_url,
+          equipment_id: p.equipment_id || null,
+          equipment_name: p.equipment_name || null,
+          analysis_status: 'pending',
+          findings_count: 0,
+        }));
+      for (let i = 0; i < frameRecords.length; i += 100) {
+        const chunk = frameRecords.slice(i, i + 100);
+        const createdFrames = await base44.asServiceRole.entities.ScanFrame.bulkCreate(chunk);
+        framesCreated += Array.isArray(createdFrames) ? createdFrames.length : chunk.length;
+      }
+    }
+
+    // 4. Bulk-create in chunks of 100 (SDK limit-friendly + safer for huge batches)
     let createdCount = 0;
     const CHUNK = 100;
     for (let i = 0; i < validRecords.length; i += CHUNK) {
@@ -93,6 +118,7 @@ Deno.serve(async (req) => {
       scan_id: scanId,
       scan_name: scanName,
       photos_created: createdCount,
+      frames_created: framesCreated,
       photo_errors: photoErrors,
     });
   } catch (error) {
