@@ -67,6 +67,21 @@ Deno.serve(async (req) => {
       frameContext = matchingFrames?.[0] || null;
     }
 
+    // Load scan + location assets so defects can be linked to fixed assets when visible.
+    let scanContext = null;
+    let knownEquipment = [];
+    try {
+      const scans = await base44.asServiceRole.entities.DigitalTwinModel.filter({ id: digital_twin_model_id }, null, 1);
+      scanContext = scans?.[0] || null;
+      if (scanContext?.location_id) {
+        knownEquipment = await base44.asServiceRole.entities.Equipment.filter({ location_id: scanContext.location_id }, '-created_date', 200);
+      } else if (scanContext?.location_name) {
+        knownEquipment = await base44.asServiceRole.entities.Equipment.filter({ location: scanContext.location_name }, '-created_date', 200);
+      }
+    } catch (ctxErr) {
+      console.warn('Asset context load failed:', ctxErr.message);
+    }
+
     // Load existing reports on this image (for IoU-based dedup against any status)
     const existing = await base44.asServiceRole.entities.ConditionReport.filter({
       digital_twin_model_id,
@@ -108,10 +123,12 @@ For each confirmed visible issue, provide:
 - severity (minor/moderate/major/critical)
 - condition_score (1-5)
 - confidence (0-100)
+- asset_type if the defect is on/near a fixed asset: light, door, window, ceiling, floor, wall, hvac, fire_equipment, security_camera, display_case, furniture, plumbing, electrical, other
+- asset_name_hint using plain language, e.g. "ceiling light", "entry door", "gallery window"
 - description with the exact visual evidence and location, e.g. "visible crack on lower-right chair leg"
 - bounding_box normalized to 0-1 range {x, y, width, height} where (0,0) is top-left
 
-Return an array of findings. If no clear defect is visible, return an empty array.`;
+Return an array of findings. If no clear defect is visible, return an empty array. Be conservative on warped, blurry, or poorly lit MatterPak JPEGs.`;
 
     const result = await base44.integrations.Core.InvokeLLM({
       prompt,
@@ -129,6 +146,8 @@ Return an array of findings. If no clear defect is visible, return an empty arra
                 severity: { type: 'string' },
                 condition_score: { type: 'number' },
                 confidence: { type: 'number' },
+                asset_type: { type: 'string' },
+                asset_name_hint: { type: 'string' },
                 description: { type: 'string' },
                 bounding_box: {
                   type: 'object',
@@ -149,8 +168,35 @@ Return an array of findings. If no clear defect is visible, return an empty arra
 
     const allowedTypes = ['scratch', 'dent', 'crack', 'corrosion', 'stain', 'broken_part', 'missing_part', 'wear', 'water_damage', 'graffiti', 'misalignment', 'other'];
     const allowedSeverity = ['minor', 'moderate', 'major', 'critical'];
+    const allowedAssetTypes = ['light', 'lighting', 'door', 'window', 'ceiling', 'floor', 'wall', 'hvac', 'air_conditioning', 'fire_equipment', 'security_camera', 'display_case', 'furniture', 'plumbing', 'electrical', 'other'];
     const clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, Number(value) || 0));
-    const rawFindings = (result?.findings || []).filter((f) => Number(f.confidence || 0) >= 55);
+    const normalizeText = (value) => String(value || '').toLowerCase().replace(/[_-]/g, ' ');
+    const matchEquipmentForFinding = (finding) => {
+      const text = normalizeText(`${finding.asset_name_hint || ''} ${finding.asset_type || ''} ${finding.description || ''}`);
+      if (!text || knownEquipment.length === 0) return null;
+
+      let best = null;
+      let bestScore = 0;
+      for (const eq of knownEquipment) {
+        const eqName = normalizeText(eq.name);
+        const eqType = normalizeText(eq.type);
+        const eqTags = normalizeText((eq.tags || []).join(' '));
+        let score = 0;
+        if (eqName && text.includes(eqName)) score += 6;
+        if (eqType && text.includes(eqType)) score += 4;
+        if (eqTags && eqTags.split(' ').some((tag) => tag && text.includes(tag))) score += 2;
+        if (text.includes('light') && (eqType.includes('light') || eqName.includes('light') || eqTags.includes('light'))) score += 4;
+        if (text.includes('door') && (eqName.includes('door') || eqTags.includes('door'))) score += 4;
+        if (text.includes('window') && (eqName.includes('window') || eqTags.includes('window'))) score += 4;
+        if ((text.includes('hvac') || text.includes('air')) && (eqType.includes('hvac') || eqName.includes('hvac') || eqTags.includes('hvac'))) score += 4;
+        if (score > bestScore) {
+          best = eq;
+          bestScore = score;
+        }
+      }
+      return bestScore >= 4 ? best : null;
+    };
+    const rawFindings = (result?.findings || []).filter((f) => Number(f.confidence || 0) >= 60);
 
     const created = [];
     const skippedDuplicates = [];
@@ -158,6 +204,10 @@ Return an array of findings. If no clear defect is visible, return an empty arra
     for (const f of rawFindings) {
       const normalizedType = allowedTypes.includes(f.anomaly_type) ? f.anomaly_type : 'other';
       const normalizedSeverity = allowedSeverity.includes(f.severity) ? f.severity : 'minor';
+      const normalizedAssetType = allowedAssetTypes.includes(f.asset_type) ? f.asset_type : null;
+      const matchedEquipment = matchEquipmentForFinding(f);
+      const linkedEquipmentId = equipment_id || matchedEquipment?.id || frameContext?.equipment_id || null;
+      const linkedEquipmentName = equipment_name || matchedEquipment?.name || frameContext?.equipment_name || null;
       const normalizedBox = f.bounding_box ? {
         x: clamp(f.bounding_box.x),
         y: clamp(f.bounding_box.y),
@@ -179,9 +229,9 @@ Return an array of findings. If no clear defect is visible, return an empty arra
         digital_twin_model_name,
         room_code: frameContext?.room_code || null,
         room_name: frameContext?.room_name || null,
-        component_type: frameContext?.component_type || null,
-        equipment_id: equipment_id || frameContext?.equipment_id || null,
-        equipment_name: equipment_name || frameContext?.equipment_name || null,
+        component_type: normalizedAssetType || frameContext?.component_type || null,
+        equipment_id: linkedEquipmentId,
+        equipment_name: linkedEquipmentName,
         image_url,
         anomaly_type: normalizedType,
         severity: normalizedSeverity,
@@ -196,12 +246,12 @@ Return an array of findings. If no clear defect is visible, return an empty arra
       created.push(report);
 
       // Auto-create work order for critical/major findings on a known asset
-      if ((normalizedSeverity === 'critical' || normalizedSeverity === 'major') && equipment_id) {
+      if ((normalizedSeverity === 'critical' || normalizedSeverity === 'major') && linkedEquipmentId) {
         try {
           await base44.asServiceRole.entities.WorkOrder.create({
             work_order_number: `WO-SCAN-${Date.now().toString().slice(-8)}`,
-            equipment_id,
-            title: `${normalizedSeverity.toUpperCase()}: ${normalizedType.replace(/_/g, ' ')} on ${equipment_name || 'asset'}`,
+            equipment_id: linkedEquipmentId,
+            title: `${normalizedSeverity.toUpperCase()}: ${normalizedType.replace(/_/g, ' ')} on ${linkedEquipmentName || 'asset'}`,
             description: `AI scan detected ${normalizedType} (${Math.round(f.confidence)}% confidence).\n\n${f.description || ''}\n\nSource: ${digital_twin_model_name || 'scan'}`,
             type: 'corrective',
             priority: normalizedSeverity === 'critical' ? 'urgent' : 'high',
@@ -259,6 +309,7 @@ Return an array of findings. If no clear defect is visible, return an empty arra
           duplicates_skipped: skippedDuplicates.length,
           model_version: modelVersion,
           equipment_name: equipment_name || null,
+          detected_asset_type: normalizedAssetType || null,
           frame_id: frame_id || null,
         },
         ip_hint: ipHint,

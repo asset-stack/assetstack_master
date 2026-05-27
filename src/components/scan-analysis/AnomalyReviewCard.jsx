@@ -72,6 +72,15 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
 
   const allowedSeverity = ['minor', 'moderate', 'major', 'critical'];
 
+  const syncScanReviewCounts = async () => {
+    if (!report.digital_twin_model_id) return;
+    const scanReports = await secureEntity('ConditionReport').filter({ digital_twin_model_id: report.digital_twin_model_id }, '-created_date', 500);
+    await secureEntity('DigitalTwinModel').update(report.digital_twin_model_id, {
+      total_anomalies: scanReports.length,
+      pending_review_count: scanReports.filter((r) => r.review_status === 'pending').length,
+    });
+  };
+
   const handleReview = async (status) => {
     // Enforce reviewer notes on rejection — rejection without an explanation is training noise.
     if (status === 'rejected' && !notes.trim()) {
@@ -102,6 +111,7 @@ export default function AnomalyReviewCard({ report, onReviewed }) {
         if (correctedBbox) updates.bounding_box = correctedBbox;
       }
       await secureEntity('ConditionReport').update(report.id, updates);
+      await syncScanReviewCounts();
       toast?.success?.(
         status === 'approved' ? 'Verified as correct' :
         status === 'corrected' ? 'Saved correction — feeds back into model training' :
