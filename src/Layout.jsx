@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -145,6 +145,13 @@ export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { currentClient, clients, setClient } = useClient();
 
+  // Accordion sidebar: keep only the hub containing the active page expanded.
+  const activeSectionIdx = navSections.findIndex((s) => s.items.some((i) => i.page === currentPageName));
+  const [openSection, setOpenSection] = useState(activeSectionIdx);
+  useEffect(() => {
+    if (activeSectionIdx >= 0) setOpenSection(activeSectionIdx);
+  }, [activeSectionIdx]);
+
   return (
     <div className="min-h-screen bg-slate-50 flex">
       <OfflineIndicator />
@@ -202,17 +209,25 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-thin">
-          {navSections.map((section, sIdx) => (
+          {navSections.map((section, sIdx) => {
+            const hasLabel = !!section.label;
+            const collapsible = hasLabel && sidebarOpen;
+            const isOpen = !collapsible || openSection === sIdx;
+            return (
             <div key={sIdx}>
-              {section.label && sidebarOpen && (
-                <p className="px-3 pt-4 pb-1 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-                  {section.label}
-                </p>
+              {collapsible && (
+                <button
+                  onClick={() => setOpenSection(openSection === sIdx ? -1 : sIdx)}
+                  className="w-full flex items-center justify-between px-3 pt-4 pb-1 text-[10px] font-semibold text-slate-400 uppercase tracking-wider hover:text-slate-600 transition-colors"
+                >
+                  <span>{section.label}</span>
+                  <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? '' : '-rotate-90'}`} />
+                </button>
               )}
-              {section.label && !sidebarOpen && sIdx > 0 && (
+              {hasLabel && !sidebarOpen && sIdx > 0 && (
                 <div className="mx-3 my-2 border-t border-slate-100" />
               )}
-              {section.items.map((item) => {
+              {isOpen && section.items.map((item) => {
                 const isActive = currentPageName === item.page;
                 const Icon = item.icon;
                 return (
@@ -220,8 +235,8 @@ export default function Layout({ children, currentPageName }) {
                     key={item.page}
                     to={createPageUrl(item.page)}
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-150 group ${
-                      isActive 
-                        ? 'bg-indigo-50 text-indigo-700' 
+                      isActive
+                        ? 'bg-indigo-50 text-indigo-700'
                         : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`}
                   >
@@ -245,7 +260,8 @@ export default function Layout({ children, currentPageName }) {
                 );
               })}
             </div>
-          ))}
+            );
+          })}
         </nav>
 
         {/* Collapse toggle and Logout */}
