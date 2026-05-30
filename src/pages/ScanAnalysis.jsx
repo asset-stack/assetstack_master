@@ -36,6 +36,7 @@ import ConditionTrendCompare from '@/components/scan-analysis/ConditionTrendComp
 import ConditionReportExport from '@/components/scan-analysis/ConditionReportExport';
 import KeyboardShortcutsHelp from '@/components/scan-analysis/KeyboardShortcutsHelp';
 import RoomTaggingPanel from '@/components/scan-analysis/RoomTaggingPanel';
+import ScanReconciliationPanel from '@/components/scan-analysis/ScanReconciliationPanel';
 import { toast } from 'sonner';
 
 export default function ScanAnalysisPage() {
@@ -367,6 +368,14 @@ export default function ScanAnalysisPage() {
                 }}
               />
             )}
+
+            <ScanReconciliationPanel
+              scan={selectedScan}
+              onUpdated={() => {
+                qc.invalidateQueries({ queryKey: ['conditionReports', selectedScan.id] });
+                qc.invalidateQueries({ queryKey: ['digitalTwinScans'] });
+              }}
+            />
 
             {frames.length > 0 && (
               <ScanFramesGallery

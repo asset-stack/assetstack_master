@@ -145,6 +145,29 @@
       "default": false,
       "description": "Whether this report has been fed back into ML training"
     },
+    "reconciliation_status": {
+      "type": "string",
+      "enum": [
+        "unreconciled",
+        "confirmed",
+        "ai_only",
+        "sheet_only"
+      ],
+      "default": "unreconciled",
+      "description": "Result of matching this finding against an uploaded condition spreadsheet"
+    },
+    "sheet_grade": {
+      "type": "number",
+      "description": "Condition grade (1-5) recorded in the matched spreadsheet row"
+    },
+    "sheet_row": {
+      "type": "object",
+      "description": "The matched spreadsheet row fields (room, component, grade, notes) preserved for audit"
+    },
+    "reconciled_at": {
+      "type": "string",
+      "format": "date-time"
+    },
     "spreadsheet_fields": {
       "type": "object",
       "description": "Original spreadsheet row fields preserved for audit and reporting"
