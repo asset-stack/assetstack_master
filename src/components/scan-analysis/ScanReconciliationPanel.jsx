@@ -44,6 +44,7 @@ export default function ScanReconciliationPanel({ scan, onUpdated }) {
         digital_twin_model_name: scan.name,
         confirmations: result.confirmed,
         sheet_only_rows: result.sheet_only,
+        ai_only: result.ai_only,
       });
       toast.success('Spreadsheet confirmations applied to the condition report');
       setResult(null);

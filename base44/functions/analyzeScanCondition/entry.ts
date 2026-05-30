@@ -309,7 +309,6 @@ Return an array of findings. If no clear defect is visible, return an empty arra
           duplicates_skipped: skippedDuplicates.length,
           model_version: modelVersion,
           equipment_name: equipment_name || null,
-          detected_asset_type: normalizedAssetType || null,
           frame_id: frame_id || null,
         },
         ip_hint: ipHint,

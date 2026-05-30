@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const { mode = 'preview', digital_twin_model_id, file_url, confirmations, sheet_only_rows } = body;
+    const { mode = 'preview', digital_twin_model_id, file_url, confirmations, sheet_only_rows, ai_only } = body;
 
     if (!digital_twin_model_id) {
       return Response.json({ error: 'digital_twin_model_id is required' }, { status: 400 });
@@ -58,7 +58,18 @@ Deno.serve(async (req) => {
         created++;
       }
 
-      return Response.json({ success: true, updated, created });
+      // Mark AI findings that no spreadsheet row matched as 'ai_only'
+      let aiOnlyMarked = 0;
+      for (const a of (ai_only || [])) {
+        if (!a.report_id) continue;
+        await base44.asServiceRole.entities.ConditionReport.update(a.report_id, {
+          reconciliation_status: 'ai_only',
+          reconciled_at: now,
+        });
+        aiOnlyMarked++;
+      }
+
+      return Response.json({ success: true, updated, created, ai_only_marked: aiOnlyMarked });
     }
 
     // ---- PREVIEW MODE -------------------------------------------------------
