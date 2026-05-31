@@ -47,7 +47,9 @@ const TENANT_SCOPED = new Set([
 //   - all other users are pinned to ClientAccounts where their email is in allowed_users.
 async function resolveTenant(base44, user, requestedClientId) {
   const allClients = await base44.asServiceRole.entities.ClientAccount.list('-created_date', 500);
-  const isPrivileged = user.role === 'admin' || user.role === 'super_admin';
+  // Cross-tenant access is restricted to platform super_admins ONLY.
+  // A customer's own 'admin' is pinned to the accounts they are a member of.
+  const isPrivileged = user.role === 'super_admin';
 
   const memberships = allClients.filter(
     (c) => Array.isArray(c.allowed_users) && c.allowed_users.includes(user.email)
