@@ -9,10 +9,29 @@ export function ClientProvider({ children }) {
   const { user } = useAuth();
   const [currentClient, setCurrentClient] = useState(null);
 
-  const { data: rawClients = [], isLoading } = useQuery({
+  const { data: rawClients = [], isLoading, refetch } = useQuery({
     queryKey: ['adminClients'],
     queryFn: () => base44.entities.ClientAccount.list('-created_date', 100),
   });
+
+  // Safe provisioning: a signed-in user with no account of their own gets a fresh,
+  // fully isolated ClientAccount instead of hitting a "no membership" wall or
+  // bleeding into an existing tenant. Runs once, never for super_admins.
+  const [provisioning, setProvisioning] = useState(false);
+  useEffect(() => {
+    if (isLoading || !user?.email || provisioning) return;
+    if (user.role === 'super_admin') return;
+    const hasOwn = rawClients.some(
+      (c) => Array.isArray(c.allowed_users) && c.allowed_users.includes(user.email)
+    );
+    if (rawClients.length === 0 || !hasOwn) {
+      setProvisioning(true);
+      base44.functions
+        .invoke('provisionClientAccount', {})
+        .then(() => refetch())
+        .finally(() => setProvisioning(false));
+    }
+  }, [isLoading, user?.email, user?.role, rawClients, provisioning, refetch]);
 
   const clients = rawClients.filter(c => !c.allowed_users?.length || c.allowed_users.includes(user?.email));
 
