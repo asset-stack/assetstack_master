@@ -9,10 +9,6 @@ export function ClientProvider({ children }) {
   const { user } = useAuth();
   const [currentClient, setCurrentClient] = useState(null);
 
-  // If the app was opened via a /demo/<slug> link, lock the whole session
-  // to that demo's ClientAccount for total data isolation.
-  const demoSlug = typeof window !== 'undefined' ? sessionStorage.getItem('demo_slug') : null;
-
   const { data: rawClients = [], isLoading, refetch } = useQuery({
     queryKey: ['adminClients'],
     queryFn: () => base44.entities.ClientAccount.list('-created_date', 100),
@@ -23,7 +19,6 @@ export function ClientProvider({ children }) {
   // bleeding into an existing tenant. Runs once, never for super_admins.
   const [provisioning, setProvisioning] = useState(false);
   useEffect(() => {
-    if (demoSlug) return;
     if (isLoading || !user?.email || provisioning) return;
     if (user.role === 'super_admin') return;
     const hasOwn = rawClients.some(
@@ -43,23 +38,13 @@ export function ClientProvider({ children }) {
   const isDemoClient = (client) => /demo|council|bunbury/i.test(client?.business_name || '');
 
   useEffect(() => {
-    if (demoSlug) {
-      const demo = rawClients.find(c => c.demo_slug === demoSlug);
-      if (demo && currentClient?.id !== demo.id) {
-        setCurrentClient(demo);
-        // Propagate the demo's account id to the data layer (secureEntities &
-        // backend functions read this) so the whole session is scoped to the demo.
-        try { localStorage.setItem('assetstack_client_id', demo.id); } catch { /* ignore */ }
-      }
-      return;
-    }
     if (clients.length > 0 && !currentClient) {
       const saved = localStorage.getItem('assetstack_client_id');
       const found = saved ? clients.find(c => c.id === saved && !isDemoClient(c)) : null;
       const mainAccount = clients.find(c => !isDemoClient(c));
       setCurrentClient(found || mainAccount || clients[0]);
     }
-  }, [clients, currentClient, rawClients, demoSlug]);
+  }, [clients, currentClient]);
 
   const setClient = (client) => {
     setCurrentClient(client);
