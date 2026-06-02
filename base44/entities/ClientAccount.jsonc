@@ -25,6 +25,15 @@
     "website": {
       "type": "string"
     },
+    "demo_slug": {
+      "type": "string",
+      "description": "Unique URL-friendly identifier for demo accounts (e.g. 'snowyhydro'). Used to load this account from a /demo/<slug> link."
+    },
+    "is_demo_account": {
+      "type": "boolean",
+      "default": false,
+      "description": "Flag marking this ClientAccount as an interactive demo environment."
+    },
     "subscription_level": {
       "type": "string",
       "enum": [

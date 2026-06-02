@@ -24,6 +24,7 @@ import BetaFeatures from './pages/BetaFeatures';
 import SavingsLedger from './pages/SavingsLedger';
 import SecurityCenter from './pages/SecurityCenter';
 import Landing from './pages/Landing';
+import DemoEntry from './pages/DemoEntry';
 import Industries from './pages/Industries';
 import LandingCompliance from './pages/LandingCompliance.jsx';
 import SpareParts from './pages/SpareParts';
@@ -102,6 +103,7 @@ const AuthenticatedApp = () => {
       {/* Public landing page — no sidebar/layout wrapper */}
       <Route path="/" element={<Landing />} />
       <Route path="/Landing" element={<Landing />} />
+      <Route path="/demo/:demoSlug" element={<DemoEntry />} />
       <Route path="/Product" element={<Product />} />
       <Route path="/Solutions" element={<Solutions />} />
       <Route path="/Industries" element={<Industries />} />
