@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { base44 } from '@/api/base44Client';
 import { useClient } from '@/lib/ClientContext';
 import OfflineIndicator from '@/components/mobile/OfflineIndicator';
+import DemoReadOnlyBanner from '@/components/demo/DemoReadOnlyBanner';
 import MobileBottomNav from '@/components/mobile/MobileBottomNav';
 import MobileHeader from '@/components/mobile/MobileHeader';
 import QuickActionsFAB from '@/components/mobile/QuickActionsFAB';
@@ -124,6 +125,7 @@ const navSections = [
   {
     label: 'Admin',
     items: [
+      { name: 'Demo Library', icon: Rocket, page: 'DemoLibrary' },
       { name: 'Client Accounts', icon: Users, page: 'SuperAdminClients' },
       { name: 'Security Center', icon: ShieldCheck, page: 'SecurityCenter' },
       { name: 'SWSC Audit', icon: FileText, page: 'SWSCAudit' },
@@ -154,6 +156,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
+      <DemoReadOnlyBanner />
       <OfflineIndicator />
       <OfflineSyncEngine />
       <GuidedTour />

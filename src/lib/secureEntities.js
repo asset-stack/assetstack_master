@@ -1,4 +1,13 @@
 import { base44 } from '@/api/base44Client';
+import { isDemoSession } from '@/lib/demoMode';
+
+// Demo sessions are strictly read-only — block every mutating call so a
+// prospect exploring a /demo/<slug> link can never pollute real data.
+function assertWritable() {
+  if (isDemoSession()) {
+    throw new Error('This is a read-only demo environment. Changes are disabled.');
+  }
+}
 
 // Thin frontend helper that routes tenant-scoped entity calls through the
 // secureEntityQuery backend gateway. The gateway enforces client_account_id
@@ -32,8 +41,8 @@ export function secureEntity(entityName) {
     filter: (filters = {}, sort = '-created_date', limit = 100, skip = 0) =>
       invoke({ entityName, operation: 'filter', filters, sort, limit, skip, requestedClientId }),
     get: (id) => invoke({ entityName, operation: 'get', id, requestedClientId }),
-    create: (data) => invoke({ entityName, operation: 'create', data, requestedClientId }),
-    update: (id, data) => invoke({ entityName, operation: 'update', id, data, requestedClientId }),
-    delete: (id) => invoke({ entityName, operation: 'delete', id, requestedClientId }),
+    create: (data) => { assertWritable(); return invoke({ entityName, operation: 'create', data, requestedClientId }); },
+    update: (id, data) => { assertWritable(); return invoke({ entityName, operation: 'update', id, data, requestedClientId }); },
+    delete: (id) => { assertWritable(); return invoke({ entityName, operation: 'delete', id, requestedClientId }); },
   };
 }
