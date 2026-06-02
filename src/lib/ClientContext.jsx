@@ -45,7 +45,12 @@ export function ClientProvider({ children }) {
   useEffect(() => {
     if (demoSlug) {
       const demo = rawClients.find(c => c.demo_slug === demoSlug);
-      if (demo && currentClient?.id !== demo.id) setCurrentClient(demo);
+      if (demo && currentClient?.id !== demo.id) {
+        setCurrentClient(demo);
+        // Propagate the demo's account id to the data layer (secureEntities &
+        // backend functions read this) so the whole session is scoped to the demo.
+        try { localStorage.setItem('assetstack_client_id', demo.id); } catch { /* ignore */ }
+      }
       return;
     }
     if (clients.length > 0 && !currentClient) {
