@@ -7,6 +7,8 @@ import { ClipboardCheck, Loader2, Search, LayoutList, AlertTriangle } from 'luci
 import { toast } from 'sonner';
 import DefectTable from '@/components/defects/DefectTable';
 import ConditionRegisterTable from '@/components/defects/ConditionRegisterTable';
+import ScheduleToCapitalPlanDialog from '@/components/defects/ScheduleToCapitalPlanDialog';
+import { secureEntity } from '@/lib/secureEntities';
 
 export default function ConditionDefects() {
   const [components, setComponents] = useState([]);
@@ -21,6 +23,7 @@ export default function ConditionDefects() {
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sort, setSort] = useState({ field: 'room_code', dir: 'asc' });
+  const [scheduleDefect, setScheduleDefect] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -50,6 +53,26 @@ export default function ConditionDefects() {
     } finally {
       setSavingId(null);
     }
+  };
+
+  const handleScheduleToPlan = async ({ defect, year, cost, priority, rationale }) => {
+    const created = await secureEntity('CapitalPlanItem').create({
+      equipment_name: `${defect.room_name || defect.room_code} — ${defect.defect_id}`,
+      asset_type: defect.origin || 'Condition Defect',
+      replacement_year: year,
+      replacement_cost: cost,
+      priority,
+      status: 'proposed',
+      funding_source: 'capital',
+      rationale,
+      notes: `Source: Condition Report defect ${defect.defect_id}`,
+    });
+    await base44.entities.InspectorDefect.update(defect.id, {
+      linked_capital_plan_item_id: created.id,
+      scheduled_year: year,
+    });
+    setDefects((ds) => ds.map((d) => (d.id === defect.id ? { ...d, linked_capital_plan_item_id: created.id, scheduled_year: year } : d)));
+    toast.success(`Added to Capital Plan · FY${year}`);
   };
 
   const groups = useMemo(() => Array.from(new Set(components.map((c) => c.group).filter(Boolean))).sort(), [components]);
@@ -197,9 +220,16 @@ export default function ConditionDefects() {
       ) : (
         <>
           <div className="text-xs text-slate-500 mb-2">{filteredDefects.length} of {defects.length} defects</div>
-          <DefectTable defects={filteredDefects} savingId={savingId} onVerify={handleVerify} />
+          <DefectTable defects={filteredDefects} savingId={savingId} onVerify={handleVerify} onSchedule={setScheduleDefect} />
         </>
       )}
+
+      <ScheduleToCapitalPlanDialog
+        open={!!scheduleDefect}
+        onOpenChange={(o) => !o && setScheduleDefect(null)}
+        defect={scheduleDefect}
+        onScheduled={handleScheduleToPlan}
+      />
     </div>
   );
 }

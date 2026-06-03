@@ -1,10 +1,11 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check, X, RotateCcw, Loader2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Check, X, RotateCcw, Loader2, CalendarClock } from 'lucide-react';
 import { PriorityBadge, VerifyBadge } from './DefectStatusBadge';
 
-export default function DefectTable({ defects, savingId, onVerify }) {
+export default function DefectTable({ defects, savingId, onVerify, onSchedule }) {
   return (
     <Card className="overflow-hidden">
       <div className="overflow-x-auto">
@@ -23,6 +24,7 @@ export default function DefectTable({ defects, savingId, onVerify }) {
               <th className="text-right font-semibold px-3 py-2.5">Year</th>
               <th className="text-right font-semibold px-3 py-2.5">Cost</th>
               <th className="text-left font-semibold px-3 py-2.5">Status</th>
+              <th className="text-left font-semibold px-3 py-2.5">Capital Plan</th>
               <th className="text-right font-semibold px-3 py-2.5">Verify</th>
             </tr>
           </thead>
@@ -43,6 +45,17 @@ export default function DefectTable({ defects, savingId, onVerify }) {
                   {d.factored_cost != null ? `$${Math.round(d.factored_cost).toLocaleString()}` : '—'}
                 </td>
                 <td className="px-3 py-2.5"><VerifyBadge status={d.verify_status} /></td>
+                <td className="px-3 py-2.5 whitespace-nowrap">
+                  {d.linked_capital_plan_item_id ? (
+                    <Badge className="bg-indigo-50 text-indigo-700 border border-indigo-100 text-[11px]">
+                      <CalendarClock className="w-3 h-3 mr-1" /> FY{d.scheduled_year}
+                    </Badge>
+                  ) : (
+                    <Button size="sm" variant="outline" className="h-7 text-[11px] px-2" onClick={() => onSchedule?.(d)}>
+                      <CalendarClock className="w-3 h-3 mr-1" /> Schedule
+                    </Button>
+                  )}
+                </td>
                 <td className="px-3 py-2.5">
                   <div className="flex items-center justify-end gap-1">
                     {savingId === d.id ? (

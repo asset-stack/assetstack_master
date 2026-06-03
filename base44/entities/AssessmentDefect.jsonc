@@ -74,6 +74,14 @@
       "type": "string",
       "description": "Reference to MaintenanceTask/WorkOrder if rectification has been raised"
     },
+    "linked_capital_plan_item_id": {
+      "type": "string",
+      "description": "Reference to the CapitalPlanItem this defect has been scheduled into"
+    },
+    "scheduled_year": {
+      "type": "number",
+      "description": "Fiscal year this defect is scheduled for in the capital plan"
+    },
     "notes": {
       "type": "string"
     },
