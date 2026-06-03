@@ -53,6 +53,7 @@ import ProjectDetail from './pages/ProjectDetail';
 import PrintLanding from './pages/PrintLanding';
 import LandingEditor from './pages/LandingEditor';
 import ConditionInspector from './pages/ConditionInspector';
+import ConditionDefects from './pages/ConditionDefects';
 import VerifyReports from './pages/VerifyReports';
 import SWSCAudit from './pages/SWSCAudit.jsx';
 import CompanyProfile from './pages/CompanyProfile.jsx';
@@ -316,6 +317,11 @@ const AuthenticatedApp = () => {
       <Route path="/ConditionInspector" element={
             <LayoutWrapper currentPageName="ConditionInspector">
               <ConditionInspector />
+            </LayoutWrapper>
+          } />
+      <Route path="/ConditionDefects" element={
+            <LayoutWrapper currentPageName="ConditionDefects">
+              <ConditionDefects />
             </LayoutWrapper>
           } />
       <Route path="/VerifyReports" element={

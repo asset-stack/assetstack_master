@@ -57,6 +57,20 @@
     },
     "source_sheet": {
       "type": "string"
+    },
+    "verify_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "verified",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Manual verification status of this condition defect"
+    },
+    "verify_notes": {
+      "type": "string",
+      "description": "Reviewer notes captured during verification"
     }
   },
   "required": [
