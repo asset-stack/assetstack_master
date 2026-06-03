@@ -94,7 +94,7 @@ const navSections = [
     label: 'Field Ops',
     items: [
       { name: 'Condition Inspector', icon: Sparkles, page: 'ConditionInspector' },
-      { name: 'Condition Defects', icon: ClipboardCheck, page: 'ConditionDefects' },
+      { name: 'Condition Report', icon: ClipboardCheck, page: 'ConditionDefects' },
       { name: 'Verify Reports', icon: ShieldCheck, page: 'VerifyReports' },
       { name: 'Field Survey', icon: Smartphone, page: 'FieldSurvey' },
       { name: 'Inspection Cycles', icon: ClipboardCheck, page: 'InspectionCycles' },
