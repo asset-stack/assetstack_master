@@ -111,109 +111,100 @@ Deno.serve(async (req) => {
       defect_id: d.defect_id || '',
       anomaly_type: 'other',
       severity: priorityToSeverity(d.priority),
-      condition_grade: d.criticality_index ?? null,
+      condition_grade: null,
+      rectification: d.rectification || '',
       notes: d.description || '',
     }));
 
-    // Scope: cap defect rows fed to the LLM so we never blow the context window.
-    const MAX_ROWS = 150;
-    const scopedRows = rows.slice(0, MAX_ROWS);
+    const scopedRows = rows;
 
     // Load existing AI findings for this scan
     const reports = await base44.asServiceRole.entities.ConditionReport.filter({
       digital_twin_model_id,
-    }, '-created_date', 300);
+    }, '-created_date', 500);
 
-    const slim = reports.map((r) => ({
-      id: r.id,
-      anomaly_type: r.anomaly_type,
-      severity: r.severity,
-      room_name: r.room_name || '',
-      component_type: r.component_type || '',
-      equipment_name: r.equipment_name || '',
-      ai_description: (r.ai_description || '').slice(0, 160),
-    }));
+    // ---- DETERMINISTIC MATCHING --------------------------------------------
+    // Index-based LLM matching is unreliable at this scale (100s of findings).
+    // Instead match in code: a defect row matches a finding when their room
+    // codes agree AND their text shares meaningful keywords.
+    const STOP = new Set(['the','and','for','with','that','this','are','was','have','has','from','near','area','damage','damaged','tile','tiles','wall','floor','ceiling','door','room','section','investigate','replace','repair','rectify','cause','requires','require','new','old']);
+    const roomCodeOf = (s) => {
+      const m = (s || '').toUpperCase().match(/\bR\d{1,3}\b/);
+      return m ? m[0] : '';
+    };
+    const keywords = (s) => new Set(
+      (s || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .split(/\s+/)
+        .filter((w) => w.length > 3 && !STOP.has(w))
+    );
+    const overlap = (a, b) => {
+      let n = 0;
+      for (const w of a) if (b.has(w)) n++;
+      return n;
+    };
 
-    // Use the LLM to align spreadsheet defect rows to AI findings.
-    const alignment = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are reconciling a building condition inspection's DEFECT list against AI-detected scan findings.
+    const usedReports = new Set();
+    const matchedRowIdx = new Set();
+    const confirmed = [];
 
-Inspector defect rows (ground truth) from sheet "${sheet_name}":
-${JSON.stringify(scopedRows)}
-
-AI findings detected from the scan:
-${JSON.stringify(slim)}
-
-Match each defect row to at most one AI finding when they clearly refer to the same defect (same room and a compatible defect type/description).
-
-CRITICAL: "report_id" MUST be an "id" value taken verbatim from the AI findings list above. NEVER use a defect_id (e.g. COB-xxxx) or any value from the inspector rows as report_id. "row_index" is the 0-based index into the inspector defect rows array.
-
-Return:
-- confirmed: pairs where a defect row matches an AI finding -> { report_id, row_index, sheet_grade, room_code, room_name, component_type }
-- sheet_only: defect row_index values that had NO matching AI finding
-- ai_only: AI finding "id" values that no defect row matched
-
-Be conservative: only confirm clear matches.`,
-      response_json_schema: {
-        type: 'object',
-        properties: {
-          confirmed: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                report_id: { type: 'string' },
-                row_index: { type: 'number' },
-                sheet_grade: { type: 'number' },
-                room_code: { type: 'string' },
-                room_name: { type: 'string' },
-                component_type: { type: 'string' },
-              },
-            },
-          },
-          sheet_only: { type: 'array', items: { type: 'number' } },
-          ai_only: { type: 'array', items: { type: 'string' } },
-        },
-      },
+    scopedRows.forEach((row, idx) => {
+      const rcode = roomCodeOf(row.room_code) || roomCodeOf(row.room_name);
+      const rkw = keywords(`${row.notes} ${row.rectification}`);
+      let best = null;
+      let bestScore = 0;
+      for (const rep of reports) {
+        if (usedReports.has(rep.id)) continue;
+        const repRoom = roomCodeOf(rep.room_name) || roomCodeOf(rep.equipment_name);
+        // Require room agreement when both sides expose a room code.
+        if (rcode && repRoom && rcode !== repRoom) continue;
+        const score = overlap(rkw, keywords(rep.ai_description));
+        // Need at least 2 shared keywords for a content match.
+        if (score >= 2 && score > bestScore) {
+          best = rep;
+          bestScore = score;
+        }
+      }
+      if (best) {
+        usedReports.add(best.id);
+        matchedRowIdx.add(idx);
+        confirmed.push({
+          report_id: best.id,
+          image_url: best.image_url || null,
+          anomaly_type: best.anomaly_type || row.anomaly_type,
+          ai_severity: best.severity,
+          ai_description: best.ai_description,
+          sheet_grade: row.condition_grade ?? null,
+          room_code: row.room_code || '',
+          room_name: row.room_name || '',
+          component_type: row.component_type || '',
+          sheet_row: row,
+        });
+      }
     });
 
-    const confirmed = (alignment?.confirmed || []).map((m) => {
-      const rep = reports.find((r) => r.id === m.report_id);
-      const row = scopedRows[m.row_index] || {};
-      return {
-        report_id: m.report_id,
-        image_url: rep?.image_url || null,
-        anomaly_type: rep?.anomaly_type || row.anomaly_type,
-        ai_severity: rep?.severity,
-        ai_description: rep?.ai_description,
-        sheet_grade: m.sheet_grade ?? row.condition_grade ?? null,
-        room_code: m.room_code || row.room_code || '',
-        room_name: m.room_name || row.room_name || '',
-        component_type: m.component_type || row.component_type || '',
-        sheet_row: row,
-      };
-    });
+    const sheetOnly = scopedRows
+      .filter((_, i) => !matchedRowIdx.has(i))
+      .map((row) => ({
+        room_code: row.room_code || '',
+        room_name: row.room_name || '',
+        component_type: row.component_type || '',
+        severity: ['minor', 'moderate', 'major', 'critical'].includes(row.severity) ? row.severity : 'minor',
+        sheet_grade: row.condition_grade ?? null,
+        defect_id: row.defect_id || '',
+        notes: row.notes || '',
+      }));
 
-    const sheetOnly = (alignment?.sheet_only || []).map((i) => scopedRows[i]).filter(Boolean).map((row) => ({
-      room_code: row.room_code || '',
-      room_name: row.room_name || '',
-      component_type: row.component_type || '',
-      severity: ['minor', 'moderate', 'major', 'critical'].includes(row.severity) ? row.severity : 'minor',
-      sheet_grade: row.condition_grade ?? null,
-      notes: row.notes || '',
-    }));
-
-    const aiOnly = (alignment?.ai_only || []).map((id) => {
-      const rep = reports.find((r) => r.id === id);
-      if (!rep) return null;
-      return {
+    const aiOnly = reports
+      .filter((rep) => !usedReports.has(rep.id))
+      .map((rep) => ({
         report_id: rep.id,
         image_url: rep.image_url,
         anomaly_type: rep.anomaly_type,
         severity: rep.severity,
         ai_description: rep.ai_description,
-      };
-    }).filter(Boolean);
+      }));
 
     return Response.json({
       success: true,

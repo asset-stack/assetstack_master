@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { scoreForSeverity } from '@/components/scan-analysis/severityScale';
 import VerifyPhotoPane from '@/components/verify/VerifyPhotoPane';
 import VerifyAIPanel from '@/components/verify/VerifyAIPanel';
+import VerifySpreadsheetMatch from '@/components/verify/VerifySpreadsheetMatch';
 import VerifyCorrectionForm from '@/components/verify/VerifyCorrectionForm';
 import VerifyActionBar from '@/components/verify/VerifyActionBar';
 import VerifyKeyboardHints from '@/components/verify/VerifyKeyboardHints';
@@ -254,6 +255,8 @@ export default function VerifyReports() {
           {/* Right — AI suggestion + actions */}
           <div className="space-y-3">
             <VerifyAIPanel report={current} />
+
+            <VerifySpreadsheetMatch report={current} />
 
             {mode === 'correct' && (
               <VerifyCorrectionForm
