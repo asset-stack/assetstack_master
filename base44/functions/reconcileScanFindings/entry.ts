@@ -1,8 +1,12 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-// Reconcile an uploaded condition spreadsheet against AI scan findings for a scan.
-// mode 'preview': extract rows, match to ConditionReports, return 3-way diff (confirmed / ai_only / sheet_only).
+// Reconcile an uploaded condition workbook against AI scan findings for a scan.
+// mode 'preview': extract DEFECT rows from a chosen sheet, match to ConditionReports,
+//   return 3-way diff (confirmed / ai_only / sheet_only). Register rows are pulled for context only.
 // mode 'apply': persist reconciliation status + sheet grade/room/component onto the matched reports.
+//
+// The Bunbury workbook has 34 sheets. We default to the "Defects (2)" sheet (real inspector
+// defects) for matching, and optionally read a register sheet ("Bunbury-Condition") for context.
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -10,7 +14,15 @@ Deno.serve(async (req) => {
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
-    const { mode = 'preview', digital_twin_model_id, file_url, confirmations, sheet_only_rows, ai_only } = body;
+    const {
+      mode = 'preview',
+      digital_twin_model_id,
+      file_url,
+      sheet_name = 'Defects (2)',
+      confirmations,
+      sheet_only_rows,
+      ai_only,
+    } = body;
 
     if (!digital_twin_model_id) {
       return Response.json({ error: 'digital_twin_model_id is required' }, { status: 400 });
@@ -77,9 +89,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'file_url is required for preview' }, { status: 400 });
     }
 
-    // Extract spreadsheet rows
+    // Extract DEFECT rows from the chosen sheet. We list the real Bunbury column names
+    // as hints so the extractor maps them reliably.
     const extraction = await base44.integrations.Core.ExtractDataFromUploadedFile({
       file_url,
+      sheet_name,
       json_schema: {
         type: 'object',
         properties: {
@@ -88,13 +102,14 @@ Deno.serve(async (req) => {
             items: {
               type: 'object',
               properties: {
-                room_code: { type: 'string' },
-                room_name: { type: 'string' },
-                component_type: { type: 'string' },
-                anomaly_type: { type: 'string' },
-                severity: { type: 'string' },
-                condition_grade: { type: 'number' },
-                notes: { type: 'string' },
+                room_code: { type: 'string', description: 'RoomID column, e.g. R01, R18' },
+                room_name: { type: 'string', description: 'Room / Location column' },
+                component_type: { type: 'string', description: 'Component Type, or empty for defect sheets' },
+                defect_id: { type: 'string', description: 'DEFECT ID column, e.g. COB-2785' },
+                anomaly_type: { type: 'string', description: 'Best-guess defect category from the description' },
+                severity: { type: 'string', description: 'minor | moderate | major | critical (derive from Priority)' },
+                condition_grade: { type: 'number', description: '2025 Condition Grade or Criticality Index if present' },
+                notes: { type: 'string', description: 'DEFECT Description column' },
               },
             },
           },
@@ -102,7 +117,20 @@ Deno.serve(async (req) => {
       },
     });
 
-    const rows = extraction?.output?.rows || [];
+    let rows = extraction?.output?.rows || [];
+
+    // De-duplicate defect rows (the Defects sheet repeats each defect across program years).
+    const seen = new Set();
+    rows = rows.filter((r) => {
+      const key = `${r.defect_id || ''}|${r.room_code || ''}|${(r.notes || '').slice(0, 40)}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    // Scope: cap defect rows fed to the LLM so we never blow the context window.
+    const MAX_ROWS = 150;
+    const scopedRows = rows.slice(0, MAX_ROWS);
 
     // Load existing AI findings for this scan
     const reports = await base44.asServiceRole.entities.ConditionReport.filter({
@@ -119,21 +147,21 @@ Deno.serve(async (req) => {
       ai_description: (r.ai_description || '').slice(0, 160),
     }));
 
-    // Use the LLM to align spreadsheet rows to AI findings.
+    // Use the LLM to align spreadsheet defect rows to AI findings.
     const alignment = await base44.integrations.Core.InvokeLLM({
-      prompt: `You are reconciling an asset-condition inspection spreadsheet against AI-detected scan findings.
+      prompt: `You are reconciling a building condition inspection's DEFECT list against AI-detected scan findings.
 
-Spreadsheet rows (the human inspector's ground truth):
-${JSON.stringify(rows)}
+Inspector defect rows (ground truth) from sheet "${sheet_name}":
+${JSON.stringify(scopedRows)}
 
 AI findings detected from the scan:
 ${JSON.stringify(slim)}
 
-Match each spreadsheet row to at most one AI finding when they clearly refer to the same defect (same room/component and a compatible defect type). 
+Match each defect row to at most one AI finding when they clearly refer to the same defect (same room and a compatible defect type/description).
 Return:
-- confirmed: pairs where a spreadsheet row matches an AI finding -> { report_id, row_index, sheet_grade, room_code, room_name, component_type }
-- sheet_only: spreadsheet row_index values that had NO matching AI finding
-- ai_only: report_id values for AI findings that no spreadsheet row matched
+- confirmed: pairs where a defect row matches an AI finding -> { report_id, row_index, sheet_grade, room_code, room_name, component_type }
+- sheet_only: defect row_index values that had NO matching AI finding
+- ai_only: report_id values for AI findings that no defect row matched
 
 Be conservative: only confirm clear matches.`,
       response_json_schema: {
@@ -161,7 +189,7 @@ Be conservative: only confirm clear matches.`,
 
     const confirmed = (alignment?.confirmed || []).map((m) => {
       const rep = reports.find((r) => r.id === m.report_id);
-      const row = rows[m.row_index] || {};
+      const row = scopedRows[m.row_index] || {};
       return {
         report_id: m.report_id,
         image_url: rep?.image_url || null,
@@ -176,7 +204,7 @@ Be conservative: only confirm clear matches.`,
       };
     });
 
-    const sheetOnly = (alignment?.sheet_only || []).map((i) => rows[i]).filter(Boolean).map((row) => ({
+    const sheetOnly = (alignment?.sheet_only || []).map((i) => scopedRows[i]).filter(Boolean).map((row) => ({
       room_code: row.room_code || '',
       room_name: row.room_name || '',
       component_type: row.component_type || '',
@@ -199,7 +227,9 @@ Be conservative: only confirm clear matches.`,
 
     return Response.json({
       success: true,
+      sheet_name,
       total_rows: rows.length,
+      scoped_rows: scopedRows.length,
       total_findings: reports.length,
       confirmed,
       sheet_only: sheetOnly,

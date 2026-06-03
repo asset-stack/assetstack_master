@@ -1,0 +1,66 @@
+{
+  "name": "InspectorDefect",
+  "type": "object",
+  "properties": {
+    "client_account_id": {
+      "type": "string",
+      "description": "Tenant scope"
+    },
+    "bld_id": {
+      "type": "number",
+      "description": "Building ID from the workbook"
+    },
+    "room_code": {
+      "type": "string",
+      "description": "RoomID, e.g. R01"
+    },
+    "room_name": {
+      "type": "string",
+      "description": "Room / Location"
+    },
+    "defect_id": {
+      "type": "string",
+      "description": "DEFECT ID, e.g. COB-2785"
+    },
+    "description": {
+      "type": "string",
+      "description": "DEFECT Description"
+    },
+    "rectification": {
+      "type": "string",
+      "description": "DEFECT Rectification"
+    },
+    "origin": {
+      "type": "string",
+      "description": "DEFECT Origin (e.g. Lycopodium, talis)"
+    },
+    "priority": {
+      "type": "string",
+      "description": "Priority (Low/Medium/High)"
+    },
+    "factored_cost": {
+      "type": "number"
+    },
+    "level_of_service": {
+      "type": "number"
+    },
+    "criticality_index": {
+      "type": "number"
+    },
+    "program": {
+      "type": "string",
+      "description": "Program (Premium/Balanced/Must Do)"
+    },
+    "year": {
+      "type": "number",
+      "description": "Target calendar year"
+    },
+    "source_sheet": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "defect_id",
+    "description"
+  ]
+}

@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Upload, Loader2, CheckCircle2, Sparkles, FileSpreadsheet, ScanLine } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 
 // Three-way reconciliation of an inspector spreadsheet vs AI scan findings.
@@ -11,6 +12,7 @@ export default function ScanReconciliationPanel({ scan, onUpdated }) {
   const [loading, setLoading] = useState(false);
   const [applying, setApplying] = useState(false);
   const [result, setResult] = useState(null);
+  const [sheetName, setSheetName] = useState('Defects (2)');
 
   const handleFile = async (e) => {
     const file = e.target.files?.[0];
@@ -23,6 +25,7 @@ export default function ScanReconciliationPanel({ scan, onUpdated }) {
         mode: 'preview',
         digital_twin_model_id: scan.id,
         file_url,
+        sheet_name: sheetName,
       });
       setResult(res.data);
       toast.success(`Matched ${res.data.confirmed?.length || 0} finding(s) to your spreadsheet`);
@@ -68,16 +71,29 @@ export default function ScanReconciliationPanel({ scan, onUpdated }) {
           Confirm with Inspector Spreadsheet
         </h4>
         <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={handleFile} />
-        <Button
-          size="sm"
-          variant="outline"
-          disabled={loading || !scan?.id}
-          onClick={() => fileRef.current?.click()}
-          className="h-8 text-xs"
-        >
-          {loading ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <Upload className="w-3.5 h-3.5 mr-1" />}
-          Upload spreadsheet
-        </Button>
+        <div className="flex items-center gap-2">
+          <Select value={sheetName} onValueChange={setSheetName} disabled={loading}>
+            <SelectTrigger className="h-8 text-xs w-[150px]">
+              <SelectValue placeholder="Sheet" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Defects (2)">Defects (2)</SelectItem>
+              <SelectItem value="Defect Reponses">Defect Responses</SelectItem>
+              <SelectItem value="Bunbury-Condition">Bunbury-Condition</SelectItem>
+              <SelectItem value="Condition Assessment">Condition Assessment</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={loading || !scan?.id}
+            onClick={() => fileRef.current?.click()}
+            className="h-8 text-xs"
+          >
+            {loading ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <Upload className="w-3.5 h-3.5 mr-1" />}
+            Upload workbook
+          </Button>
+        </div>
       </div>
 
       <p className="text-xs text-slate-500 mb-3">
