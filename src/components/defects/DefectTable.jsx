@@ -15,7 +15,12 @@ export default function DefectTable({ defects, savingId, onVerify }) {
               <th className="text-left font-semibold px-3 py-2.5">Room</th>
               <th className="text-left font-semibold px-3 py-2.5 min-w-[280px]">Description</th>
               <th className="text-left font-semibold px-3 py-2.5 min-w-[220px]">Rectification</th>
+              <th className="text-left font-semibold px-3 py-2.5">Origin</th>
               <th className="text-left font-semibold px-3 py-2.5">Priority</th>
+              <th className="text-right font-semibold px-3 py-2.5">LoS</th>
+              <th className="text-right font-semibold px-3 py-2.5">Crit.</th>
+              <th className="text-left font-semibold px-3 py-2.5">Program</th>
+              <th className="text-right font-semibold px-3 py-2.5">Year</th>
               <th className="text-right font-semibold px-3 py-2.5">Cost</th>
               <th className="text-left font-semibold px-3 py-2.5">Status</th>
               <th className="text-right font-semibold px-3 py-2.5">Verify</th>
@@ -28,7 +33,12 @@ export default function DefectTable({ defects, savingId, onVerify }) {
                 <td className="px-3 py-2.5 text-slate-600 whitespace-nowrap">{d.room_name || d.room_code}</td>
                 <td className="px-3 py-2.5 text-slate-700 leading-relaxed">{d.description}</td>
                 <td className="px-3 py-2.5 text-slate-500 leading-relaxed">{d.rectification || '—'}</td>
+                <td className="px-3 py-2.5 text-slate-500 whitespace-nowrap">{d.origin || '—'}</td>
                 <td className="px-3 py-2.5"><PriorityBadge priority={d.priority} /></td>
+                <td className="px-3 py-2.5 text-right text-slate-600 tabular-nums">{d.level_of_service ?? '—'}</td>
+                <td className="px-3 py-2.5 text-right text-slate-600 tabular-nums">{d.criticality_index ?? '—'}</td>
+                <td className="px-3 py-2.5 text-slate-500 whitespace-nowrap">{d.program || '—'}</td>
+                <td className="px-3 py-2.5 text-right text-slate-600 tabular-nums">{d.year ?? '—'}</td>
                 <td className="px-3 py-2.5 text-right text-slate-700 tabular-nums whitespace-nowrap">
                   {d.factored_cost != null ? `$${Math.round(d.factored_cost).toLocaleString()}` : '—'}
                 </td>

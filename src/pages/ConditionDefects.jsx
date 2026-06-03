@@ -14,17 +14,12 @@ export default function ConditionDefects() {
   const [search, setSearch] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [programFilter, setProgramFilter] = useState('all');
 
   const load = useCallback(async () => {
     setLoading(true);
-    const rows = await base44.entities.InspectorDefect.list('-created_date', 1000);
-    // De-duplicate: each defect repeats across program years — keep one per defect_id.
-    const byId = new Map();
-    for (const r of rows) {
-      const key = r.defect_id || r.id;
-      if (!byId.has(key)) byId.set(key, r);
-    }
-    setDefects(Array.from(byId.values()));
+    const rows = await base44.entities.InspectorDefect.list('-created_date', 2000);
+    setDefects(rows);
     setLoading(false);
   }, []);
 
@@ -47,6 +42,7 @@ export default function ConditionDefects() {
     return defects.filter((d) => {
       if (priorityFilter !== 'all' && (d.priority || '').toLowerCase() !== priorityFilter) return false;
       if (statusFilter !== 'all' && (d.verify_status || 'pending') !== statusFilter) return false;
+      if (programFilter !== 'all' && d.program !== programFilter) return false;
       if (search) {
         const q = search.toLowerCase();
         const hay = `${d.defect_id} ${d.room_name} ${d.room_code} ${d.description} ${d.rectification}`.toLowerCase();
@@ -54,7 +50,9 @@ export default function ConditionDefects() {
       }
       return true;
     });
-  }, [defects, priorityFilter, statusFilter, search]);
+  }, [defects, priorityFilter, statusFilter, programFilter, search]);
+
+  const programs = useMemo(() => Array.from(new Set(defects.map((d) => d.program).filter(Boolean))), [defects]);
 
   const stats = useMemo(() => {
     const verified = defects.filter((d) => d.verify_status === 'verified').length;
@@ -112,6 +110,13 @@ export default function ConditionDefects() {
             <SelectItem value="pending">Pending</SelectItem>
             <SelectItem value="verified">Verified</SelectItem>
             <SelectItem value="rejected">Rejected</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={programFilter} onValueChange={setProgramFilter}>
+          <SelectTrigger className="h-9 w-40 text-xs"><SelectValue placeholder="Program" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All programs</SelectItem>
+            {programs.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
