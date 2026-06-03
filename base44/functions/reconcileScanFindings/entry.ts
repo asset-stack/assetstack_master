@@ -85,48 +85,35 @@ Deno.serve(async (req) => {
     }
 
     // ---- PREVIEW MODE -------------------------------------------------------
-    if (!file_url) {
-      return Response.json({ error: 'file_url is required for preview' }, { status: 400 });
-    }
+    // Defect rows are imported into the InspectorDefect entity (via the import_data
+    // tool, which reliably parses the chosen Excel sheet). We read them here instead
+    // of live-extracting from the multi-sheet workbook (which is unreliable).
+    const priorityToSeverity = (p) => {
+      const v = (p || '').toLowerCase();
+      if (v.includes('high') || v.includes('urgent')) return 'major';
+      if (v.includes('med')) return 'moderate';
+      return 'minor';
+    };
 
-    // Extract DEFECT rows from the chosen sheet. We list the real Bunbury column names
-    // as hints so the extractor maps them reliably.
-    const extraction = await base44.integrations.Core.ExtractDataFromUploadedFile({
-      file_url,
-      sheet_name,
-      json_schema: {
-        type: 'object',
-        properties: {
-          rows: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                room_code: { type: 'string', description: 'RoomID column, e.g. R01, R18' },
-                room_name: { type: 'string', description: 'Room / Location column' },
-                component_type: { type: 'string', description: 'Component Type, or empty for defect sheets' },
-                defect_id: { type: 'string', description: 'DEFECT ID column, e.g. COB-2785' },
-                anomaly_type: { type: 'string', description: 'Best-guess defect category from the description' },
-                severity: { type: 'string', description: 'minor | moderate | major | critical (derive from Priority)' },
-                condition_grade: { type: 'number', description: '2025 Condition Grade or Criticality Index if present' },
-                notes: { type: 'string', description: 'DEFECT Description column' },
-              },
-            },
-          },
-        },
-      },
-    });
-
-    let rows = extraction?.output?.rows || [];
+    const defects = await base44.asServiceRole.entities.InspectorDefect.list('-created_date', 1000);
 
     // De-duplicate defect rows (the Defects sheet repeats each defect across program years).
     const seen = new Set();
-    rows = rows.filter((r) => {
-      const key = `${r.defect_id || ''}|${r.room_code || ''}|${(r.notes || '').slice(0, 40)}`;
+    let rows = defects.filter((d) => {
+      const key = `${d.defect_id || ''}|${d.room_code || ''}|${(d.description || '').slice(0, 40)}`;
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
-    });
+    }).map((d) => ({
+      room_code: d.room_code || '',
+      room_name: d.room_name || '',
+      component_type: '',
+      defect_id: d.defect_id || '',
+      anomaly_type: 'other',
+      severity: priorityToSeverity(d.priority),
+      condition_grade: d.criticality_index ?? null,
+      notes: d.description || '',
+    }));
 
     // Scope: cap defect rows fed to the LLM so we never blow the context window.
     const MAX_ROWS = 150;
@@ -158,10 +145,13 @@ AI findings detected from the scan:
 ${JSON.stringify(slim)}
 
 Match each defect row to at most one AI finding when they clearly refer to the same defect (same room and a compatible defect type/description).
+
+CRITICAL: "report_id" MUST be an "id" value taken verbatim from the AI findings list above. NEVER use a defect_id (e.g. COB-xxxx) or any value from the inspector rows as report_id. "row_index" is the 0-based index into the inspector defect rows array.
+
 Return:
 - confirmed: pairs where a defect row matches an AI finding -> { report_id, row_index, sheet_grade, room_code, room_name, component_type }
 - sheet_only: defect row_index values that had NO matching AI finding
-- ai_only: report_id values for AI findings that no defect row matched
+- ai_only: AI finding "id" values that no defect row matched
 
 Be conservative: only confirm clear matches.`,
       response_json_schema: {
