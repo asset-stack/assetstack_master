@@ -26,6 +26,7 @@ import SecurityCenter from './pages/SecurityCenter';
 import Landing from './pages/Landing';
 import Industries from './pages/Industries';
 import LandingCompliance from './pages/LandingCompliance.jsx';
+import SecurityDocs from './pages/SecurityDocs';
 import SpareParts from './pages/SpareParts';
 import CostCenter from './pages/CostCenter';
 import Suppliers from './pages/Suppliers';
@@ -107,6 +108,7 @@ const AuthenticatedApp = () => {
       <Route path="/Solutions" element={<Solutions />} />
       <Route path="/Industries" element={<Industries />} />
       <Route path="/LandingCompliance" element={<LandingCompliance />} />
+      <Route path="/SecurityDocs" element={<SecurityDocs />} />
       <Route path="/Contact" element={<Contact />} />
       <Route path="/About" element={<About />} />
       <Route path="/Customers" element={<Customers />} />

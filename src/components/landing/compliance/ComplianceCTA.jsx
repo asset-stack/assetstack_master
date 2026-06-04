@@ -48,10 +48,10 @@ export default function ComplianceCTA() {
                   </Button>
                 </a>
                 <a
-                  href="/Landing#contact"
+                  href="/SecurityDocs"
                   className="inline-flex items-center text-white/85 hover:text-white text-[13px] font-medium px-4 h-11 border border-white/40 hover:border-white/80 rounded-md transition-colors"
                 >
-                  Book a demo
+                  Security documentation
                 </a>
               </div>
             </div>
