@@ -1,0 +1,60 @@
+{
+  "name": "TimeEntry",
+  "type": "object",
+  "properties": {
+    "client_account_id": {
+      "type": "string",
+      "description": "Tenant scope"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Project the time was spent on"
+    },
+    "task_id": {
+      "type": "string",
+      "description": "Optional ProjectTask the time was logged against"
+    },
+    "task_title": {
+      "type": "string",
+      "description": "Denormalized task title for display"
+    },
+    "technician_id": {
+      "type": "string",
+      "description": "Technician who logged the time"
+    },
+    "technician_name": {
+      "type": "string",
+      "description": "Denormalized technician name"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the work was performed"
+    },
+    "hours": {
+      "type": "number",
+      "description": "Hours worked"
+    },
+    "hourly_rate": {
+      "type": "number",
+      "description": "Rate snapshot at time of logging"
+    },
+    "cost": {
+      "type": "number",
+      "description": "hours x hourly_rate"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "billable": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "project_id",
+    "technician_id",
+    "hours",
+    "date"
+  ]
+}

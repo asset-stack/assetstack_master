@@ -126,9 +126,19 @@
       "default": 0,
       "description": "Spend to date (rolled up from linked work orders)"
     },
+    "labor_cost_to_date": {
+      "type": "number",
+      "default": 0,
+      "description": "Labor cost rolled up from TimeEntry records"
+    },
     "forecast_cost": {
       "type": "number",
       "description": "AI / PM forecast at completion"
+    },
+    "contingency_reserve": {
+      "type": "number",
+      "default": 0,
+      "description": "Contingency budget held separately from base"
     },
     "currency": {
       "type": "string",
@@ -211,6 +221,22 @@
             "type": "string"
           },
           "notes": {
+            "type": "string"
+          },
+          "signed_off": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this phase has been QA signed-off"
+          },
+          "signed_off_by": {
+            "type": "string",
+            "description": "Who signed off the phase"
+          },
+          "signed_off_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sign_off_notes": {
             "type": "string"
           }
         }

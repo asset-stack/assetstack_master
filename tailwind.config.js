@@ -10,6 +10,8 @@ module.exports = {
       'text-emerald-700', 'text-amber-700', 'text-rose-700',
       'border-emerald-200', 'border-amber-200', 'border-rose-200',
       'border-emerald-500', 'border-amber-500', 'border-rose-500',
+      // Task board column accent dots (lib/taskUtils TASK_COLUMNS colors)
+      'bg-slate-500', 'bg-indigo-500', 'bg-rose-500', 'bg-amber-500',
     ],
   theme: {
   	extend: {
