@@ -1,0 +1,160 @@
+{
+  "name": "ExternalOpportunity",
+  "type": "object",
+  "properties": {
+    "client_account_id": {
+      "type": "string",
+      "description": "Tenant scope"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "government_grant",
+        "asx_announcement",
+        "tender_db",
+        "partnership_network",
+        "industry_report",
+        "sustainability_initiative",
+        "technology_innovation"
+      ],
+      "description": "Where this opportunity came from"
+    },
+    "source_name": {
+      "type": "string",
+      "description": "Issuing body / program name"
+    },
+    "title": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "published_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "closing_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Deadline if applicable"
+    },
+    "days_until_close": {
+      "type": "number",
+      "description": "Cached countdown"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "funding",
+        "partnership",
+        "technology",
+        "market",
+        "compliance",
+        "sustainability",
+        "workforce"
+      ],
+      "default": "funding"
+    },
+    "geographic_scope": {
+      "type": "string",
+      "description": "e.g. WA, National, APAC"
+    },
+    "relevant_sectors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "e.g. water, energy, transport"
+    },
+    "relevance_score": {
+      "type": "number",
+      "description": "0-100, AI-computed against portfolio"
+    },
+    "relevance_reason": {
+      "type": "string",
+      "description": "Why this matters to our portfolio"
+    },
+    "linked_locations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Location names this could benefit"
+    },
+    "estimated_value": {
+      "type": "number",
+      "description": "Potential grant, revenue, or savings"
+    },
+    "implementation_cost": {
+      "type": "number",
+      "description": "Cost to pursue"
+    },
+    "roi_estimate_months": {
+      "type": "number",
+      "description": "Estimated months to break even"
+    },
+    "effort_required": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "description": "Staff effort to pursue"
+    },
+    "risk_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "eligibility_criteria": {
+      "type": "string"
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": [
+        "pursue_aggressively",
+        "pursue_carefully",
+        "monitor",
+        "skip",
+        "unassessed"
+      ],
+      "default": "unassessed"
+    },
+    "next_steps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "discovered",
+        "assessed",
+        "proposed_to_board",
+        "pursuing",
+        "won",
+        "lost",
+        "archived"
+      ],
+      "default": "discovered"
+    },
+    "user_note": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "source",
+    "title",
+    "summary"
+  ]
+}

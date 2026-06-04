@@ -9,7 +9,7 @@ import {
   ChevronDown, GitBranch, Globe2, FlaskConical, ShieldCheck,
   Package, Wallet, Building2, CalendarDays, AlertOctagon, Banknote,
   Target, FlaskConical as FlaskIcon, ClipboardCheck, TrendingUp, Smartphone,
-  ShieldAlert, Waves, Camera, Filter, Edit3, Rocket, Layout as LayoutIcon, LogOut
+  ShieldAlert, Waves, Camera, Filter, Edit3, Rocket, Layout as LayoutIcon, LogOut, Radar
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { base44 } from '@/api/base44Client';
@@ -28,6 +28,7 @@ const navSections = [
       { name: 'Command Center', icon: Sparkles, page: 'CommandCenter' },
       { name: 'Dashboard', icon: LayoutDashboard, page: 'Dashboard' },
       { name: 'AssetMind', icon: MessageSquare, page: 'AIAssistant' },
+      { name: 'Opportunity Radar', icon: Radar, page: 'Opportunities' },
     ]
   },
   {

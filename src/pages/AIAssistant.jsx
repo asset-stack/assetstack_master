@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Loader2, Trash2, History, Plus, Zap } from 'lucide-react';
+import { Loader2, Trash2, History, Plus, Zap, Radar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AgentMessageBubble from '@/components/ai-chat/AgentMessageBubble';
 import ChatInput from '@/components/ai-chat/ChatInput';
@@ -67,6 +68,20 @@ export default function AIAssistant() {
     return () => {
       if (unsubRef.current) unsubRef.current();
     };
+  }, []);
+
+  // Deep link from Opportunity Radar: /AIAssistant?q=...
+  const autoSentRef = useRef(false);
+  useEffect(() => {
+    if (autoSentRef.current) return;
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q) {
+      autoSentRef.current = true;
+      window.history.replaceState({}, '', '/AIAssistant');
+      handleSend(q);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSend = async (text, fileUrls = []) => {
@@ -160,6 +175,11 @@ export default function AIAssistant() {
             </div>
           </div>
           <div className="flex items-center gap-1.5">
+            <Link to="/Opportunities">
+              <Button variant="outline" size="sm" className="text-indigo-600 border-indigo-200 hover:bg-indigo-50 text-xs">
+                <Radar className="h-3.5 w-3.5 mr-1" /> Opportunity Radar
+              </Button>
+            </Link>
             {messages.length > 0 && (
               <Button variant="outline" size="sm" onClick={handleNewChat} className="text-indigo-600 border-indigo-200 hover:bg-indigo-50 text-xs">
                 <Plus className="h-3.5 w-3.5 mr-1" /> New Chat

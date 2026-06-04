@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import { ClientProvider } from '@/lib/ClientContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import AIAssistant from './pages/AIAssistant';
+import Opportunities from './pages/Opportunities';
 import Locations from './pages/Locations';
 import RoleManagement from './pages/RoleManagement';
 import JobBoard from './pages/JobBoard';
@@ -136,6 +137,11 @@ const AuthenticatedApp = () => {
       <Route path="/AIAssistant" element={
             <LayoutWrapper currentPageName="AIAssistant">
               <AIAssistant />
+            </LayoutWrapper>
+          } />
+      <Route path="/Opportunities" element={
+            <LayoutWrapper currentPageName="Opportunities">
+              <Opportunities />
             </LayoutWrapper>
           } />
       <Route path="/Locations" element={

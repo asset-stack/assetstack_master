@@ -1,0 +1,108 @@
+{
+  "name": "AdvisorMemory",
+  "type": "object",
+  "properties": {
+    "client_account_id": {
+      "type": "string",
+      "description": "Tenant scope"
+    },
+    "strategic_theme": {
+      "type": "string",
+      "description": "Primary strategy, e.g. 'preventive_maintenance', 'cost_optimization', 'growth_expansion', 'risk_mitigation', 'compliance_first'"
+    },
+    "risk_appetite_equipment": {
+      "type": "string",
+      "enum": [
+        "conservative",
+        "balanced",
+        "aggressive"
+      ],
+      "default": "balanced"
+    },
+    "risk_appetite_capital": {
+      "type": "string",
+      "enum": [
+        "conservative",
+        "balanced",
+        "aggressive"
+      ],
+      "default": "conservative"
+    },
+    "funding_appetite": {
+      "type": "string",
+      "enum": [
+        "grant_aggressive",
+        "self_funded",
+        "debt_willing",
+        "unknown"
+      ],
+      "default": "unknown",
+      "description": "Willingness to chase external funding"
+    },
+    "opportunity_appetite": {
+      "type": "string",
+      "enum": [
+        "proactive_scanner",
+        "passive_monitor",
+        "ignore"
+      ],
+      "default": "proactive_scanner",
+      "description": "How aggressively to pursue new opportunities"
+    },
+    "asset_categories_prioritized": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Categories the user consistently prioritizes (e.g. HVAC, electrical)"
+    },
+    "asset_categories_deprioritized": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Categories the user consistently defers (e.g. cosmetic, landscaping)"
+    },
+    "board_approval_threshold": {
+      "type": "number",
+      "description": "Dollar amount requiring board review"
+    },
+    "sector_context": {
+      "type": "string",
+      "description": "Industry vertical: council, utility, hospital, transport, retail"
+    },
+    "decision_patterns": {
+      "type": "object",
+      "description": "Learned behaviour map: {category: {accepted, rejected, success_rate}}"
+    },
+    "learned_insights": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "insight": {
+            "type": "string"
+          },
+          "discovered_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validated": {
+            "type": "boolean"
+          },
+          "source": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Portfolio-specific facts the advisor has learned"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "strategic_theme"
+  ]
+}
