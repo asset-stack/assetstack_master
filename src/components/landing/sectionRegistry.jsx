@@ -4,27 +4,40 @@ import { lazy } from 'react';
 import LandingHero from '@/components/landing/LandingHero';
 import AssetMindSection from '@/components/landing/AssetMindSection';
 
+// Resilient lazy loader — retries a failed dynamic import once after a short delay.
+// Guards against transient "Failed to fetch dynamically imported module" errors
+// that occur when a chunk URL is briefly stale (e.g. right after a redeploy).
+function lazyWithRetry(factory) {
+  return lazy(() =>
+    factory().catch(
+      () => new Promise((resolve, reject) => {
+        setTimeout(() => factory().then(resolve, reject), 600);
+      })
+    )
+  );
+}
+
 // Lazy loaded (below the fold)
-const LogoCloud = lazy(() => import('@/components/landing/LogoCloud'));
-const PersonaSwitcher = lazy(() => import('@/components/landing/PersonaSwitcher'));
-const WhatsNewShowcase = lazy(() => import('@/components/landing/WhatsNewShowcase'));
-const MechanismSection = lazy(() => import('@/components/landing/MechanismSection'));
-const ProductTour = lazy(() => import('@/components/landing/ProductTour'));
-const SavingsProof = lazy(() => import('@/components/landing/SavingsProof'));
-const ROICalculator = lazy(() => import('@/components/landing/ROICalculator'));
-const PersonaCards = lazy(() => import('@/components/landing/PersonaCards'));
-const IndustryUseCases = lazy(() => import('@/components/landing/IndustryUseCases'));
-const SecuritySection = lazy(() => import('@/components/landing/SecuritySection'));
-const PricingSection = lazy(() => import('@/components/landing/PricingSection'));
-const FirstWeekDeliverables = lazy(() => import('@/components/landing/FirstWeekDeliverables'));
-const FAQ = lazy(() => import('@/components/landing/FAQ'));
-const FinalCTA = lazy(() => import('@/components/landing/FinalCTA'));
-const ContactSection = lazy(() => import('@/components/landing/ContactSection'));
+const LogoCloud = lazyWithRetry(() => import('@/components/landing/LogoCloud'));
+const PersonaSwitcher = lazyWithRetry(() => import('@/components/landing/PersonaSwitcher'));
+const WhatsNewShowcase = lazyWithRetry(() => import('@/components/landing/WhatsNewShowcase'));
+const MechanismSection = lazyWithRetry(() => import('@/components/landing/MechanismSection'));
+const ProductTour = lazyWithRetry(() => import('@/components/landing/ProductTour'));
+const SavingsProof = lazyWithRetry(() => import('@/components/landing/SavingsProof'));
+const ROICalculator = lazyWithRetry(() => import('@/components/landing/ROICalculator'));
+const PersonaCards = lazyWithRetry(() => import('@/components/landing/PersonaCards'));
+const IndustryUseCases = lazyWithRetry(() => import('@/components/landing/IndustryUseCases'));
+const SecuritySection = lazyWithRetry(() => import('@/components/landing/SecuritySection'));
+const PricingSection = lazyWithRetry(() => import('@/components/landing/PricingSection'));
+const FirstWeekDeliverables = lazyWithRetry(() => import('@/components/landing/FirstWeekDeliverables'));
+const FAQ = lazyWithRetry(() => import('@/components/landing/FAQ'));
+const FinalCTA = lazyWithRetry(() => import('@/components/landing/FinalCTA'));
+const ContactSection = lazyWithRetry(() => import('@/components/landing/ContactSection'));
 
 // Sister-site sections
-const SisterHero = lazy(() => import('@/components/landing/sister/SisterHero'));
-const SisterEcosystem = lazy(() => import('@/components/landing/sister/SisterEcosystem'));
-const SisterFeaturesGrid = lazy(() => import('@/components/landing/sister/SisterFeaturesGrid'));
+const SisterHero = lazyWithRetry(() => import('@/components/landing/sister/SisterHero'));
+const SisterEcosystem = lazyWithRetry(() => import('@/components/landing/sister/SisterEcosystem'));
+const SisterFeaturesGrid = lazyWithRetry(() => import('@/components/landing/sister/SisterFeaturesGrid'));
 
 // Central registry — single source of truth for landing sections.
 // Adding a new section: add an entry here AND default order in DEFAULT_SECTION_ORDER.
