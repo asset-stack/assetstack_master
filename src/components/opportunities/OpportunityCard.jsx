@@ -83,11 +83,18 @@ export default function OpportunityCard({ opp, onAsk }) {
         </div>
 
         <div className="flex items-center justify-between gap-2">
-          {opp.url ? (
-            <a href={opp.url} target="_blank" rel="noopener noreferrer" className="text-[12px] text-slate-500 hover:text-indigo-600 truncate">
-              View source
-            </a>
-          ) : <span />}
+          {(() => {
+            // Verified direct link when the scanner confirmed the URL is live,
+            // otherwise a safe Google search for the exact opportunity — never a dead link.
+            const verified = !!opp.url;
+            const query = [opp.source_name, opp.title].filter(Boolean).join(' ');
+            const href = verified ? opp.url : `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+            return (
+              <a href={href} target="_blank" rel="noopener noreferrer" className="text-[12px] text-slate-500 hover:text-indigo-600 truncate">
+                {verified ? 'View source' : 'Find source'}
+              </a>
+            );
+          })()}
           <Button size="sm" onClick={() => onAsk(opp)} className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs h-8">
             Ask AssetMind <ArrowRight className="w-3.5 h-3.5 ml-1" />
           </Button>

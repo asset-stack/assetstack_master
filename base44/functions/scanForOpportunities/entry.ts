@@ -92,6 +92,34 @@ For EACH opportunity, score relevance 0-100 against THIS portfolio and explain w
 
     const found = (result.opportunities || []).filter((o) => (o.relevance_score || 0) >= minRelevance);
 
+    // Validate AI-supplied URLs. LLMs often hallucinate deep links that 404.
+    // We HEAD/GET each URL; if it's unreachable or malformed we drop it so the
+    // card falls back to a trustworthy Google search instead of a dead link.
+    async function urlIsLive(rawUrl) {
+      if (!rawUrl || typeof rawUrl !== 'string') return false;
+      let u;
+      try {
+        u = new URL(rawUrl.trim());
+        if (u.protocol !== 'http:' && u.protocol !== 'https:') return false;
+      } catch { return false; }
+      try {
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 6000);
+        let res = await fetch(u.href, { method: 'HEAD', redirect: 'follow', signal: ctrl.signal });
+        // Some servers reject HEAD — retry with a ranged GET.
+        if (res.status === 405 || res.status === 501) {
+          res = await fetch(u.href, { method: 'GET', redirect: 'follow', signal: ctrl.signal, headers: { Range: 'bytes=0-0' } });
+        }
+        clearTimeout(t);
+        return res.ok || res.status === 206;
+      } catch { return false; }
+    }
+
+    await Promise.all(found.map(async (o) => {
+      const live = await urlIsLive(o.url);
+      if (!live) o.url = ''; // blank → card builds a verified search link instead
+    }));
+
     const validSources = ['government_grant', 'asx_announcement', 'tender_db', 'partnership_network', 'industry_report', 'sustainability_initiative', 'technology_innovation'];
     const validCats = ['funding', 'partnership', 'technology', 'market', 'compliance', 'sustainability', 'workforce'];
     const validEffort = ['low', 'medium', 'high'];
