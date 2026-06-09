@@ -41,6 +41,39 @@ function round(n, dp = 0) {
 function norm(s) {
   return String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
 }
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+// Run an SDK call with retry + exponential backoff when the rate limiter (429) trips.
+async function withRetry(fn, { tries = 6, base = 700 } = {}) {
+  let lastErr;
+  for (let attempt = 0; attempt < tries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      const msg = String(err?.message || err).toLowerCase();
+      const transient = msg.includes('rate limit') || msg.includes('429')
+        || msg.includes('connection') || msg.includes('timeout')
+        || msg.includes('econnreset') || msg.includes('fetch failed');
+      if (!transient || attempt === tries - 1) throw err;
+      lastErr = err;
+      await sleep(base * Math.pow(2, attempt)); // 0.7s, 1.4s, 2.8s, 5.6s…
+    }
+  }
+  throw lastErr;
+}
+// Process a list of tasks with bounded concurrency, each wrapped in withRetry.
+async function runLimited(items, worker, { concurrency = 4, gapMs = 80 } = {}) {
+  let idx = 0;
+  async function lane() {
+    while (idx < items.length) {
+      const i = idx++;
+      await withRetry(() => worker(items[i], i));
+      if (gapMs) await sleep(gapMs);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, lane));
+}
 
 Deno.serve(async (req) => {
   try {
@@ -121,16 +154,26 @@ Deno.serve(async (req) => {
       if (code && r.level_of_service != null) losByRoom[code] = Number(r.level_of_service);
     }
 
-    // ── Optionally clear a previous run for this assessment+scenario ──
+    // ── Optionally clear previous runs for this assessment+scenario ──
+    // deleteMany() removes matching rows in ONE request (vs hundreds of per-record
+    // deletes that tripped the rate limiter). We loop it to drain any accumulated
+    // backlog in safe passes, each wrapped in retry/backoff for transient errors.
+    let deleted = 0;
     if (replace_existing) {
-      const prior = await svc.CapitalPlanItem.filter({
-        source_assessment_id: assessment_id,
-        scenario,
-        ai_generated: true,
-      }, '-created_date', 5000);
-      const DCHUNK = 25;
-      for (let i = 0; i < prior.length; i += DCHUNK) {
-        await Promise.all(prior.slice(i, i + DCHUNK).map((p) => svc.CapitalPlanItem.delete(p.id)));
+      const query = { source_assessment_id: assessment_id, scenario, ai_generated: true };
+      const deadline = Date.now() + 90_000; // never spend >90s clearing the backlog
+      for (let pass = 0; pass < 50; pass++) {
+        if (Date.now() > deadline) break;
+        try {
+          const res = await svc.CapitalPlanItem.deleteMany(query);
+          const n = res?.deleted ?? 0;
+          deleted += n;
+          if (n === 0) break;      // nothing left to clear
+        } catch (_e) {
+          await sleep(800);        // transient backend hiccup — pause and retry the pass
+          continue;
+        }
+        await sleep(120);          // breathe between passes
       }
     }
 
@@ -213,13 +256,19 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── Bulk insert in chunks to stay under rate limits ──
+    // ── Bulk insert in chunks (each chunk = 1 request) with retry/backoff ──
     const created = [];
     const CHUNK = 100;
-    for (let i = 0; i < toCreate.length; i += CHUNK) {
-      const batch = await svc.CapitalPlanItem.bulkCreate(toCreate.slice(i, i + CHUNK));
-      created.push(...(Array.isArray(batch) ? batch : []));
-    }
+    const chunks = [];
+    for (let i = 0; i < toCreate.length; i += CHUNK) chunks.push(toCreate.slice(i, i + CHUNK));
+    await runLimited(
+      chunks,
+      async (chunk) => {
+        const batch = await svc.CapitalPlanItem.bulkCreate(chunk);
+        created.push(...(Array.isArray(batch) ? batch : []));
+      },
+      { concurrency: 2, gapMs: 150 },
+    );
 
     return Response.json({
       data: {
@@ -228,6 +277,7 @@ Deno.serve(async (req) => {
         components_total: components.length,
         included,
         skipped,
+        deleted,
         created: created.length || toCreate.length,
         total_cost: round(toCreate.reduce((s, i) => s + (i.replacement_cost || 0), 0)),
       },
