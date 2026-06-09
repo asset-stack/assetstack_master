@@ -158,22 +158,31 @@ Deno.serve(async (req) => {
     // deleteMany() removes matching rows in ONE request (vs hundreds of per-record
     // deletes that tripped the rate limiter). We loop it to drain any accumulated
     // backlog in safe passes, each wrapped in retry/backoff for transient errors.
+    // Page through existing rows and delete them in small bounded batches. A single
+    // giant deleteMany() on a large match set errors with "connection error" on the
+    // backend, so we cap each delete to a small page and loop with throttling.
     let deleted = 0;
+    let cleanup_incomplete = false;
     if (replace_existing) {
       const query = { source_assessment_id: assessment_id, scenario, ai_generated: true };
-      const deadline = Date.now() + 90_000; // never spend >90s clearing the backlog
-      for (let pass = 0; pass < 50; pass++) {
-        if (Date.now() > deadline) break;
+      const deadline = Date.now() + 60_000; // hard cap so cleanup never times out the request
+      const PAGE = 50;
+      while (true) {
+        if (Date.now() > deadline) { cleanup_incomplete = true; break; }
+        let page;
         try {
-          const res = await svc.CapitalPlanItem.deleteMany(query);
-          const n = res?.deleted ?? 0;
-          deleted += n;
-          if (n === 0) break;      // nothing left to clear
+          page = await withRetry(() => svc.CapitalPlanItem.filter(query, '-created_date', PAGE));
         } catch (_e) {
-          await sleep(800);        // transient backend hiccup — pause and retry the pass
-          continue;
+          cleanup_incomplete = true;
+          break;
         }
-        await sleep(120);          // breathe between passes
+        if (!page?.length) break; // nothing left to clear
+        await runLimited(
+          page,
+          (row) => svc.CapitalPlanItem.delete(row.id),
+          { concurrency: 3, gapMs: 60 },
+        );
+        deleted += page.length;
       }
     }
 
@@ -278,6 +287,7 @@ Deno.serve(async (req) => {
         included,
         skipped,
         deleted,
+        cleanup_incomplete,
         created: created.length || toCreate.length,
         total_cost: round(toCreate.reduce((s, i) => s + (i.replacement_cost || 0), 0)),
       },
