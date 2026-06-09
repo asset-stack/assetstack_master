@@ -1,0 +1,27 @@
+{
+  "name": "LOSMatrixEntry",
+  "type": "object",
+  "properties": {
+    "client_account_id": {
+      "type": "string",
+      "description": "Tenant scope. Null/blank entries are treated as global defaults."
+    },
+    "level_of_service": {
+      "type": "number",
+      "description": "Level of Service rating 1 (very high) - 5 (very low)"
+    },
+    "component_criticality": {
+      "type": "number",
+      "description": "Component criticality 1 (very high) - 5 (very low)"
+    },
+    "adjustment_factor": {
+      "type": "number",
+      "description": "Renewal timing multiplier. <1 accelerates, >1 defers."
+    }
+  },
+  "required": [
+    "level_of_service",
+    "component_criticality",
+    "adjustment_factor"
+  ]
+}

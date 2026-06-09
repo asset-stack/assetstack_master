@@ -1,0 +1,26 @@
+{
+  "name": "LifeRemainingEntry",
+  "type": "object",
+  "properties": {
+    "client_account_id": {
+      "type": "string",
+      "description": "Tenant scope. Null/blank entries are treated as global defaults."
+    },
+    "condition_rating": {
+      "type": "number",
+      "description": "Condition grade 1 (excellent) - 5 (failed)"
+    },
+    "life_remaining_pct": {
+      "type": "number",
+      "description": "Fraction of base life remaining (0-1)"
+    },
+    "life_consumed_pct": {
+      "type": "number",
+      "description": "Fraction of base life consumed (0-1)"
+    }
+  },
+  "required": [
+    "condition_rating",
+    "life_remaining_pct"
+  ]
+}

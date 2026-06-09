@@ -42,6 +42,12 @@ const TENANT_SCOPED = new Set([
   'DataIngestionLog',
   'SavedScenario',
   'SavedView',
+  'AssetLibraryItem',
+  'LOSMatrixEntry',
+  'LifeRemainingEntry',
+  'AssessmentComponent',
+  'AssessmentRoom',
+  'ConditionAssessment',
 ]);
 
 // Resolve the ClientAccount the caller belongs to.

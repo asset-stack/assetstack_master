@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, Calendar, Download } from 'lucide-react';
+import { Plus, Calendar, Download, Sparkles } from 'lucide-react';
 import { secureEntity } from '@/lib/secureEntities';
 import CapitalPlanStats from '@/components/capital-plan/CapitalPlanStats';
 import SpendByYearChart from '@/components/capital-plan/SpendByYearChart';
 import RiskMatrix from '@/components/capital-plan/RiskMatrix';
 import CapitalPlanTable from '@/components/capital-plan/CapitalPlanTable';
 import CapitalPlanFormDialog from '@/components/capital-plan/CapitalPlanFormDialog';
+import GeneratePlanDialog from '@/components/capital-plan/GeneratePlanDialog';
 import FinanceNav from '@/components/finance/FinanceNav';
 import FinanceHeader from '@/components/finance/FinanceHeader';
 import { exportFinanceCSV } from '@/components/finance/exportFinanceCSV';
@@ -17,6 +18,8 @@ export default function CapitalPlanPage() {
   const [filter, setFilter] = useState('all');
   const [editing, setEditing] = useState(null);
   const [formOpen, setFormOpen] = useState(false);
+  const [genOpen, setGenOpen] = useState(false);
+  const [scenario, setScenario] = useState('all');
 
   const load = async () => {
     setLoading(true);
@@ -27,13 +30,25 @@ export default function CapitalPlanPage() {
 
   useEffect(() => { load(); }, []);
 
-  const filtered = items.filter(i => {
+  // Scenario scope first (engine-generated items carry a scenario; manual items have none)
+  const scenarioItems = scenario === 'all'
+    ? items
+    : items.filter(i => i.scenario === scenario);
+
+  const filtered = scenarioItems.filter(i => {
     if (filter === 'all') return true;
     if (filter === 'urgent') return i.priority === 'urgent';
     if (filter === 'this_year') return i.replacement_year === new Date().getFullYear();
     if (filter === 'next_5y') return i.replacement_year && i.replacement_year <= new Date().getFullYear() + 5;
     return i.status === filter;
   });
+
+  const scenarios = [
+    { id: 'all', label: 'All items' },
+    { id: 'Premium', label: 'Premium' },
+    { id: 'Balanced', label: 'Balanced' },
+    { id: 'Must Do', label: 'Must Do' },
+  ];
 
   const filters = [
     { id: 'all', label: 'All' },
@@ -81,6 +96,9 @@ export default function CapitalPlanPage() {
             >
               <Download className="w-4 h-4 mr-1" /> Export plan
             </Button>
+            <Button variant="outline" onClick={() => setGenOpen(true)}>
+              <Sparkles className="w-4 h-4 mr-1" /> Generate from condition
+            </Button>
             <Button onClick={() => { setEditing(null); setFormOpen(true); }}>
               <Plus className="w-4 h-4 mr-1" /> Add to plan
             </Button>
@@ -90,11 +108,27 @@ export default function CapitalPlanPage() {
 
       <FinanceNav />
 
-      <CapitalPlanStats items={items} />
+      {/* Scenario scope */}
+      <div className="flex items-center gap-1 mb-4 flex-wrap">
+        <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mr-1">Scenario</span>
+        {scenarios.map(s => (
+          <Button
+            key={s.id}
+            size="sm"
+            variant={scenario === s.id ? 'default' : 'outline'}
+            onClick={() => setScenario(s.id)}
+            className="h-8 text-[12px]"
+          >
+            {s.label}
+          </Button>
+        ))}
+      </div>
+
+      <CapitalPlanStats items={scenarioItems} />
 
       <div className="grid lg:grid-cols-2 gap-3 mb-6">
-        <SpendByYearChart items={items} />
-        <RiskMatrix items={items} />
+        <SpendByYearChart items={scenarioItems} />
+        <RiskMatrix items={scenarioItems} />
       </div>
 
       <div className="flex items-center gap-1 mb-3 flex-wrap">
@@ -125,6 +159,12 @@ export default function CapitalPlanPage() {
         onOpenChange={setFormOpen}
         item={editing}
         onSaved={load}
+      />
+
+      <GeneratePlanDialog
+        open={genOpen}
+        onOpenChange={setGenOpen}
+        onGenerated={load}
       />
     </div>
   );

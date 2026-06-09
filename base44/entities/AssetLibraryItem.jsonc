@@ -1,0 +1,52 @@
+{
+  "name": "AssetLibraryItem",
+  "type": "object",
+  "properties": {
+    "client_account_id": {
+      "type": "string",
+      "description": "Tenant scope. Null/blank entries are treated as global defaults."
+    },
+    "asset_lookup_type": {
+      "type": "string",
+      "description": "Composite lookup key, e.g. 'ExternalWall FabricCast Concrete'"
+    },
+    "group": {
+      "type": "string",
+      "description": "High-level group, e.g. External, Internal, Roof, Services"
+    },
+    "component_type": {
+      "type": "string",
+      "description": "Component type, e.g. 'Wall Fabric'"
+    },
+    "component_subtype": {
+      "type": "string",
+      "description": "Subtype / material / size, e.g. 'Cast Concrete'"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measure, e.g. m2, m, each"
+    },
+    "component_criticality": {
+      "type": "number",
+      "description": "Component criticality 1 (very high) - 5 (very low)"
+    },
+    "baselife": {
+      "type": "number",
+      "description": "Expected base useful life in years"
+    },
+    "unit_rate": {
+      "type": "number",
+      "description": "2025 replacement unit rate in dollars per unit"
+    },
+    "rate_year": {
+      "type": "number",
+      "default": 2025,
+      "description": "Base year the unit rate is expressed in"
+    }
+  },
+  "required": [
+    "asset_lookup_type",
+    "baselife",
+    "unit_rate"
+  ]
+}

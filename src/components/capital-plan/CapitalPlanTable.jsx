@@ -77,6 +77,9 @@ export default function CapitalPlanTable({ items, onEdit }) {
             <th className="text-left px-3 py-2.5">FY</th>
             <th className="text-right px-3 py-2.5">Replacement cost</th>
             <th className="text-right px-3 py-2.5" title="Estimated cost if we don't fund this and it fails — includes downtime, collateral damage, and emergency replacement premium.">Do-nothing cost</th>
+            <th className="text-center px-2 py-2.5" title="Component criticality 1 (very high) – 5 (very low)">Crit</th>
+            <th className="text-center px-2 py-2.5" title="LOS × Criticality adjustment factor. <1 accelerates, >1 defers.">LOS×</th>
+            <th className="text-right px-2 py-2.5" title="Adjusted remaining life in years after LOS overlay">Adj life</th>
             <th className="text-left px-3 py-2.5">Condition</th>
             <th className="text-left px-3 py-2.5">Priority</th>
             <th className="text-left px-3 py-2.5">Status</th>
@@ -101,6 +104,23 @@ export default function CapitalPlanTable({ items, onEdit }) {
                 </td>
                 <td className="px-3 py-3 text-right text-[12px] tabular-nums font-bold text-rose-600" title="If we don't fund this">
                   {fmtCompact(doNothingCost(item))}
+                </td>
+                <td className="px-2 py-3 text-center text-[12px] tabular-nums text-slate-600">
+                  {item.component_criticality ?? '—'}
+                </td>
+                <td className="px-2 py-3 text-center text-[12px] tabular-nums">
+                  {item.los_adjustment_factor != null ? (
+                    <span className={
+                      item.los_adjustment_factor < 1 ? 'text-rose-600 font-semibold'
+                      : item.los_adjustment_factor > 1 ? 'text-emerald-600 font-semibold'
+                      : 'text-slate-500'
+                    }>
+                      {item.los_adjustment_factor.toFixed(2)}
+                    </span>
+                  ) : '—'}
+                </td>
+                <td className="px-2 py-3 text-right text-[12px] tabular-nums text-slate-700">
+                  {item.expected_useful_life_years != null ? `${item.expected_useful_life_years}y` : '—'}
                 </td>
                 <td className="px-3 py-3">
                   <span className={`text-[12px] font-semibold tabular-nums ${condColor}`}>

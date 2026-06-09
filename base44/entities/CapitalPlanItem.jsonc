@@ -2,6 +2,10 @@
   "name": "CapitalPlanItem",
   "type": "object",
   "properties": {
+    "client_account_id": {
+      "type": "string",
+      "description": "Tenant scope"
+    },
     "equipment_id": {
       "type": "string"
     },
@@ -14,18 +18,67 @@
     "location_name": {
       "type": "string"
     },
+    "room_code": {
+      "type": "string",
+      "description": "Room code (R01-R26) the asset belongs to"
+    },
+    "room_name": {
+      "type": "string"
+    },
     "asset_type": {
       "type": "string"
+    },
+    "quantity": {
+      "type": "number",
+      "description": "Quantity in the asset's unit of measure"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measure, e.g. m2, m, each"
+    },
+    "unit_rate_base": {
+      "type": "number",
+      "description": "Base-year unit rate ($) from the Asset Library"
+    },
+    "baselife_years": {
+      "type": "number",
+      "description": "Base useful life (years) from the Asset Library"
     },
     "current_age_years": {
       "type": "number"
     },
     "expected_useful_life_years": {
-      "type": "number"
+      "type": "number",
+      "description": "Adjusted remaining life (years) after LOS overlay"
+    },
+    "condition_grade": {
+      "type": "number",
+      "description": "Condition grade 1 (excellent) - 5 (failed) used in the calc"
     },
     "condition_score": {
       "type": "number",
-      "description": "Latest condition 0-100"
+      "description": "Latest condition 0-100 (display)"
+    },
+    "component_criticality": {
+      "type": "number",
+      "description": "Component criticality 1-5, from Asset Library"
+    },
+    "level_of_service": {
+      "type": "number",
+      "description": "Level of Service 1-5 for the room"
+    },
+    "los_adjustment_factor": {
+      "type": "number",
+      "description": "LOS x Criticality multiplier applied to remaining life"
+    },
+    "remaining_life_years": {
+      "type": "number",
+      "description": "Remaining life before LOS overlay (baselife x life-remaining%)"
+    },
+    "escalation_percent_pa": {
+      "type": "number",
+      "default": 3,
+      "description": "Annual cost escalation assumed in the forecast"
     },
     "replacement_year": {
       "type": "number",
@@ -33,10 +86,36 @@
     },
     "replacement_cost": {
       "type": "number",
-      "description": "Estimated replacement cost in target year"
+      "description": "Escalated replacement cost in target year"
+    },
+    "replacement_cost_today": {
+      "type": "number",
+      "description": "Replacement cost in today's dollars (qty x unit rate)"
     },
     "current_book_value": {
       "type": "number"
+    },
+    "scenario": {
+      "type": "string",
+      "enum": [
+        "Premium",
+        "Balanced",
+        "Must Do"
+      ],
+      "description": "Which LOS scenario this item belongs to"
+    },
+    "source_assessment_id": {
+      "type": "string",
+      "description": "ConditionAssessment this item was generated from"
+    },
+    "generated_batch_id": {
+      "type": "string",
+      "description": "Batch id of the computeLifecyclePlan run that created this item (for re-runs/undo)"
+    },
+    "ai_generated": {
+      "type": "boolean",
+      "default": false,
+      "description": "True when produced by the lifecycle engine rather than entered manually"
     },
     "priority": {
       "type": "string",
