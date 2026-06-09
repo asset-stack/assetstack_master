@@ -128,11 +128,14 @@ Deno.serve(async (req) => {
         scenario,
         ai_generated: true,
       }, '-created_date', 5000);
-      for (const p of prior) await svc.CapitalPlanItem.delete(p.id);
+      const DCHUNK = 25;
+      for (let i = 0; i < prior.length; i += DCHUNK) {
+        await Promise.all(prior.slice(i, i + DCHUNK).map((p) => svc.CapitalPlanItem.delete(p.id)));
+      }
     }
 
     const batchId = `lcp_${Date.now()}`;
-    const created = [];
+    const toCreate = [];
     let skipped = 0;
     let included = 0;
 
@@ -171,7 +174,7 @@ Deno.serve(async (req) => {
 
       const { consequence, likelihood, riskScore } = deriveRisk(criticality, grade);
 
-      const item = await svc.CapitalPlanItem.create({
+      toCreate.push({
         client_account_id: tenantId,
         equipment_name: comp.component_type
           ? `${comp.component_type}${comp.subtype ? ' – ' + comp.subtype : ''}`
@@ -208,7 +211,14 @@ Deno.serve(async (req) => {
         funding_source: 'capital',
         rationale: `Grade ${grade} → ${Math.round(lifePct * 100)}% life remaining; LOS ${los} × criticality ${criticality} → factor ${adjFactor}.`,
       });
-      created.push(item);
+    }
+
+    // ── Bulk insert in chunks to stay under rate limits ──
+    const created = [];
+    const CHUNK = 100;
+    for (let i = 0; i < toCreate.length; i += CHUNK) {
+      const batch = await svc.CapitalPlanItem.bulkCreate(toCreate.slice(i, i + CHUNK));
+      created.push(...(Array.isArray(batch) ? batch : []));
     }
 
     return Response.json({
@@ -218,8 +228,8 @@ Deno.serve(async (req) => {
         components_total: components.length,
         included,
         skipped,
-        created: created.length,
-        total_cost: round(created.reduce((s, i) => s + (i.replacement_cost || 0), 0)),
+        created: created.length || toCreate.length,
+        total_cost: round(toCreate.reduce((s, i) => s + (i.replacement_cost || 0), 0)),
       },
     });
   } catch (err) {
