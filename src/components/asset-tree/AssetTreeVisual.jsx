@@ -6,7 +6,8 @@ import {
   Search, Layers, MapPin, Cpu, AlertTriangle, DoorOpen,
   Maximize2, GitBranch, Network
 } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
+import { useClient } from '@/lib/ClientContext';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -23,9 +24,20 @@ export default function AssetTreeVisual() {
   const [search, setSearch] = useState('');
   const [selectedAsset, setSelectedAsset] = useState(null);
 
+  const { currentClient } = useClient();
   const { data: equipment = [], isLoading } = useQuery({
-    queryKey: ['equipment'],
-    queryFn: () => base44.entities.Equipment.list('-updated_date', 500),
+    queryKey: ['equipment-tree', currentClient?.id],
+    queryFn: async () => {
+      // Tenant-scoped, paginated — same pattern as the Finance hub
+      const all = [];
+      for (let p = 0; p < 20; p++) {
+        const batch = await secureEntity('Equipment').list('-updated_date', 500, p * 500);
+        if (!batch?.length) break;
+        all.push(...batch);
+        if (batch.length < 500) break;
+      }
+      return all;
+    },
   });
 
   useEffect(() => {
