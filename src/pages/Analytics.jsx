@@ -101,7 +101,7 @@ export default function Analytics() {
 
   const { data: technicians = [] } = useQuery({
     queryKey: ['technicians'],
-    queryFn: () => base44.entities.Technician.list('-created_date', 50),
+    queryFn: () => secureEntity('Technician').list('-created_date', 50),
   });
 
   // Calculate metrics

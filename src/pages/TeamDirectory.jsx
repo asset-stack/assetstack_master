@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { secureEntity } from '@/lib/secureEntities';
 import { Link } from 'react-router-dom';
 
 import { motion } from 'framer-motion';
@@ -42,7 +43,7 @@ export default function TeamDirectory() {
 
   const { data: technicians = [] } = useQuery({
     queryKey: ['technicians'],
-    queryFn: () => base44.entities.Technician.list('-created_date', 200),
+    queryFn: () => secureEntity('Technician').list('-created_date', 200),
   });
 
   const { data: kudos = [] } = useQuery({

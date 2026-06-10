@@ -35,7 +35,7 @@ export default function ManagerDashboard() {
 
   const { data: technicians = [] } = useQuery({
     queryKey: ['technicians'],
-    queryFn: () => base44.entities.Technician.list('-created_date', 200),
+    queryFn: () => secureEntity('Technician').list('-created_date', 200),
   });
 
   const { data: equipment = [] } = useQuery({
