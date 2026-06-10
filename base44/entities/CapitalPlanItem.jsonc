@@ -108,6 +108,10 @@
       "type": "string",
       "description": "ConditionAssessment this item was generated from"
     },
+    "source_component_id": {
+      "type": "string",
+      "description": "AssessmentComponent this item maps to \u2014 stable upsert key so regenerating a plan updates in place instead of delete-and-recreate"
+    },
     "generated_batch_id": {
       "type": "string",
       "description": "Batch id of the computeLifecyclePlan run that created this item (for re-runs/undo)"

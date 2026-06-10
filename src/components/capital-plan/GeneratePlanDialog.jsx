@@ -138,11 +138,19 @@ export default function GeneratePlanDialog({ open, onOpenChange, onGenerated }) 
             <div className="flex items-start gap-2 rounded-lg bg-emerald-50 border border-emerald-200 p-3 text-[12px] text-emerald-800">
               <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold">{result.created} items generated ({result.scenario})</p>
+                <p className="font-semibold">
+                  {result.created || 0} created · {result.updated || 0} updated · {result.unchanged || 0} unchanged ({result.scenario})
+                </p>
                 <p className="text-emerald-700">
-                  {result.included} included · {result.skipped} skipped · total forecast{' '}
+                  {result.included} included · {result.skipped} skipped
+                  {result.removed ? ` · ${result.removed} stale removed` : ''} · total forecast{' '}
                   ${(result.total_cost || 0).toLocaleString()}
                 </p>
+                {result.cleanup_incomplete && (
+                  <p className="text-amber-700 mt-0.5">
+                    Some older duplicate rows remain — they'll be cleared automatically on the next run.
+                  </p>
+                )}
               </div>
             </div>
           )}

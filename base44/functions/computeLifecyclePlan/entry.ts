@@ -154,36 +154,25 @@ Deno.serve(async (req) => {
       if (code && r.level_of_service != null) losByRoom[code] = Number(r.level_of_service);
     }
 
-    // ── Optionally clear previous runs for this assessment+scenario ──
-    // deleteMany() removes matching rows in ONE request (vs hundreds of per-record
-    // deletes that tripped the rate limiter). We loop it to drain any accumulated
-    // backlog in safe passes, each wrapped in retry/backoff for transient errors.
-    // Page through existing rows and delete them in small bounded batches. A single
-    // giant deleteMany() on a large match set errors with "connection error" on the
-    // backend, so we cap each delete to a small page and loop with throttling.
-    let deleted = 0;
-    let cleanup_incomplete = false;
-    if (replace_existing) {
-      const query = { source_assessment_id: assessment_id, scenario, ai_generated: true };
-      const deadline = Date.now() + 60_000; // hard cap so cleanup never times out the request
-      const PAGE = 50;
-      while (true) {
-        if (Date.now() > deadline) { cleanup_incomplete = true; break; }
-        let page;
-        try {
-          page = await withRetry(() => svc.CapitalPlanItem.filter(query, '-created_date', PAGE));
-        } catch (_e) {
-          cleanup_incomplete = true;
-          break;
-        }
-        if (!page?.length) break; // nothing left to clear
-        await runLimited(
-          page,
-          (row) => svc.CapitalPlanItem.delete(row.id),
-          { concurrency: 3, gapMs: 60 },
-        );
-        deleted += page.length;
-      }
+    // ── Upsert model: load existing engine rows for this assessment+scenario ──
+    // Reads are cheap; writes are rate-limited. We update rows in place and only
+    // create/delete the difference, so regeneration costs near-zero writes.
+    const existQuery = { source_assessment_id: assessment_id, scenario, ai_generated: true };
+    const existing = [];
+    for (let p = 0; p < 40; p++) {
+      const page = await withRetry(() => svc.CapitalPlanItem.filter(existQuery, '-created_date', 500, p * 500));
+      if (!page?.length) break;
+      existing.push(...page);
+      if (page.length < 500) break;
+    }
+    // Index by stable component key. Rows without a key (legacy delete-and-recreate
+    // era) or with a duplicate key are stale and queued for removal.
+    const byKey = new Map();
+    const stale = [];
+    for (const row of existing) {
+      const k = row.source_component_id;
+      if (k && !byKey.has(k)) byKey.set(k, row);
+      else stale.push(row);
     }
 
     const batchId = `lcp_${Date.now()}`;
@@ -253,6 +242,7 @@ Deno.serve(async (req) => {
         replacement_cost_today: round(costToday),
         scenario,
         source_assessment_id: assessment_id,
+        source_component_id: comp.id,
         generated_batch_id: batchId,
         ai_generated: true,
         consequence_of_failure: consequence,
@@ -265,19 +255,51 @@ Deno.serve(async (req) => {
       });
     }
 
-    // ── Bulk insert in chunks (each chunk = 1 request) with retry/backoff ──
-    const created = [];
+    // ── Diff & write: update changed rows, insert new ones, remove stale ones ──
+    const CMP_FIELDS = [
+      'quantity', 'unit', 'unit_rate_base', 'baselife_years', 'expected_useful_life_years',
+      'condition_grade', 'condition_score', 'component_criticality', 'level_of_service',
+      'los_adjustment_factor', 'remaining_life_years', 'escalation_percent_pa',
+      'replacement_year', 'replacement_cost', 'replacement_cost_today',
+      'risk_score', 'priority', 'consequence_of_failure', 'likelihood_of_failure', 'rationale',
+    ];
+    const toInsert = [];
+    const toUpdate = [];
+    let unchanged = 0;
+    const seen = new Set();
+    for (const item of toCreate) {
+      seen.add(item.source_component_id);
+      const row = byKey.get(item.source_component_id);
+      if (!row) { toInsert.push(item); continue; }
+      const changed = CMP_FIELDS.some((f) => (row[f] ?? null) !== (item[f] ?? null));
+      if (changed) toUpdate.push({ id: row.id, data: item });
+      else unchanged++;
+    }
+    // Existing rows whose component no longer qualifies for this scenario → stale
+    for (const [k, row] of byKey) {
+      if (!seen.has(k)) stale.push(row);
+    }
+
+    // Updates — only rows whose computed values actually changed
+    await runLimited(toUpdate, (u) => svc.CapitalPlanItem.update(u.id, u.data), { concurrency: 3, gapMs: 80 });
+
+    // Inserts — bulk chunks (each chunk = 1 request)
     const CHUNK = 100;
     const chunks = [];
-    for (let i = 0; i < toCreate.length; i += CHUNK) chunks.push(toCreate.slice(i, i + CHUNK));
-    await runLimited(
-      chunks,
-      async (chunk) => {
-        const batch = await svc.CapitalPlanItem.bulkCreate(chunk);
-        created.push(...(Array.isArray(batch) ? batch : []));
-      },
-      { concurrency: 2, gapMs: 150 },
-    );
+    for (let i = 0; i < toInsert.length; i += CHUNK) chunks.push(toInsert.slice(i, i + CHUNK));
+    await runLimited(chunks, (chunk) => svc.CapitalPlanItem.bulkCreate(chunk), { concurrency: 2, gapMs: 150 });
+
+    // Stale/duplicate removal — gentle and deadline-bounded; any remainder
+    // drains automatically on the next run. Steady state is zero deletes.
+    const deadline = Date.now() + 75_000;
+    let removed = 0;
+    let cleanup_incomplete = false;
+    for (const row of stale) {
+      if (Date.now() > deadline) { cleanup_incomplete = true; break; }
+      await withRetry(() => svc.CapitalPlanItem.delete(row.id));
+      await sleep(60);
+      removed++;
+    }
 
     return Response.json({
       data: {
@@ -286,9 +308,12 @@ Deno.serve(async (req) => {
         components_total: components.length,
         included,
         skipped,
-        deleted,
+        created: toInsert.length,
+        updated: toUpdate.length,
+        unchanged,
+        removed,
+        stale_remaining: stale.length - removed,
         cleanup_incomplete,
-        created: created.length || toCreate.length,
         total_cost: round(toCreate.reduce((s, i) => s + (i.replacement_cost || 0), 0)),
       },
     });
