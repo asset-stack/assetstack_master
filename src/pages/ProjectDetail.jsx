@@ -30,6 +30,8 @@ import ProjectSCurve from '@/components/projects/ProjectSCurve';
 import ProjectCriticalPath from '@/components/projects/ProjectCriticalPath';
 import ProjectTasksTab from '@/components/projects/tasks/ProjectTasksTab';
 import PhaseSignOffPanel from '@/components/projects/PhaseSignOffPanel';
+import ProjectAssetIntelligence from '@/components/projects/ProjectAssetIntelligence';
+import ProjectLifecycleImpact from '@/components/projects/ProjectLifecycleImpact';
 import {
   STATUS_META,
   HEALTH_META,
@@ -220,6 +222,7 @@ export default function ProjectDetail() {
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="tasks">Tasks &amp; Team</TabsTrigger>
+          <TabsTrigger value="intelligence">Intelligence</TabsTrigger>
           <TabsTrigger value="evm">EVM Analysis</TabsTrigger>
           <TabsTrigger value="schedule">Schedule</TabsTrigger>
           <TabsTrigger value="assets">
@@ -242,6 +245,11 @@ export default function ProjectDetail() {
         <TabsContent value="tasks" className="space-y-4">
           <ProjectTasksTab project={project} />
           <PhaseSignOffPanel project={project} onSaved={refresh} />
+        </TabsContent>
+
+        <TabsContent value="intelligence" className="space-y-4">
+          <ProjectAssetIntelligence project={project} />
+          <ProjectLifecycleImpact project={project} />
         </TabsContent>
 
         <TabsContent value="evm" className="space-y-4">
