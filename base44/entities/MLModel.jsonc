@@ -6,6 +6,11 @@
       "type": "string",
       "description": "Name of the ML model"
     },
+    "description": {
+      "type": "string",
+      "description": "Optional description (up to 1000 characters)",
+      "maxLength": 1000
+    },
     "model_type": {
       "type": "string",
       "enum": [

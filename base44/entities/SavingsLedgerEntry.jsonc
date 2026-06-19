@@ -13,6 +13,11 @@
       "type": "string",
       "description": "Short summary, e.g. 'Bearing replacement on Pump #3'"
     },
+    "description": {
+      "type": "string",
+      "description": "Optional description (up to 1000 characters)",
+      "maxLength": 1000
+    },
     "trigger_source": {
       "type": "string",
       "enum": [

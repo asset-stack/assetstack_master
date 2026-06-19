@@ -6,6 +6,11 @@
       "type": "string",
       "description": "Auto-generated title from first message"
     },
+    "description": {
+      "type": "string",
+      "description": "Optional description (up to 1000 characters)",
+      "maxLength": 1000
+    },
     "messages": {
       "type": "array",
       "items": {

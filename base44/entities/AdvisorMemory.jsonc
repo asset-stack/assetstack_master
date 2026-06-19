@@ -6,6 +6,11 @@
       "type": "string",
       "description": "Tenant scope"
     },
+    "description": {
+      "type": "string",
+      "description": "Optional description (up to 1000 characters)",
+      "maxLength": 1000
+    },
     "strategic_theme": {
       "type": "string",
       "description": "Primary strategy, e.g. 'preventive_maintenance', 'cost_optimization', 'growth_expansion', 'risk_mitigation', 'compliance_first'"

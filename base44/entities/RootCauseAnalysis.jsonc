@@ -6,6 +6,11 @@
       "type": "string",
       "description": "Reference to equipment"
     },
+    "description": {
+      "type": "string",
+      "description": "Optional description (up to 1000 characters)",
+      "maxLength": 1000
+    },
     "alert_id": {
       "type": "string",
       "description": "Related alert if any"
