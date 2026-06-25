@@ -69,6 +69,7 @@ import About from './pages/About.jsx';
 import Customers from './pages/Customers.jsx';
 import AssessmentReport from './pages/AssessmentReport.jsx';
 import SecurityAuditReport from './pages/SecurityAuditReport';
+import TechnicalDebtRegister from './pages/TechnicalDebtRegister';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -361,6 +362,7 @@ const AuthenticatedApp = () => {
           } />
       <Route path="/AssessmentReport" element={<AssessmentReport />} />
       <Route path="/SecurityAuditReport" element={<SecurityAuditReport />} />
+      <Route path="/TechnicalDebtRegister" element={<TechnicalDebtRegister />} />
       <Route path="/ProjectDetail" element={
             <LayoutWrapper currentPageName="Projects">
               <ProjectDetail />
