@@ -68,6 +68,7 @@ import Contact from './pages/Contact.jsx';
 import About from './pages/About.jsx';
 import Customers from './pages/Customers.jsx';
 import AssessmentReport from './pages/AssessmentReport.jsx';
+import SecurityAuditReport from './pages/SecurityAuditReport';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -359,6 +360,7 @@ const AuthenticatedApp = () => {
             </LayoutWrapper>
           } />
       <Route path="/AssessmentReport" element={<AssessmentReport />} />
+      <Route path="/SecurityAuditReport" element={<SecurityAuditReport />} />
       <Route path="/ProjectDetail" element={
             <LayoutWrapper currentPageName="Projects">
               <ProjectDetail />
