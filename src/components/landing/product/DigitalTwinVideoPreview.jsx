@@ -6,8 +6,8 @@ import { Box, ExternalLink } from 'lucide-react';
  * in the platform so visitors can navigate a real 3D digital twin.
  */
 export default function DigitalTwinVideoPreview({
-  modelId = '4xXzHXiFbDV',
-  title = 'South West Sports Centre',
+  modelId = 'SxQL3iGyoDo',
+  title = 'Industrial Facility Digital Twin',
   subtitle = '3D Digital Twin · Matterport',
 }) {
   const src = `https://my.matterport.com/show/?m=${modelId}&play=1&qs=1&brand=0&hr=0&help=0`;
