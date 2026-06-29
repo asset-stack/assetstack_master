@@ -56,7 +56,7 @@ export default function CaseStudyHero() {
           transition={{ delay: 0.4 }}
           className="mt-8 flex justify-center"
         >
-          <a href="#bunbury" className="group inline-flex items-center gap-2 text-[13px] font-semibold text-primary">
+          <a href="#lga-council" className="group inline-flex items-center gap-2 text-[13px] font-semibold text-primary">
             Read the first study <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </a>
         </motion.div>

@@ -9,9 +9,9 @@ export const INDUSTRY_DEMOS = {
     accentSolid: 'indigo',
     icon: Building2,
     headline: 'Plan a $2M renewal program against your council backlog — in 30 seconds.',
-    sample: 'Bunbury City Council · 1,432 assets',
+    sample: 'LGA Council · 1,432 assets',
     assets: [
-      { name: 'Town Hall HVAC chiller', location: 'Bunbury Town Hall', condition: 4, risk: 86, crc: 184000, action: 'Replace within 6 months' },
+      { name: 'Town Hall HVAC chiller', location: 'LGA Council Town Hall', condition: 4, risk: 86, crc: 184000, action: 'Replace within 6 months' },
       { name: 'Sports Centre roof', location: 'South West Sports Centre', condition: 4, risk: 78, crc: 420000, action: 'Re-deck — Q3 capital' },
       { name: 'Library AV system', location: 'Public Library', condition: 3, risk: 52, crc: 38000, action: 'Inspect Q2' },
       { name: 'Park irrigation pump', location: 'Hands Oval', condition: 5, risk: 92, crc: 12500, action: 'Emergency renewal' },

@@ -5,7 +5,7 @@ import { Quote, Star } from 'lucide-react';
 const QUOTES = [
   {
     quote: "We caught a $156k bridge expansion joint failure 47 days early. The audit trail meant council signed off the spend in one meeting.",
-    name: 'Sarah Chen', role: 'Asset Manager', org: 'City of Bunbury',
+    name: 'Sarah Chen', role: 'Asset Manager', org: 'LGA Council',
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80',
   },
   {

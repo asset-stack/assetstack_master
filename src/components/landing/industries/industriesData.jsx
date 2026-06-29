@@ -31,7 +31,7 @@ export const INDUSTRIES = [
     stats: [
       { value: '6+', label: 'Asset categories' },
       { value: 'Multi-site', label: 'Coverage' },
-      { value: 'Live', label: 'With Bunbury Council' },
+      { value: 'Live', label: 'With LGA Council' },
     ],
   },
   {

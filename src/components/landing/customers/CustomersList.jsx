@@ -6,7 +6,7 @@ const CUSTOMERS = [
   {
     icon: Building2,
     sector: 'Local government',
-    name: 'Bunbury Council',
+    name: 'LGA Council',
     blurb:
       'Migrated 12,000+ assets across 84 facilities into a single defensible register — replacing four legacy systems.',
     metric: 'AUD 8.4M',

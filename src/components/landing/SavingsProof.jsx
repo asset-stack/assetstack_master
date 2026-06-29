@@ -8,7 +8,7 @@ import { ShieldCheck, ArrowUpRight, FileCheck2 } from 'lucide-react';
 // Sample ledger rows — the Verified Savings Ledger is a real product feature (see /SavingsLedger).
 // These rows are an illustrative preview of the format, not live customer data.
 const LEDGER_ROWS = [
-['LDG-0142', 'Bunbury Council · Bridge-12', 312000, 8900],
+['LDG-0142', 'LGA Council · Bridge-12', 312000, 8900],
 ['LDG-0141', 'Lycopodium · Switch-S04', 487300, 12100],
 ['LDG-0140', 'Sample · Substation transformer T-19', 2148000, 38400],
 ['LDG-0139', 'Sample · Haul truck fleet (n=14)', 1204000, 91200],

@@ -11,7 +11,7 @@ import { MessageSquare, Sparkles, FileText, AlertTriangle, TrendingUp, ChevronRi
 const SCRIPT = [
   {
     role: 'user',
-    content: 'Which Bunbury assets need attention this week?',
+    content: 'Which LGA Council assets need attention this week?',
   },
   {
     role: 'assistant',
@@ -89,7 +89,7 @@ export default function AssetMindPreview() {
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-[12px] font-semibold leading-none">AssetMind</div>
-          <div className="text-[10px] text-white/40 mt-0.5">Connected to 156 assets · Bunbury LGA</div>
+          <div className="text-[10px] text-white/40 mt-0.5">Connected to 156 assets · LGA Council</div>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />

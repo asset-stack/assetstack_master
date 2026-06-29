@@ -4,11 +4,11 @@ import { ShieldAlert, Bot, Database, DollarSign, Cog, Shield } from 'lucide-reac
 import { Badge } from '@/components/ui/badge';
 
 const LOGS = [
-  { time: '2026-05-06 09:42:15', actor: 'sarah.chen@bunbury.gov.au', role: 'admin', action: 'data.import', cat: 'admin', sev: 'critical', summary: 'Bunbury Excel import: 247 equipment, 1,403 reports created', icon: Database, color: 'text-purple-600 bg-purple-50' },
-  { time: '2026-05-06 09:38:02', actor: 'tom.davies@bunbury.gov.au', role: 'user', action: 'scan.analyze', cat: 'ai', sev: 'notice', summary: 'AI scan analysis produced 3 finding(s)', icon: Bot, color: 'text-pink-600 bg-pink-50' },
+  { time: '2026-05-06 09:42:15', actor: 'sarah.chen@lgacouncil.gov.au', role: 'admin', action: 'data.import', cat: 'admin', sev: 'critical', summary: 'LGA Council Excel import: 247 equipment, 1,403 reports created', icon: Database, color: 'text-purple-600 bg-purple-50' },
+  { time: '2026-05-06 09:38:02', actor: 'tom.davies@lgacouncil.gov.au', role: 'user', action: 'scan.analyze', cat: 'ai', sev: 'notice', summary: 'AI scan analysis produced 3 finding(s)', icon: Bot, color: 'text-pink-600 bg-pink-50' },
   { time: '2026-05-06 09:31:48', actor: 'admin@assetstack.io', role: 'admin', action: 'ml.retrain', cat: 'ai', sev: 'warning', summary: 'Retrained model v2.3 → v2.4 (+1.8% accuracy)', icon: Bot, color: 'text-pink-600 bg-pink-50' },
-  { time: '2026-05-06 09:24:11', actor: 'maria.lopez@bunbury.gov.au', role: 'user', action: 'savings.verify', cat: 'financial', sev: 'notice', summary: 'Verified $24,800 savings on Pump #3 intervention', icon: DollarSign, color: 'text-emerald-600 bg-emerald-50' },
-  { time: '2026-05-06 09:18:33', actor: 'unknown@external.co', role: 'user', action: 'data.import', cat: 'security', sev: 'warning', summary: 'Non-admin attempted to run Bunbury Excel import', icon: ShieldAlert, color: 'text-red-600 bg-red-50', denied: true },
+  { time: '2026-05-06 09:24:11', actor: 'maria.lopez@lgacouncil.gov.au', role: 'user', action: 'savings.verify', cat: 'financial', sev: 'notice', summary: 'Verified $24,800 savings on Pump #3 intervention', icon: DollarSign, color: 'text-emerald-600 bg-emerald-50' },
+  { time: '2026-05-06 09:18:33', actor: 'unknown@external.co', role: 'user', action: 'data.import', cat: 'security', sev: 'warning', summary: 'Non-admin attempted to run LGA Council Excel import', icon: ShieldAlert, color: 'text-red-600 bg-red-50', denied: true },
   { time: '2026-05-06 09:12:09', actor: 'system', role: 'system', action: 'system.healthcheck', cat: 'system', sev: 'info', summary: 'Daily health check completed', icon: Cog, color: 'text-slate-600 bg-slate-50' },
 ];
 

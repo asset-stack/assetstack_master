@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 
 const ASSETS = [
   {
-    id: 'pump-3', name: 'Pump #3', location: 'Bunbury Pump Station', risk: 78, days: 23,
+    id: 'pump-3', name: 'Pump #3', location: 'LGA Council Pump Station', risk: 78, days: 23,
     history: [
       { d: 'Jan', vibration: 4.2 }, { d: 'Feb', vibration: 4.5 }, { d: 'Mar', vibration: 5.1 },
       { d: 'Apr', vibration: 5.9 }, { d: 'May', vibration: 6.8 }, { d: 'Jun', vibration: 7.4 },
